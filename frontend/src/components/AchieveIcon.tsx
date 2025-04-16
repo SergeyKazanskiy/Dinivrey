@@ -1,0 +1,67 @@
+import React, { useState } from "react";
+import { EffectName, effects } from '../shared/constants'
+import { Box, Image, Text } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+
+
+interface AnimatedIconProps {
+  image: string;
+  label: string;
+  level: string;
+  effect: EffectName;
+}
+
+export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, effect: selectedEffect }) => {
+  const frameSrc = `/achieves/frames/${level}.png`;
+  const pngSrc = `/achieves/images/${image}.png`;
+  const gifSrc = `/achieves/gifs/${image}.gif`;
+  
+  const [animationStyle, setAnimationStyle] = useState<React.CSSProperties>({});
+  const effect = effects.find((e) => e.name === selectedEffect);
+
+  const [src, setSrc] = useState(gifSrc);
+
+  const handlePress = () => {
+    setAnimationStyle(effect!.apply(true));
+    setTimeout(() => setAnimationStyle(effect!.apply(false)), 600);
+    
+    //if (src === pngSrc) {
+    //  setSrc(gifSrc);
+    //  setTimeout(() => setSrc(pngSrc), 3000);
+   // }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.1 }}
+      animate={{ opacity: 1, scale: 1, rotate: 720 }}
+      transition={{ duration: 3, ease: "easeInOut" }}
+    >
+      <Box style={{ ...animationStyle }} position="relative" display="inline-block"
+        onClick={handlePress}>
+        <Image src={frameSrc} alt="Background" boxSize={level === 'Epic' ? "78px" : "80px"} objectFit='cover' />
+        <Image src={gifSrc} alt="GIF" boxSize="60px" borderRadius='30px'
+          position="absolute" top="40px" left="50%" transform="translate(-50%, -50%)"/>
+        <Text fontSize={12} align='center' color='gray.400'>{label}</Text>
+      </Box>
+    </motion.div>
+  );
+};
+
+/*
+setAnimationStyle(
+      selectedEffects.reduce<React.CSSProperties>((acc, effectName) => {
+        const effect = effects.find((e) => e.name === effectName);
+        return effect ? { ...acc, ...effect.apply(true) } : acc;
+      }, {})
+    );
+
+    setTimeout(() => {
+      setAnimationStyle(
+        selectedEffects.reduce<React.CSSProperties>((acc, effectName) => {
+          const effect = effects.find((e) => e.name === effectName);
+          return effect ? { ...acc, ...effect.apply(false) } : acc;
+        }, {})
+      );
+    }, 800);
+    */

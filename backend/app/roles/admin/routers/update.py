@@ -1,0 +1,69 @@
+from fastapi import APIRouter, Depends
+from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_session
+from crud import CRUD
+from roles.admin import schemas
+import models
+from sqlalchemy.future import select
+from sqlalchemy import delete
+
+router = APIRouter()
+
+
+# Students
+@router.put("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Camp, id, data, session)}
+
+@router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Group, id, data, session)}
+
+# Student
+@router.put("/students/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_student(id: int, data: schemas.StudentUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Student, id, data, session)}
+
+@router.put("/students/parents/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_student_parents(id: int, data: List[schemas.ParentUpdate], session: AsyncSession = Depends(get_session)):
+    for parent in data:
+        await CRUD.update(models.Parent, parent.id, parent, session)   
+    return {"isOk": True}
+
+@router.put("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_student_test(id: int, data: schemas.TestUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Test, id, data, session)}
+
+@router.put("/students/games/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_student_game(id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Game, id, data, session)}
+
+# Events
+@router.put("/camps/events/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Event, id, data, session)}
+
+@router.put("/camps/events/attendances/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_event(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Attendance, id, data, session)}
+
+# Achieves
+@router.put("/achieves/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_achieve(id: int, data: schemas.AchieveUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Achieve, id, data, session)}
+
+@router.put("/achieves/rules/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_achieve_rules(id: int, data: List[schemas.RuleCreate], session: AsyncSession = Depends(get_session)): 
+    await session.execute(delete(models.Rule).where(models.Rule.achieve_id == id))
+    await session.commit()
+    
+    for rule in data:
+        await CRUD.add(models.Rule, rule, session)   
+    return {"isOk": True}
+
+# Coaches
+@router.put("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_coach(id: int, data: schemas.CoachUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Coach, id, data, session)}
+

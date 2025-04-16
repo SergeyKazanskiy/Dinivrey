@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "expo-cli": "^6.3.10",
+
+    "main": "expo-router/entry"  
+  }
+}
