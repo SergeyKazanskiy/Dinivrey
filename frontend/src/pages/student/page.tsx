@@ -25,7 +25,7 @@ export const StudentPage: React.FC = () => {
     const breadcrumb: string = camp.name + ' / ' + group.name;
 
     useEffect(() => {
-        loadStudent(studentId);
+        loadStudent(studentId, camp_id);
     }, [loadStudent ]);
 
     const [isBackAlert, setIsBackAlert] = useState(false);

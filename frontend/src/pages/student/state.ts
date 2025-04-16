@@ -24,7 +24,7 @@ export interface StateSlice {
     student_id: number;
 
     setPhoto:(photo: string) => void;
-    loadStudent:(studentId: number) => void;
+    loadStudent:(studentId: number, camp_id: number) => void;
     updateStudent:(completed: (student: StudentShort) => void) => void;
 
     loadAttendance: () => void;
@@ -42,10 +42,10 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
     setPhoto:(photo: string) => set({ photo }),
 
-    loadStudent:(studentId: number) => {
+    loadStudent:(studentId: number, camp_id: number) => {
         const { setPhoto, setFirstName, setLastName, setGender, setAge, setIsActive, setPhone }: ProfileSlice = get();
         const { setCity, setStreet, setHome}: AddressSlice = get();
-        const { setGroup, setGroupExtra}: GroupsSlice = get();
+        const { setCamp, setGroup, setGroupExtra}: GroupsSlice = get();
         const { initialStudent, loadTests, loadGames, loadAchieves, loadAttendance }: StateSlice = get();
         const { selectDate }: EventsSlice = get();
 
@@ -69,6 +69,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 setStreet(street);
                 setHome(home);
 
+                setCamp(camp_id);
                 setGroup(group_id);
                 setGroupExtra(group_extra_id);
 
