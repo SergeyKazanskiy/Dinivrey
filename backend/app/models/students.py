@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float
 from sqlalchemy.orm import relationship
 from .base import Base
 
@@ -43,11 +43,11 @@ class Test(Base):
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(Integer, nullable=False)
     date = Column(String, nullable=False)
-    speed = Column(Integer, nullable=False)
-    stamina = Column(Integer, nullable=False)
-    climbing = Column(Integer, nullable=False)
-    evasion = Column(Integer, nullable=False)
-    hiding = Column(Integer, nullable=False)
+    speed = Column(Float, nullable=False)
+    stamina = Column(Float, nullable=False)
+    climbing = Column(Float, nullable=False)
+    evasion = Column(Float, nullable=False)
+    hiding = Column(Float, nullable=False)
     student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
     student = relationship("Student", back_populates="tests")    
 
@@ -58,8 +58,8 @@ class Game(Base):
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(Integer, nullable=False)
     date = Column(String, nullable=False)
-    caughted = Column(Integer, nullable=False)
-    freeded = Column(Integer, nullable=False)
+    caughted = Column(Float, nullable=False)
+    freeded = Column(Float, nullable=False)
     description = Column(String, nullable=True)
     student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
     student = relationship("Student", back_populates="games")

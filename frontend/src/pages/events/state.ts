@@ -5,7 +5,7 @@ import { FiltersSlice } from './store/FiltersSlice';
 import { StudentsSlice } from './store/StudentsSlice';
 import { get_camps, get_last_event, get_events, get_groups, get_attendances, get_students_names } from './http';
 import { Camp, Group, Event, Student, Attendance } from './model';
-import { getTimestamp } from '../../shared/utils';
+import { getTimestamp, getCurrentMonth, getCurrentYear } from '../../shared/utils';
 
 
 export interface StateSlice {
@@ -22,11 +22,13 @@ export interface StateSlice {
     loadLastEvent: (camp_id: number) => void;
     loadEvents: (camp_id: number, year: number, month: number) => void;
     loadAttendances: (event_id: number, group_id: number) => void;
+    loadStudentsNames: (group_id: number) => void;
 
     openAddModal: () => void;
     openUpdateModal: () => void;
     openDeleteModal: () => void;
     closeModal: () => void;
+    
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
@@ -84,19 +86,29 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 setAttendances(attendances);
                 set({ isStudentsView: false, isAttendanceView: true });
             } else {
-                get_students_names(group_id, (students: Student[]) => {
-                    const { setStudents }: StudentsSlice = get();
-                    setStudents(students);
-                    set({ isStudentsView: true, isAttendanceView: false });
-                })
+                const { loadStudentsNames }: StateSlice = get();
+                loadStudentsNames(group_id);
             }
         })
     },
 
+    loadStudentsNames: (group_id: number) => {
+        get_students_names(group_id, (students: Student[]) => {
+            const { setStudents }: StudentsSlice = get();
+            setStudents(students);
+            set({ isStudentsView: true, isAttendanceView: false });
+        });
+    },
+
     openAddModal: () => {
         const { year, month}: FiltersSlice = get();
-        //const timestamp = getTimestamp(year, month); // for DateMenu
-        const timestamp = Date.now();
+        let timestamp // for DateMenu
+        if (year === getCurrentYear() && month === getCurrentMonth()) {
+            timestamp = Date.now();
+        } else {
+            timestamp = getTimestamp(year, month)
+        }
+
         const { setTimestamp, setType, setDesc, setGroup1, setGroup2}: EventSlice = get();
         setTimestamp(timestamp);
         setType(eventTypes[0]);

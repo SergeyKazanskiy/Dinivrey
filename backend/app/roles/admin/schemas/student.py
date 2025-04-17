@@ -93,21 +93,21 @@ class TestBase(BaseModel):
     student_id: int
     timestamp: int
     date: str
-    speed: int
-    stamina: int
-    climbing: int
-    evasion: int
-    hiding: int
+    speed: float
+    stamina: float
+    climbing: float
+    evasion: float
+    hiding: float
 
 class TestCreate(TestBase):
     pass
 
 class TestUpdate(BaseModel):
-    speed: Optional[int] = None
-    stamina: Optional[int] = None
-    climbing: Optional[int] = None
-    evasion: Optional[int] = None
-    hiding: Optional[int] = None
+    speed: Optional[float] = None
+    stamina: Optional[float] = None
+    climbing: Optional[float] = None
+    evasion: Optional[float] = None
+    hiding: Optional[float] = None
 
 class TestResponse(TestBase):
     id: int
@@ -120,16 +120,16 @@ class GameBase(BaseModel):
     student_id: int
     timestamp: int
     date: str
-    caughted: int
-    freeded: int
+    caughted: float
+    freeded: float
     description: str
 
 class GameCreate(GameBase):
     pass
 
 class GameUpdate(BaseModel):
-    caughted: Optional[int] = None
-    freeded: Optional[int] = None
+    caughted: Optional[float] = None
+    freeded: Optional[float] = None
     description: Optional[str] = None
 
 class GameResponse(GameBase):

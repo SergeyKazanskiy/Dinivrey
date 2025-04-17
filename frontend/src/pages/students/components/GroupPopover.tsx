@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { IconButton, Menu, MenuList, Text, MenuButton, CloseButton } from "@chakra-ui/react";
 import { Input, Button, ButtonGroup, useDisclosure, HStack } from "@chakra-ui/react";
 
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { EditIcon } from '@chakra-ui/icons';
 
 
 interface Props {
@@ -30,7 +30,7 @@ export function GroupPopover({ name, desc, onUpdate, onDelete }: Props) {
   return (
     <Menu size='sm' isOpen={isOpen} onOpen={onOpen} placement="bottom">
       <MenuButton  onClick={(event) => { event.stopPropagation() }}>
-        <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' bg='unset' icon={<ChevronDownIcon />}/>
+        <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' bg='unset' icon={<EditIcon />}/>
       </MenuButton>
       <MenuList p={2}>
         <HStack justifyContent='space-between'>

@@ -41,9 +41,9 @@ export const EventsPage: React.FC = () => {
                     <Flex justifyContent='space-between' align='start'>
                         <Text color='red.400'>Attendance</Text>
                         {isStudentsView && <Button size='sm' colorScheme="blue"
-                            onClick={addAttendances}>Add List</Button>}
+                            onClick={addAttendances}>Add Blank</Button>}
                         {isAttendanceView && <Button size='sm' colorScheme="blue" variant='outline'
-                            onClick={deleteAttendances}>Delete List</Button>}
+                            onClick={deleteAttendances}>Delete Blank</Button>}
                     </Flex>
                     <Box borderTopWidth={1} borderColor='gray.100' p={1}>       
                         {isStudentsView && <StudentsView/>}

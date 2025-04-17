@@ -43,9 +43,9 @@ export function EventView({isNew}: Props) {
       <MenuCell title='Type' value={type}><TypesMenu type={type} setType={setType}/></MenuCell>
       <MenuCell title='Desc' value={desc}><DescMenu desc={desc} setDesc={setDesc}/></MenuCell>
 
-      <MenuCell title='Group 1' value={getGroupName(group1_id)}>
+      <MenuCell title='Group' value={getGroupName(group1_id)}>
         <GroupsMenu groupId={group1_id} groups={groups} setGroup={setGroup1}/></MenuCell>
-      <MenuCell title='Group 2' value={getGroupName(group2_id)}>
+      <MenuCell title='Extra' value={getGroupName(group2_id)}>
         <GroupsMenu groupId={group1_id} groups={groups} setGroup={setGroup2}/></MenuCell>
 
       <ButtonGroup size='sm' colorScheme='gray' display='flex' justifyContent='end' mt={1}>

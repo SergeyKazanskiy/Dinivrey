@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IconButton, Menu, MenuList, Text, MenuButton, CloseButton } from "@chakra-ui/react";
 import { Input, Button, ButtonGroup, useDisclosure, HStack } from "@chakra-ui/react";
 
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { EditIcon } from '@chakra-ui/icons';//ChevronDownIcon
 
 
 interface Props {
@@ -30,7 +30,7 @@ export function CampPopover({ name, city, onUpdate, onDelete }: Props) {
   return (
     <Menu size='sm' isOpen={isOpen} onOpen={onOpen} placement="bottom">
       <MenuButton>
-        <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' bg='unset' icon={<ChevronDownIcon />}/>
+        <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' bg='unset' icon={<EditIcon />}/>
       </MenuButton>
       <MenuList p={2}>
         <HStack justifyContent='space-between'>

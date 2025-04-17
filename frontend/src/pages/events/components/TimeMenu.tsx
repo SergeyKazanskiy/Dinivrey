@@ -36,7 +36,6 @@ export function TimeMenu({ timestamp, setTime }: Props) {
         <SimpleGrid columns={6} gap={1} mb={4}>
           {Array.from({ length: 12 }, (_, i) => i + 8).map((h) => (
             <Button key={h} size="sm" w='30px' opacity={0.7} variant={hours === h ? "solid" : "outline"}
-              isDisabled={h < hours}
               onClick={() => handleTimeChange(h, minutes)}>
               {h}
             </Button>
@@ -46,8 +45,7 @@ export function TimeMenu({ timestamp, setTime }: Props) {
         <Text fontWeight="bold" style={widgetStyles.text} mb={2}>Minutes</Text>
         <SimpleGrid columns={6} gap={1}>
           {Array.from({ length: 60 }, (_, i) => i).filter(m => m % 5 === 0).map((m) => (
-            <Button key={m} size="sm" w='30px' opacity={0.7} variant={minutes === m ? "solid" : "outline"}
-              isDisabled={m < minutes}
+            <Button key={m} size="sm" w='30px' opacity={0.7} variant="outline"
               onClick={() => handleTimeChange(hours, m)}>
               {m}
             </Button>

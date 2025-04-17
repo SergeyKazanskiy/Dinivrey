@@ -1,3 +1,5 @@
+import {useEffect, useState} from 'react';
+
 import { useStore } from "../store";
 import { TableView } from '../../../components/TableView';
 import { ActionButton } from '../../../components/ActionButton';
@@ -6,13 +8,21 @@ import { TimeMenu } from '../components/TimeMenu';
 import { TypesMenu } from '../components/TypesMenu';
 import { DescMenu } from '../components/DescMenu';
 import { GroupsMenu } from '../components/GroupsMenu';
-import { isPast, isToday, isFuture} from '../../../shared/utils';
+import { getCurrentYear, getCurrentMonth,  } from '../../../shared/utils';
 
 
 export const EventsView: React.FC = () => {
-  const { formatedEvents, column, event_id, year, month } = useStore();
-  const { openAddModal, openUpdateModal, openDeleteModal, selectCell } = useStore();
+  const { year, month, setTimestamp } = useStore();
+  const [ past, setPast ] = useState(false);
 
+  useEffect(() => {
+    setTimestamp(Date.now());
+  }, []);
+
+  useEffect(() => {
+    setPast(year < getCurrentYear() || month < getCurrentMonth());
+  }, [ year, month ]);
+ 
   const columns = [
     {name: 'date', title: 'Date', width: '13%'},
     {name: 'time', title: 'Time', width: '12%'},
@@ -21,11 +31,14 @@ export const EventsView: React.FC = () => {
     {name: 'group1', title: 'Group', width: '13%'},
     {name: 'group2', title: 'Extra', width: '13%'},
   ];
+
+  const { formatedEvents, column, event_id } = useStore();
+  const { openAddModal, openUpdateModal, openDeleteModal, selectCell } = useStore();
   
   const { timestamp, type, desc, group1_id, group2_id, groups } = useStore();
   const { updateTimestamp, updateType, updateDesc, updateGroup1, updateGroup2 } = useStore();
-  const past = timestamp === 0 ? false : isPast(timestamp);
 
+ 
   return (
     <>
       <TableView columns={columns} data={formatedEvents} selected={{id: event_id, column}}
@@ -42,7 +55,7 @@ export const EventsView: React.FC = () => {
       </TableView>
 
       <ActionButton type="add"
-        available={true}
+        available={!past}
         onClick={openAddModal}/> 
     </>
   )
