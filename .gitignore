@@ -1,4 +1,20 @@
-/node_modules
-node_modules
-mobile/node_modules
+# node modules
 frontend/node_modules
+mobile/node_modules
+
+# expo
+frontend/.expo
+mobile/.expo
+
+# macos
+.DS_Store
+backend/.DS_Store
+frontend/.DS_Store
+frontend/public/icons/.DS_Store
+frontend/public/.DS_Store
+frontend/.DS_Store
+
+# env
+backend/.env
+frontend/.env
+frontend/.env.production
