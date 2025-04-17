@@ -14,6 +14,7 @@ export const widgetStyles: { [key: string]: any } = {
   score: { color: "green", fontSize: "13px", fontWeight: "semibold"},
   alert: { color: "#444444", fontSize: "16px", fontWeight: "semibold"},
   selected: { borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1, borderRadius: "8px"},
+  label: { color: "#5694F2", fontSize: "14px", fontWeight: "bold"},
 };
 
 export const screenStyles: { [key: string]: any } = {

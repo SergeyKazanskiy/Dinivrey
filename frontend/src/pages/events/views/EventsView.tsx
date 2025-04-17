@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-
+import { Box, Button, Text } from "@chakra-ui/react";
 import { useStore } from "../store";
 import { TableView } from '../../../components/TableView';
 import { ActionButton } from '../../../components/ActionButton';
@@ -40,7 +40,7 @@ export const EventsView: React.FC = () => {
 
  
   return (
-    <>
+    <Box h='730px' overflow='scroll'>
       <TableView columns={columns} data={formatedEvents} selected={{id: event_id, column}}
         onClick={selectCell} onUpdate={openUpdateModal} onDelete={openDeleteModal}>
 
@@ -57,6 +57,6 @@ export const EventsView: React.FC = () => {
       <ActionButton type="add"
         available={!past}
         onClick={openAddModal}/> 
-    </>
+    </Box>
   )
 };
