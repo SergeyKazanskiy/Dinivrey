@@ -48,6 +48,14 @@ async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession
 async def update_event(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Attendance, id, data, session)}
 
+@router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
+    rows = await CRUD.get(models.Attendance, session, filters={"event_id": event_id, "group_id": group_id})
+    for row in rows:
+        await CRUD.update(models.Attendance, row.id, data, session)
+    return {"isOk": True}
+
+
 # Achieves
 @router.put("/achieves/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_achieve(id: int, data: schemas.AchieveUpdate, session: AsyncSession = Depends(get_session)):

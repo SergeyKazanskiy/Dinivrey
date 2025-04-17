@@ -83,6 +83,8 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         setGroup2(event.group2_id);
 
         if (column === 'group1' || column === 'group2' ) {
+
+            
             const { loadAttendances }: StateSlice = get();
             const group_id = column === 'group1' ? event.group1_id : event.group2_id;
 
@@ -97,8 +99,12 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         //alert(objectToJson(newEvent));
         add_event(newEvent, (res) => {
             if (res.id) {
-                const event: Event = {...newEvent, id: res.id}
-                set((state: EventsSlice) => ({ events: [ ...state.events, event] }));
+                const event: Event = {...newEvent, id: res.id};
+                const { events }: EventsSlice  = get();
+
+                const eventsWithNew = [ ...events, event];
+                const sortedEvents = eventsWithNew.sort((a, b) => a.timestamp - b.timestamp);
+                set({ events: sortedEvents });
         
                 const { types, camp_id, group_id, filterEvents }: EventsSlice & FiltersSlice  = get();
                 const filters: Filters = { types: types, camp: camp_id, group: group_id };

@@ -48,6 +48,9 @@ import { objectToJson } from '../../shared/utils';
     return httpWrapper(() => api.put(`camps/events/attendances/${attendance_id}`, data), callback);
   };
 
+  export function update_all_attendances(event_id: number, group_id: number, data: {present: boolean}, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.put(`camps/events/${event_id}/groups/${group_id}/attendances`, data), callback);
+  };
 
   // Delete
   export function delete_event(event_id: number, callback: (res: {isOk: boolean}) => void) {

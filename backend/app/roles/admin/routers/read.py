@@ -51,7 +51,9 @@ async def get_events(year: int, month: int, camp_id: int, session: AsyncSession 
     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
     result = await session.execute(
-        select(models.Event).where(models.Event.timestamp.between(start_ts, end_ts), models.Event.camp_id == camp_id)
+        select(models.Event)
+        .where(models.Event.timestamp.between(start_ts, end_ts), models.Event.camp_id == camp_id)
+        .order_by(asc(models.Event.timestamp))
     )
     return result.scalars().all()
 

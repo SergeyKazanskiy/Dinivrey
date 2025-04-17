@@ -25,7 +25,7 @@ export function DeletePopover({title, isOpen, onOpen, onClose, onDelete}: IPopov
   return (
     <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} placement='bottom-start'>
       <PopoverTrigger>
-        <Button colorScheme='blue' size='sm'>Delete</Button>
+        <Button colorScheme='blue' size='sm' variant='outline'>Delete</Button>
       </PopoverTrigger>
       <PopoverContent w='300px' >
         <PopoverArrow bg='blue.200'  />
@@ -39,7 +39,7 @@ export function DeletePopover({title, isOpen, onOpen, onClose, onDelete}: IPopov
         <PopoverFooter display='flex' justifyContent='flex-end' gap={2}>
             <Button size='sm' variant='solid' colorScheme='gray'
               onClick={handleCancel}>Cancel</Button>
-            <Button size='sm' variant='solid' colorScheme='gray'
+            <Button size='sm' variant='outline' colorScheme='gray'
               onClick={handleDelete}>Delete</Button>
         </PopoverFooter>
       </PopoverContent>

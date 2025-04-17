@@ -1,5 +1,5 @@
 import { Student, Attendance } from '../model';
-import { add_attendances, update_attendance, delete_attendances } from '../http';
+import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
 import { EventsSlice } from '../store/EventsSlice';
 import { EventSlice } from '../store/EventSlice';
 import { StateSlice } from '../state';
@@ -11,12 +11,14 @@ export interface StudentsSlice {
     students: Student[];
     attendance_id: number;
     openedGroupId: number;
+    isAllChecked: boolean;
 
     setStudents: (students: Student[]) => void;
     addAttendances: () => void;
     setAttendances: (attendances: Attendance[]) => void;
     checkStudent: (id: number) => void;
     deleteAttendances: () => void;
+    setAllChecked: () => void;
 }
 
 export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
@@ -31,9 +33,19 @@ export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
     ],
     attendance_id: 0,
     openedGroupId: 0,
+    isAllChecked: false,
 
     setStudents: (students: Student[]) => set({ students }),
     addAttendances: () => {
+        const { timestamp }: EventSlice = get();
+        if (isFuture(timestamp)) {
+            alert('It is not possible to create blank for future');
+            return
+        }
+        if (isPast(timestamp)) {
+            alert('It is not possible to create blank in past');
+            return
+        }
         const {event_id, openedGroupId}: StudentsSlice & EventsSlice = get();
         //alert (openedGroupId)
         add_attendances({event_id, group_id: openedGroupId}, (res) => {
@@ -48,10 +60,8 @@ export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
 
     checkStudent: (attendance_id: number) => {
         const { timestamp }: EventSlice = get();
-        if (!isToday(timestamp)) {
-            alert(isPast(timestamp) ?
-            'It is not possible to change past attendance!' :
-            'It is not possible to change future attendance!');
+        if (isPast(timestamp)) {
+            alert('It is not possible to change past attendance!');
             return
         }
         const { attendances }: EventsSlice & EventSlice & StudentsSlice = get();
@@ -80,5 +90,19 @@ export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
             }
         });
     },
+
+    setAllChecked: () => {
+        const {event_id, openedGroupId, isAllChecked}: EventsSlice & StudentsSlice  = get();
+        const data = {present: !isAllChecked};
+
+        update_all_attendances(event_id, openedGroupId, data, (res) => {
+            if (res.isOk) {
+                set((state: StudentsSlice) => ({
+                    isAllChecked: !isAllChecked,
+                    attendances: state.attendances.map(el => ({...el, present: !isAllChecked}))
+                }));
+            }
+        });
+    }
 });
 

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IconButton, Menu, MenuList, Text, MenuButton, CloseButton } from "@chakra-ui/react";
 import { Input, Button, ButtonGroup, useDisclosure, HStack } from "@chakra-ui/react";
 
-import { EditIcon } from '@chakra-ui/icons';//ChevronDownIcon
+import { ChevronDownIcon } from '@chakra-ui/icons';
 
 
 interface Props {
@@ -30,7 +30,7 @@ export function CampPopover({ name, city, onUpdate, onDelete }: Props) {
   return (
     <Menu size='sm' isOpen={isOpen} onOpen={onOpen} placement="bottom">
       <MenuButton>
-        <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' bg='unset' icon={<EditIcon />}/>
+        <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' bg='unset' icon={<ChevronDownIcon />}/>
       </MenuButton>
       <MenuList p={2}>
         <HStack justifyContent='space-between'>
@@ -49,7 +49,7 @@ export function CampPopover({ name, city, onUpdate, onDelete }: Props) {
           <Button size='sm' variant='solid' colorScheme='blue' px={5}
             isDisabled={name === newName && city === newCity}
             onClick={handleUpdate}>Update</Button>
-          <Button size='sm' variant='solid' colorScheme='blue' px={5}
+          <Button size='sm' variant='outline' colorScheme='blue' px={5}
             onClick={handleDelete}>Delete</Button>
         </ButtonGroup>
       </MenuList>
