@@ -6,7 +6,7 @@ from .student import StudentCreate, StudentUpdate, StudentResponse, StudentShort
 from .student import ParentCreate, ParentUpdate, ParentResponse
 from .student import TestCreate, TestUpdate, TestResponse
 from .student import GameCreate, GameUpdate, GameResponse
-from .student import AchievementCreate, AchievementResponse
+from .student import AchievementCreate, AchievementUpdate, AchievementResponse
 
 from .event import EventCreate, EventUpdate, EventResponse
 from .event import AttendanceDataCreate, AttendanceCreate, AttendanceUpdate, AttendanceResponse

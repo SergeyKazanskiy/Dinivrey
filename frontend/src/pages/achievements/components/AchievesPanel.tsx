@@ -23,7 +23,7 @@ export const AchievesPanel: React.FC<Props> = ({ title, achieves, category, achi
       <Box borderWidth={2} borderColor='gray.300' borderRadius={8} pb='4px' h='160px' w='100%'>
         <SimpleGrid display='flex' flexWrap='wrap'>
           {achieves.filter(((item: AchieveShort) => item.category === category)).map((item, inx) => (
-            <Box bg={item.id === achieveId ? 'gray.100' : 'unset'}
+            <Box key={inx} bg={item.id === achieveId ? 'gray.100' : 'unset'}
               onClick={() => onClick(item.id, inx)}>
               <AchieveImage
                 uri={item.image} 

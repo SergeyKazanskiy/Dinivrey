@@ -6,12 +6,13 @@ import { PopoverFooter, PopoverArrow, PopoverCloseButton, IconButton } from '@ch
 interface IPopover {
   title: string;
   isOpen: boolean;
+  isDisabled: boolean;
   onOpen: () => void;
   onClose: () => void;
   onDelete: () => void;
 }
 
-export function DeletePopover({title, isOpen, onOpen, onClose, onDelete}: IPopover) {
+export function DeletePopover({title, isOpen, isDisabled, onOpen, onClose, onDelete}: IPopover) {
 
   function handleCancel () {
     onClose();
@@ -25,7 +26,9 @@ export function DeletePopover({title, isOpen, onOpen, onClose, onDelete}: IPopov
   return (
     <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} placement='bottom-start'>
       <PopoverTrigger>
-        <Button colorScheme='blue' size='sm' variant='outline'>Delete</Button>
+        <Button colorScheme='blue' size='sm' variant='outline' isDisabled={isDisabled}>
+          Delete
+        </Button>
       </PopoverTrigger>
       <PopoverContent w='300px' >
         <PopoverArrow bg='blue.200'  />

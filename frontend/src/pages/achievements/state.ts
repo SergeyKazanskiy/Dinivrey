@@ -65,7 +65,8 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         set((state: StateSlice) => ({
             achieves: [...state.achieves, achieve],
             isEditorOpened: false,
-            achieveId: achieve.id, 
+            //achieveId: achieve.id, 
+            achieveId: 0,
         }))
     },
 

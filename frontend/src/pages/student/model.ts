@@ -77,20 +77,30 @@ export type Game = {
   description?: string;
 };
 
+export interface Achievement {
+  id: number; // Achievement id
+  image: string;
+  name: string;
+  desc: string;
+  in_profile: boolean;
+  category: string;
+  level: string;
+  trigger: string;
+  effect: string;
+}
+
 export interface Achieve {
   id: number;
-  student_id: number;
-  level: string;
   image: string;
   name: string;
   category: string;
-  effect: string;
 }
 
 export interface AchieveAttach {
   student_id: number;
   achieve_id: number;
-  desc: string;
+  level: string;
+  in_profile: boolean;
 }
 
 export interface ColumnStructure {

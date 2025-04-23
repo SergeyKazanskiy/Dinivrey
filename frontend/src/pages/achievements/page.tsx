@@ -32,7 +32,7 @@ export const AchievementsPage: React.FC = () => {
                 <HStack mt={1}>
                     <RepeatIcon onClick={showReportView} />
                     <Text  mr={8} style={widgetStyles.title} mt={1}>{title}</Text>
-                    <DeletePopover title='Delete achievement!'
+                    <DeletePopover title='Delete achievement!' isDisabled={false}
                         isOpen={isOpen} onOpen={onOpen} onClose={onClose} onDelete={()=>deleteAchieve(achieveId)}/>
                     <Button colorScheme='blue' size='sm' onClick={saveAchieve}>Save</Button>
                     <CloseButton size='sm' onClick={closeAchieveView}/>

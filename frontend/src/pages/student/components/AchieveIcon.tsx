@@ -13,7 +13,7 @@ interface AnimatedIconProps {
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, onClick }) => {
   const frameSrc = `/achieves/frames/${level}.png`;
-  const gifSrc = `/achieves/gifs/${image}.gif`;
+  const pngSrc = `/achieves/images/${image}.png`;
 
   return (
     <motion.div
@@ -21,11 +21,11 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, 
       animate={{ opacity: 1, scale: 1, rotate: 720 }}
       transition={{ duration: 3, ease: "easeInOut" }}
     >
-      <Box position="relative" display="inline-block"
+      <Box position="relative" display="inline-block" mx='8px'
         onClick={onClick}>
-        <Image src={frameSrc} alt="Background" boxSize={level === 'Epic' ? "56px" : "56px"} objectFit='cover' />
-        <Image src={gifSrc} alt="GIF" boxSize="48px" borderRadius='24px'
-          position="absolute" top="40px" left="50%" transform="translate(-50%, -50%)"/>
+        <Image src={frameSrc} alt="Background" boxSize={level === 'Epic' ? "58px" : "58px"} objectFit='cover' />
+        <Image src={pngSrc} alt="GIF" boxSize="46px" borderRadius='23px'
+          position="absolute" top="29px" left="50%" transform="translate(-50%, -50%)"/>
         <Text fontSize={12} align='center' color='gray.400'>{label}</Text>
       </Box>
     </motion.div>

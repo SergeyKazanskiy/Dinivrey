@@ -1,7 +1,7 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from '../../api/api';
 import { Student, Camp, Group, Parent, Attendance } from './model';
-import { Test, Game, Achieve, AchieveAttach } from './model';
+import { Test, Game, Achieve, AchieveAttach, Achievement } from './model';
 import { objectToJson } from '../../shared/utils';
 
 
@@ -34,13 +34,13 @@ export function get_student_games(student_id: number, year: number, month: numbe
   return httpWrapper(() => api.get(`students/${student_id}/games?year=${year}&month=${month}`), callback);
 };
 
-export function get_student_achieves(student_id: number, callback: (achieves: Achieve[]) => void) {
-  return httpWrapper(() => api.get(`achieves`), callback);
+export function get_student_achieves(student_id: number, callback: (achieves: Achievement[]) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
   //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
 };
 
-export function get_achieves(filter: string, callback: (achieves: Achieve[]) => void) {
-  return httpWrapper(() => api.get(`achievements?filter=${filter}`), callback);
+export function get_achieves(category: string, callback: (achieves: Achieve[]) => void) {
+  return httpWrapper(() => api.get(`achieves?category=${category}`), callback);
 };
 
 // Update
@@ -64,6 +64,9 @@ export function update_student_game(id: number, data: Partial<Game>, callback: (
   return httpWrapper(() => api.put(`students/games/${id}`, data), callback);
 };
 
+export function update_student_achieve(id: number, data: Partial<Achievement>, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`students/achievements/${id}`, data), callback);
+};
 
 // Add
 export function add_test(data: Omit<Test, 'id'>, callback: (res: {id: number}) => void) {
@@ -74,7 +77,7 @@ export function add_game(data: Omit<Game, 'id'>, callback: (res: {id: number}) =
   return httpWrapper(() => api.post(`students/games`, data), callback);
 };
 
-export function attach_achieve(data: AchieveAttach, callback: (achieve: Achieve) => void) {
+export function attach_achieve(data: AchieveAttach, callback: (achievement: Achievement) => void) {
   return httpWrapper(() => api.post(`students/achievements`, data), callback);
 };
 
@@ -92,6 +95,6 @@ export function delete_student_game(id: number, callback: (res: {isOk: boolean})
   return httpWrapper(() => api.delete(`students/games/${id}`), callback);
 };
 
-export function detach_achieve(student_id: number, achieve_id: number, callback: (res: {isOk: boolean}) => void) {
-  return httpWrapper(() => api.delete(`students/${student_id}/achievements/${achieve_id}`), callback);
+export function detach_student_achieve(achieve_id: number, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.delete(`students/achievements/${achieve_id}`), callback);
 };

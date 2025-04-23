@@ -70,5 +70,7 @@ class Achievement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     achieve_id = Column(Integer, nullable=False)
+    in_profile = Column(Boolean, default=False)
+    level = Column(String, nullable=False)
     student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
     student = relationship("Student", back_populates="achievements")

@@ -94,9 +94,17 @@ async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)
     return await CRUD.read(models.CoachGroup, id, session)
 
 # Achieves
-@router.get("/achieves", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
+@router.get("/achieves/all", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
 async def get_achieves(session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Achieve, session)
+
+@router.get("/achieves", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
+async def get_achieves(category: str, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Achieve, session, filters={"category": category})
+
+@router.get("/achieves/{id}", response_model=schemas.AchieveResponse, tags=["Admin_select"])
+async def get_achieve(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Achieve, id, session)
 
 @router.get("/achieves/{id}/rules", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
 async def get_achieve_rules(session: AsyncSession = Depends(get_session)):
@@ -133,6 +141,29 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
 async def get_student_attendance(id: int, session: AsyncSession = Depends(get_session)):
     return {}
 
-@router.get("/students/{id}/achievements", response_model=List[schemas.AchievementResponse], tags=["Admin_select"])
-async def get_student_achievements(id: int, session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Achievement, session, filters={models.Achievement.student_id: id})
+@router.get("/students/{id}/achievements", tags=["Admin_select"])
+async def get_student_achieves(id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Achieve
+    S = models.Achievement
+    #return {'status': "Ok"}
+    stmt = (
+        select(S.id, A.category, A.name, A.image, S.level, S.in_profile, A.effect, A.trigger, A.desc)
+        .join(A, S.achieve_id == A.id )
+        .where( S.student_id == id )
+        .order_by(asc(A.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"id": row[0],
+             "category": row[1],
+             "name": row[2],
+             "image": row[3],
+             "level": row[4],
+             "in_profile": row[5],
+             "effect": row[6],
+             "trigger": row[7],
+             "desc": row[8]} for row in rows]
+
+
+
+    
