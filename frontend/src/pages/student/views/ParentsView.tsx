@@ -28,7 +28,7 @@ export const ParentsView: React.FC = () => {
         <Text style={widgetStyles.title}>Parent contacts</Text>
 
         <ButtonGroup >
-          <DeletePopover title='Delete student!'
+          <DeletePopover title='Delete student!' isDisabled={false}
             isOpen={isOpen} onOpen={onOpen} onClose={onClose} onDelete={()=>deleteStudent(studentId)}/>
           
           <Button size='sm' variant='solid' colorScheme='blue'

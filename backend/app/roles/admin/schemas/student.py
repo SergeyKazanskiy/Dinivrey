@@ -142,12 +142,25 @@ class GameResponse(GameBase):
 class AchievementBase(BaseModel):
     student_id: int
     achieve_id: int
+    in_profile: bool
+    level: str
 
 class AchievementCreate(AchievementBase):
     pass
+     
+class AchievementUpdate(BaseModel):
+    in_profile: bool
 
-class AchievementResponse(AchievementBase):
+class AchievementResponse(BaseModel):
     id: int
-
+    category: str
+    name: str
+    image: str
+    level: str
+    in_profile: str
+    effect: str
+    trigger: str
+    desc: str
+        
     class Config:
-        from_attributes = True        
+        from_attributes = True

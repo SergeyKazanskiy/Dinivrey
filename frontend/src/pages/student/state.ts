@@ -1,6 +1,6 @@
 import { get_student, get_student_parents, get_student_attendance,
     get_student_achieves, get_student_tests, get_student_games} from './http';
-import { Student, Parent, Attendance, Test, Game, Achieve } from './model';
+import { Student, Parent, Attendance, Test, Game, Achieve, Achievement } from './model';
 import { ProfileSlice } from './store/ProfileSlice';
 import { AddressSlice } from './store/AddressSlice';
 import { GroupsSlice } from './store/GroupsSlice';
@@ -8,7 +8,7 @@ import { ParentsSlice } from './store/ParentsSlice';
 import { update_student } from './http';
 import { getChanges, getCurrentYear, getCurrentMonth } from '../../shared/utils';
 import { Normalize, normalizeObject, objectToJson } from '../../shared/utils';
-import { update_student_parents } from './http';
+import { update_student_parents, get_achieves } from './http';
 import { Student as StudentShort  } from '../students/model';
 import { TestsSlice } from './store/TestsSlice';
 import { GamesSlice } from './store/GamesSlice';
@@ -31,6 +31,7 @@ export interface StateSlice {
     loadTests: () => void;
     loadGames: () => void;
     loadAchieves: () => void;
+    loadBaseAchieves: (category: string) => void;
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
@@ -117,11 +118,20 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
     loadAchieves: () => {
         const { student_id }: StateSlice = get();
-        get_student_achieves(student_id, (achieves: Achieve[]) => {
-            const { setAchieves }: AchievesSlice = get();
-            setAchieves(achieves)
+        get_student_achieves(student_id, (achieves: Achievement[]) => {
+            const { setStudentAchieves }: AchievesSlice = get();
+            setStudentAchieves(achieves);
         })
     },
+
+    loadBaseAchieves: (category: string) => {
+        const { setBaseAchieves }: AchievesSlice = get();
+            setBaseAchieves([]);
+        get_achieves(category, (achieves: Achieve[]) => {
+            setBaseAchieves(achieves);
+        });
+    },
+
 
     updateStudent:(completed: (student: StudentShort) => void) => {
         const { isProfileChanged, isAddressChanged, isGroupsChanged }: ProfileSlice & AddressSlice & GroupsSlice= get();

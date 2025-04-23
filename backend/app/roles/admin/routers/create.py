@@ -77,9 +77,21 @@ async def add_student_test(data: schemas.TestCreate, session: AsyncSession = Dep
 async def add_student_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Game, data, session)}
 
-@router.post("/students/achievements", response_model=schemas.ResponseId, tags=["Admin_create"])
-async def add_student_achievement(data: schemas.AchievementCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Achievement, data, session)}
+@router.post("/students/achievements", tags=["Admin_create"])
+async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSession = Depends(get_session)):
+    id = await CRUD.add(models.Achievement, data, session)
+    achieve = await CRUD.read(models.Achieve, data.achieve_id, session)
+    return {
+        "id": id,
+        "image": achieve.image,
+        "name": achieve.name,
+        "desc": achieve.desc,
+        "in_profile": data.in_profile,
+        "category": achieve.category,
+        "level": data.level,
+        "trigger": achieve.trigger,
+        "effect": achieve.effect
+    }
 
 
 # Coaches

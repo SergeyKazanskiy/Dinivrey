@@ -5,7 +5,7 @@ import { AchieveShort, Achieve, Rule } from './model';
 
 // Get
 export function get_achieves(callback: (achieves: AchieveShort[]) => void) {
-  return httpWrapper(() => api.get(`achieves`), callback);
+  return httpWrapper(() => api.get(`achieves/all`), callback);
 };
 
 export function get_achieve(achieve_id: number, callback: (achieve: Achieve) => void) {

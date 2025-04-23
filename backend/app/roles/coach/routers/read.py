@@ -25,6 +25,3 @@ async def get_student(id: int, session: AsyncSession = Depends(get_session)):
 async def get_student_parents(session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Parent, session, filters={models.Parent.student_id: id})
 
-@router.get("/student/{id}/achievements", response_model=List[schemas.AchievementResponse], tags=["Coach"])
-async def get_student_achievements(session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Achievement, session, filters={models.Achievement.student_id: id})
