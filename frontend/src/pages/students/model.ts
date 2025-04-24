@@ -22,3 +22,27 @@ export interface Student {
     phone?: string;
     active: boolean;
 }
+
+export interface Achieve {
+    image: string;
+    level: string;
+    name: string;
+}
+
+export interface Lider {
+    id: number;
+    photo: string;
+    first_name: string;
+    last_name: string;
+    gender: string;
+    age: number;
+    phone: string;
+
+    speed: number;
+    stamina: number;
+    climbing: number;
+    evasion: number;
+    hiding: number;
+
+    achieves: Achieve[];
+}

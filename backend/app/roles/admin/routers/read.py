@@ -145,7 +145,6 @@ async def get_student_attendance(id: int, session: AsyncSession = Depends(get_se
 async def get_student_achieves(id: int, session: AsyncSession = Depends(get_session)):
     A = models.Achieve
     S = models.Achievement
-    #return {'status': "Ok"}
     stmt = (
         select(S.id, A.category, A.name, A.image, S.level, S.in_profile, A.effect, A.trigger, A.desc)
         .join(A, S.achieve_id == A.id )
@@ -164,6 +163,44 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
              "trigger": row[7],
              "desc": row[8]} for row in rows]
 
+@router.get("/camps/groups/{id}/liders", tags=["Admin_select"])
+async def get_liders(id: int, session: AsyncSession = Depends(get_session)):
+    students = await CRUD.get(models.Student, session, filters={"group_id": id}, order_by="first_name")
+    liders = []
+    for student in students:
+        tests = await session.execute(select(models.Test).where(models.Test.student_id == student.id).order_by(desc(models.Test.timestamp)).limit(1))
+        test = tests.scalar_one_or_none()
+        if test:
+            lider = {
+                'id': student.id,
+                'photo': student.photo,
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'gender': student.gender,
+                'age': student.age,
+                'phone': student.phone or '',
+                'speed': test.speed,
+                'stamina': test.stamina,
+                'climbing': test.climbing,
+                'evasion': test.evasion,
+                'hiding': test.hiding,  
+                'achieves': await getAchievements(id, session)
+            }
+            liders.append(lider)
+    return liders
 
-
-    
+async def getAchievements(id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Achieve
+    S = models.Achievement
+    stmt = (
+        select(A.name, A.image, S.level)
+        .join(A, S.achieve_id == A.id )
+        .where(
+            S.student_id == id,
+            S.in_profile == True
+        )
+        .order_by(asc(A.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"name": row[0], "image": row[1], "level": row[2]} for row in rows]

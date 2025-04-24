@@ -8,7 +8,7 @@ interface AnimatedIconProps {
   image: string;
   label: string;
   level: string;
-  effect: EffectName;
+  effect?: EffectName;
 }
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, effect: selectedEffect }) => {
@@ -19,8 +19,10 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, 
   const effect = effects.find((e) => e.name === selectedEffect);
 
   const handlePress = () => {
-    setAnimationStyle(effect!.apply(true));
-    setTimeout(() => setAnimationStyle(effect!.apply(false)), 600);
+    if (effect) {
+      setAnimationStyle(effect.apply(true));
+      setTimeout(() => setAnimationStyle(effect!.apply(false)), 600);
+    }
   };
 
   return (

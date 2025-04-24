@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from '../../api/api';
-import { Camp, Group, Student } from './model';
+import { Camp, Group, Lider, Student } from './model';
 import { Parent } from '../student/model';
 
 // Get
@@ -16,6 +16,9 @@ export function get_students(group_id: number, callback: (students: Student[]) =
   return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
 };
 
+export function get_liders(group_id: number, callback: (liders: Lider[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/liders/`), callback, 'Getting liders');
+};
 
 // Create
 export function create_camp(data: Omit<Camp, 'id'>, callback: (res: {id: number}) => void) {

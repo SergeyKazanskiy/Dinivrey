@@ -28,7 +28,7 @@ export function GroupsView({ children }: Props) {
                                 onUpdate={updateGroup} onDelete={deleteGroup}/>}
                     </AccordionButton>
 
-                    <AccordionPanel p={4}>
+                    <AccordionPanel px={4}>
                         { children }
                     </AccordionPanel>
                 </AccordionItem>

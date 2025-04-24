@@ -7,6 +7,10 @@ export type Normalize<T> = {
     ? number : T[K]
 }
 
+export type NumericFields<T> = {
+  [K in keyof T]: T[K] extends number ? K : never
+}[keyof T];
+
 export function normalizeObject<T extends Record<string, any>>(
   data: Partial<T>,
   template: T
