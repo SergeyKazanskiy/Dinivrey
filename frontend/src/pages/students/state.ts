@@ -1,8 +1,9 @@
 import { CampsSlice } from './store/CampsSlice';
-import { get_camps, get_groups, get_students } from './http';
-import { Camp, Group, Student } from './model';
+import { get_camps, get_groups, get_students , get_liders} from './http';
+import { Camp, Group, Lider, Student } from './model';
 import { GroupsSlice } from './store/GroupsSlice';
 import { StudentsSlice } from './store/StudentsSlice';
+import { LidersSlice } from './store/LidersSlice';
 
 
 export interface StateSlice {
@@ -11,6 +12,7 @@ export interface StateSlice {
     loadCamps: () => void;
     loadGroups: (camp_id: number) => void;
     loadStudents: (group_id: number) => void;
+    loadLiders: (group_id: number) => void;
 
     closeStudent: () => void;
 }
@@ -49,7 +51,14 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     loadStudents: (group_id: number) => {
         get_students(group_id, (students: Student[]) => {
             const { setStudents }: StudentsSlice = get();
-            setStudents(students)
+            setStudents(students);
+        })
+    },
+
+    loadLiders: (group_id: number) => {
+        get_liders(group_id, (liders: Lider[]) => {
+            const { setLiders }: LidersSlice = get();
+            setLiders(liders);
         })
     },
 

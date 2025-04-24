@@ -10,7 +10,7 @@ import { getCurrentYear, getCurrentMonth } from '../../../shared/utils';
 
 
 export const EventsView: React.FC = () => {
-    const { isOpen, onToggle } = useDisclosure()
+    const { isOpen, onToggle } = useDisclosure();
     const { year, month, selectDate } = useStore();
 
     function nextMonth() {
