@@ -20,7 +20,7 @@ export interface ProfileSlice {
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
   student_id: 0,
-  student: { first_name: "FirstName", last_name: "LastName", gender: "Girl", age: 10, group_id: 0 },
+  student: { first_name: "FirstName", last_name: "LastName", gender: "Girl", age: 10, group_id: 0},
   profile_achievements: [{ image: 'medal', name: 'Medal', level: RuleLevels[0], effect: effectNames[0]}],
 
   last_test: { speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },

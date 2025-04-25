@@ -9,7 +9,7 @@ export const menuStyles = StyleSheet.create({
 
 
 export const profileStyles = StyleSheet.create({
-  title: { color: '#444444', fontSize: 18, fontWeight: 'semibold' },
+  title: { color: '#FACA71', fontSize: 20, fontWeight: 'semibold' },
   background: { backgroundColor: '#ECF2C8', opacity: 0.7 },
 });
 

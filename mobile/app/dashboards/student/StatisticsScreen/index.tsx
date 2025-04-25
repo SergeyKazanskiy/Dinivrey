@@ -110,7 +110,14 @@ const useStatisticsStore = create<StatisticsState>((set, get) => ({
 const StatisticsScreen: React.FC = () => {
   const { year, month, graphData, metrics, nextMonth, prevMonth, nextYear, prevYear } =
     useStatisticsStore();
-
+/*
+      const { year, month, events } = useStore();
+      const { selectDate, selectEvent } = useStore();
+    
+      useEffect(() => {
+        selectDate(getCurrentYear(), getCurrentMonth());
+      }, [selectDate]);
+*/
   return (
     <ScrollView style={styles.container}>
 

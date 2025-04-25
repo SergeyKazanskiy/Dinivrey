@@ -1,18 +1,26 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import {GamesList} from './views/GamesList';
 import { screenStyles, widgetStyles } from '../../../shared/styles/appStyles';
+import { getCurrentYear, getCurrentMonth } from '../../../shared/utils';
+import { useStore } from '../store';
 
 
-export default function GamesScreen() {
+export default function EventsScreen() {
   const router = useRouter()
+  const { year, month, events } = useStore();
+  const { selectDate, selectEvent } = useStore();
+
+  useEffect(() => {
+    selectDate(getCurrentYear(), getCurrentMonth());
+  }, [selectDate]);
 
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
         <Image style={styles.image} source={require('../../../../assets/images/Calendar.png')}/>
-        <GamesList onClick={() => router.push('/dashboards/student/GamesScreen/GameScreen')}/>
+        <GamesList onClick={() => router.push('/dashboards/student/EventsScreen/GameScreen')}/>
       </View>
       <Text style={[screenStyles.summary, styles.summary]}>In most cases you win !</Text>
     </View>
