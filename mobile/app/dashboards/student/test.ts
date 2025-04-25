@@ -1,4 +1,4 @@
-import { Student, Event, Achievement} from "../student/ProfileScreen/model";
+import { Student, Event, Achievement} from "./model";
 import { EventType } from "../../shared/models/Event";
 
 export const student: Student = {

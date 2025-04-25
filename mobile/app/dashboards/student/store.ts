@@ -1,14 +1,19 @@
 import { create } from "zustand";
 import { LoadingSlice, createLoadingSlice } from "../../shared/httpClient";
-import { ProfileState, createProfileState } from "./ProfileScreen/state";
-import { LidersState, createLidersState } from "./LidersScreen/state";
+import { ProfileSlice, createProfileSlice } from "./ProfileScreen/state";
+import { LidersSlice, createLidersSlice } from "./LidersScreen/state";
+import { EventsSlice, createEventsSlice } from "./EventsScreen/state";
+import { StatisticsSlice, createStatisticsSlice } from "./StatisticsScreen/state";
 
-export type Store = LoadingSlice & ProfileState & LidersState;
+
+export type Store = LoadingSlice & ProfileSlice & LidersSlice & EventsSlice & StatisticsSlice;
 
 export const useStore = create<Store>((set, get) => ({
   ...createLoadingSlice(set),
-  ...createProfileState(set, get),
-  ...createLidersState(set, get),
+  ...createProfileSlice(set, get),
+  ...createLidersSlice(set, get),
+  ...createEventsSlice(set, get),
+  ...createStatisticsSlice(set, get),
 }));
 
 export const configureStore = () => {

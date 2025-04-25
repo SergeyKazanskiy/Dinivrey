@@ -1,14 +1,14 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { router } from 'expo-router';
 import { View, Text, ImageBackground, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { screenStyles, profileStyles } from '../styles/appStyles';
-import { ProfileCell } from './ProfileCell';
-import { useStore } from '../../dashboards/student/store';
+import { screenStyles, profileStyles } from '../../shared/styles/appStyles';
+import { ProfileCell } from '../../shared/components/ProfileCell';
+import { useStore } from './store';
 
 
-export function DrawerWrapper(props: any) {  
+export function DrawerHeader(props: any) {  
   const { top, bottom } = useSafeAreaInsets();
   const { student } = useStore();
 
@@ -22,8 +22,10 @@ export function DrawerWrapper(props: any) {
         <Text style={styles.header}>DINIVREY</Text>
         <View style={styles.section}>
           <Image style={styles.image} source={require('../../../assets/images/profile/student.png')}/>
-          <View style={[profileStyles.background, styles.profileText]}>
+          <View style={styles.profileText}>
               <Text style={profileStyles.title}>{student.first_name}</Text>
+              <Text style={profileStyles.title}>{student.last_name}</Text>
+              <Text style={profileStyles.title}>{student.gender + ', ' + student.age}</Text>
           </View>
         </View>
 
@@ -53,16 +55,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     paddingTop: 10,
-    paddingBottom: 10,
-    //justifyContent: "center",
-    //alignItems: "center",
-    //alignContent: "center"
+    paddingBottom: 30,
   },
   image: { 
-    height:  '100%',
+    height: 100,
+    borderRadius: 50,
     resizeMode: 'contain',
     aspectRatio: 1,
     marginRight: 16,
+    marginTop: 20,
   },
   profileCircle:{
     width:100,
@@ -74,12 +75,13 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
   profileText:{
-    marginTop: 16,
+    marginTop: 2,
     paddingTop: 8,
     paddingLeft: 12,
     width: 136,
-    height: 38,
-    borderRadius: 12
+    height: 100,
+    flex: 1,
+    justifyContent:'space-evenly'
   },
   text:{
     fontFamily:"PoppinsBold",

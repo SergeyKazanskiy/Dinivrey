@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, ScrollView, Modal, View, Text, Pressable, Button } from 'react-native';
 
 import { ProfileView } from './views/ProfileView';
@@ -12,6 +12,10 @@ import { useStore } from '../store';
 const ProfileScreen = () => {
   const { profile_achievements, achievements, isOpenAchievements } = useStore();
   const { open_achievements, close_achievements } = useStore();
+
+    //useEffect(() => {
+    //  loadStudent();
+    //}, [loadStudent]);
 
   return (
     <ScrollView style={styles.container}>

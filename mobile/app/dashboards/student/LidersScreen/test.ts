@@ -1,3 +1,4 @@
+/*
 import { Exercise, Group, Student, Achievement } from "./model";
 
 export const TestStudents: Student[] = [
@@ -95,3 +96,4 @@ export const TestStudents: Student[] = [
     }
 
 ];
+*/
