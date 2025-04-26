@@ -1,0 +1,16 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_session
+from crud import CRUD
+from roles.student import schemas
+import models
+
+router = APIRouter()
+
+
+# Achieves
+@router.put("/achieves/{id}", response_model=schemas.ResponseOk, tags=["Student"])
+async def update_achieve(id: int, data: schemas.AchieveUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Achieve, id, data, session)}
+
+
