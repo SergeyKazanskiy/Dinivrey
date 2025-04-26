@@ -20,8 +20,8 @@ export function get_last_game(id: number, callback: (game: Game) => void) {
     return httpWrapper(() => api.get(`students/${id}/games/last`), callback);
 };
 
-export function get_upcoming_events(id: number, callback: (events: Event[]) => void) {
-    return httpWrapper(() => api.get(`students/${id}/events/upcoming`), callback);
+export function get_upcoming_events(group_id: number, callback: (events: Event[]) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/events/upcoming`), callback);
 };
 
 
@@ -47,15 +47,16 @@ export function update_student_achieve(id: number, data: Partial<Achievement>, c
 
 // Events
 export function get_group_events(group_id: number, year: number, month: number, callback: (events: Event[]) => void) {
-    return httpWrapper(() => api.get(`groups/${group_id}/events?year=${year}&month=${month}`), callback);
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/events?year=${year}&month=${month}`), callback);
 };
 
 
 // Liders
-export function get_liders(group_id: number, callback: (liders: Lider[]) => void) {
-    return httpWrapper(() => api.get(`groups/${group_id}/liders/`), callback, 'Getting liders');
-};
-
 export function get_groups(camp_id: number, callback: (camps: Group[]) => void) {
     return httpWrapper(() => api.get(`camps/${camp_id}/groups`), callback, 'Getting groups');
 };
+
+export function get_liders(group_id: number, callback: (liders: Lider[]) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/liders/`), callback, 'Getting liders');
+};
+

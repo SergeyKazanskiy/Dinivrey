@@ -5,7 +5,7 @@ from models.base import Base
 from database import engine
 
 from roles.admin.routers import admin_select, admin_create, admin_update, admin_delete
-from roles.student.routers import student_select
+from roles.student.routers import student_select, student_update
 from roles.coach.routers import coach_select, coach_create, coach_update, coach_delete
 from roles.manager.routers import manager_select, manager_create, manager_update, manager_delete
 
@@ -36,6 +36,7 @@ app.include_router(admin_update, prefix="/admin_api")
 app.include_router(admin_delete, prefix="/admin_api")
 
 app.include_router(student_select, prefix="/student_api")
+app.include_router(student_update, prefix="/student_api")
 
 app.include_router(coach_select, prefix="/coach_api")
 app.include_router(coach_create, prefix="/coach_api")

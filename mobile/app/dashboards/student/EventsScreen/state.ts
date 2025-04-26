@@ -23,7 +23,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         set({ event_year, event_month });
 
         const { loadEvents, student }: EventsSlice & ProfileSlice = get();
-        loadEvents(student.group_id);
+        loadEvents(student.group_id, event_year, event_month);
     },
 
     loadEvents: (group_id: number, year: number, month: number) => {
