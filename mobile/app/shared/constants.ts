@@ -45,3 +45,5 @@ export const StudentsIcons = {
   Boy: "Student_boy.png",
   Girl: "Student_girl.png",
 };
+
+export const ImagesPath = 'http://localhost:8000/images'

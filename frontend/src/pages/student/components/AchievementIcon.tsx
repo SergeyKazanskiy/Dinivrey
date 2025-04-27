@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { EffectName, effects } from '../../../shared/constants'
 import { Box, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { ImagesPath } from '../../../shared/constants';
 
 
 interface Props {
@@ -13,8 +14,8 @@ interface Props {
 }
 
 export const AchievementIcon: React.FC<Props> = ({ image, label, level, effect: selectedEffect, onClick }) => {
-  const frameSrc = `/achieves/frames/${level}.png`;
-  const gifSrc = `/achieves/gifs/${image}.gif`;
+  const frameSrc = ImagesPath + `/achieves/frames/${level}.png`;
+  const gifSrc = ImagesPath + `/achieves/gifs/${image}.gif`;
   
   const [animationStyle, setAnimationStyle] = useState<React.CSSProperties>({});
   const effect = effects.find((e) => e.name === selectedEffect);

@@ -1,4 +1,5 @@
 import { Box, Image, Text } from "@chakra-ui/react";
+import { ImagesPath } from '../../../shared/constants';
 
 
 interface Props {
@@ -8,8 +9,8 @@ interface Props {
 }
 
 export const AchieveIcon: React.FC<Props> = ({ image, label, level }) => {
-  const frameSrc = `/achieves/frames/${level}.png`;
-  const pngSrc = `/achieves/images/${image}.png`;
+  const frameSrc = ImagesPath + `/achieves/frames/${level}.png`;
+  const pngSrc = ImagesPath + `/achieves/images/${image}.png`;
 
   return (
       <Box position="relative" display="inline-block" mx='6px'>
