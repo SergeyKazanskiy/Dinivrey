@@ -82,21 +82,27 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
     },
 
     attachProfileAchieve:() => {
-        const { studentAchieves, achieve_id }: AchievesSlice = get();
-        const achieve = studentAchieves.find(el => el.id === achieve_id)!;
-        const inProfile = !achieve.in_profile;
-        const data: Partial<Achievement> = { in_profile: inProfile};
+        const { studentAchieves, achieve_id, achievement_id }: AchievesSlice = get();
+        const achieveId = achieve_id > 0 ? achieve_id : achievement_id;
+        const achieve = studentAchieves.find(el => el.id === achieveId);
 
-        update_student_achieve(achieve_id, data, (res => {
-            if (res.isOk) {
-                achieve.in_profile = inProfile;
-                set((state: AchievesSlice) => ({
-                    studentAchieves: state.studentAchieves.map(el => el.id !== achieve_id ? el : achieve ),
-                    achieve_id: 0,
-                    updateButtonTitle: 'Update'
-                }));
-            }
-        }))
+        if (achieve) {
+            const inProfile = !achieve.in_profile;
+            const data: Partial<Achievement> = { in_profile: inProfile};
+
+            update_student_achieve(achieveId, data, (res => {
+                if (res.isOk) {
+                    achieve.in_profile = inProfile;
+                    set((state: AchievesSlice) => ({
+                        studentAchieves: state.studentAchieves.map(el => el.id !== achieve_id ? el : achieve ),
+                        achieve_id: 0,
+                        updateButtonTitle: 'Update'
+                    }));
+                }
+            }))
+        } else {
+            alert('Error!')
+        }
     },
 
     updateAchieves:() => {

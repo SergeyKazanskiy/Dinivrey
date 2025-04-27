@@ -17,12 +17,12 @@ export const createLidersSlice = (set: any, get: any): LidersSlice => ({
 
     setLiders: (liders: Lider[]) => set({
         test: 'speed',
-        liders: liders.sort((a, b) => a.speed - b.speed)
+        liders: liders.sort((a, b) => b.speed - a.speed)
     }),
 
     selectTest: (test: NumericFields<Lider>) => set((state: LidersSlice) => ({
         test,
-        liders: [...state.liders].sort((a, b) => a[test] - b[test])
+        liders: [...state.liders].sort((a, b) => b[test] - a[test])
     })),
 });
 
