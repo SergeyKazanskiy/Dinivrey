@@ -116,16 +116,7 @@ async def get_next_events(group_id: int, session: AsyncSession = Depends(get_ses
         # 4. Если за сегодня нет — берем события следующего ближайшего дня
         sorted_keys = sorted(events_by_date.keys())
         selected_events = events_by_date[sorted_keys[0]]
-
-    # 5. Формируем ответ
-    return [
-        {
-            "id": event.id,
-            "timestamp": event.timestamp,
-            "name": event.name  # если у модели Event есть поле name
-        }
-        for event in selected_events
-    ]
+    return selected_events
 
 @router.get("/camps/groups/{group_id}/events/latest", tags=["Student"])
 async def get_latest_event(group_id: int, session: AsyncSession = Depends(get_session)):

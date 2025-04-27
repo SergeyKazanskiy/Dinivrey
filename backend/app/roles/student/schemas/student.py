@@ -66,7 +66,7 @@ class AchieveResponse(BaseModel):
     id: int
     image: str
     name: str
-    in_profile: str
+    in_profile: bool
     category: str
     level: str
         
