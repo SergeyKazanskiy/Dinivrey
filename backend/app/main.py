@@ -8,6 +8,7 @@ from roles.admin.routers import admin_select, admin_create, admin_update, admin_
 from roles.student.routers import student_select, student_update
 from roles.coach.routers import coach_select, coach_create, coach_update, coach_delete
 from roles.manager.routers import manager_select, manager_create, manager_update, manager_delete
+from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI()
@@ -19,6 +20,8 @@ app.add_middleware(
     allow_methods=["*"],  # Разрешить все методы (GET, POST, OPTIONS и т. д.)
     allow_headers=["*"],  # Разрешить все заголовки
 )
+app.mount("/images", StaticFiles(directory="images"), name="images")
+
 
 router = APIRouter()
 

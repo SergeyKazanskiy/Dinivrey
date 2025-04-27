@@ -36,7 +36,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 effect = row[3]
             ) for row in rows]
 
-@router.get("/student/{id}/tests/last", response_model=schemas.TestResponse or {}, tags=["Student"])
+@router.get("/students/{id}/tests/last", response_model=schemas.TestResponse or {}, tags=["Student"])
 async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
     stmt = (
         select(models.Test)
@@ -48,7 +48,7 @@ async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
     test = result.scalar_one_or_none()
     return test or {}
 
-@router.get("/student/{id}/games/last", response_model=schemas.GameResponse or {}, tags=["Student"])
+@router.get("/students/{id}/games/last", response_model=schemas.GameResponse or {}, tags=["Student"])
 async def get_last_game(id: int, session: AsyncSession = Depends(get_session)):
     stmt = (
         select(models.Game)
