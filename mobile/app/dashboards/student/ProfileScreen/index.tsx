@@ -1,43 +1,48 @@
-import { useEffect } from 'react';
-import { StyleSheet, ScrollView, Modal, View, Text, Pressable, Button } from 'react-native';
-
-import { ProfileView } from './views/ProfileView';
-import { AddressView } from './views/AddressView';
+import { useEffect, useLayoutEffect } from 'react';
+import { StyleSheet, ScrollView, Modal, View, Text, Pressable, Alert } from 'react-native';
+import { useNavigation, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { StatisticView } from './views/StatisticView';
 import { AchievesView } from './views/AchievesView';
 import { EventsView } from './views/EventsView';
-import BottomSheet from '../../../shared/components/BottomSheet';
 import { useStore } from '../store';
 
 
 const ProfileScreen = () => {
-  const { profile_achievements, achievements, isOpenAchievements } = useStore();
-  const { open_achievements, close_achievements } = useStore();
+  //const { profile_achievements, last_test, last_game, upcoming_events } = useStore();
+  const { loadStudent, detachAchievement, clickAchievement } = useStore();
 
-    //useEffect(() => {
-    //  loadStudent();
-    //}, [loadStudent]);
+  const navigation = useNavigation();
+  const router = useRouter();
 
+  useEffect(() => {
+    loadStudent(2);
+  }, [loadStudent]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable style={{ marginRight: 15 }}
+          onPress={detachAchievement} >
+          <Ionicons name='trash-outline' size={24} color="black" />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
+  
+  const openAchievesScreen = () => {
+    router.push("/dashboards/student/AchievesScreen");
+  };
+  
   return (
     <ScrollView style={styles.container}>
-      {isOpenAchievements && (
-          <View style={styles.centeredView}>
-            <Text style={styles.modalText}>This is a Modal</Text>
-            <Button title="Close Modal" onPress={close_achievements} />
-          </View>)}
-      <ProfileView/>
-      <AddressView/>
-      <AchievesView onClick={open_achievements}/>
+      <AchievesView onClick={clickAchievement} onAddClick={openAchievesScreen}/>
+      <StatisticView/>
       <EventsView/>
     </ScrollView>
   );
 };
-/*<BottomSheet/>
-      {isOpenAchievements && (
-          <View style={styles.centeredView}>
-            <Text style={styles.modalText}>This is a Modal</Text>
-            <Button title="Close Modal" onPress={close_achievements} />
-          </View>)}
-*/
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

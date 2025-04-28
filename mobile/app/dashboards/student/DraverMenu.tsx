@@ -36,7 +36,7 @@ export function DraverMenu() {
       }}>
 
         {/* Menu */}
-        <Drawer.Screen
+      <Drawer.Screen
         name="ProfileScreen/index"
         options={{
           headerTitle: 'Main',

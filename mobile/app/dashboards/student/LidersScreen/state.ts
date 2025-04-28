@@ -7,11 +7,12 @@ import { NumericFields } from '../../../shared/utils';
 export interface LidersSlice {
     groups: Group[];
     liders: Lider[];
-    test: NumericFields<Lider>;
-    tests: NumericFields<Lider>[];
+    lider_test: NumericFields<Lider>;
+    lider_tests: NumericFields<Lider>[];
 
     loadGroups: (camp_id: number) => void;
     loadLiders: (group_id: number) => void;
+
     selectTest: (test: NumericFields<Lider>) => void;
 }
 
@@ -21,8 +22,8 @@ export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
         speed: 5.1, stamina: 5.1, climbing: 5.1, evasion: 5.1, hiding: 5.1,
         achieves: [{image: 'medal', level: 'common'}, {image: 'medal', level: 'common'}]
     }],
-    test: 'speed',       
-    tests: ['speed', 'stamina', 'climbing', 'evasion', 'hiding'],
+    lider_test: 'speed',       
+    lider_tests: ['speed', 'stamina', 'climbing', 'evasion', 'hiding'],
 
     loadGroups: (camp_id: number) => {
         get_groups(camp_id, (groups: Group[]) => {
@@ -32,12 +33,12 @@ export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
 
     loadLiders: (group_id: number) => {
         get_liders(group_id, (liders: Lider[]) => {
-            set({ test: 'speed', liders: liders.sort((a, b) => a.speed - b.speed) });
+            set({ lider_test: 'speed', liders: liders.sort((a, b) => a.speed - b.speed) });
         })
     },
 
     selectTest: (test: NumericFields<Lider>) => set((state: LidersSlice) => ({
-        test,
+        lider_test: test,
         liders: [...state.liders].sort((a, b) => a[test] - b[test])
     })),
 });

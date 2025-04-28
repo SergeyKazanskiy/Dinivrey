@@ -1,24 +1,25 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { cellStyles, widgetStyles } from '../../../../shared/styles/appStyles';
-
+import { formatDateTime } from '../../../../shared/utils';
 import { useStore } from '../../store';
 import { EventCell } from '../../../../shared/components/EventCell';
 
 
 export type Props = {
-  onClick: () => void;
+  onClick: (event_id: number) => void;
 };
 
-export const GamesList: React.FC<Props> = ({onClick}) => {
+export const EventsView: React.FC<Props> = ({onClick}) => {
   const { events } = useStore();
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container}>
         <FlatList data={events} renderItem={({ item }) =>
-          <TouchableOpacity onPress={onClick}>
-            <EventCell title={item.title} date={item.date} event={item.type} address={item.desc}/> 
+          <TouchableOpacity onPress={() => onClick(item.id)}>
+            <EventCell title={item.type} event={item.type} desc={item.desc}
+            date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}/> 
           </TouchableOpacity>        
             } style={styles.list} />
       </ScrollView>

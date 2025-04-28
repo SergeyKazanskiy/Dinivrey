@@ -6,11 +6,11 @@ import { EventType } from '../models/Event';
 export type Props = {
   title: string;
   date: string;
-  event: EventType;
-  address: string;
+  event: string;
+  desc: string;
 };
   
-export const EventCell: React.FC<Props> = ({title, date, event, address}) => {
+export const EventCell: React.FC<Props> = ({title, date, event, desc}) => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -19,7 +19,7 @@ export const EventCell: React.FC<Props> = ({title, date, event, address}) => {
         </View>
         <View style={styles.desc}>
             <Text style={[cellStyles.type, {marginRight: 10}]}>{event}</Text>
-            <Text style={cellStyles.description}>{address}</Text>
+            <Text style={cellStyles.description}>{desc}</Text>
         </View>
     </View>
   );

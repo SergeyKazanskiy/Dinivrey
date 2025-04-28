@@ -1,18 +1,41 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { SearchView } from './views/SearchView';
-import { GroupField } from './views/GroupField';
+import { useEffect, useLayoutEffect } from 'react';
+import { useNavigation, useRouter } from 'expo-router';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { SportsView } from './views/SportsView';
-import { LidersList } from './views/LidersList';
+import { LidersView } from './views/LidersView';
+import { useStore } from '../store';
 
 
-const LidersScreen = () => {
+export const LidersScreen = () => {
+  const { loadLiders } = useStore();
+
+  const navigation = useNavigation();
+  const router = useRouter();
+
+  useEffect(() => {
+    loadLiders(3);
+  }, [loadLiders]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable style={{ marginRight: 15 }}
+          onPress={openGroupsScreen} >
+          <Ionicons name='folder-open' size={24} color="black" />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
+  
+  const openGroupsScreen = () => {
+    router.push("/dashboards/student/LidersScreen/GroupsScreen");
+  };
+
   return (
     <View style={styles.container}>
-      <SearchView/>
-      <GroupField/>
       <SportsView/>
-      <LidersList/>
+      <LidersView/>
     </View>
   );
 };
@@ -25,5 +48,3 @@ const styles = StyleSheet.create({
   },
   
 });
-
-export default LidersScreen;

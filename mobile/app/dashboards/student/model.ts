@@ -1,11 +1,15 @@
 import { EventType } from "../../shared/models/Event";
 
 export interface Student {
+    id: number;
+    photo: string;
     first_name: string;
     last_name: string;
     gender: string;
     age: number;
+    active: boolean;
     group_id: number;
+    group_extra_id?: number;
   }
 
   export interface Event {
@@ -16,6 +20,7 @@ export interface Student {
   }
 
   export interface Achievement {
+    id: number;
     image: string;
     name: string;
     level: string;

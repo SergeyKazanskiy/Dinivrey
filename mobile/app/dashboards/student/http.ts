@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from "../../api/student_api";
-import { Student, Achievement, Test, Game, Event, Lider, Group } from './model';
+import { Student, Achievement, Achieve, Test, Game, Event, Lider, Group } from './model';
 
 
 // Profile
@@ -36,11 +36,11 @@ export function get_student_games(student_id: number, year: number, month: numbe
 
 
 // Achievements
-export function get_student_achieves(student_id: number, callback: (achieves: Achievement[]) => void) {
+export function get_student_achieves(student_id: number, callback: (achieves: Achieve[]) => void) {
     return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback); //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
 };
 
-export function update_student_achieve(id: number, data: Partial<Achievement>, callback: (res: {isOk: boolean}) => void) {
+export function update_student_achieve(id: number, data: { "in_profile": boolean }, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.put(`students/achievements/${id}`, data), callback);
 };
 

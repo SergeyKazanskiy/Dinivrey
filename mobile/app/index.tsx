@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { HttpStatus } from './shared/http/HttpStatus';
+
 
 export default function Index() {
   const router = useRouter();
@@ -29,6 +31,8 @@ export default function Index() {
       >
         <Text style={styles.buttonText}>Manager</Text>
       </TouchableOpacity>
+
+      <HttpStatus/>
     </View>
   );
 }

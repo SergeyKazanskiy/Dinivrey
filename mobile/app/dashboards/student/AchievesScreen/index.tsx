@@ -1,22 +1,44 @@
-import React from 'react';
-import { StyleSheet, ScrollView, Text } from 'react-native';
+import { useEffect, useLayoutEffect } from 'react';
+import { StyleSheet, ScrollView, Text, Pressable } from 'react-native';
+import { useNavigation, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { widgetStyles, screenStyles } from '../../../shared/styles/appStyles';
-import { AchievesView } from './views/AchievesView';
-import { AchievesView2 } from './views/AchievesView2';
-import { AchievesView3 } from './views/AchievesView3';
+import { AchievesPanel } from './views/AchievesPanel';
+import { useStore } from '../store';
 
 
 export const AchievesScreen = () => {
+  const { achieves } = useStore();
+  const { loadAchieves, selectAchieve, attachAchievement } = useStore();
+  
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    loadAchieves();
+  }, [loadAchieves]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable style={{ marginRight: 15 }}
+          onPress={attachAchievement} >
+          <Ionicons name='add-circle-outline' size={24} color="black" />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={[widgetStyles.title, styles.title]}>Individual achievements</Text>
-      <AchievesView/>
+      <Text style={[widgetStyles.title, styles.title]}>Test achievements</Text>
+      <AchievesPanel achieves={achieves} category='test' onClick={selectAchieve}/>
 
-      <Text style={[widgetStyles.title, styles.title]}>Team Achievements</Text>
-      <AchievesView2/>
+      <Text style={[widgetStyles.title, styles.title]}>Game achievements</Text>
+      <AchievesPanel achieves={achieves} category='game' onClick={selectAchieve}/>
 
       <Text style={[widgetStyles.title, styles.title]}>Additional rewards</Text>
-      <AchievesView3/>
+      <AchievesPanel achieves={achieves} category='training' onClick={selectAchieve}/>
+
       <Text style={[screenStyles.summary, styles.summary]}>You still have a little time left !</Text>
     </ScrollView>
   );

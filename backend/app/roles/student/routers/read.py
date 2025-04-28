@@ -21,7 +21,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
     A = models.Achieve
     S = models.Achievement
     stmt = (
-        select(A.image, A.name, S.level, A.effect)
+        select(S.id, A.image, A.name, S.level, A.effect)
         .join(A, S.achieve_id == A.id )
         .where( S.student_id == id, S.in_profile == True )
         .order_by(asc(A.name))
@@ -30,10 +30,11 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
     rows = result.all()
 
     return [ schemas.AchievementResponse(
-                image = row[0],
-                name = row[1],
-                level = row[2],
-                effect = row[3]
+                id = row[0],
+                image = row[1],
+                name = row[2],
+                level = row[3],
+                effect = row[4]
             ) for row in rows]
 
 @router.get("/students/{id}/tests/last", response_model=schemas.TestResponse or {}, tags=["Student"])
