@@ -1,50 +1,52 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useStore } from '../../store';
-
 import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
-import { ProfileCell } from '../../../../shared/components/ProfileCell';
+import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export type Props = {
-    onClick: () => void;
+    onClick: (id: number) => void;
+    onAddClick: () => void;
 };
 
-export const AchievesView: React.FC<Props> = ({onClick}) => {
-    const iconsPath: String = '../../../../shared/icons/';
+export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
     const { profile_achievements } = useStore();
-
-    function getImage(imageName: string) {
-        switch (imageName) {
-          case 'Lider.png':
-            return require('../../../../../assets/images/icons/Lider.png');
-          case 'Score.png':
-            return require('../../../../../assets/images/icons/Score.png');
-            case 'Skill.png':
-            return require('../../../../../assets/images/icons/Skill.png');
-            case 'Tagger.png':
-                return require('../../../../../assets/images/icons/Tagger.png');
-          default:
-            return require('../../../../../assets/images/icons/Tagger.png'); // Изображение по умолчанию
-        }
-      }
 
     return (
         <View style={styles.container}>
-            <Text style={[screenStyles.summary, styles.summary]}>My Top 3</Text>
-            <View style={[ styles.section]}>
-                <FlatList data={profile_achievements} horizontal
-                    keyExtractor={(item) => item.imageName}
-                    renderItem={({ item }) =>
-                        <TouchableOpacity onPress={onClick}>
-                            <Image style={styles.image} source={getImage(item.imageName)}/>
+            <Text style={[screenStyles.title, styles.title]}>My Top 3</Text>
+            <FlatList data={profile_achievements} 
+                horizontal
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) =>
+                    <TouchableOpacity onPress={() => onClick(item.id)}>
+                        <AchieveIcon size={80}
+                            image={item.image}
+                            label={item.name}
+                            level={item.level}
+                            effect={item.effect}
+                            isGif={true}
+                        />
+                    </TouchableOpacity>
+                }
+                ListFooterComponent={
+                    profile_achievements.length < 3 ? (
+                        <TouchableOpacity style={[styles.iconContainer, styles.addButton]}
+                            onPress={onAddClick}
+                        >
+                            <Ionicons name="add" size={30} color="black" />
                         </TouchableOpacity>
-                }/>
-            </View>
+                    ) : null
+                    }
+                contentContainerStyle={styles.section}
+            />
         </View>
     );
 };
 
+//<View style={[ styles.section]}>
 const styles = StyleSheet.create({
     container: {
     },
@@ -63,9 +65,21 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 40
     },
-    summary: {
-        textAlign: 'center',
+    title: {
+        textAlign: 'left',
         paddingTop: 26,
         paddingBottom: 10
-    }
+    },
+    iconContainer: {
+        marginRight: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 50,
+        padding: 10,
+    },
 });

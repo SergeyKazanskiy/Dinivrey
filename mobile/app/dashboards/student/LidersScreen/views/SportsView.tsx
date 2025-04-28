@@ -1,34 +1,32 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import { widgetStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
+import { ImagesPath } from '../../../../shared/constants';
 
 
 export const SportsView = () => {
-    const { open_achievements } = useStore();
+    const { lider_tests } = useStore();
+    const { selectTest } = useStore();
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={open_achievements}>
-                <Image style={styles.image} source={require('../../../../../assets/images/exercise/Endurance.png')}/>
-                <Text style={widgetStyles.sport}>Endurance</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={open_achievements}>
-                <Image style={styles.image} source={require('../../../../../assets/images/exercise/Climbing.png')}/>
-                <Text style={widgetStyles.sport}>Climbing</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={open_achievements}>
-                <Image style={styles.image} source={require('../../../../../assets/images/exercise/Speed.png')}/>
-                <Text style={widgetStyles.sport}>Speed</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={open_achievements}>
-                <Image style={styles.image} source={require('../../../../../assets/images/exercise/Hiding.png')}/>
-                <Text style={widgetStyles.sport}>Hiding</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={open_achievements}>
-                <Image style={styles.image} source={require('../../../../../assets/images/exercise/Evading.png')}/>
-                <Text style={widgetStyles.sport}>Evading</Text>
-            </TouchableOpacity>
+            <FlatList 
+                data={lider_tests} 
+                horizontal
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => {
+                    const capitalizedItem = item.charAt(0).toUpperCase() + item.slice(1);
+                    return (
+                        <TouchableOpacity onPress={() => selectTest(item)}>
+                            <Image style={styles.image} 
+                                source={{ uri: `${ImagesPath}/icons/tests/${capitalizedItem}.png` }} 
+                            />
+                            <Text style={widgetStyles.sport}>{item}</Text>
+                        </TouchableOpacity>
+                    );
+                }}
+            />
         </View>
     );
 };

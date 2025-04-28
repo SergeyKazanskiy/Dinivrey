@@ -9,8 +9,9 @@ class StudentBase(BaseModel):
     last_name: str = Field(..., min_length=2, max_length=50)
     gender: str
     age: int = Field(None, ge=3, le=99)
+    active: bool
     group_id: int
-    
+    group_extra_id: int
     model_config = {"from_attributes": True}  # Нужно для корректной работы model_validate
 
 
@@ -54,6 +55,7 @@ class GameResponse(GameBase):
 
 # Achievement   
 class AchievementResponse(BaseModel):
+    id: int;
     image: str
     name: str
     level: str

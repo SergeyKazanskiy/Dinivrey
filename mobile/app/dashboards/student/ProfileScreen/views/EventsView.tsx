@@ -1,19 +1,21 @@
 import React from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { cellStyles, widgetStyles } from '../../../../shared/styles/appStyles';
-
 import { useStore } from '../../store';
 import { EventCell } from '../../../../shared/components/EventCell';
+import { formatDateTime } from '../../../../shared/utils';
 
 
 export const EventsView = () => {
-  const { events } = useStore();
+  const { upcoming_events } = useStore();
 
   return (
     <View style={styles.container}>
       <Text style={[widgetStyles.title, styles.summary]}>Upcoming class</Text>
-      <FlatList data={events} renderItem={({ item }) =>
-        <EventCell title={item.title} date={item.date} event={item.type} address={item.desc}/>           
+      <FlatList data={upcoming_events} keyExtractor={(index) => '№' + index}
+        renderItem={({ item }) => 
+          <EventCell title={item.type} event={item.type} desc={item.desc}
+            date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}/>           
         } style={styles.list} />
     </View>
   );
