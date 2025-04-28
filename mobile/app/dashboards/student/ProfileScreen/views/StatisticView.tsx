@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text} from 'react-native';
-import { widgetStyles } from '../../../../shared/styles/appStyles';
+import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
 import { RadarChart } from '../../../../shared/components/RadarChart';
 
@@ -18,12 +18,11 @@ export const StatisticView = () => {
   
   return (
     <View style={styles.container}>
-      <Text style={[widgetStyles.title]}>Statistics</Text>
       <RadarChart exam={exam} />
 
       <View style={styles.section}>
-        <Text style={[widgetStyles.title]}>Caughted: {last_game.caughted}</Text>
-        <Text style={[widgetStyles.title]}>Freeded: {last_game.freeded}</Text>
+        <Text style={[screenStyles.gold]}>Caughted: {last_game.caughted}</Text>
+        <Text style={[screenStyles.gold]}>Freeded: {last_game.freeded}</Text>
       </View>
     </View>
   );
@@ -31,8 +30,6 @@ export const StatisticView = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
-    backgroundColor: 'gray'
   },
   title: {
     
@@ -41,6 +38,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     flexDirection: 'row',
-    backgroundColor: 'gray'
   },
 });

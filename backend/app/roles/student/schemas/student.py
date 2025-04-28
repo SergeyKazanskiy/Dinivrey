@@ -11,7 +11,7 @@ class StudentBase(BaseModel):
     age: int = Field(None, ge=3, le=99)
     active: bool
     group_id: int
-    group_extra_id: int
+    group_extra_id: Optional[int]
     model_config = {"from_attributes": True}  # Нужно для корректной работы model_validate
 
 

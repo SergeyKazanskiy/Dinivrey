@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
-import { cellStyles, widgetStyles } from '../../../../shared/styles/appStyles';
 import { formatDateTime } from '../../../../shared/utils';
 import { useStore } from '../../store';
 import { EventCell } from '../../../../shared/components/EventCell';

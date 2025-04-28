@@ -57,7 +57,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, 
           />
           <Image source={isGif ? gifSrc : pngSrc}
             style={[ styles.iconImage,
-                { width: iconSize, height: iconSize, top: frameSize / 2, marginLeft: -(iconSize / 2) } ]}
+                { width: iconSize, height: iconSize, top: (frameSize - iconSize) / 2, marginLeft: -(iconSize / 2) } ]}
             resizeMode="cover"
           />
           <Text style={styles.label}>{label}</Text>
@@ -86,9 +86,9 @@ const styles = StyleSheet.create({
     borderRadius: 9999, //  for circle
   },
   label: {
-    fontSize: 12,
-    color: 'gray',
+    fontSize: 15,
+    color: '#F8E187',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 4,
   },
 });

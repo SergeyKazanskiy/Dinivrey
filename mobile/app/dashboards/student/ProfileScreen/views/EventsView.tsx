@@ -11,11 +11,13 @@ export const EventsView = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={[widgetStyles.title, styles.summary]}>Upcoming class</Text>
-      <FlatList data={upcoming_events} keyExtractor={(index) => '№' + index}
+      <FlatList data={upcoming_events}
+        keyExtractor={(index) => '№' + index}
         renderItem={({ item }) => 
+
           <EventCell title={item.type} event={item.type} desc={item.desc}
-            date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}/>           
+            date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}
+          />           
         } style={styles.list} />
     </View>
   );

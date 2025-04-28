@@ -27,7 +27,7 @@ export const EventCell: React.FC<Props> = ({title, date, event, desc}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#5F6B47',
+    backgroundColor: '#222222',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
