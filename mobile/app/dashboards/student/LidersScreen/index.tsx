@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect } from 'react';
 import { useNavigation, useRouter } from 'expo-router';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { ImageBackground, View, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SportsView } from './views/SportsView';
 import { LidersView } from './views/LidersView';
@@ -14,7 +14,7 @@ export const LidersScreen = () => {
   const router = useRouter();
 
   useEffect(() => {
-    loadLiders(3);
+    //loadLiders(3);
   }, [loadLiders]);
 
   useLayoutEffect(() => {
@@ -33,18 +33,25 @@ export const LidersScreen = () => {
   };
 
   return (
+    <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
+          style={styles.background} resizeMode='cover'
+        >
     <View style={styles.container}>
       <SportsView/>
       <LidersView/>
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#1A1C21',
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
     padding: 16,
-    height: '100%'
   },
-  
+  container: {
+    flex: 1,
+  },
 });

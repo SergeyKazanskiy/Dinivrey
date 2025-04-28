@@ -4,6 +4,8 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerHeader } from './DrawerHeader';
 import { menuStyles, screenStyles } from '../../shared/styles/appStyles';
+import { ImageBackground, StyleSheet } from 'react-native';
+import { Slot } from 'expo-router';
 
 
 export function DraverMenu() {
@@ -91,6 +93,11 @@ export function DraverMenu() {
   );
 }
 
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
+});
 /*
 diamond-outline
 */

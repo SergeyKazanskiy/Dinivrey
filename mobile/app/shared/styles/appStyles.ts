@@ -21,6 +21,7 @@ export const screenStyles = StyleSheet.create({
   selected: { backgroundColor: '#475339' },
   //background: { color: 'rgba(89, 198, 84, 0.8)' },
   background: { backgroundColor: '#161D23'},
+  gold: { color: '#F8E187', fontSize: 16, fontWeight: 'medium' },
 });
 
 export const widgetStyles = StyleSheet.create({

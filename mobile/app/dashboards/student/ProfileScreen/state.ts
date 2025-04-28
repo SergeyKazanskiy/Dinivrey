@@ -53,7 +53,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
           set({ last_game: game });
         });
 
-        get_upcoming_events(student_id, (events: Event[]) => {
+        get_upcoming_events(student.group_id, (events: Event[]) => {
           set({ upcoming_events: events });
         });
       }

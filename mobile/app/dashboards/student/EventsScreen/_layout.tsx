@@ -1,6 +1,5 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerActions } from '@react-navigation/native';
@@ -28,9 +27,7 @@ export default function StackLayout() {
           headerLeft: () => {
             return (
               <Ionicons name="menu" size={24} color='#fff'
-                onPress={() => {
-                  navigation.dispatch(DrawerActions.openDrawer());
-                }}
+                onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
               />
             );
           },

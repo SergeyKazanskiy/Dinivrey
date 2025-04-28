@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { ImageBackground, View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { create } from 'zustand';
 import { screenStyles } from '../../../shared/styles/appStyles';
@@ -119,6 +119,9 @@ const StatisticsScreen: React.FC = () => {
       }, [selectDate]);
 */
   return (
+        <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
+          style={styles.background} resizeMode='cover'
+        >
     <ScrollView style={styles.container}>
 
       <View style={styles.section}>
@@ -177,11 +180,17 @@ const StatisticsScreen: React.FC = () => {
       </View>
       <Text style={[screenStyles.summary, {alignSelf: 'center', marginTop: 26}]}>You are good!</Text>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
-// TypeScript styles
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    padding: 16,
+  },
   image: {
     marginBottom: -16,
     width: 320,
@@ -189,8 +198,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#1C1C1E',
-    padding: 16,
   },
   section: {
     flex: 1,

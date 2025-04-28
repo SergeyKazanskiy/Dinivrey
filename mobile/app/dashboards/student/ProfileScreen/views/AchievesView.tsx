@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, View, Alert } from 'react-native';
 import { useStore } from '../../store';
-import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
 import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -15,14 +14,55 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
     const { profile_achievements } = useStore();
 
     return (
-        <View style={styles.container}>
-            <Text style={[screenStyles.title, styles.title]}>My Top 3</Text>
-            <FlatList data={profile_achievements} 
-                horizontal
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) =>
-                    <TouchableOpacity onPress={() => onClick(item.id)}>
-                        <AchieveIcon size={80}
+        <FlatList
+            data={[
+                ...profile_achievements,
+                ...(profile_achievements.length < 3 ? [{ id: 'add' }] : [])
+            ]}
+            horizontal
+            keyExtractor={(item, index) => item.id.toString() + index}
+            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => {
+                const totalItems = profile_achievements.length < 3
+                    ? profile_achievements.length + 1
+                    : profile_achievements.length;
+
+                let iconSize = 80;
+                if (totalItems === 1) {
+                    iconSize = 120;
+                } else if (totalItems === 2) {
+                    iconSize = 100;
+                } else if (totalItems === 3) {
+                    iconSize = index === 1 ? 100 : 80;
+                }
+
+                const isAddButton = item.id === 'add';
+
+                if (isAddButton) {
+                    return (
+                        <TouchableOpacity onPress={onAddClick} activeOpacity={0.8}
+                            style={{ marginHorizontal: 8, width: iconSize, height: iconSize,
+                                alignItems: 'center', justifyContent: 'center', paddingBottom: 24 }}
+                        >
+                            <View style={{ width: iconSize / 2, height: iconSize / 2,
+                                borderRadius: iconSize / 4, backgroundColor: '#CCC',
+                                alignItems: 'center', justifyContent: 'center' }}
+                            >
+                                <Ionicons name="add" size={iconSize * 0.4} color="black" />
+                            </View>
+                        </TouchableOpacity>
+                    );
+                }
+
+                return (
+                    <TouchableOpacity
+                        onPress={() => onClick(item.id)}
+                        activeOpacity={0.8}
+                        style={{ marginHorizontal: 8 }}
+                    >
+                        <AchieveIcon
+                            size={iconSize}
                             image={item.image}
                             label={item.name}
                             level={item.level}
@@ -30,19 +70,9 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
                             isGif={true}
                         />
                     </TouchableOpacity>
-                }
-                ListFooterComponent={
-                    profile_achievements.length < 3 ? (
-                        <TouchableOpacity style={[styles.iconContainer, styles.addButton]}
-                            onPress={onAddClick}
-                        >
-                            <Ionicons name="add" size={30} color="black" />
-                        </TouchableOpacity>
-                    ) : null
-                    }
-                contentContainerStyle={styles.section}
-            />
-        </View>
+                );
+           }}
+        />
     );
 };
 
@@ -53,7 +83,10 @@ const styles = StyleSheet.create({
     section: {
         height: 100,
         borderRadius: 10,
-        paddingLeft: 12,
+        paddingHorizontal: 10,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
     icon: {
         backgroundColor: 'red',
@@ -64,11 +97,6 @@ const styles = StyleSheet.create({
         width: 80,
         margin: 10,
         borderRadius: 40
-    },
-    title: {
-        textAlign: 'left',
-        paddingTop: 26,
-        paddingBottom: 10
     },
     iconContainer: {
         marginRight: 15,
@@ -81,5 +109,32 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         borderRadius: 50,
         padding: 10,
+        margin: 18,
     },
 });
+
+/*
+
+<FlatList data={profile_achievements} horizontal
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) =>
+                <TouchableOpacity onPress={() => onClick(item.id)}>
+                    <AchieveIcon size={80}
+                        image={item.image} label={item.name}
+                        level={item.level} effect={item.effect}
+                        isGif={true}
+                    />
+                </TouchableOpacity>
+            }
+            ListFooterComponent={
+                profile_achievements.length < 3 ? (
+                    <TouchableOpacity style={[styles.iconContainer, styles.addButton]}
+                        onPress={onAddClick}
+                    >
+                        <Ionicons name="add" size={26} color="black" />
+                    </TouchableOpacity>
+                ) : null
+                }
+            contentContainerStyle={styles.section}
+        />
+*/

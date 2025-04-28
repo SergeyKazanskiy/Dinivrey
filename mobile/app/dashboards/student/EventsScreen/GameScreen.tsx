@@ -11,7 +11,7 @@ const GameScreen = () => {
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.container}>
-        
+        <Text>Reserve</Text>
       </View>
       <Text style={[screenStyles.summary, styles.summary]}>The game was cool!</Text>
     </ScrollView>

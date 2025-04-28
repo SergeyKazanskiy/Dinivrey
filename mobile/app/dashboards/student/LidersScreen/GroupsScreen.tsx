@@ -5,7 +5,7 @@ import { screenStyles, cellStyles } from '../../../shared/styles/appStyles';
 import { useStore } from '../store';
 
 
-export const GroupsScreen = () => {
+  const GroupsScreen = () => {
   const { groups } = useStore();
   const { loadGroups, loadLiders } = useStore();
   
@@ -57,3 +57,5 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
 });
+
+export default GroupsScreen;
