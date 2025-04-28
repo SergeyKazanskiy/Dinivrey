@@ -41,7 +41,7 @@ export function DraverMenu() {
       <Drawer.Screen
         name="ProfileScreen/index"
         options={{
-          headerTitle: 'Main',
+          headerTitle: 'Welcome!',
           title: 'Main', 
           drawerIcon: ({ size, color}) => (
             <Ionicons name='home-outline' size={size} color={color} />
@@ -79,7 +79,7 @@ export function DraverMenu() {
         }}
       />
       <Drawer.Screen
-        name="LidersScreen/index"
+        name="LidersScreen"
         options={{
           headerTitle: 'Liderboard',
           title: 'Liderboard', 

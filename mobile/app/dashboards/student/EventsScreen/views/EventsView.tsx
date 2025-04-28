@@ -13,16 +13,14 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
   const { events } = useStore();
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.container}>
-        <FlatList data={events} renderItem={({ item }) =>
-          <TouchableOpacity onPress={() => onClick(item.id)}>
-            <EventCell title={item.type} event={item.type} desc={item.desc}
-            date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}/> 
-          </TouchableOpacity>        
-            } style={styles.list} />
-      </ScrollView>
-    </View>
+    <ScrollView style={styles.container}>
+      <FlatList data={events} renderItem={({ item }) =>
+        <TouchableOpacity onPress={() => onClick(item.id)}>
+          <EventCell title={item.type} event={item.type} desc={item.desc}
+          date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}/> 
+        </TouchableOpacity>        
+          } style={styles.list} />
+    </ScrollView>
   );
 };
 

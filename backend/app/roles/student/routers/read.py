@@ -139,7 +139,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
     A = models.Achieve
     S = models.Achievement
     stmt = (
-        select(S.id, A.image, A.name, S.in_profile, A.category, S.level)
+        select(S.id, A.image, A.name, S.in_profile, A.category, S.level, A.effect)
         .join(A, S.achieve_id == A.id )
         .where( S.student_id == id )
         .order_by(asc(A.name))
@@ -153,7 +153,8 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 name = row[2],
                 in_profile = row[3],
                 category = row[4],
-                level = row[5]
+                level = row[5],
+                effect = row[6]
             ) for row in rows]
 
 

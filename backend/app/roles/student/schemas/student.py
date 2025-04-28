@@ -71,6 +71,7 @@ class AchieveResponse(BaseModel):
     in_profile: bool
     category: str
     level: str
+    effect: str
         
     class Config:
         from_attributes = True

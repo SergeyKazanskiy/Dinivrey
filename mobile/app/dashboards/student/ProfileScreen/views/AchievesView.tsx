@@ -13,6 +13,9 @@ export type Props = {
 export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
     const { profile_achievements } = useStore();
 
+    function handleClick() {
+        alert('ddddd')
+    }
     return (
         <FlatList
             data={[
@@ -41,7 +44,7 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
 
                 if (isAddButton) {
                     return (
-                        <TouchableOpacity onPress={onAddClick} activeOpacity={0.8}
+                        <TouchableOpacity onPress={onAddClick} 
                             style={{ marginHorizontal: 8, width: iconSize, height: iconSize,
                                 alignItems: 'center', justifyContent: 'center', paddingBottom: 24 }}
                         >
@@ -53,15 +56,9 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
                             </View>
                         </TouchableOpacity>
                     );
-                }
-
-                return (
-                    <TouchableOpacity
-                        onPress={() => onClick(item.id)}
-                        activeOpacity={0.8}
-                        style={{ marginHorizontal: 8 }}
-                    >
-                        <AchieveIcon
+                } else {
+                    return (
+                        <AchieveIcon onClick={() => onClick(item.id)}
                             size={iconSize}
                             image={item.image}
                             label={item.name}
@@ -69,8 +66,8 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
                             effect={item.effect}
                             isGif={true}
                         />
-                    </TouchableOpacity>
-                );
+                    );
+                }
            }}
         />
     );

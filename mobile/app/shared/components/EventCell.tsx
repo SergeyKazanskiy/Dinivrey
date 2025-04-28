@@ -27,10 +27,13 @@ export const EventCell: React.FC<Props> = ({title, date, event, desc}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#222222',
+   
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
+    backgroundColor: 'rgba(45, 75, 10, 0.3)',
+    borderWidth: 1,
+    borderColor: 'rgb(110, 151, 6)'
   },
   header: {
     flexDirection: 'row',
