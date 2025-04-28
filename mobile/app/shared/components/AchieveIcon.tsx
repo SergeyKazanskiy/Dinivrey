@@ -5,6 +5,7 @@ import { ImagesPath } from '../constants';
 
 
 interface AnimatedIconProps {
+  onClick: () => void;
   image: string;
   label: string;
   level: string;
@@ -22,7 +23,7 @@ const effectMapping: Record<string, Animatable.Animation> = {
 };
 
 
-export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, size = 80, effect: selectedEffect, isGif}) => {
+export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label, level, size = 80, effect: selectedEffect, isGif}) => {
   const frameSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/frames/${level}.png` };
   const pngSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/images/${image}.png` };
   const gifSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/gifs/${image}.gif` };
@@ -31,6 +32,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, 
   const [animation, setAnimation] = useState<Animatable.Animation | undefined>(undefined);
 
   const handlePress = () => {
+    onClick();
     if (selectedEffect) {
       const mappedAnimation = effectMapping[selectedEffect];
       setAnimation(mappedAnimation);
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: 10
   },
   innerContainer: {
     alignItems: 'center',

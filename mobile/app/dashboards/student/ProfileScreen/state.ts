@@ -10,6 +10,7 @@ export interface ProfileSlice {
   student_id: number;
   student: Student;
   achievement_id: number;
+  isAchievementAdding: boolean;
 
   profile_achievements: Achievement[];
   last_test: Test;
@@ -19,8 +20,11 @@ export interface ProfileSlice {
   loadStudent: (studentId: number) => void;
   loadAchievements: (studentId: number) => void;
 
-  clickAchievement: (achieve_id: number) => void;
+  clickAchievement: (achievement_id: number) => void;
   detachAchievement: () => void;
+
+  clickPlus: () => void;
+  finishAdding: () => void;
 }
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
@@ -30,6 +34,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   
   achievement_id: 0,
   profile_achievements: [{ id:0, image: 'medal', name: 'Medal', level: RuleLevels[0], effect: effectNames[0]}],
+  isAchievementAdding: false,
 
   last_test: { speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },
   last_game: {caughted: 0, freeded: 0 },
@@ -66,25 +71,35 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     });
   },
 
-  clickAchievement: (achieve_id: number) => set({ achieve_id }),
+  clickAchievement: (achievement_id: number) => {
+    set({ achievement_id })
+  },
 
   detachAchievement:() => {
     const { achievement_id, profile_achievements }: ProfileSlice = get();
     const achieve = profile_achievements.find(el => el.id === achievement_id);
-
+    
     if (achieve) {
       const data = { "in_profile": false };
 
       update_student_achieve(achievement_id, data, (res => {
-          if (res.isOk) {
-              set((state: ProfileSlice) => ({
-                profile_achievements: state.profile_achievements.filter(el => el.id !== achievement_id ),
-                achievement_id: 0,
-              }));
-          }
+        if (res.isOk) {
+          set((state: ProfileSlice) => ({
+            profile_achievements: state.profile_achievements.filter(el => el.id !== achievement_id ),
+            achievement_id: 0,
+          }));
+        }
       }))
     } else {
         alert('Error!')
     }
   },
+
+  clickPlus: () => {
+    set({ isAchievementAdding: true });
+  },
+
+  finishAdding: () => {
+    set({ isAchievementAdding: false });
+  }
 });

@@ -2,6 +2,7 @@ import { Store } from "../store";
 import { Student, Achieve, Test, Game, Event } from "../model";
 import { get_student_achieves, update_student_achieve } from '../http';
 import { ProfileSlice } from '../ProfileScreen/state';
+import { objectToJson } from '../../../shared/utils';
 
 
 export interface AshievesSlice {
@@ -10,7 +11,6 @@ export interface AshievesSlice {
 
   loadAchieves: () => void;
   selectAchieve: (achieve_id: number) => void;
-  attachAchievement:() => void;
 }
 
 export const createAshievesSlice = (set: any, get: () => Store): AshievesSlice => ({
@@ -18,33 +18,32 @@ export const createAshievesSlice = (set: any, get: () => Store): AshievesSlice =
   achieve_id: 0,
 
   loadAchieves: () => {
+
+
     const { student_id }: ProfileSlice = get();
     get_student_achieves(student_id, (achieves: Achieve[]) => {
+      //alert(objectToJson(achieves))
       set({ achieves });
     })
   },
 
   selectAchieve: (achieve_id: number) => {
-    set({ achieve_id });
-  },
+      const { isAchievementAdding }: ProfileSlice & AshievesSlice = get();
 
-  attachAchievement:() => {
-      const { achievement_id, profile_achievements }: ProfileSlice = get();
-      const achieve = profile_achievements.find(el => el.id === achievement_id);
+      if (isAchievementAdding) {
+        const { achieves }: ProfileSlice & AshievesSlice = get();
+        const achieve = achieves.find(el => el.id === achieve_id)!;
   
-      if (achieve) {
-        const data = { "in_profile": true };
-  
-        update_student_achieve(achievement_id, data, (res => {
-            if (res.isOk) {
-                set((state: ProfileSlice) => ({
-                  profile_achievements: state.profile_achievements.filter(el => el.id !== achievement_id ),
-                  achievement_id: 0,
-                }));
-            }
-        }))
-      } else {
-          alert('Error!')
+        if ( !achieve.in_profile) {
+          const data = { "in_profile": true };
+    
+          update_student_achieve(achieve_id, data, (res => {
+              if (res.isOk) {
+                const { finishAdding }: ProfileSlice = get();
+                finishAdding();
+              }
+          }))
+        } 
       }
     }
 });

@@ -1,14 +1,20 @@
 import { Test, Game } from "../model";
 import { get_student_tests, get_student_games } from '../http';
 import { ProfileSlice } from '../ProfileScreen/state';
+import { Metric } from '../model';
 
 export interface StatisticsSlice {
+    year: number;
+    month: number;
+
     tests: Test[];
     games: Game[];
 
-    year: number;
-    month: number;
     isTests: boolean;
+    metrics: Metric[];
+
+    togleStatictic: () => void;
+    selectMetric: (metric: string) => void;
 
     selectDate: (year: number, month: number) => void;
     loadTests: (student_id: number) => void;
@@ -18,6 +24,9 @@ export interface StatisticsSlice {
 export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({     
     tests: [],
     games: [],
+
+    metri: {},
+    currentGame: {},
 
     year: 2025,
     month: 3,

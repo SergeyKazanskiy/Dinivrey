@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { ImageBackground, View, Image, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { EventsView}  from './views/EventsView';
@@ -12,9 +13,11 @@ export default function EventsScreen() {
   const { year, month, events } = useStore();
   const { selectDate, selectEvent } = useStore();
 
-  useEffect(() => {
-    //selectDate(getCurrentYear(), getCurrentMonth());
-  }, [selectDate]);
+  useFocusEffect(
+    useCallback(() => {
+      //selectDate(getCurrentYear(), getCurrentMonth());
+    }, [])
+  );
 
   const openEventScreen = (event_id: number) => {
     selectEvent(event_id);

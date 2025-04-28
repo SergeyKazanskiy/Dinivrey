@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useCallback } from 'react';
+import { useLayoutEffect, useCallback, useState, useEffect, useRef } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { ImageBackground, StyleSheet, ScrollView, Text, Pressable, Alert } from 'react-native';
+import { ImageBackground, StyleSheet, ScrollView, Text, Pressable, Animated } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { StatisticView } from './views/StatisticView';
@@ -11,7 +11,8 @@ import { screenStyles } from '../../../shared/styles/appStyles';
 
 
 const ProfileScreen = () => {
-  const { loadStudent, detachAchievement, clickAchievement } = useStore();
+  const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
+  const [showHeaderButton, setShowHeaderButton] = useState(false);
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -22,18 +23,45 @@ const ProfileScreen = () => {
     }, [])
   );
 
+  const handleClickAchievement = (achievement_id: number) => {
+    setShowHeaderButton(true);
+    clickAchievement(achievement_id);
+
+    setTimeout(() => {
+      setShowHeaderButton(false);
+    }, 3000);
+  };
+
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (showHeaderButton) {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 5, // Параметры пружины
+        tension: 100,
+      }).start();
+    } else {
+      scaleAnim.setValue(0); // Сброс масштаба обратно
+    }
+  }, [showHeaderButton]);
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Pressable style={{ marginRight: 15 }}
-          onPress={detachAchievement} >
-          <Ionicons name='trash-outline' size={24} color="white" />
-        </Pressable>
-      ),
+      headerRight: () => 
+        showHeaderButton ? (
+          <Animated.View style={{ marginRight: 15, transform: [{ scale: scaleAnim }] }}>
+            <Pressable onPress={detachAchievement} >
+              <Ionicons name='trash-outline' size={24} color="red" />
+            </Pressable>
+          </Animated.View>
+        ): null,
     });
-  }, [navigation]);
+  }, [navigation, showHeaderButton]);
   
   const openAchievesScreen = () => {
+    clickPlus()
     router.push("/dashboards/student/AchievesScreen");
   };
   
@@ -42,11 +70,11 @@ const ProfileScreen = () => {
       style={styles.background} resizeMode='cover'
     >
       <ScrollView style={styles.container}>
-        <AchievesView onClick={clickAchievement} onAddClick={openAchievesScreen}/>
+        <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
       
         <StatisticView/>
 
-        <Text style={[screenStyles.calendar, {marginTop: 60, marginBottom: 4}]}>Upcoming class</Text>
+        <Text style={[screenStyles.calendar, {marginTop: 40, marginBottom: 4}]}>Upcoming class</Text>
         <EventsView/>
       </ScrollView>
     </ImageBackground>

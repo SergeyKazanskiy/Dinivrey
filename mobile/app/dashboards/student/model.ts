@@ -34,6 +34,7 @@ export interface Student {
     in_profile: boolean;
     category: string;
     level: string;
+    effect: string;
   }
 
   export type Test = {
@@ -74,3 +75,9 @@ export interface Group {
   name: string;
   description: string;
 }
+
+export interface Metric {
+  name: string;
+  score: number;
+  unit: string;
+};

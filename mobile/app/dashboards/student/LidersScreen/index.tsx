@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation, useRouter } from 'expo-router';
 import { ImageBackground, View, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,9 +14,11 @@ export const LidersScreen = () => {
   const navigation = useNavigation();
   const router = useRouter();
 
-  useEffect(() => {
-    //loadLiders(3);
-  }, [loadLiders]);
+  useFocusEffect(
+    useCallback(() => {
+      loadLiders(3);
+    }, [])
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({

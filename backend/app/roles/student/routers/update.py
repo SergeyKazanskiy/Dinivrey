@@ -9,8 +9,9 @@ router = APIRouter()
 
 
 # Achieves
-@router.put("/achieves/{id}", response_model=schemas.ResponseOk, tags=["Student"])
+@router.put("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Student"])
 async def update_achieve(id: int, data: schemas.AchieveUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Achieve, id, data, session)}
+    return {"isOk": await CRUD.update(models.Achievement, id, data, session)}
+
 
 
