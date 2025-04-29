@@ -8,7 +8,7 @@ export interface EventsSlice {
     event_year: number;
     event_month: number;
 
-    selectDate: (year: number, month: number) => void;
+    selectEventDate: (year: number, month: number) => void;
     loadEvents: (student_id: number, year: number, month: number) => void;
     selectEvent: (event_id: number) => void;
 }
@@ -19,7 +19,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     event_year: 2025,
     event_month: 3,
 
-    selectDate: (event_year: number, event_month: number) => {
+    selectEventDate: (event_year: number, event_month: number) => {
         set({ event_year, event_month });
 
         const { loadEvents, student }: EventsSlice & ProfileSlice = get();

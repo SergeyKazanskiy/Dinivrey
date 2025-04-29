@@ -37,7 +37,8 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 effect = row[4]
             ) for row in rows]
 
-@router.get("/students/{id}/tests/last", response_model=schemas.TestResponse or {}, tags=["Student"])
+
+@router.get("/students/{id}/tests/last", response_model=List[schemas.TestResponse], tags=["Student"])
 async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
     stmt = (
         select(models.Test)
@@ -46,10 +47,10 @@ async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
         .limit(1)
     )
     result = await session.execute(stmt)
-    test = result.scalar_one_or_none()
-    return test or {}
+    event = result.scalar_one_or_none()
+    return [event] if event else []
 
-@router.get("/students/{id}/games/last", response_model=schemas.GameResponse or {}, tags=["Student"])
+@router.get("/students/{id}/games/last", response_model=List[schemas.GameResponse], tags=["Student"])
 async def get_last_game(id: int, session: AsyncSession = Depends(get_session)):
     stmt = (
         select(models.Game)
@@ -58,8 +59,39 @@ async def get_last_game(id: int, session: AsyncSession = Depends(get_session)):
         .limit(1)
     )
     result = await session.execute(stmt)
-    test = result.scalar_one_or_none()
-    return test or {}
+    event = result.scalar_one_or_none()
+    return [event] if event else []
+
+
+@router.get("/students/{id}/tests/last/date", tags=["Student"])
+async def get_last_test_date(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Test)
+        .where(models.Test.student_id == id)
+        .order_by(desc(models.Test.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    isEvents = True if event else False
+    timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
+    date = datetime.fromtimestamp(timestamp / 1000)
+    return {"year": date.year, "month": date.month, "isEvents": isEvents}
+
+@router.get("/students/{id}/games/last/date", tags=["Student"])
+async def get_last_game_date(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Game)
+        .where(models.Game.student_id == id)
+        .order_by(desc(models.Game.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    isEvents = True if event else False
+    timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
+    date = datetime.fromtimestamp(timestamp / 1000)
+    return {"year": date.year, "month": date.month, "isEvents": isEvents}
 
 @router.get("/students/{id}/tests", response_model=List[schemas.TestResponse], tags=["Student"])
 async def get_student_tests(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):

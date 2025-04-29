@@ -81,6 +81,14 @@ export function getTimestamp(year: number, month: number): number {
   return new Date(year, month - 1, 1).getTime();
 }
 
+export function getYearAndMonth(timestamp: number): { year: number; month: number } {
+  const date = new Date(timestamp);
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1, // добавляем 1, т.к. месяцы начинаются с 0
+  };
+}
+
 export function getTodayTimestamp(): number {
   return new Date().getTime();
 }

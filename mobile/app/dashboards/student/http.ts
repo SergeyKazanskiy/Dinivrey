@@ -12,12 +12,21 @@ export function get_profile_achievements(id: number, callback: (achievements: Ac
     return httpWrapper(() => api.get(`students/${id}/achievements/profile`), callback);
 };
 
-export function get_last_test(id: number, callback: (test: Test) => void) {
-    return httpWrapper(() => api.get(`students/${id}/tests/last`), callback);
+
+export function get_last_test(student_id: number, callback: (tests: Test[]) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/tests/last`), callback);
 };
 
-export function get_last_game(id: number, callback: (game: Game) => void) {
-    return httpWrapper(() => api.get(`students/${id}/games/last`), callback);
+export function get_last_game(student_id: number, callback: (games: Game[]) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/games/last`), callback);
+};
+
+export function get_last_test_date(student_id: number, callback: (res: {year: number, month: number, isEvents: boolean}) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/tests/last/date`), callback);
+};
+
+export function get_last_game_date(student_id: number, callback: (res: {year: number, month: number, isEvents: boolean}) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/games/last/date`), callback);
 };
 
 export function get_upcoming_events(group_id: number, callback: (events: Event[]) => void) {

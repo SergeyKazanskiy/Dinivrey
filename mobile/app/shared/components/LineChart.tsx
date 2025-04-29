@@ -5,18 +5,19 @@ import { LineChart as RNLineChart } from 'react-native-chart-kit';
 interface Props {
   labels: string[];
   values: number[];
+  w: number;
 }
 
-export function LineChart({ labels, values }: Props) {
-  const screenWidth = Dimensions.get('window').width;
+export function LineChart({ labels, values, w }: Props) {
 
   const data = {
-    labels: labels,
+    labels: labels, // days
     datasets: [
       {
         data: values,
-        color: (opacity = 1) => `rgba(255, 99, 132, ${opacity})`, // цвет линии
-        strokeWidth: 2, // толщина линии
+        color: (opacity = 1) => `rgba(209, 255, 77, ${opacity})`, //line color
+        strokeWidth: 8,
+        //backgroundColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity * 0.5})`, 
       },
     ],
   };
@@ -24,24 +25,22 @@ export function LineChart({ labels, values }: Props) {
   return (
     <RNLineChart
       data={data}
-      width={260}  // можно поставить screenWidth или фиксированную ширину
+      width={w}
       height={200}
       chartConfig={{
-        backgroundGradientFrom: "#fff",
-        backgroundGradientTo: "#fff",
-        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // цвет подписей
-        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        decimalPlaces: 2,
-        propsForDots: {
-          r: "3",
-          strokeWidth: "1",
-          stroke: "#ff6384", // цвет вокруг точек
+        propsForLabels: {
+          fontSize: 14,
+          //fontWeight: 800
         },
+        backgroundGradientFrom: 'rgba(45, 75, 10, 0.1)',
+        backgroundGradientTo: 'rgba(45, 75, 10, 0.3)',
+        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // texts color
+        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        decimalPlaces: 2,
+        propsForDots: {r: "4", strokeWidth: "1", stroke: 'gold'}, // points color '#D1FF4D'
       }}
-      bezier // чтобы линия была сглаженная
-      style={{
-        borderRadius: 8,
-      }}
+      bezier // smoose line
+      style={{ borderRadius: 8,}}
     />
   );
 }

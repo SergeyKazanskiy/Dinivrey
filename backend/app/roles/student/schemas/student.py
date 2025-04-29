@@ -23,9 +23,7 @@ class StudentResponse(StudentBase):
 
 # Test
 class TestBase(BaseModel):
-    student_id: int
     timestamp: int
-    date: str
     speed: float
     stamina: float
     climbing: float
@@ -34,18 +32,16 @@ class TestBase(BaseModel):
 
 class TestResponse(TestBase):
     id: int
-
+    
     class Config:
         from_attributes = True
 
 # Game
 class GameBase(BaseModel):
-    student_id: int
     timestamp: int
-    date: str
     caughted: float
     freeded: float
-    description: str
+    #description: str
 
 class GameResponse(GameBase):
     id: int

@@ -13,9 +13,6 @@ export type Props = {
 export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
     const { profile_achievements } = useStore();
 
-    function handleClick() {
-        alert('ddddd')
-    }
     return (
         <FlatList
             data={[
@@ -109,29 +106,3 @@ const styles = StyleSheet.create({
         margin: 18,
     },
 });
-
-/*
-
-<FlatList data={profile_achievements} horizontal
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) =>
-                <TouchableOpacity onPress={() => onClick(item.id)}>
-                    <AchieveIcon size={80}
-                        image={item.image} label={item.name}
-                        level={item.level} effect={item.effect}
-                        isGif={true}
-                    />
-                </TouchableOpacity>
-            }
-            ListFooterComponent={
-                profile_achievements.length < 3 ? (
-                    <TouchableOpacity style={[styles.iconContainer, styles.addButton]}
-                        onPress={onAddClick}
-                    >
-                        <Ionicons name="add" size={26} color="black" />
-                    </TouchableOpacity>
-                ) : null
-                }
-            contentContainerStyle={styles.section}
-        />
-*/

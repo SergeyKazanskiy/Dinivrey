@@ -5,7 +5,11 @@ import { useStore } from '../../store';
 import { RadarChart } from '../../../../shared/components/RadarChart';
 
 
-export const StatisticView = () => {
+export type Props = {
+  onExam: (metric: string) => void;
+};
+
+export const StatisticView = ({ onExam }: Props) => {
   const { last_test, last_game } = useStore();
 
   const exam = {
@@ -18,7 +22,7 @@ export const StatisticView = () => {
   
   return (
     <View style={styles.container}>
-      <RadarChart exam={exam} />
+      <RadarChart exam={last_test} onExam={onExam} />
 
       <View style={styles.section}>
         <Text style={[screenStyles.gold]}>Caughted: {last_game.caughted}</Text>

@@ -12,6 +12,8 @@ import { screenStyles } from '../../../shared/styles/appStyles';
 
 const ProfileScreen = () => {
   const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
+  const { student_id, last_test, last_game, loadTest, loadGame } = useStore();
+  
   const [showHeaderButton, setShowHeaderButton] = useState(false);
 
   const navigation = useNavigation();
@@ -64,6 +66,12 @@ const ProfileScreen = () => {
     clickPlus()
     router.push("/dashboards/student/AchievesScreen");
   };
+
+  const openStatisticsScreen = (metric: string) => {
+    const metricName = metric.charAt(0).toUpperCase() + metric.slice(1);
+    loadTest(last_test.timestamp, metricName);
+    router.push("/dashboards/student/StatisticsScreen");
+  }
   
   return (
     <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
@@ -72,7 +80,7 @@ const ProfileScreen = () => {
       <ScrollView style={styles.container}>
         <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
       
-        <StatisticView/>
+        <StatisticView onExam={openStatisticsScreen}/>
 
         <Text style={[screenStyles.calendar, {marginTop: 40, marginBottom: 4}]}>Upcoming class</Text>
         <EventsView/>
@@ -92,55 +100,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  centeredView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  title: {
-    textAlign: 'left',
-    paddingBottom: 20
-},
 });
 
 export default ProfileScreen;

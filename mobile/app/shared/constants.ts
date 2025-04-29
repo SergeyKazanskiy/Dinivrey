@@ -32,12 +32,12 @@ export const RuleTests: string[] = ['Speed', 'Stamina', 'Climbing', 'Evasion', '
 export const RuleConditions: string[] = ['<', '>', '='];
 export const RulePersonal: string[] = ['first', 'last', 'max', 'min', 'agv'];
 
-export const MeasureUnits = {
+export const MeasureUnits: Record<string, string> = {
   Speed: "m/s",
   Stamina: "min",
   Climbing: "grade",
   Evasion: "ball",
-  Hiding: "sec"
+  Hiding: "sec",
 };
 
 export const Genders = ['Boy', 'Girl'];
@@ -47,3 +47,4 @@ export const StudentsIcons = {
 };
 
 export const ImagesPath = 'http://localhost:8000/images'
+
