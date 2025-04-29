@@ -18,8 +18,6 @@ export const createAshievesSlice = (set: any, get: () => Store): AshievesSlice =
   achieve_id: 0,
 
   loadAchieves: () => {
-
-
     const { student_id }: ProfileSlice = get();
     get_student_achieves(student_id, (achieves: Achieve[]) => {
       //alert(objectToJson(achieves))

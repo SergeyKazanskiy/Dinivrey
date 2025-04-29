@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import Svg, { Polygon, Line, Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 import { ImagesPath } from '../constants';
 
@@ -14,11 +14,12 @@ type Exam = {
 
 type RadarChartProps = {
   exam: Exam;
+  onExam: (metricName: string) => void;
 };
 
 const labels = ['climbing', 'stamina', 'speed', 'evasion', 'hiding'];
 
-export const RadarChart: React.FC<RadarChartProps> = ({ exam }) => {
+export const RadarChart: React.FC<RadarChartProps> = ({ exam, onExam }) => {
   const { width } = useWindowDimensions();
   const size = Math.min(width * 0.8, 300);
   const center = size / 2;
@@ -88,9 +89,14 @@ export const RadarChart: React.FC<RadarChartProps> = ({ exam }) => {
       </Svg>
 
       {outerPoints.map((p, i) => (
-        <Image key={i} source={{ uri: icons[i] }}
-          style={[ styles.icon, { left: p.x - 12, top: p.y - 22 }]}
-        />
+        <TouchableOpacity key={i}
+          style={[styles.iconWrapper, { left: p.x - 12, top: p.y - 22 }]}
+          onPress={() => onExam(labels[i])} >
+
+          <Image key={i} source={{ uri: icons[i] }}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
       ))}
 
       {values.map((v, i) => {
@@ -115,10 +121,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  iconWrapper: {
+    position: 'absolute', // ← важно!
+  },
   icon: {
     width: 50,
     height: 50,
-    position: 'absolute',
+    //position: 'absolute',
   },
   valueText: {
     position: 'absolute',

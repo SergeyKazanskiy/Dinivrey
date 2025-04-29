@@ -4,7 +4,7 @@ import { ImageBackground, View, Image, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { EventsView}  from './views/EventsView';
 import { screenStyles } from '../../../shared/styles/appStyles';
-import { getCurrentYear, getCurrentMonth } from '../../../shared/utils';
+import { CalendarView } from './views/CalendarView';
 import { useStore } from '../store';
 
 
@@ -29,7 +29,8 @@ export default function EventsScreen() {
       style={styles.background} resizeMode='cover'
     >
       <View style={styles.container}>
-        <Image style={styles.image} source={require('../../../../assets/images/Calendar.png')}/>
+        <CalendarView/>
+        
         <EventsView onClick={openEventScreen}/>
       </View>
       <Text style={[screenStyles.summary, styles.summary]}>In most cases you win !</Text>

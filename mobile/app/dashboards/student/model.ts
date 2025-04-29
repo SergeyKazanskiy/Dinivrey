@@ -38,6 +38,8 @@ export interface Student {
   }
 
   export type Test = {
+    id: number;
+    timestamp: number;
     speed: number;
     stamina: number;
     climbing: number;
@@ -46,9 +48,11 @@ export interface Student {
   };
   
   export type Game = {
+    id: number;
+    timestamp: number;
     caughted: number;
     freeded: number;
-    description?: string;
+    //description?: string;
   };
   
   export interface AchieveShort {
@@ -77,6 +81,7 @@ export interface Group {
 }
 
 export interface Metric {
+  timestamp: number;
   name: string;
   score: number;
   unit: string;

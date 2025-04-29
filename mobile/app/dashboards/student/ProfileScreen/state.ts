@@ -16,6 +16,7 @@ export interface ProfileSlice {
   last_test: Test;
   last_game: Game;
   upcoming_events: Event[];
+  
 
   loadStudent: (studentId: number) => void;
   loadAchievements: (studentId: number) => void;
@@ -36,8 +37,8 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   profile_achievements: [{ id:0, image: 'medal', name: 'Medal', level: RuleLevels[0], effect: effectNames[0]}],
   isAchievementAdding: false,
 
-  last_test: { speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },
-  last_game: {caughted: 0, freeded: 0 },
+  last_test: { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },
+  last_game: { id: 0, timestamp: 0, caughted: 0, freeded: 0 },
 
   upcoming_events: [{ id: 0, type: eventTypes[0], desc: "We going to running", timestamp: getTodayTimestamp() }],
 
@@ -50,12 +51,22 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
         const {loadAchievements}: ProfileSlice = get();
         loadAchievements(student_id);
 
-        get_last_test(student_id, (test: Test) => {
-          set({ last_test: test });
+        get_last_test(student_id, (tests: Test[]) => {
+          if (tests.length > 0) {
+            set({ last_test: tests[0]});
+          } else {
+            const emptyTest: Test = { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 };
+            set({ last_test: emptyTest});
+          }
         });
 
-        get_last_game(student_id, (game: Game) => {
-          set({ last_game: game });
+        get_last_game(student_id, (games: Game[]) => {
+          if (games.length > 0) {
+            set({ last_game: games[0]});
+          } else {
+            const emptyGame: Game = { id: 0, timestamp: 0, caughted: 0, freeded: 0 };
+            set({ last_game: emptyGame});
+          }
         });
 
         get_upcoming_events(student.group_id, (events: Event[]) => {

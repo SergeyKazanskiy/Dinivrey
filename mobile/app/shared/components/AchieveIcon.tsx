@@ -47,7 +47,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label
   return (
     <Animatable.View
       animation="zoomIn"
-      duration={3000}
+      duration={2000}
       easing="ease-in-out"
       style={styles.container}
     >
