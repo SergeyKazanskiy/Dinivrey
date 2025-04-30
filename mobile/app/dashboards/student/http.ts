@@ -55,6 +55,10 @@ export function update_student_achieve(id: number, data: { "in_profile": boolean
 
 
 // Events
+export function get_group_last_event(group_id: number, callback: (res: {year: number, month: number, isEvents: boolean}) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/events/latest`), callback);
+};
+
 export function get_group_events(group_id: number, year: number, month: number, callback: (events: Event[]) => void) {
     return httpWrapper(() => api.get(`camps/groups/${group_id}/events?year=${year}&month=${month}`), callback);
 };

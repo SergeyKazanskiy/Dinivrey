@@ -16,7 +16,7 @@ export interface StatisticsSlice {
     timestamps: number[]; 
     metrics: Metric[];
     
-    isFromMainScreen: boolean;
+    isMainMetric: boolean;
 
     loadStatistics: () => void;
     selectDate: (year: number, month: number) => void;
@@ -43,14 +43,15 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     timestamps: [], 
     metrics: [],
 
-    isFromMainScreen: false,
+    isMainMetric: false,
 
 
     loadStatistics: () => {
-        const { student_id, isFromMainScreen }: ProfileSlice & StatisticsSlice = get();
+        const { student_id, isMainMetric }: ProfileSlice & StatisticsSlice = get();
 
-        if (isFromMainScreen) {
+        if (isMainMetric) {
             const { isTests, year, month, metricName }: StatisticsSlice = get();
+           
             if (isTests) {
                 get().loadTests( student_id, year, month, metricName);
             } else {
@@ -111,11 +112,11 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
                 const metrics = convertTestsToMetrics(tests);
 
                 set((state: StatisticsSlice) => ({ 
-                    timestamp: state.isFromMainScreen ? state.timestamp : tests[0].timestamp,
+                    timestamp: state.isMainMetric ? state.timestamp : tests[0].timestamp,
                     timestamps: tests.map(el => el.timestamp),
                     metricName,
                     metrics,
-                    isFromMainScreen: false
+                    isMainMetric: false
                  }));
             } else {
                 set({ metricName: '', timestamps: [], metrics: [], timestamp: 0 });
@@ -131,11 +132,11 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
                 const metrics = convertGamesToMetrics(games);
        
                 set((state: StatisticsSlice) => ({ 
-                    timestamp: state.isFromMainScreen ? state.timestamp : games[0].timestamp,
+                    timestamp: state.isMainMetric ? state.timestamp : games[0].timestamp,
                     timestamps: games.map(el => el.timestamp),
                     metricName,
                     metrics,
-                    isFromMainScreen: false
+                    isMainMetric: false
                  }));
             } else {
                 set({ metricName: '', timestamps: [], metrics: [], timestamp: 0 });
@@ -145,12 +146,12 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
 
     loadTest: (timestamp: number, metricName: string) => {
         const { year, month } = getYearAndMonth(timestamp);
-        set({ isTest: true, year, month, metricName, timestamp, isFromMainScreen: true})
+        set({ isTests: true, year, month, metricName, timestamp, isMainMetric: true})
     },
 
     loadGame: (timestamp: number, metricName: string) => {
         const { year, month } = getYearAndMonth(timestamp);
-        set({ isTest: false, year, month, metricName, timestamp, isFromMainScreen: true })
+        set({ isTests: false, year, month, metricName, timestamp, isMainMetric: true })
     }
 });
 

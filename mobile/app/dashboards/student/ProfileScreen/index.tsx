@@ -12,7 +12,7 @@ import { screenStyles } from '../../../shared/styles/appStyles';
 
 const ProfileScreen = () => {
   const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
-  const { student_id, last_test, last_game, loadTest, loadGame } = useStore();
+  const { student_id, last_test, last_game, loadTest, loadGame, loadEvent } = useStore();
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
 
@@ -67,12 +67,22 @@ const ProfileScreen = () => {
     router.push("/dashboards/student/AchievesScreen");
   };
 
-  const openStatisticsScreen = (metric: string) => {
+  const openTestStatistic = (metric: string) => {
     const metricName = metric.charAt(0).toUpperCase() + metric.slice(1);
     loadTest(last_test.timestamp, metricName);
     router.push("/dashboards/student/StatisticsScreen");
   }
   
+  const openGameStatistic = (metric: string) => {
+    loadGame(last_game.timestamp, metric);
+    router.push("/dashboards/student/StatisticsScreen");
+  }
+
+  const openEventsScreen = (event_id: number, timestamp: number) => {
+    loadEvent(event_id, timestamp);
+    router.push("/dashboards/student/EventsScreen");
+  }
+
   return (
     <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
       style={styles.background} resizeMode='cover'
@@ -80,10 +90,10 @@ const ProfileScreen = () => {
       <ScrollView style={styles.container}>
         <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
       
-        <StatisticView onExam={openStatisticsScreen}/>
+        <StatisticView onExam={openTestStatistic} onGame={openGameStatistic}/>
 
         <Text style={[screenStyles.calendar, {marginTop: 40, marginBottom: 4}]}>Upcoming class</Text>
-        <EventsView/>
+        <EventsView onClick={openEventsScreen}/>
       </ScrollView>
     </ImageBackground>
   );

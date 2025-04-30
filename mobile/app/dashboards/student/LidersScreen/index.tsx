@@ -16,7 +16,7 @@ export const LidersScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      loadLiders(3);
+      loadLiders();
     }, [])
   );
 
@@ -39,7 +39,7 @@ export const LidersScreen = () => {
     <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
           style={styles.background} resizeMode='cover'
         >
-    <View style={styles.container}>
+      <View style={styles.container}>
       <SportsView/>
       <LidersView/>
     </View>

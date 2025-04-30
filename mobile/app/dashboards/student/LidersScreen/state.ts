@@ -2,6 +2,7 @@ import { Store } from "../store";
 import { Group, Lider } from "../model";
 import { get_groups, get_liders} from '../http';
 import { NumericFields } from '../../../shared/utils';
+import { ProfileSlice } from '../ProfileScreen/state';
 
 
 export interface LidersSlice {
@@ -11,7 +12,7 @@ export interface LidersSlice {
     lider_tests: NumericFields<Lider>[];
 
     loadGroups: (camp_id: number) => void;
-    loadLiders: (group_id: number) => void;
+    loadLiders: () => void;
 
     selectTest: (test: NumericFields<Lider>) => void;
 }
@@ -31,9 +32,14 @@ export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
         })
     },
 
-    loadLiders: (group_id: number) => {
-        get_liders(group_id, (liders: Lider[]) => {
-            set({ lider_test: 'speed', liders: liders.sort((a, b) => a.speed - b.speed) });
+    loadLiders: () => {
+        const { student }: ProfileSlice = get();
+
+        get_liders(student.group_id, (liders: Lider[]) => {
+            set({
+                lider_test: 'speed',
+                liders: liders.sort((a, b) => a.speed - b.speed)
+            });
         })
     },
 

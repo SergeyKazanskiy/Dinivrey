@@ -10,16 +10,25 @@ export type Props = {
 };
 
 export const EventsView: React.FC<Props> = ({onClick}) => {
-  const { events } = useStore();
+  const { events, event_id } = useStore();
 
   return (
     <ScrollView style={styles.container}>
-      <FlatList data={events} renderItem={({ item }) =>
-        <TouchableOpacity onPress={() => onClick(item.id)}>
-          <EventCell title={item.type} event={item.type} desc={item.desc}
-          date={ formatDateTime(item.timestamp).date + ', ' + formatDateTime(item.timestamp).time}/> 
+      <FlatList data={events}
+        renderItem={({ item }) =>
+        <TouchableOpacity
+          style={item.id === event_id ? styles.itemSelected :  styles.item}
+          onPress={() => onClick(item.id)}>
+
+          <EventCell
+            type={item.type}
+            date={ formatDateTime(item.timestamp).date}
+            time={formatDateTime(item.timestamp).time}
+            desc={item.desc}
+          /> 
         </TouchableOpacity>        
-          } style={styles.list} />
+        } style={styles.list}
+      />
     </ScrollView>
   );
 };
@@ -34,5 +43,12 @@ const styles = StyleSheet.create({
   },
   list: {    
     borderRadius: 10,
+  },
+  item: {    
+    marginBottom: 8,
+  },
+  itemSelected: {   
+    marginBottom: 8, 
+    backgroundColor: '#555'
   },
 });

@@ -8,6 +8,7 @@ import { screenStyles } from '../../../shared/styles/appStyles';
 
 
 const GameScreen = () => {
+  
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.container}>
