@@ -61,6 +61,7 @@ export interface Student {
 }
 
 export interface Lider {
+    id: number;
     photo: string;
     first_name: string;
     last_name: string;

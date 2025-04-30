@@ -6,7 +6,7 @@ import { ImagesPath } from '../../../../shared/constants';
 
 
 export const SportsView = () => {
-    const { lider_tests } = useStore();
+    const { lider_tests, lider_test } = useStore();
     const { selectTest } = useStore();
 
     return (
@@ -22,7 +22,7 @@ export const SportsView = () => {
                             <Image style={styles.image} 
                                 source={{ uri: `${ImagesPath}/icons/tests/${capitalizedItem}.png` }} 
                             />
-                            <Text style={widgetStyles.sport}>{item}</Text>
+                            <Text style={item === lider_test ? widgetStyles.sportSelected : widgetStyles.sport}>{item}</Text>
                         </TouchableOpacity>
                     );
                 }}

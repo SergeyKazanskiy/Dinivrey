@@ -26,7 +26,7 @@ export default function StackLayout() {
           headerShadowVisible: false,
           headerLeft: () => {
             return (
-              <Ionicons name="menu" size={24} color='#fff'
+              <Ionicons name="menu" size={24} color='#D1FF4D' style={{ marginLeft: 12 }}
                 onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
               />
             );

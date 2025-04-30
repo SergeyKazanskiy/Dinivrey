@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 10
+    marginHorizontal: 5
   },
   innerContainer: {
     alignItems: 'center',

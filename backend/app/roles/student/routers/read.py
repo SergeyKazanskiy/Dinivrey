@@ -213,9 +213,9 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
 async def get_camp_groups(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Group, session, filters={"camp_id": id}, order_by="name")
 
-@router.get("/camps/groups/{id}/liders", tags=["Student"])
-async def get_liders(id: int, session: AsyncSession = Depends(get_session)):
-    students = await CRUD.get(models.Student, session, filters={"group_id": id}, order_by="first_name")
+@router.get("/camps/groups/{group_id}/liders", tags=["Student"])
+async def get_liders(group_id: int, session: AsyncSession = Depends(get_session)):
+    students = await CRUD.get(models.Student, session, filters={"group_id": group_id}, order_by="first_name")
     liders = []
     for student in students:
         tests = await session.execute(select(models.Test).where(models.Test.student_id == student.id).order_by(desc(models.Test.timestamp)).limit(1))
@@ -228,13 +228,12 @@ async def get_liders(id: int, session: AsyncSession = Depends(get_session)):
                 'last_name': student.last_name,
                 'gender': student.gender,
                 'age': student.age,
-                'phone': student.phone or '',
                 'speed': test.speed,
                 'stamina': test.stamina,
                 'climbing': test.climbing,
                 'evasion': test.evasion,
                 'hiding': test.hiding,  
-                'achieves': await getAchievements(id, session)
+                'achieves': await getAchievements(student.id, session)
             }
             liders.append(lider)
     return liders
@@ -245,10 +244,7 @@ async def getAchievements(id: int, session: AsyncSession = Depends(get_session))
     stmt = (
         select(A.name, A.image, S.level)
         .join(A, S.achieve_id == A.id )
-        .where(
-            S.student_id == id,
-            S.in_profile == True
-        )
+        .where(S.student_id == id, S.in_profile == True)
         .order_by(asc(A.name))
     )
     result = await session.execute(stmt)

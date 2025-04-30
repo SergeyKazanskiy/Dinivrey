@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect } from 'react';
+import { useCallback, useLayoutEffect, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { ImageBackground, Pressable, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';

@@ -83,6 +83,10 @@ const ProfileScreen = () => {
     router.push("/dashboards/student/EventsScreen");
   }
 
+  const openLidersScreen = () => {
+    router.push("/dashboards/student/LidersScreen");
+  }
+
   return (
     <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
       style={styles.background} resizeMode='cover'
@@ -90,7 +94,11 @@ const ProfileScreen = () => {
       <ScrollView style={styles.container}>
         <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
       
-        <StatisticView onExam={openTestStatistic} onGame={openGameStatistic}/>
+        <StatisticView
+          onExam={openTestStatistic}
+          onGame={openGameStatistic}
+          onLiders={openLidersScreen}
+        />
 
         <Text style={[screenStyles.calendar, {marginTop: 40, marginBottom: 4}]}>Upcoming class</Text>
         <EventsView onClick={openEventsScreen}/>
