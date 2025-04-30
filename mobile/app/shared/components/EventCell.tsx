@@ -4,21 +4,21 @@ import { cellStyles } from '../styles/appStyles';
 import { EventType } from '../models/Event';
 
 export type Props = {
-  title: string;
+  type: string;
   date: string;
-  event: string;
+  time: string;
   desc: string;
 };
   
-export const EventCell: React.FC<Props> = ({title, date, event, desc}) => {
+export const EventCell: React.FC<Props> = ({type, date, time, desc}) => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-            <Text style={cellStyles.title}> ❤️   {title}</Text>
-            <Text style={cellStyles.date}>{date}</Text>
+            <Text style={cellStyles.title}> ❤️    {type}</Text>
+            <Text style={cellStyles.date}>{time}</Text>
         </View>
         <View style={styles.desc}>
-            <Text style={[cellStyles.type, {marginRight: 10}]}>{event}</Text>
+            <Text style={[cellStyles.type, {marginRight: 10}]}>{date}</Text>
             <Text style={cellStyles.description}>{desc}</Text>
         </View>
     </View>
@@ -27,10 +27,8 @@ export const EventCell: React.FC<Props> = ({title, date, event, desc}) => {
 
 const styles = StyleSheet.create({
   container: {
-   
     borderRadius: 8,
     padding: 12,
-    marginBottom: 8,
     backgroundColor: 'rgba(45, 75, 10, 0.3)',
     borderWidth: 1,
     borderColor: 'rgb(110, 151, 6)'

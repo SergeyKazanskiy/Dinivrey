@@ -10,12 +10,11 @@ import { useStore } from '../store';
 
 export default function EventsScreen() {
   const router = useRouter()
-  const { year, month, events } = useStore();
-  const { selectDate, selectEvent } = useStore();
+  const { loadLastEvent, selectEvent } = useStore();
 
   useFocusEffect(
     useCallback(() => {
-      //selectDate(getCurrentYear(), getCurrentMonth());
+      loadLastEvent();
     }, [])
   );
 
@@ -33,7 +32,7 @@ export default function EventsScreen() {
         
         <EventsView onClick={openEventScreen}/>
       </View>
-      <Text style={[screenStyles.summary, styles.summary]}>In most cases you win !</Text>
+      <Text style={[screenStyles.gold, styles.summary]}>In most cases you win !</Text>
     </ImageBackground>
   );
 }
@@ -54,9 +53,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   summary: {
+    marginTop: 'auto', 
     textAlign: 'center',
-    paddingTop: 26,
-    paddingBottom: 10
+    paddingBottom: 30
   }
 });
 

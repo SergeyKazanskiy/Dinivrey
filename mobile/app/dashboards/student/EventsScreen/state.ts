@@ -1,23 +1,53 @@
 import { Event } from "../model";
-import { get_group_events } from '../http';
+import { get_group_last_event, get_group_events } from '../http';
 import { ProfileSlice } from '../ProfileScreen/state';
+import { objectToJson, getYearAndMonth } from "@/app/shared/utils";
+import { events } from "../test";
 
 export interface EventsSlice {
     events: Event[];
     event_id: number;
+
     event_year: number;
     event_month: number;
 
-    selectEventDate: (year: number, month: number) => void;
-    loadEvents: (student_id: number, year: number, month: number) => void;
+    isMainEvent: boolean;
+
+    loadLastEvent:() => void;
+    selectEventDate: (event_year: number, event_month: number) => void;
+
+    loadEvents: (student_id: number, event_year: number, event_month: number) => void;
+    loadEvent: (event_id: number, timestamp: number) => void;
+
     selectEvent: (event_id: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
     events: [],
     event_id: 0,
+
     event_year: 2025,
     event_month: 3,
+
+    isMainEvent: false,
+
+
+    loadLastEvent:() => {
+        const { isMainEvent, student }: EventsSlice & ProfileSlice = get();
+
+        if (isMainEvent) {
+            const { event_year, event_month }: EventsSlice = get();
+            get().loadEvents(student.group_id, event_year, event_month);
+        } else {
+            get_group_last_event(student.group_id, (res => {
+                if (res.isEvents) {
+                    
+                    const { loadEvents }: EventsSlice = get();
+                    loadEvents(student.group_id, res.year, res.month);
+                }
+            }));
+        }
+    },
 
     selectEventDate: (event_year: number, event_month: number) => {
         set({ event_year, event_month });
@@ -26,10 +56,35 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         loadEvents(student.group_id, event_year, event_month);
     },
 
-    loadEvents: (group_id: number, year: number, month: number) => {
-        get_group_events(group_id, year, month, (events: Event[]) => {
-            set({ events, event_id: 0 });
+    loadEvents: (group_id: number, event_year: number, event_month: number) => {
+        get_group_events(group_id, event_year, event_month, (events: Event[]) => {
+            const { event_id }: EventsSlice = get();
+            var eventId: Number;
+
+            if (event_id > 0) {
+                eventId = event_id;
+            } else if (events.length > 0) {
+                eventId = events[0].id;
+            } else {
+                eventId = 0;
+            }
+            set({
+                events,
+                event_id: eventId,
+                event_year,event_month,
+                isMainEvent: false
+             });
         })
+    },
+
+    loadEvent: (event_id: number, timestamp: number ) => {
+        const { year, month } = getYearAndMonth(timestamp);
+        set({
+            event_id,
+            isMainEvent: true,
+            event_year: year,
+            event_month: month
+        });
     },
 
     selectEvent: (event_id: number) => {

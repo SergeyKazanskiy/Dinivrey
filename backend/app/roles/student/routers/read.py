@@ -12,6 +12,7 @@ from datetime import datetime
 router = APIRouter()
 
 
+# Profile
 @router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Student"])
 async def get_student(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.read(models.Student, id, session)
@@ -37,7 +38,48 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 effect = row[4]
             ) for row in rows]
 
+@router.get("/camps/groups/{group_id}/events/upcoming", response_model=List[schemas.EventResponse], tags=["Student"])
+async def get_next_events(group_id: int, session: AsyncSession = Depends(get_session)):
+    now = datetime.now()
+    now_timestamp = int(now.timestamp() * 1000)  # текущее время в миллисекундах
 
+    # 1. Находим все события после текущего времени, отсортированные по времени
+    stmt = (
+        select(models.Event)
+        .where(
+            or_(
+                models.Event.group1_id == group_id,
+                models.Event.group2_id == group_id
+            ),
+            models.Event.timestamp >= now_timestamp
+        )
+        .order_by(asc(models.Event.timestamp))
+    )
+    result = await session.execute(stmt)
+    events = result.scalars().all()
+
+    if not events:
+        return []
+
+    # 2. Группируем события по дате (год, месяц, день)
+    events_by_date = {}
+    for event in events:
+        event_dt = datetime.fromtimestamp(event.timestamp / 1000)
+        date_key = (event_dt.year, event_dt.month, event_dt.day)
+        events_by_date.setdefault(date_key, []).append(event)
+
+    # 3. Ищем события за сегодня
+    today_key = (now.year, now.month, now.day)
+    if today_key in events_by_date:
+        selected_events = events_by_date[today_key]
+    else:
+        # 4. Если за сегодня нет — берем события следующего ближайшего дня
+        sorted_keys = sorted(events_by_date.keys())
+        selected_events = events_by_date[sorted_keys[0]]
+    return selected_events
+
+
+# Statistics
 @router.get("/students/{id}/tests/last", response_model=List[schemas.TestResponse], tags=["Student"])
 async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
     stmt = (
@@ -111,46 +153,8 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
     )
     return result.scalars().all()
 
-@router.get("/camps/groups/{group_id}/events/upcoming", response_model=List[schemas.EventResponse], tags=["Student"])
-async def get_next_events(group_id: int, session: AsyncSession = Depends(get_session)):
-    now = datetime.now()
-    now_timestamp = int(now.timestamp() * 1000)  # текущее время в миллисекундах
 
-    # 1. Находим все события после текущего времени, отсортированные по времени
-    stmt = (
-        select(models.Event)
-        .where(
-            or_(
-                models.Event.group1_id == group_id,
-                models.Event.group2_id == group_id
-            ),
-            models.Event.timestamp >= now_timestamp
-        )
-        .order_by(asc(models.Event.timestamp))
-    )
-    result = await session.execute(stmt)
-    events = result.scalars().all()
-
-    if not events:
-        return []
-
-    # 2. Группируем события по дате (год, месяц, день)
-    events_by_date = {}
-    for event in events:
-        event_dt = datetime.fromtimestamp(event.timestamp / 1000)
-        date_key = (event_dt.year, event_dt.month, event_dt.day)
-        events_by_date.setdefault(date_key, []).append(event)
-
-    # 3. Ищем события за сегодня
-    today_key = (now.year, now.month, now.day)
-    if today_key in events_by_date:
-        selected_events = events_by_date[today_key]
-    else:
-        # 4. Если за сегодня нет — берем события следующего ближайшего дня
-        sorted_keys = sorted(events_by_date.keys())
-        selected_events = events_by_date[sorted_keys[0]]
-    return selected_events
-
+# Events
 @router.get("/camps/groups/{group_id}/events/latest", tags=["Student"])
 async def get_latest_event(group_id: int, session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(models.Event)
@@ -165,6 +169,21 @@ async def get_latest_event(group_id: int, session: AsyncSession = Depends(get_se
     timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
     date = datetime.fromtimestamp(timestamp / 1000)
     return {"year": date.year, "month": date.month, "isEvents": isEvents}
+
+@router.get("/camps/groups/{group_id}/events",  response_model=List[schemas.EventResponse], tags=["Student"])
+async def get_events(year: int, month: int, group_id: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+    result = await session.execute(
+        select(models.Event)
+        .where(models.Event.timestamp.between(start_ts, end_ts),
+               or_(
+                    models.Event.group1_id == group_id,
+                    models.Event.group2_id == group_id
+                ))
+        .order_by(asc(models.Event.timestamp))
+    )
+    return result.scalars().all()
 
 @router.get("/students/{id}/achievements", response_model=List[schemas.AchieveResponse], tags=["Student"])
 async def get_student_achieves(id: int, session: AsyncSession = Depends(get_session)):

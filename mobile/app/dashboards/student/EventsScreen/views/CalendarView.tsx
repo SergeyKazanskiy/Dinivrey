@@ -7,23 +7,23 @@ import { months } from '../../../../shared/constants';
 
 export function CalendarView() {
     const { event_year, event_month } = useStore();
-    const { selectDate } = useStore();
+    const { selectEventDate } = useStore();
 
     function nextMonth() {
-        if (event_month === 12) { selectDate(event_year + 1, 1)}
-        else { selectDate(event_year, event_month + 1)}
+        if (event_month === 12) { selectEventDate(event_year + 1, 1)}
+        else { selectEventDate(event_year, event_month + 1)}
     }
 
     function prevMonth() {
-        if (event_month === 1) { selectDate(event_year - 1, 12)}
-        else { selectDate(event_year, event_month - 1)}
+        if (event_month === 1) { selectEventDate(event_year - 1, 12)}
+        else { selectEventDate(event_year, event_month - 1)}
     }
 
     return (
         <View style={styles.container}>
             <DateStepper title={String(event_year)}
-                onPrev={() => selectDate(event_year - 1, 12)}
-                onNext={() => selectDate(event_year + 1, 1)}
+                onPrev={() => selectEventDate(event_year - 1, 12)}
+                onNext={() => selectEventDate(event_year + 1, 1)}
                 canNext={getCurrentMonth() === 12 ? true : event_year < getCurrentYear()}
             />
             <DateStepper title={months[event_month-1]} 
@@ -39,5 +39,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingBottom: 10
   },
 });
