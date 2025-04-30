@@ -26,7 +26,7 @@ export default function StackLayout() {
           headerShadowVisible: false,
           headerLeft: () => {
             return (
-              <Ionicons name="menu" size={24} color='#fff'
+              <Ionicons name="menu" size={24} color='#D1FF4D' style={{ marginLeft: 12 }}
                 onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
               />
             );
@@ -35,7 +35,7 @@ export default function StackLayout() {
       />
       <Stack.Screen name="GroupsScreen"
         options={{
-          //animation: 'slide_from_right',
+          animation: 'slide_from_right',
           headerTitle: "Groups",
           headerStyle: {
             backgroundColor: screenStyles.background.backgroundColor, // Фон заголовка
@@ -52,4 +52,5 @@ export default function StackLayout() {
     </Stack>
   );
 }
+
 

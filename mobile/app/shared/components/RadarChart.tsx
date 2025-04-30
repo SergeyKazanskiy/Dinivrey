@@ -15,11 +15,12 @@ type Exam = {
 type RadarChartProps = {
   exam: Exam;
   onExam: (metricName: string) => void;
+  onLiders: () => void;
 };
 
 const labels = ['climbing', 'stamina', 'speed', 'evasion', 'hiding'];
 
-export const RadarChart: React.FC<RadarChartProps> = ({ exam, onExam }) => {
+export const RadarChart: React.FC<RadarChartProps> = ({ exam, onExam, onLiders }) => {
   const { width } = useWindowDimensions();
   const size = Math.min(width * 0.8, 300);
   const center = size / 2;
@@ -109,8 +110,10 @@ export const RadarChart: React.FC<RadarChartProps> = ({ exam, onExam }) => {
           </Text>
         );
       })}
-
-      <Text style={styles.centerText}>{average}</Text>
+      <TouchableOpacity  style={styles.centerText}
+         onPress={onLiders}>
+        <Text style={styles.average}>{average}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -137,6 +140,8 @@ const styles = StyleSheet.create({
   },
   centerText: {
     position: 'absolute',
+  },
+  average: {
     color: 'white',
     fontSize: 32,
     fontWeight: 'bold',

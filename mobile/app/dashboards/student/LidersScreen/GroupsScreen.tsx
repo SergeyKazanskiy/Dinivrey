@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
-import { StyleSheet, ScrollView, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, ScrollView, Text, View, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import { screenStyles, cellStyles } from '../../../shared/styles/appStyles';
 import { useStore } from '../store';
+import { GroupCell } from '../../../shared/components/GroupCell';
 
 
-  const GroupsScreen = () => {
+const GroupsScreen = () => {
   const { groups } = useStore();
   const { loadGroups, loadLiders } = useStore();
   
@@ -16,33 +17,44 @@ import { useStore } from '../store';
   }, [loadGroups]);
 
   const handlePress = (group_id: number) => {
-    loadLiders(group_id)
+    loadLiders()
     router.back();
   };
 
   return (
-    <ScrollView style={styles.screen}>
-      <View style={styles.container}>
-        <FlatList data={groups} 
-          keyExtractor={(index) => index.toString()}
-          renderItem={({ item }) =>
+        
+      <ScrollView style={styles.screen}>
+        <View style={styles.container}>
+          <FlatList data={groups}
+            keyExtractor={(index) => index.toString()}
+            renderItem={({ item }) =>
 
-            <TouchableOpacity onPress={() => handlePress(item.id)}>
-              <Text style={cellStyles.description}>{item.name}</Text>
-              <Text style={cellStyles.description}>{item.description}</Text>
-            </TouchableOpacity>
-          
-      }/>
-      </View>
-    </ScrollView>
+              <TouchableOpacity onPress={() => handlePress(item.id)}>
+                <GroupCell
+                  name={item.name}
+                  desc={item.description}
+                />
+              </TouchableOpacity>   
+        }/>
+        </View>
+      </ScrollView>
+    
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    backgroundColor: '#1A1C21',
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
     padding: 16,
-    paddingTop: 0,
+  },
+  screen: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    padding: 16,
+    backgroundColor: '#222'
   },
   container: {
     flex: 1,

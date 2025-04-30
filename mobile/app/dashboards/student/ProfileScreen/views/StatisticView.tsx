@@ -8,14 +8,15 @@ import { RadarChart } from '../../../../shared/components/RadarChart';
 export type Props = {
   onExam: (metric: string) => void;
   onGame: (metric: string) => void;
+  onLiders: () => void;
 };
 
-export const StatisticView = ({ onExam, onGame }: Props) => {
+export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
   const { last_test, last_game } = useStore();
 
   return (
     <View style={styles.container}>
-      <RadarChart exam={last_test} onExam={onExam} />
+      <RadarChart exam={last_test} onExam={onExam} onLiders={onLiders} />
 
       <View style={styles.section}>
         <TouchableOpacity onPress={() => onGame('Caughted')}>

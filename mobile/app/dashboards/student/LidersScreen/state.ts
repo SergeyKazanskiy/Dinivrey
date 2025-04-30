@@ -1,7 +1,7 @@
 import { Store } from "../store";
 import { Group, Lider } from "../model";
 import { get_groups, get_liders} from '../http';
-import { NumericFields } from '../../../shared/utils';
+import { NumericFields, objectToJson } from '../../../shared/utils';
 import { ProfileSlice } from '../ProfileScreen/state';
 
 
@@ -19,10 +19,7 @@ export interface LidersSlice {
 
 export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
     groups: [{id: 0, name: 'Group 1', description: 'description'}, {id: 0, name: 'Group 2', description: 'description'}],
-    liders: [{ photo: '', first_name: 'first', last_name: 'last',
-        speed: 5.1, stamina: 5.1, climbing: 5.1, evasion: 5.1, hiding: 5.1,
-        achieves: [{image: 'medal', level: 'common'}, {image: 'medal', level: 'common'}]
-    }],
+    liders: [],
     lider_test: 'speed',       
     lider_tests: ['speed', 'stamina', 'climbing', 'evasion', 'hiding'],
 
@@ -36,15 +33,29 @@ export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
         const { student }: ProfileSlice = get();
 
         get_liders(student.group_id, (liders: Lider[]) => {
+            //alert(objectToJson(liders))
             set({
                 lider_test: 'speed',
-                liders: liders.sort((a, b) => a.speed - b.speed)
+                liders: liders.sort((a, b) => b.speed - a.speed)
             });
         })
     },
 
-    selectTest: (test: NumericFields<Lider>) => set((state: LidersSlice) => ({
-        lider_test: test,
-        liders: [...state.liders].sort((a, b) => a[test] - b[test])
-    })),
+    selectTest: (test: NumericFields<Lider>) => {
+        const { liders, lider_test}: LidersSlice = get();
+        var sorted: Lider[];
+        if (test === lider_test) {
+            sorted = liders.sort((a, b) => {
+                const avgA = a.speed + a.stamina + a.climbing + a.evasion + a.hiding;
+                const avgB = b.speed + b.stamina + b.climbing + b.evasion + b.hiding;
+                return avgB - avgA;
+            });
+        } else {
+            sorted = liders.sort((a, b) => b[test] - a[test]);
+        }
+        set((state: LidersSlice) => ({
+            lider_test: test === state.lider_test ? '' : test,
+            liders: sorted
+        }))
+    },
 });

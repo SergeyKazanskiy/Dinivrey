@@ -8,7 +8,7 @@ import { LidersView } from './views/LidersView';
 import { useStore } from '../store';
 
 
-export const LidersScreen = () => {
+export default function LidersScreen() {
   const { loadLiders } = useStore();
 
   const navigation = useNavigation();
@@ -25,7 +25,7 @@ export const LidersScreen = () => {
       headerRight: () => (
         <Pressable style={{ marginRight: 15 }}
           onPress={openGroupsScreen} >
-          <Ionicons name='folder-open' size={24} color="black" />
+          <Ionicons name='folder-open' size={24} color="#D1FF4D" />
         </Pressable>
       ),
     });

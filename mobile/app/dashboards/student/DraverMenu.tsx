@@ -81,7 +81,8 @@ export function DraverMenu() {
       <Drawer.Screen
         name="LidersScreen"
         options={{
-          headerTitle: 'Liderboard',
+          headerShown: false, // Отключаем заголовок
+         // headerTitle: 'Liderboard',
           title: 'Liderboard', 
           drawerIcon: ({ size, color}) => (
             <Ionicons name='medal-outline' size={size} color={color} />
