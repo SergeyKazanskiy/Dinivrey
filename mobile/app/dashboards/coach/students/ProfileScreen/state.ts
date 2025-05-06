@@ -1,5 +1,5 @@
 import { Store } from "../store";
-import { Student, Parent } from "../model";
+import { Student, Parent, Attendance } from "../model";
 import { get_student, get_student_parents } from '../http';
 import { GroupsSlice } from '../GroupsScreen/state';
 import { objectToJson } from '../../../../shared/utils';
@@ -10,6 +10,8 @@ export interface ProfileSlice {
 
   initialParents: Parent[];
   parents: Parent[];
+
+  attendance: Attendance;
 
   loadStudent: () => void;
 }
@@ -26,6 +28,8 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     { id: 0, name: '', phone: '', email: ''},
     { id: 1, name: '', phone: '', email: ''},
   ],
+
+  attendance: {trainings: 97, tests: 55, games: 34},
 
   loadStudent: () => {
     const { student_id }: GroupsSlice = get();

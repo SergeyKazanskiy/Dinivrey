@@ -10,8 +10,7 @@ import { Stack } from 'expo-router';
 export default function CoachLayout() {
   const [index, setIndex] = useState(0);
 
-  return (
-       
+  return ( 
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
 
       <Tab value={index} indicatorStyle={styles.indicator} variant="primary"
@@ -43,8 +42,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   indicator: { backgroundColor: '#c2ff00', height: 4 },
-  tab: { backgroundColor: '#444' },
-  label: { marginLeft: 8, color: '#ddd' },
+  tab: { backgroundColor: '#152B52' },
+  label: { marginLeft: 8, color: '#ddd', fontSize: 16, padding: 6 },
   content: { flex: 1 },
 });
 

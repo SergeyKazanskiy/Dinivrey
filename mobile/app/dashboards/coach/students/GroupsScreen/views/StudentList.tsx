@@ -19,7 +19,7 @@ export function StudentList() {
   return (
     <>
         {students.map(student => {
-            const itemStyle = student.id === student_id ? styles.selected : styles.item;
+            const itemStyle = styles.item;
 
             return (
                 <ListItem key={student.id}
@@ -47,7 +47,14 @@ export function StudentList() {
 }
 
 const styles = StyleSheet.create({
-  item: { backgroundColor: '#4b5320' },
+  item: { 
+    margin: 4,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+   // borderColor: 'rgb(110, 151, 6)',
+    backgroundColor: 'rgba(45, 75, 10, 0.4)',
+   },
   selected: { backgroundColor: '#4b5320', borderWidth: 1, borderColor: 'yellow' },
   title: { color: 'white', fontWeight: 'bold' },
   subtitle: { color: '#A7CFF5' },
