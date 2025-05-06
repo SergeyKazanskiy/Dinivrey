@@ -1,0 +1,54 @@
+import { StyleSheet, View } from 'react-native';
+import { Avatar, Badge, ListItem } from '@rneui/themed';
+import { useRouter } from 'expo-router';
+import { useStore } from '../../store';
+import { ImagesPath } from '../../../../../shared/constants';
+
+
+export function StudentList() {
+  const { students, student_id } = useStore();
+  const { selectStudent } = useStore();
+
+  const router = useRouter();
+
+  function handlePress(id: number) {
+    selectStudent(id);
+    router.push(`/dashboards/coach/students`)
+  }
+
+  return (
+    <>
+        {students.map(student => {
+            const itemStyle = student.id === student_id ? styles.selected : styles.item;
+
+            return (
+                <ListItem key={student.id}
+                    bottomDivider
+                    onPress={() => handlePress(student.id)}
+                    containerStyle={itemStyle}
+                >
+                    <Avatar size={44} source={{ uri: `${ImagesPath}/photos/${student.photo}` }} rounded />
+
+                    <ListItem.Content>
+                        <ListItem.Title style={styles.title}>
+                            {`${student.first_name} ${student.last_name}`}
+                        </ListItem.Title>
+
+                        <ListItem.Subtitle style={styles.subtitle}>
+                            {`${student.gender} ${student.age} years old`}
+                        </ListItem.Subtitle>
+                    </ListItem.Content>
+                    <Badge value="3.5" status="success" />
+                </ListItem>
+            )})
+        }
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  item: { backgroundColor: '#4b5320' },
+  selected: { backgroundColor: '#4b5320', borderWidth: 1, borderColor: 'yellow' },
+  title: { color: 'white', fontWeight: 'bold' },
+  subtitle: { color: '#A7CFF5' },
+});
