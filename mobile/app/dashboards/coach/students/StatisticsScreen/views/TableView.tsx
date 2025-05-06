@@ -20,7 +20,7 @@ export function TableView() {
 
 const styles = StyleSheet.create({
   container: {
-    
+    paddingHorizontal: 8
   },
 });
 

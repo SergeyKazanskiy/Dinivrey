@@ -45,7 +45,7 @@ export const PerentsView = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 16
+    marginTop: 12
   },
   section: {
     marginBottom: 12,

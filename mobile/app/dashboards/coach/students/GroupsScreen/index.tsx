@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, Platform } from 'react-native';
 import { Badge, ListItem } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import { useStore } from '../store';
@@ -21,7 +21,7 @@ export default function GroupsScreen() {
   );
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.wrapper}> 
       {groups.map((group, index) => {
         return (
           <ListItem.Accordion key={index}
@@ -51,7 +51,14 @@ export default function GroupsScreen() {
 }
 
 const styles = StyleSheet.create({
-  group: { backgroundColor: '4b5320', borderWidth: 1, borderColor: 'gray' },
+  wrapper: {
+    flex: 1,
+    alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
+    maxWidth: Platform.OS === 'web' ? 360 : undefined,
+    width: '100%',
+    padding: 16,
+  },
+  group: { backgroundColor: '4b5320', borderWidth: 1, borderColor: 'green' },
   title: { color: 'white', fontWeight: 'bold' },
   subtitle: { color: '#A7CFF5' },
 });

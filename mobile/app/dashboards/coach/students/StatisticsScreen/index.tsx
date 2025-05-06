@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Platform, Pressable, Text, StyleSheet } from 'react-native';
+import { Platform, Pressable, Text, StyleSheet, View } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { screenStyles } from '../../../../shared/styles/appStyles';
@@ -10,6 +10,7 @@ import { ChartView } from './views/ChartView';
 import { DatesView } from './views/DatesView';
 import { TableView } from './views/TableView';
 import { LinearGradient } from 'expo-linear-gradient';
+import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 
 
 export default function StatisticsScreen() {
@@ -36,7 +37,11 @@ export default function StatisticsScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <CalendarView/>
+      <CustomNavbar title='Statistics' onClick={() => router.push("/dashboards/coach")}/>
+      <View style={{paddingTop: 12}}>
+        <CalendarView/>
+      </View>
+
       {timestamp > 0 &&
         <>
           <Text style={styles.metric}>{metricName}</Text>
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
     alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
     maxWidth: Platform.OS === 'web' ? 360 : undefined,
     width: '100%',
-    backgroundColor: '#fff',
+    height: '100%',
   },
   navButton: {
     color: '#D1FF4D',

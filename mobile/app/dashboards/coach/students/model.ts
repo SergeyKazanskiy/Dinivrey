@@ -69,11 +69,9 @@ export interface StudentProfile {
   }
   
   export interface Attendance {
-    student_id: number;
     trainings: number;
     tests: number;
     games: number;
-    total: number;
   }
   
   export type Test = {

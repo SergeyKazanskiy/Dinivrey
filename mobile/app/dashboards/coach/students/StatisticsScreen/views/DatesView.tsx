@@ -20,9 +20,7 @@ export function DatesView() {
 
 const styles = StyleSheet.create({
   container: {
-    //borderWidth: 1,
-    //borderColor: 'gray',
-   // backgroundColor: 'gray',
+    paddingHorizontal: 8,
     marginTop: 8,
     marginBottom: 4
   },

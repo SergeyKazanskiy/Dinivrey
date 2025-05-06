@@ -18,21 +18,24 @@ export default function StackLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="index"
-        options={{
-          animation: 'slide_from_right',
-          headerTitle: "Student",
-          headerStyle: {
-            backgroundColor: screenStyles.background.backgroundColor, // Фон заголовка
-          },
-          headerTintColor: '#D1FF4D', // Цвет текста заголовка
-          headerTitleStyle: {
-            fontSize: 22,
-            fontWeight: 'bold', // Стиль текста
-          },
-          headerTitleAlign: 'center',
-          headerShadowVisible: false,
-        }}
+        options={{ headerShown: false }}
       />
     </Stack>
   );
 }
+/*
+options={{
+          animation: 'slide_from_right',
+          headerTitle: "Student",
+          headerStyle: {
+            backgroundColor: screenStyles.background.backgroundColor, 
+          },
+          headerTintColor: '#D1FF4D', 
+          headerTitleStyle: {
+            fontSize: 22,
+            fontWeight: 'bold', 
+          },
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+        }}
+          */
