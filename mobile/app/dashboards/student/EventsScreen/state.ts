@@ -2,7 +2,7 @@ import { Event } from "../model";
 import { get_group_last_event, get_group_events } from '../http';
 import { ProfileSlice } from '../ProfileScreen/state';
 import { objectToJson, getYearAndMonth } from "@/app/shared/utils";
-import { events } from "../test";
+
 
 export interface EventsSlice {
     events: Event[];

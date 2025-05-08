@@ -125,3 +125,24 @@ export function isFuture(timestamp: number): boolean {
   tomorrow.setDate(tomorrow.getDate() + 1);
   return inputDate >= tomorrow;
 }
+
+export function getWeeksInMonth(year: number, month: number): number {
+  const firstDay = new Date(year,  month - 1, 1);
+  const lastDay = new Date(year,  month, 0);
+
+  const firstDayOfWeek = firstDay.getDay(); // 0 (вс) – 6 (сб)
+  const totalDays = lastDay.getDate();
+
+  const daysWithOffset = totalDays + firstDayOfWeek;
+  return Math.ceil(daysWithOffset / 7);
+}
+
+export function getDayAndWeekday(timestamp: number): { day: number; weekday: string } {
+  const date = new Date(timestamp);
+  const day = date.getDate(); // число месяца
+
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const weekday = weekdays[date.getDay()]; // 0 (вс) – 6 (сб)
+
+  return { day, weekday };
+}
