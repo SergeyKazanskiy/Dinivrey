@@ -1,40 +1,16 @@
 import { EventType } from "../../../shared/models/Event";
 
-export interface Student {
-    id: number;
-    photo: string;
-    first_name: string;
-    last_name: string;
-    gender: string;
-    age: number;
-    active: boolean;
-    group_id: number;
-    group_extra_id?: number;
-  }
-
   export interface Event {
     id: number;
     timestamp: number;
     type: string;
     desc: string;
+    day?: number;
   }
 
-  export interface Achievement {
-    id: number;
-    image: string;
-    name: string;
-    level: string;
-    effect: string;
-  }
-
-  export interface Achieve {
-    id: number;
-    image: string;
-    name: string;
-    in_profile: boolean;
-    category: string;
-    level: string;
-    effect: string;
+  export interface Student {
+    first_name: string;
+    last_name: string;
   }
 
   export type Test = {
@@ -55,12 +31,8 @@ export interface Student {
     //description?: string;
   };
   
-  export interface AchieveShort {
-    image: string;
-    level: string;
-}
 
-export interface Lider {
+export interface Tester {
     id: number;
     photo: string;
     first_name: string;
@@ -71,14 +43,6 @@ export interface Lider {
     climbing: number;
     evasion: number;
     hiding: number;
-
-    achieves: AchieveShort[];
-}
-
-export interface Group {
-  id: number;
-  name: string;
-  description: string;
 }
 
 export interface Metric {
@@ -87,3 +51,11 @@ export interface Metric {
   score: number;
   unit: string;
 };
+
+export interface Attendance {
+  id: number;
+  student_id: number;
+  first_name: string;
+  last_name: string;
+  present: boolean;
+}

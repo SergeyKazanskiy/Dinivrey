@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView, View, Platform } from 'react-native';
+import { StyleSheet, ScrollView, Platform } from 'react-native';
 import { Badge, ListItem } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import { useStore } from '../store';
@@ -9,10 +9,10 @@ import { Icon } from '@rneui/themed';
 
 
 export default function GroupsScreen() {
-    const { groups, students, group_id } = useStore();
-    const { loadGroups, selectGroup } = useStore();
+  const { groups, students, group_id } = useStore();
+  const { loadGroups, selectGroup } = useStore();
 
-    const router = useRouter();
+  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -22,8 +22,7 @@ export default function GroupsScreen() {
 
   return (
     <ScrollView style={styles.wrapper}> 
-      {groups.map((group, index) => {
-        return (
+      {groups.map((group, index) => 
           <ListItem.Accordion key={index}
             containerStyle={styles.group}
             isExpanded={group.id === group_id}
@@ -32,8 +31,7 @@ export default function GroupsScreen() {
             content={
               <>
                 <Icon name={group.id === group_id ? 'chevron-down' : 'chevron-right'}
-                  type="material-community" color="white" style={{ marginRight: 10 }}
-                />
+                  type="material-community" color="white" style={{ marginRight: 10 }} />
                 <ListItem.Content>
                   <ListItem.Title style={styles.title}>{group.name}</ListItem.Title>
                   <ListItem.Subtitle style={styles.subtitle}>{group.description}</ListItem.Subtitle>
@@ -44,8 +42,7 @@ export default function GroupsScreen() {
           >
             <StudentList/>
           </ListItem.Accordion>
-        );
-      })}
+      )}
     </ScrollView>
   );
 }

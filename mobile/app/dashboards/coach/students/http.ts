@@ -4,8 +4,8 @@ import { Group, Lider, Student, Test, Game, Achievement, Attendance, Parent } fr
 
 
 // Get
-export function get_groups(camp_id: number, callback: (camps: Group[]) => void) {
-  return httpWrapper(() => api.get(`camps/${camp_id}/groups`), callback, 'Getting groups');
+export function get_groups(coach_id: number, callback: (camps: Group[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups?coach_id=${coach_id}`), callback, 'Getting coach groups');
 };
 
 export function get_students(group_id: number, callback: (students: Student[]) => void) {
