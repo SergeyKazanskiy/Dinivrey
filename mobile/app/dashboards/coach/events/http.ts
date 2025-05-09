@@ -1,5 +1,5 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
-import { api } from "../../../api/student_api";
+import { api } from '../../../api/coach_api';
 import { Attendance, Test, Game, Event, Tester, Student } from './model';
 
 

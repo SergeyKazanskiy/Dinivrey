@@ -134,6 +134,7 @@ export function getWeeksInMonth(year: number, month: number): number {
   const totalDays = lastDay.getDate();
 
   const daysWithOffset = totalDays + firstDayOfWeek;
+  //alert(daysWithOffset)
   return Math.ceil(daysWithOffset / 7);
 }
 

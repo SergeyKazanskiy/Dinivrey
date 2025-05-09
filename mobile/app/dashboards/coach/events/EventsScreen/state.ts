@@ -2,16 +2,18 @@ import { Event } from "../model";
 import { get_groups } from '../../students/http';
 import { get_coach_last_event, get_coach_events } from '../http';
 import { objectToJson, getYearAndMonth, getCurrentYear, getDayAndWeekday } from "../../../../shared/utils";
-import { Group } from "../../students/model";
+import { ShortGroup } from '../../../../shared/components/CoachEventCell';
 
 
 export interface EventsSlice {
-    groups: Group[];
+    groups: ShortGroup[];
     group_ids: number[];
 
     days: {day: number, weekday: string}[];
     events: Event[];
+
     event_id: number;
+    group_id: number;
 
     event_year: number;
     event_month: number;
@@ -22,7 +24,7 @@ export interface EventsSlice {
     loadEvents: (group_ids: number[], year: number, month: number, week: number) => void;
 
     selectDate: (year: number, month: number, week: number ) => void;
-    selectEvent: (event_id: number) => void;
+    selectEvent: (event_id: number, group_id: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
@@ -31,14 +33,17 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     days: [],
     events: [],
+
     event_id: 0,
+    group_id: 0,
 
     event_year: getCurrentYear(),
     event_month: 3,
     event_week: 0,
 
     loadGroups: (coach_id: number) => {
-        get_groups(coach_id, (groups: Group[]) => {
+        get_groups(coach_id, (groups: ShortGroup[]) => {
+            //alert(objectToJson(groups))
             set({ groups });
             if (groups.length > 0) {
                 const group_ids: number[] = groups.map(el => el.id);
@@ -64,7 +69,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         get_coach_events(year, month, week, group_ids, (events: Event[]) => {
             const { event_id }: EventsSlice = get();
             var eventId: Number;
-
+            //alert(objectToJson(events))
             if (event_id > 0) {
                 eventId = event_id;
             } else if (events.length > 0) {
@@ -87,6 +92,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
                 if (day !== currentDay) {
                     days.push({day, weekday});
+                    currentDay = day;
                 }
             }
             set({days})
@@ -100,7 +106,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         loadEvents(group_ids, year, month, week);
     },
 
-    selectEvent: (event_id: number) => {
-        set({ event_id });
+    selectEvent: (event_id: number, group_id: number) => {
+        set({ event_id, group_id });
     },
 });

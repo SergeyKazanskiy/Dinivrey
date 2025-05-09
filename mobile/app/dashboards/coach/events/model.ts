@@ -6,6 +6,8 @@ import { EventType } from "../../../shared/models/Event";
     type: string;
     desc: string;
     day?: number;
+    group1_id: number;
+    group2_id: number;
   }
 
   export interface Student {

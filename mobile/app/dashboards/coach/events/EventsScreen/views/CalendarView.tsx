@@ -21,35 +21,49 @@ export function CalendarView() {
     }
 
     return (
-        <>
-            <View style={styles.container}>
-                <Text>DINIVREY</Text>
+        <View style={styles.container}>
+            <View style={styles.section}>
                 <DateStepper title={String(event_year)}
                     onPrev={() => selectDate(event_year - 1, 12, 0)}
                     onNext={() => selectDate(event_year + 1, 1, 0)}
                     canNext={getCurrentMonth() === 12 ? true : event_year < getCurrentYear()}
                 />
-            </View>
-
-            <View style={styles.container}>
                 <DateStepper title={months[event_month-1]} 
                     onPrev={prevMonth}
                     onNext={nextMonth}
                     canNext={getCurrentMonth() === 12 ? true : event_month <= getCurrentMonth()}
                 />
-                <NumberButtons
-                    maxNumber={getWeeksInMonth(event_year, event_month)}
-                    selectedNumber={event_week}
-                    onPress={(value) => selectDate(event_year, event_month, value)}
-                />
             </View>
-        </>
+
+            <View style={[styles.calendar, styles.section]}>
+                <Text style={styles.weeks} >Weeks: </Text>
+                <View>
+                    <NumberButtons
+                        maxNumber={getWeeksInMonth(event_year, event_month)}
+                        selectedNumber={event_week + 1}
+                        onPress={(value) => selectDate(event_year, event_month, value - 1)}
+                    />
+                </View>
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 8
+  },
+  section: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  calendar: {
+    paddingLeft: 8,
+    alignItems: 'center',
+   // backgroundColor: 'gray'
+  },
+  weeks: {
+    color: 'white',
+    fontSize: 16,
   },
 });

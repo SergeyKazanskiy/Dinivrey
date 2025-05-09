@@ -10,7 +10,7 @@ import { useRouter } from 'expo-router';
 export default function GamingScreen() {
     // const { loadStudent } = useStore();
 
-    // const router = useRouter();
+    const router = useRouter();
 
     // useFocusEffect(
     //   useCallback(() => {
@@ -20,9 +20,9 @@ export default function GamingScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      {/* <CustomNavbar title='Student' onClick={() => router.back()}/>
+     <CustomNavbar title='Game' onClick={() => router.back()}/>
 
-      <ScrollView style={styles.container}>
+      {/*  <ScrollView style={styles.container}>
         <ProfileView/>
         <PerentsView/>
         <AddressView/>

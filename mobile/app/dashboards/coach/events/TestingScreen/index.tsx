@@ -1,11 +1,13 @@
 import { useCallback, useLayoutEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation, useRouter } from 'expo-router';
-import { ImageBackground, View, StyleSheet, Pressable } from 'react-native';
+import { ImageBackground, View, StyleSheet, Pressable, Platform } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SportsView } from './views/SportsView';
 import { LidersView } from './views/LidersView';
 import { useStore } from '../store';
+import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 
 
 export default function TestingScreen() {
@@ -36,21 +38,23 @@ export default function TestingScreen() {
   };
 
   return (
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+      <CustomNavbar title='Students' onClick={() => router.back()}/>
 
-      <View style={styles.container}>
       <SportsView/>
       <LidersView/>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    padding: 16,
-  },
+   wrapper: {
+     flex: 1,
+     alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
+     maxWidth: Platform.OS === 'web' ? 360 : undefined,
+     width: '100%',
+     height: '100%',
+   },
   container: {
     flex: 1,
   },
