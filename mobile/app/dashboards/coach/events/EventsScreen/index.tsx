@@ -5,7 +5,7 @@ import { useStore } from '../store';
 import { CalendarView } from './views/CalendarView';
 import { EventsView } from './views/EventsView';
 
-export default function GroupsScreen() {
+export default function EventsScreen() {
   const { days } = useStore();
   const { loadGroups } = useStore();
 

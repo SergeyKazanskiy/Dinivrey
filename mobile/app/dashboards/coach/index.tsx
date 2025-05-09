@@ -1,7 +1,7 @@
 import { View, StyleSheet, Platform } from 'react-native';
 import { Tab, Text } from '@rneui/themed';
 import { useState } from 'react';
-import EventsScreen from './events/EventsScreen/views/EventsView';
+import EventsScreen from './events/EventsScreen';
 import GroupsScreen from './students/GroupsScreen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Stack } from 'expo-router';

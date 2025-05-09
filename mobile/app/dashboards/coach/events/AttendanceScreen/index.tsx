@@ -8,13 +8,14 @@ import { useStore } from '../store';
  import { LinearGradient } from 'expo-linear-gradient';
 // import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 // import { AttendanceView } from './views/AttendanceView';
-// import { useRouter } from 'expo-router';
+ import { useRouter } from 'expo-router';
+ import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 
 
 export default function ProfileScreen() {
     // const { loadStudent } = useStore();
 
-    // const router = useRouter();
+  const router = useRouter();
 
     // useFocusEffect(
     //   useCallback(() => {
@@ -24,6 +25,7 @@ export default function ProfileScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+       <CustomNavbar title='Students' onClick={() => router.back()}/>
       {/* <CustomNavbar title='Student' onClick={() => router.back()}/>
 
       <ScrollView style={styles.container}>

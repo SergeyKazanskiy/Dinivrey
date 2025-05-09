@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     gap: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 4,
   },
   button: {
     paddingHorizontal: 12,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2089dc',
   },
   title: {
-    fontSize: 14,
+    fontSize: 15,
   },
 });
  
