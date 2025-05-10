@@ -51,7 +51,7 @@ async def delete_event(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Event, id, session)}
 
 @router.delete("/camps/events/{event_id}/groups/{group_id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
-async def delete_event(event_id: int, group_id: int, session: Session = Depends(get_session)):
+async def delete_attendance(event_id: int, group_id: int, session: Session = Depends(get_session)):
     stmt = (
         delete(models.Attendance)
         .where(

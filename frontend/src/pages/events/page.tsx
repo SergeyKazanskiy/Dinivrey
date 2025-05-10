@@ -52,3 +52,4 @@ export const EventsPage: React.FC = () => {
         </VStack>
     )
 };
+

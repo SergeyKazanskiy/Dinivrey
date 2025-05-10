@@ -121,6 +121,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
             ) for row in rows]
 
 
+# Events
 @router.get("/camps/groups/events/latest", tags=["Coach"])
 async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     
@@ -155,3 +156,27 @@ async def get_events(year: int, month: int, week: int, group_ids: List[int] = Qu
         .order_by(asc(models.Event.timestamp))
     )
     return result.scalars().all()
+
+# Attendances
+@router.get("/camps/events/{event_id}/groups/{group_id}/attendances", tags=["Coach"])
+async def get_attendances(event_id:int, group_id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Attendance
+    S = models.Student
+    stmt = (
+        select(A.id, A.student_id, S.first_name, S.last_name, A.present)
+        .join(S, A.student_id == S.id)
+        .where((A.group_id == group_id) & (A.event_id == event_id))
+        .order_by(asc(S.first_name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"id": row[0],
+             "student_id": row[1],
+             "first_name": row[2],
+             "last_name": row[3],
+             "present": row[4]} for row in rows]
+
+
+@router.get("/camps/groups/{group_id}/students/names", response_model=List[schemas.StudentName], tags=["Coach"]) #
+async def get_student_names(group_id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Student, session, filters={"group_id": group_id}, order_by="first_name")

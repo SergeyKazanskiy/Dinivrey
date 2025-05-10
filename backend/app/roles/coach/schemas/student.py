@@ -30,6 +30,13 @@ class ParentResponse(BaseModel):
     email: str
     phone: str
 
+class StudentName(BaseModel):
+    first_name: str
+    last_name: str
+
+    class Config:
+        from_attributes = True
+        
 # Test
 class TestBase(BaseModel):
     timestamp: int

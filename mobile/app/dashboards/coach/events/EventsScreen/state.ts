@@ -1,7 +1,7 @@
 import { Event } from "../model";
 import { get_groups } from '../../students/http';
 import { get_coach_last_event, get_coach_events } from '../http';
-import { objectToJson, getYearAndMonth, getCurrentYear, getDayAndWeekday } from "../../../../shared/utils";
+import { objectToJson, getTimestamp, getCurrentYear, getDayAndWeekday } from "../../../../shared/utils";
 import { ShortGroup } from '../../../../shared/components/CoachEventCell';
 
 
@@ -15,6 +15,7 @@ export interface EventsSlice {
     event_id: number;
     group_id: number;
 
+    timestamp: number;
     event_year: number;
     event_month: number;
     event_week: number;
@@ -37,6 +38,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     event_id: 0,
     group_id: 0,
 
+    timestamp: 0,
     event_year: getCurrentYear(),
     event_month: 3,
     event_week: 0,
@@ -82,7 +84,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                 event_id: eventId,
                 event_year: year,
                 event_month: month,
-                event_week: week
+                event_week: week,
             });
             let currentDay: number = 0;
             let days: {day: number, weekday: string}[]=[];
@@ -107,6 +109,8 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     },
 
     selectEvent: (event_id: number, group_id: number) => {
-        set({ event_id, group_id });
+        const { events }: EventsSlice = get();
+        const event = events.find(el => el.id === event_id)!;
+        set({ event_id, group_id, timestamp: event.timestamp});
     },
 });

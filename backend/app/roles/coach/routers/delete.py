@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import delete
 from database import get_session
 from crud import CRUD
 from roles.admin import schemas
@@ -8,6 +9,21 @@ import models
 router = APIRouter()
 
 
-@router.delete("/student/achievements/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+@router.delete("/student/achievements/{id}", response_model=schemas.ResponseOk, tags=["Coach"])#???
 async def remove_achievement(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Achievement, id, session)}
+
+
+# Attendances
+@router.delete("/camps/events/{event_id}/groups/{group_id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def delete_attendance(event_id: int, group_id: int, session: Session = Depends(get_session)):
+    stmt = (
+        delete(models.Attendance)
+        .where(
+            models.Attendance.event_id == event_id,
+            models.Attendance.group_id == group_id
+        )
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"isOk": True}
