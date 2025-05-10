@@ -77,8 +77,15 @@ export function getChanges<T extends Record<string, any>>(oldObj: T, newObj: T):
 }
 //const changedFields = getChangedFields(oldData, newData);
 
-export function getTimestamp(year: number, month: number): number {
-  return new Date(year, month - 1, 1).getTime();
+export function getTimestamp(year: number, month: number, week?: number): number {
+  const date = new Date(year, month - 1, 1); // первый день месяца
+
+  if (week && week > 0) { // от 0
+    const firstDay = date.getDay();  // Найти день недели первого числа месяца (0 — воскресенье, 1 — понедельник, ..., 6 — суббота)
+    const offset = week * 7; // Вычисляем смещение до нужной недели
+    date.setDate(date.getDate() + offset);
+  }
+  return date.getTime();
 }
 
 export function getYearAndMonth(timestamp: number): { year: number; month: number } {

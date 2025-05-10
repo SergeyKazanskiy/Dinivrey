@@ -16,7 +16,7 @@ export default function StudentLayout() {
     let iconName: any; let label = '';
 
     if (routeName === 'Attendance') {
-      iconName = 'persons-outline'; label = 'Attendance';
+      iconName = 'checkmark-done-sharp'; label = 'Attendance';
     } else if (routeName === 'Testing') {
       iconName = 'document-text-outline'; label = 'Testing';
     } else if (routeName === 'Gaming') {

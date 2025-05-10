@@ -5,7 +5,7 @@ import { ImageBackground, View, StyleSheet, Pressable, Platform } from 'react-na
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SportsView } from './views/SportsView';
-import { LidersView } from './views/LidersView';
+import { StudentsView } from './views/StudentsView';
 import { useStore } from '../store';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 
@@ -42,7 +42,7 @@ export default function TestingScreen() {
       <CustomNavbar title='Students' onClick={() => router.back()}/>
 
       <SportsView/>
-      <LidersView/>
+      <StudentsView/>
     </LinearGradient>
   );
 };
