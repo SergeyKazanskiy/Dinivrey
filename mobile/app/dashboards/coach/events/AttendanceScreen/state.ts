@@ -44,7 +44,8 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
     loadAttendances: () => {
         const { event_id, group_id }: EventsSlice = get();
-
+        set({ isAllChecked: false});
+        
         get_attendances(event_id, group_id, (attendances: Attendance[]) => {
             if (attendances.length > 0) {
                 set({ attendances, isStudentsView: false, isAttendanceView: true });
@@ -100,7 +101,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
             if (res.isOk) {
                 const { loadStudentsNames }: AttendanceSlice = get();
                 loadStudentsNames(group_id);
-                set({ attendances: [] });
+                set({ attendances: [], isAllChecked: false });
             }
         });
     },

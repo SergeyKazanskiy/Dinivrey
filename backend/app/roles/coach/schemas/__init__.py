@@ -2,7 +2,7 @@ from .shared import ResponseOk, ResponseId
 from .group import GroupResponse, StudentShort
 
 from .student import StudentResponse, ParentResponse, StudentName
-from .student import TestResponse
+from .student import TestResponse, Tester
 from .student import GameResponse
 from .student import  AchievementResponse, AchieveUpdate, AchieveResponse
 

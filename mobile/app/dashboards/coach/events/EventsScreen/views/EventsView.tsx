@@ -25,17 +25,11 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
 
   return (
     <>
-      <View style={styles.group}>
-        
-        <ListItem.Accordion
-          containerStyle={styles.group}
-          isExpanded={expanded}
-          icon={{}}
+        <ListItem.Accordion containerStyle={styles.group} isExpanded={expanded} icon={{}}
           content={
             <>
               <Icon name={expanded ? 'chevron-down' : 'chevron-right'}
                 type="material-community" color="white" style={{ marginRight: 10 }} />
-
               <ListItem.Content>
                 <ListItem.Title style={styles.title}>{day}. {weekday}</ListItem.Title>
               </ListItem.Content>
@@ -43,12 +37,11 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
           }
           onPress={() => setExpanded(!expanded)}
         />
-      </View>
       {expanded &&
-          <FlatList data={dayEvents}
+          <FlatList data={dayEvents} contentContainerStyle={{paddingBottom: 24}}
             renderItem={({ item }) =>
               <CoachEventCell
-                type={item.type}
+                type={item.type}  
                 time={formatDateTime(item.timestamp).time}
                 desc={item.desc}
                 group1={groups.find(el => el.id === item.group1_id)!}
@@ -63,8 +56,7 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
 }
 
 const styles = StyleSheet.create({
-  group: { backgroundColor: '4b5320', borderWidth: 1, borderColor: 'green' },
+  group: { backgroundColor: '4b5320', borderWidth: 1, borderColor: 'green', marginBottom: 2},
   title: { color: 'white', fontWeight: 'bold' },
   list: { borderRadius: 10 },
-  item: { marginBottom: 8 },
 });
