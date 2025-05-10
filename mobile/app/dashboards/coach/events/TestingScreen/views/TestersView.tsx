@@ -1,29 +1,32 @@
 import React from "react";
-import { StyleSheet, FlatList, ScrollView, View} from "react-native";
+import { StyleSheet, FlatList, ScrollView } from "react-native";
 import { useStore } from '../../store';
-import { LiderCell } from '../../../../../shared/components/LiderCell';
+import { TesterCell } from '../../../../../shared/components/TesterCell';
 
 
-export const LidersView = () => { 
-  //const { liders, student_id } = useStore();
+export const TestersView = () => { 
+  const { testers, exam, selectTesterExam } = useStore();
     
   return (
     <ScrollView style={styles.container}>
-        
+        <FlatList data={testers} 
+            keyExtractor={(index) => index.toString()}
+            renderItem={({ item }) =>
+              <TesterCell
+                first_name={item.first_name}
+                last_name={item.last_name}
+                value={item[exam]}
+                onClick={() => selectTesterExam(item.id)}
+              />
+        }/>
     </ScrollView>
   );
 };
-/*
-<FlatList data={liders} 
-            keyExtractor={(index) => index.toString()}
-            renderItem={({ item, index }) =>
-            <View style={item.id === student_id ? styles.itemSelected : styles.item}>
-              <LiderCell inx={index + 1} lider={item}/>
-            </View>    
-        }/>*/
+
 const styles = StyleSheet.create({
   container: {
-    //marginTop: 60,
+    padding: 16,
+    paddingTop: 0,
   },
   item: {
     marginVertical: 4

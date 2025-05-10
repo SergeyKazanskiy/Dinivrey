@@ -36,7 +36,21 @@ class StudentName(BaseModel):
 
     class Config:
         from_attributes = True
-        
+
+class Tester(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+
+    speed: float
+    stamina: float
+    climbing: float
+    evasion: float
+    hiding: float
+
+    class Config:
+            from_attributes = True
+
 # Test
 class TestBase(BaseModel):
     timestamp: int

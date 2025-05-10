@@ -52,17 +52,20 @@ export default function AttendanceScreen() {
 
        <View style={styles.container}>
           <View style={styles.section}>
-            {isStudentsView && <Button size='sm' disabled={students.length === 0} color="blue"
-                onPress={handleAddBlank}>Add Blank</Button>}
+            {isStudentsView && <Button disabled={students.length === 0} type='outline'
+              buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
+              onPress={handleAddBlank}>Add Blank</Button>}
             {isAttendanceView && <Button size='sm' color="blue" type='outline'
-                onPress={deleteAttendances}>Delete Blank</Button>}
+              buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
+              onPress={deleteAttendances}>Delete Blank</Button>}
 
             <View style={[styles.section, {marginRight: 11}]}>
-              <Text style={[widgetStyles.title, {paddingTop: 4}]}>All select</Text>
-              <CheckBox checked={isAllChecked} onPress={setAllChecked}
+              {isAttendanceView && <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>}
+
+              {isAttendanceView && <CheckBox checked={isAllChecked} onPress={setAllChecked}
                 iconType="material-community" checkedIcon="checkbox-outline" uncheckedIcon={'checkbox-blank-outline'}
                 containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}} checkedColor='#ddd'
-              />
+              />}
             </View>
           </View>
 
@@ -88,9 +91,23 @@ const styles = StyleSheet.create({
   section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 4
   },
   summary: { 
     marginTop: 'auto', 
     paddingBottom: 20
+  },
+  button: {
+    height: 28,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+  },
+  title: {
+    fontSize: 16,
+    color: '#ddd'
+  },
+  allSelect: {
+    fontSize: 16,
+    color: 'gold'
   },
 });

@@ -1,40 +1,43 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
-//import { widgetStyles } from '../../../../shared/styles/appStyles';
+import { widgetStyles } from '../../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
-//import { ImagesPath } from '../../../../shared/constants';
+import { ImagesPath } from '../../../../../shared/constants';
 
 
 export const SportsView = () => {
-   // const { lider_tests, lider_test } = useStore();
-    //const { selectTest } = useStore();
+    const { exams, exam } = useStore();
+    const { selectExam } = useStore();
 
     return (
-        <View style={styles.container}>
-            
-        </View>
-    );
-};
-/*
-<FlatList 
-                data={lider_tests} 
+        <View style={styles.container} >
+            <FlatList 
+                data={exams} 
                 horizontal
                 keyExtractor={(item) => item}
+                contentContainerStyle={styles.section}
                 renderItem={({ item }) => {
                     const capitalizedItem = item.charAt(0).toUpperCase() + item.slice(1);
                     return (
-                        <TouchableOpacity onPress={() => selectTest(item)}>
-                            <Image style={styles.image} 
+                        <TouchableOpacity onPress={() => selectExam(item)}>
+                            <Image style={[styles.image, item === exam && styles.examSelected]} 
                                 source={{ uri: `${ImagesPath}/icons/tests/${capitalizedItem}.png` }} 
                             />
-                            <Text style={item === lider_test ? widgetStyles.sportSelected : widgetStyles.sport}>{item}</Text>
+                            <Text style={widgetStyles.sport}>{item}</Text>
                         </TouchableOpacity>
                     );
                 }}
             />
-            */
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
     container: {
+        marginTop:4,
+        alignSelf:'center'
+    },
+    section: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 4,
@@ -50,4 +53,9 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         marginBottom: -8,
     },
+    examSelected: {
+        marginTop: -8,
+        height: 68,
+        width: 68,
+    }
 });

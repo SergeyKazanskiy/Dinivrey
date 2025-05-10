@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(110, 151, 6)',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginTop: 6
+    marginVertical: 4
   },
   column: {
     flexDirection: 'column',
@@ -75,14 +75,11 @@ const styles = StyleSheet.create({
   },
   desc: {
     flexDirection: 'row',
-    //justifyContent: 'space-between',
-    //marginBottom: 8,
   },
   button: {
     height: 28,
     paddingHorizontal: 8,
     borderRadius: 5,
-    //backgroundColor: 'blue'
   },
   title: {
     fontSize: 16,

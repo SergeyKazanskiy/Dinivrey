@@ -180,3 +180,25 @@ async def get_attendances(event_id:int, group_id: int, session: AsyncSession = D
 @router.get("/camps/groups/{group_id}/students/names", response_model=List[schemas.StudentName], tags=["Coach"]) #
 async def get_student_names(group_id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Student, session, filters={"group_id": group_id}, order_by="first_name")
+
+# Testers
+@router.get("/camps/groups/{group_id}/testers", response_model=List[schemas.Tester], tags=["Coach"]) #
+async def get_student_names(group_id: int, session: AsyncSession = Depends(get_session)):
+    students = await CRUD.get(models.Student, session, filters={"group_id": group_id}, order_by="first_name")
+    liders = []
+    for student in students:
+        tests = await session.execute(select(models.Test).where(models.Test.student_id == student.id).order_by(desc(models.Test.timestamp)).limit(1))
+        test = tests.scalar_one_or_none()
+        if test:
+            lider = {
+                'id': student.id,
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'speed': test.speed,
+                'stamina': test.stamina,
+                'climbing': test.climbing,
+                'evasion': test.evasion,
+                'hiding': test.hiding,  
+            }
+            liders.append(lider)
+    return liders
