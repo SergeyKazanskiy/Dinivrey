@@ -1,18 +1,17 @@
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, Platform } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SportsView } from './views/SportsView';
 import { TestersView } from './views/TestersView';
 import { useStore } from '../store';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
-import { ExamView } from './views/ExamView';
+import { ExamModal } from './views/ExamModal';
 
 
 export default function TestingScreen() {
-  const { exam, isAlert, testerName } = useStore();
-  const { loadTesters, setIsAlert } = useStore();
+  const { loadTesters } = useStore();
 
   const router = useRouter();
 
@@ -25,8 +24,7 @@ export default function TestingScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Students' onClick={() => router.back()}/>
-
-      <ExamView/>
+      <ExamModal/>
 
       <SportsView/>
       <TestersView/>

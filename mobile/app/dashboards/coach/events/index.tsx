@@ -31,7 +31,7 @@ export default function StudentLayout() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      {/* <DinivreyHeader/> */}
+      <DinivreyHeader/>
 
       <Tab.Navigator
         screenOptions={({ route }) => ({ headerShown: false, tabBarShowLabel: false,

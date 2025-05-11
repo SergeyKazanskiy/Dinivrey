@@ -40,18 +40,23 @@ export function delete_attendances(event_id: number, group_id: number, callback:
     return httpWrapper(() => api.delete(`camps/events/${event_id}/groups/${group_id}`), callback);
 };
 
+
+// Testing
+export function get_testers(event_id: number, group_id: number,  callback: (testers: Tester[]) => void) {
+    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/testers/`), callback, 'Getting testers');
+};
+
+
+export function add_all_present_students_new_tests(event_id: number, group_id: number, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.post(`camps/events/${event_id}/groups/${group_id}/tests`), callback);
+};
+
 export function add_student_test(data: Omit<Test, 'id'>, callback: (res: {id: number}) => void) {
     return httpWrapper(() => api.post(`students/tests`, data), callback);
 };
 
 export function delete_student_test(id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.delete(`students/tests/${id}`), callback);
-};
-
-
-// Testing
-export function get_testers(event_id: number, group_id: number,  callback: (testers: Tester[]) => void) {
-    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/testers/`), callback, 'Getting testers');
 };
 
 export function update_student_test(id: number, data: any, callback: (res: {isOk: boolean}) => void) {

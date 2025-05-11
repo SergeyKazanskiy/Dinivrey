@@ -71,11 +71,11 @@ export const CustomDialog: React.FC<Props> =
 
           <View style={styles.content}>{children}</View>
           <View style={styles.actions}>
-            <Button title={buttonText1} type='outline' 
+            <Button title={buttonText1} type='solid' 
               buttonStyle={styles.button} titleStyle={styles.buttonText}
               onPress={() => onButton1()}
             />
-            <Button title={buttonText2} type='outline' 
+            <Button title={buttonText2} type='solid' 
               buttonStyle={styles.button} titleStyle={styles.buttonText}
               onPress={() => onButton2()}
             />
@@ -95,11 +95,11 @@ const styles = StyleSheet.create({
     
   },
   dialog: {
-    marginTop: 140,
-    backgroundColor: '#7FFFD4',
+    marginTop: 158,
+    backgroundColor: '#AFEEEE', //E0FFFF
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'gold',
+    borderColor: 'green',
     paddingHorizontal: 20,
     paddingVertical: 18,
     marginHorizontal: 28,
@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
     height: 28,
     paddingHorizontal: 8,
     borderRadius: 5,
+    backgroundColor: '#2E4A7C',
   },
   buttonText: {
     fontSize: 15,
-    color: '#333'
+    color: '#ddd'
   },
 });
 

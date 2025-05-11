@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    paddingRight: 30,
+    paddingRight: 44,
     fontWeight: '400',
     fontSize: 22,
     color: '#D1FF4D',
