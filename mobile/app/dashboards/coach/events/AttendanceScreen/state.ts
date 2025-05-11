@@ -1,9 +1,10 @@
 import { Alert } from 'react-native';
-import { Student, Attendance } from '../model';
-import { get_attendances, get_students_names } from '../http';
+import { Student, Attendance, Test } from '../model';
+import { get_attendances, get_students_names, add_student_test, delete_student_test } from '../http';
 import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
-import { EventsSlice } from '../../events/EventsScreen/state'; 
-import { isPast, isToday, isFuture} from '../../../../shared/utils';
+import { EventsSlice } from '../EventsScreen/state';
+import { TestingSlice } from '../TestingScreen/state';
+import { isPast, formatDateTime } from '../../../../shared/utils';
 
 
 export interface AttendanceSlice {
@@ -85,6 +86,27 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         if (attendance) {
             update_attendance(attendance_id, {present: !attendance.present}, (res) => {
                 if (res.isOk) {
+                    if (attendance.present) {
+                        delete_student_test(attendance.test_id!, (res => {
+                            if (res.isOk) {
+                                attendance.test_id = undefined;
+                            } 
+                        }));
+                    } else {
+                        const newTest: Omit<Test, 'id'> = {
+                            student_id: attendance.student_id,
+                            timestamp: timestamp,
+                            date: formatDateTime(timestamp).date,
+                            speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
+                        };
+                        
+                        add_student_test(newTest, (res) => {
+                            if (res.id) {
+                                attendance.test_id = res.id;
+                            }     
+                        })
+                    }
+
                     attendance.present = !attendance.present;
                     set({
                         attendance_id,
@@ -118,6 +140,6 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                 }));
             }
         });
-    }
+    },
 });
 

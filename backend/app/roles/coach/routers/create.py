@@ -34,3 +34,6 @@ async def add_attendances(data: schemas.AttendanceDataCreate, session: AsyncSess
         await CRUD.add(models.Attendance, attendance, session)
     return {"isOk": True}
 
+@router.post("/students/tests", response_model=schemas.ResponseId, tags=["Coach"])
+async def add_student_test(data: schemas.TestCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Test, data, session)}

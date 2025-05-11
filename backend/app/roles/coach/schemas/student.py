@@ -42,6 +42,7 @@ class Tester(BaseModel):
     first_name: str
     last_name: str
 
+    test_id: int
     speed: float
     stamina: float
     climbing: float
