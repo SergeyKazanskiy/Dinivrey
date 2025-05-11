@@ -23,7 +23,7 @@ export const ProfileView = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 8,
+        padding: 4,
         flexDirection: 'row',
         justifyContent: 'flex-start',
     },
@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '400',
         marginBottom: 4,
-        padding: 6,
+        paddingVertical: 4,
+        paddingHorizontal: 12,
         width: 200,
         borderRadius: 10,
         backgroundColor: 'rgb(180, 216, 158)',
@@ -49,7 +50,8 @@ const styles = StyleSheet.create({
         //marginTop: 8,
         color: '#444',
         fontSize: 18,
-        padding: 6,
+        paddingVertical: 4,
+        paddingHorizontal: 12,
         width: 200,
         borderRadius: 10,
         backgroundColor: 'rgb(180, 216, 158)',

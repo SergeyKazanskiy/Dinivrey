@@ -8,16 +8,15 @@ export type Props = {
   first_name: string;
   last_name: string;
   value: number;
-  onClick: () => void;
 };
   
-export const TesterCell: React.FC<Props> = ({first_name, last_name, value, onClick}) => {
+export const TesterCell: React.FC<Props> = ({ first_name, last_name, value }) => {
   return (
     <View style={[styles.container, styles.section]}>
-      <Text style={[groupStyles.title, {marginRight: 10}]}>
+      <Text style={[styles.text]}>
         {first_name} {last_name}
       </Text>
-      <Text style={[groupStyles.title, {marginRight: 2}]} onPress={onClick}>
+      <Text style={[groupStyles.title, {marginRight: 2}]}>
         {value}
       </Text>
     </View>
@@ -37,6 +36,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  text: {
+    color: '#ddd',
+    fontWeight: '400',
+    fontSize: 18
+  }
 });
 
 

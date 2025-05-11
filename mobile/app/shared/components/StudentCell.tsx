@@ -12,7 +12,7 @@ export type Props = {
 export const StudentCell: React.FC<Props> = ({first_name, last_name}) => {
   return (
     <View style={[styles.container, styles.section]}>
-      <Text style={[groupStyles.title, {marginRight: 10}]}>
+      <Text style={[styles.text]}>
         {first_name} {last_name}
       </Text>
     </View>
@@ -32,6 +32,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  text: {
+    color: '#ddd',
+    fontWeight: '400',
+    fontSize: 18
+  }
 });
 
 

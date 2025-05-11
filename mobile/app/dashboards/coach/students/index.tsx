@@ -6,6 +6,7 @@ import { StyleSheet, Platform, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native-animatable';
+import { DinivreyHeader } from '../../../shared/components/DinivreyHeader';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,6 +28,8 @@ export default function StudentLayout() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+      <DinivreyHeader/>
+      
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
@@ -37,7 +40,7 @@ export default function StudentLayout() {
             return (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'}/>
-                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 12, marginTop: 4 }} >
+                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 14, marginTop: 4 }} >
                   {label}
                 </Text>
               </View>

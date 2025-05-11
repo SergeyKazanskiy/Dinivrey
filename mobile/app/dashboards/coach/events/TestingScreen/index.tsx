@@ -1,18 +1,17 @@
-import { useCallback, useLayoutEffect } from 'react';
+import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { useNavigation, useRouter } from 'expo-router';
-import { ImageBackground, View, StyleSheet, Text, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { SportsView } from './views/SportsView';
 import { TestersView } from './views/TestersView';
 import { useStore } from '../store';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
-import { CustomAlert } from '../../../../shared/components/CustomAlert';
+import { ExamView } from './views/ExamView';
 
 
 export default function TestingScreen() {
-  const { exam, isAlert } = useStore();
+  const { exam, isAlert, testerName } = useStore();
   const { loadTesters, setIsAlert } = useStore();
 
   const router = useRouter();
@@ -27,10 +26,7 @@ export default function TestingScreen() {
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Students' onClick={() => router.back()}/>
 
-      <CustomAlert visible={isAlert}  title={"Enter "+exam}
-        onClose={() => setIsAlert(false)}>
-        <Text>Value: </Text>
-      </CustomAlert>
+      <ExamView/>
 
       <SportsView/>
       <TestersView/>
@@ -46,7 +42,8 @@ const styles = StyleSheet.create({
      width: '100%',
      height: '100%',
    },
-  container: {
-    flex: 1,
+  dialogText: {
+    fontSize: 16,
+    color: '#444'
   },
 });

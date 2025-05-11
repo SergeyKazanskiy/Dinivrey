@@ -41,7 +41,7 @@ export const CoachEventCell: React.FC<Props> = ({type, time, desc, group1, onGro
             />}
           </View>
           
-          <Text style={[cellStyles.date]}>{time}</Text>
+          <Text style={[cellStyles.date, {paddingRight: 4}]}>{time}</Text>
         </View>
 
         <Text style={[cellStyles.description, {marginTop: 7}]}>{desc}</Text>
@@ -86,5 +86,4 @@ const styles = StyleSheet.create({
     color: 'gold'
   },
 });
-
 

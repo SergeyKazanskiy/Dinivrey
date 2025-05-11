@@ -56,7 +56,13 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
 }
 
 const styles = StyleSheet.create({
-  group: { backgroundColor: '4b5320', borderWidth: 1, borderColor: 'green', marginBottom: 2},
-  title: { color: 'white', fontWeight: 'bold' },
+  group: {
+    backgroundColor: '#152B52',
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'green',
+    marginVertical: 3
+  },
+  title: { color: '#ddd', fontWeight: '500', fontSize: 16 },
   list: { borderRadius: 10 },
 });

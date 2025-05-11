@@ -35,7 +35,7 @@ export function StudentList() {
                         </ListItem.Title>
 
                         <ListItem.Subtitle style={styles.subtitle}>
-                            {`${student.gender} ${student.age} years old`}
+                            {`${student.gender}, ${student.age} years old`}
                         </ListItem.Subtitle>
                     </ListItem.Content>
                     <Badge value="3.5" status="success" />
@@ -52,10 +52,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-   // borderColor: 'rgb(110, 151, 6)',
-    backgroundColor: 'rgba(45, 75, 10, 0.4)',
+    borderColor: 'rgb(110, 151, 6)',
+    backgroundColor: 'rgba(45, 75, 10, 0.3)',
    },
   selected: { backgroundColor: '#4b5320', borderWidth: 1, borderColor: 'yellow' },
-  title: { color: 'white', fontWeight: 'bold' },
-  subtitle: { color: '#A7CFF5' },
+  title: { color: '#ddd', fontWeight: '500' },
+  subtitle: { color: '#A7CFF5', paddingTop: 4 },
 });

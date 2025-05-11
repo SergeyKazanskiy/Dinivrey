@@ -6,6 +6,7 @@ import { StyleSheet, Platform, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native-animatable';
+import { DinivreyHeader } from '../../../shared/components/DinivreyHeader';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,28 +17,31 @@ export default function StudentLayout() {
     let iconName: any; let label = '';
 
     if (routeName === 'Attendance') {
-      iconName = 'checkmark-done-sharp'; label = 'Attendance';
+      iconName = 'checkmark-done-sharp';
+      label = 'Attendance';
     } else if (routeName === 'Testing') {
-      iconName = 'document-text-outline'; label = 'Testing';
+      iconName = 'document-text-outline';
+      label = 'Testing';
     } else if (routeName === 'Gaming') {
-      iconName = 'trophy-outline'; label = 'Gaming';
+      iconName = 'trophy-outline';
+      label = 'Gaming';
     };
     return {iconName, label}
   }
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+      <DinivreyHeader/>
+
       <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarShowLabel: false,
+        screenOptions={({ route }) => ({ headerShown: false, tabBarShowLabel: false,
           tabBarStyle: { backgroundColor: '#0C1B30', height: 70, borderTopWidth: 0 },
           tabBarIcon: ({ focused }) => {
             const { iconName, label } = getIconData(route.name);
             return (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'}/>
-                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 12, marginTop: 4 }} >
+                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 14, marginTop: 4 }} >
                   {label}
                 </Text>
               </View>
