@@ -6,6 +6,7 @@ from database import get_session
 from crud import CRUD
 from roles.admin import schemas 
 import models
+from datetime import datetime
 
 router = APIRouter()
 
@@ -37,3 +38,31 @@ async def add_attendances(data: schemas.AttendanceDataCreate, session: AsyncSess
 @router.post("/students/tests", response_model=schemas.ResponseId, tags=["Coach"])
 async def add_student_test(data: schemas.TestCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Test, data, session)}
+
+@router.post("/camps/events/{event_id}/groups/{group_id}/tests", response_model=schemas.ResponseId, tags=["Coach"])
+async def add_all_present_students_new_tests(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Attendance
+    E = models.Event
+    stmt = (
+        select(A.student_id, E.timestamp)
+        .join(E, A.event == E.id)
+        .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    
+    for row in rows:
+        date=datetime.fromtimestamp(row[1] / 1000).strftime("%a %d")
+        test = schemas.TestCreate(
+            student_id=row[0],
+            timestamp=row[1],
+            date=date,
+            speed=0.0,
+            stamina=0.0,
+            climbing=0.0,
+            evasion=0.0,
+            hiding=0.0
+        )
+        id = await CRUD.add(models.Test, test, session)
+
+    return {"isOk": True}

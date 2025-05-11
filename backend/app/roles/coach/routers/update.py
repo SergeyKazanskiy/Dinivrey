@@ -31,3 +31,8 @@ async def update_all_attendances(event_id: int, group_id: int, data: schemas.Att
     for row in rows:
         await CRUD.update(models.Attendance, row.id, data, session)
     return {"isOk": True}
+
+# Test
+@router.put("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def update_student_test(id: int, data: schemas.TestUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Test, id, data, session)}

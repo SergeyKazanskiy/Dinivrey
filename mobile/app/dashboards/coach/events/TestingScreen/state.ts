@@ -1,6 +1,6 @@
 import { Store } from "../store";
 import { Tester, Test } from "../model";
-import { get_testers, update_student_test } from '../http';
+import { get_testers, update_student_test, add_all_present_students_new_tests } from '../http';
 import { NumericFields, objectToJson } from '../../../../shared/utils';
 import { EventsSlice } from '../EventsScreen/state';
 
@@ -12,7 +12,7 @@ export interface TestingSlice {
     exams: NumericFields<Tester>[];
     exam: NumericFields<Tester>;
 
-    isAlert: boolean;
+    isModal: boolean;
     tester_id: number;
     examValue: number;
 
@@ -20,9 +20,7 @@ export interface TestingSlice {
     selectExam: (test: NumericFields<Tester>) => void;
 
     onTesterClick: (student_id: number) => void;
-    setIsAlert: (isAlert: boolean) => void;
-    setExamValue: (examValue: number) => void;
-
+    closeModal: () => void;
     updateTest: (examValue: number) => void;
 }
 
@@ -33,7 +31,7 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
     exam: 'speed',       
     exams: ['speed', 'stamina', 'climbing', 'evasion', 'hiding'],
 
-    isAlert: false,
+    isModal: false,
     tester_id: 0,
     examValue: 0,
 
@@ -56,34 +54,33 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
     },
 
     onTesterClick: (tester_id: number) => {
-        const { testers }: TestingSlice = get();
+        const { testers, exam }: TestingSlice = get();
         const tester = testers.find(el => el.id === tester_id)!;
+       
         set({
-            isAlert: true,
+            examValue: tester[exam],
+            isModal: true,
             testerName: tester.first_name + ' ' + tester.last_name,
             tester_id
-        })
+        });
     },
 
-    setIsAlert: (isAlert: boolean) => set({ isAlert }),
-
-    setExamValue: (examValue: number) => {
-        set({ examValue, isAlert: false });
-    },
-
+    closeModal: () => set({ isModal: false }),
 
     updateTest: (examValue: number, ) => {
         const { exam, tester_id, testers }: TestingSlice= get();
-        const data = {exam: examValue};
+        const data = {[exam]: examValue};
         const tester = testers.find(el => el.id === tester_id)!;
-
+        
         update_student_test(tester.test_id, data, (res => {
             if (res.isOk) {
                 tester[exam] = examValue;
 
                 set((state: TestingSlice) => ({
+                    examValue,
                     testers: state.testers.map(el => el.id === tester_id ? tester : el),
-                }))
+                    isModal: false,
+                }));
             }
         }));
     },

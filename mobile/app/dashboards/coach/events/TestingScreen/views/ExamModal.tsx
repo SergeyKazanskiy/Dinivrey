@@ -1,15 +1,19 @@
-import {useState} from 'react';
-
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput} from 'react-native';
 import { useStore } from '../../store';
 import { CustomDialog } from '../../../../../shared/components/CustomDialog';
 
 
-export function ExamView() {
-  const { exam, isAlert, testerName, examValue } = useStore();
-  const { setExamValue, setIsAlert } = useStore();
+export function ExamModal() {
+  const { exam, isModal, testerName, examValue } = useStore();
+  const { closeModal, updateTest } = useStore();
 
   const [input, setInput] = useState<string>(String(examValue));
+  
+  useEffect(() => {
+    setInput(String(examValue));
+  }, [examValue]);
+
 
   const handleChange = (text: string) => {
 
@@ -22,9 +26,9 @@ export function ExamView() {
 
   return (
     <View style={styles.container} >
-      <CustomDialog visible={isAlert} title={testerName}
+      <CustomDialog visible={isModal} title={testerName}
         buttonText1='Cancel' buttonText2='Save'
-        onButton1={() => setIsAlert(false)} onButton2={() => setExamValue(Number(input))}>
+        onButton1={closeModal} onButton2={() => updateTest(Number(input))}>
 
             <View style={styles.section} >
                 <Text style={styles.dialogText} >{"Enter "+exam}: </Text>
@@ -51,15 +55,17 @@ const styles = StyleSheet.create({
   },
   dialogText: {
     fontSize: 16,
-    color: '#444',
+    fontWeight: '400',
+    color: '#222',
     paddingTop: 4,
     paddingRight: 4
   },
   dialogInput: {
     height: 28,
     width: 44,
-    //margin: 12,
+    fontSize: 15,
     borderWidth: 1,
     paddingHorizontal: 8,
+    backgroundColor: '#FFFACD',
   },
 });
