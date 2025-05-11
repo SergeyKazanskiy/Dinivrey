@@ -14,10 +14,12 @@ import { EventType } from "../../../shared/models/Event";
     first_name: string;
     last_name: string;
   }
-
+  
   export type Test = {
     id: number;
+    student_id: number;
     timestamp: number;
+    date: string;
     speed: number;
     stamina: number;
     climbing: number;
@@ -40,6 +42,7 @@ export interface Tester {
     first_name: string;
     last_name: string;
 
+    test_id: number;
     speed: number;
     stamina: number;
     climbing: number;
@@ -60,4 +63,5 @@ export interface Attendance {
   first_name: string;
   last_name: string;
   present: boolean;
+  test_id?: number;
 }

@@ -27,3 +27,7 @@ async def delete_attendance(event_id: int, group_id: int, session: Session = Dep
     await session.execute(stmt)
     await session.commit()
     return {"isOk": True}
+
+@router.delete("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def delete_student_test(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.Test, id, session)}
