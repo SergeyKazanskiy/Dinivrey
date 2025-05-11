@@ -1,16 +1,22 @@
 import React, { useEffect, useRef } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
+import { Modal, View, Text, StyleSheet, Animated, Platform } from 'react-native';
+import { Button } from '@rneui/themed';
 
 
 interface Props {
   visible: boolean;
-  onClose: () => void;
-  title?: string;
-  children?: React.ReactNode;
-  buttonText?: string;
+  title: string;
+  children: React.ReactNode;
+  buttonText1: string;
+  buttonText2: string;
+
+  onButton1: () => void;
+  onButton2: () => void;
 }
 
-export const CustomAlert: React.FC<Props> = ({ visible, onClose, title, children, buttonText }) => {
+export const CustomDialog: React.FC<Props> =
+  ({ visible, title, children, buttonText1, buttonText2, onButton1, onButton2 }) => {
+
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
@@ -49,7 +55,7 @@ export const CustomAlert: React.FC<Props> = ({ visible, onClose, title, children
       transparent
       visible={visible}
       animationType="none"
-      onRequestClose={onClose}
+      onRequestClose={onButton1}
     >
       <View style={styles.overlay}>
         <Animated.View
@@ -61,12 +67,18 @@ export const CustomAlert: React.FC<Props> = ({ visible, onClose, title, children
             },
           ]}
         >
-          {title && <Text style={styles.title}>{title}</Text>}
+          <Text style={styles.title}>{title}</Text>
+
           <View style={styles.content}>{children}</View>
           <View style={styles.actions}>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.buttonText}>Close</Text>
-            </TouchableOpacity>
+            <Button title={buttonText1} type='outline' 
+              buttonStyle={styles.button} titleStyle={styles.buttonText}
+              onPress={() => onButton1()}
+            />
+            <Button title={buttonText2} type='outline' 
+              buttonStyle={styles.button} titleStyle={styles.buttonText}
+              onPress={() => onButton2()}
+            />
           </View>
         </Animated.View>
       </View>
@@ -77,32 +89,45 @@ export const CustomAlert: React.FC<Props> = ({ visible, onClose, title, children
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'flex-start',
     ...(Platform.OS === 'web' ? { width: 360, alignSelf: 'flex-start' } : {}),
+    
   },
   dialog: {
-    backgroundColor: '#90EE90',
+    marginTop: 140,
+    backgroundColor: '#7FFFD4',
     borderRadius: 10,
-    padding: 20,
-    marginHorizontal: 36,
+    borderWidth: 1,
+    borderColor: 'gold',
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    marginHorizontal: 28,
     maxWidth: Platform.OS === 'web' ? 360 : undefined,
     elevation: 5,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 10,
+    marginBottom: 16,
   },
   content: {
     marginBottom: 20,
   },
   actions: {
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 6,
+    marginTop: 4
+  },
+  button: {
+    height: 28,
+    paddingHorizontal: 8,
+    borderRadius: 5,
   },
   buttonText: {
-    color: '#007bff',
-    fontWeight: '500',
+    fontSize: 15,
+    color: '#333'
   },
 });
 

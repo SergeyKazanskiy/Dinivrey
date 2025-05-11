@@ -1,23 +1,25 @@
 import React from "react";
-import { StyleSheet, FlatList, ScrollView } from "react-native";
+import { StyleSheet, FlatList, ScrollView, TouchableOpacity } from "react-native";
 import { useStore } from '../../store';
 import { TesterCell } from '../../../../../shared/components/TesterCell';
 
 
 export const TestersView = () => { 
-  const { testers, exam, selectTesterExam } = useStore();
+  const { testers, exam, onTesterClick } = useStore();
     
   return (
     <ScrollView style={styles.container}>
         <FlatList data={testers} 
             keyExtractor={(index) => index.toString()}
             renderItem={({ item }) =>
-              <TesterCell
-                first_name={item.first_name}
-                last_name={item.last_name}
-                value={item[exam]}
-                onClick={() => selectTesterExam(item.id)}
-              />
+
+              <TouchableOpacity onPress={() => onTesterClick(item.id)}>
+                <TesterCell
+                  first_name={item.first_name}
+                  last_name={item.last_name}
+                  value={item[exam]}
+                />
+              </TouchableOpacity>
         }/>
     </ScrollView>
   );

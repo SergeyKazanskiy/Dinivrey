@@ -44,7 +44,7 @@ export default function StatisticsScreen() {
 
       {timestamp > 0 &&
         <>
-          <Text style={styles.metric}>{metricName}</Text>
+          {/* <Text style={styles.metric}>{metricName}</Text> */}
           <ChartView/>
           <DatesView/>
           <TableView/>

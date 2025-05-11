@@ -51,7 +51,8 @@ export function CalendarView() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 8
+    paddingTop: 8,
+    marginVertical: 4
   },
   section: {
     flexDirection: 'row',

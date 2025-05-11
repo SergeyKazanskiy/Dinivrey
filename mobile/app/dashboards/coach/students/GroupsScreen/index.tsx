@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useStore } from '../store';
 import { StudentList } from './views/StudentList';
 import { Icon } from '@rneui/themed';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function GroupsScreen() {
@@ -21,29 +22,31 @@ export default function GroupsScreen() {
   );
 
   return (
-    <ScrollView style={styles.wrapper}> 
-      {groups.map((group, index) => 
-          <ListItem.Accordion key={index}
-            containerStyle={styles.group}
-            isExpanded={group.id === group_id}
-            onPress={() => selectGroup(group.id)}
-            icon={{}}
-            content={
-              <>
-                <Icon name={group.id === group_id ? 'chevron-down' : 'chevron-right'}
-                  type="material-community" color="white" style={{ marginRight: 10 }} />
-                <ListItem.Content>
-                  <ListItem.Title style={styles.title}>{group.name}</ListItem.Title>
-                  <ListItem.Subtitle style={styles.subtitle}>{group.description}</ListItem.Subtitle>
-                </ListItem.Content>
-                <Badge value={students.length} status="primary" />
-              </>
-            }
-          >
-            <StudentList/>
-          </ListItem.Accordion>
-      )}
-    </ScrollView>
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+      <ScrollView> 
+        {groups.map((group, index) => 
+            <ListItem.Accordion key={index}
+              containerStyle={styles.group}
+              isExpanded={group.id === group_id}
+              onPress={() => selectGroup(group.id)}
+              icon={{}}
+              content={
+                <>
+                  <Icon name={group.id === group_id ? 'chevron-down' : 'chevron-right'}
+                    type="material-community" color="white" style={{ marginRight: 10 }} />
+                  <ListItem.Content>
+                    <ListItem.Title style={styles.title}>{group.name}</ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitle}>{group.description}</ListItem.Subtitle>
+                  </ListItem.Content>
+                  {/* <Badge value={students.length} status="primary" /> */}
+                </>
+              }
+            >
+              <StudentList/>
+            </ListItem.Accordion>
+        )}
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
@@ -55,7 +58,14 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 16,
   },
-  group: { backgroundColor: '4b5320', borderWidth: 1, borderColor: 'green' },
-  title: { color: 'white', fontWeight: 'bold' },
+  group: {
+    backgroundColor: '#152B52',
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'green',
+    paddingVertical: 12,
+    marginVertical: 3
+  },
+  title: { color: '#ddd', fontWeight: '500' },
   subtitle: { color: '#A7CFF5' },
 });
