@@ -6,11 +6,12 @@ import { AchieveIcon } from '../../../../../shared/components/AchieveIcon';
 
 export type Props = {
   achieves: Achieve[];
+  achieve_id: number;
   category: string;
   onClick: (id: number) => void;
 };
 
-export const AchievesPanel: React.FC<Props> = ({ achieves, category, onClick }) => {  
+export const AchievesPanel: React.FC<Props> = ({ achieves, achieve_id, category, onClick }) => {  
     const data = achieves.filter(achieve => achieve.category === category);
 
     return (
@@ -21,13 +22,15 @@ export const AchievesPanel: React.FC<Props> = ({ achieves, category, onClick }) 
                 contentContainerStyle={{ justifyContent: 'flex-start', alignItems: 'center', flexGrow: 1}}
                 showsHorizontalScrollIndicator={true}
                 renderItem={({ item }) =>
-                    <AchieveIcon onClick={() => onClick(item.id)}
-                        size={80}
-                        image={item.image}
-                        label={item.name}
-                        level={item.level}
-                        effect={item.effect}
-                    />
+                    <View style={ item.id === achieve_id && styles.selected }>
+                        <AchieveIcon onClick={() => onClick(item.id)}
+                            size={80}
+                            image={item.image}
+                            label={item.name}
+                            level={item.level}
+                            effect={item.effect}
+                        />
+                    </View>
                 }
             />
         </View>
@@ -47,5 +50,8 @@ const styles = StyleSheet.create({
     },
     icon: {
         backgroundColor: 'red',
+    },
+    selected: {
+        backgroundColor: 'rgb(110, 151, 6)',
     }
 });

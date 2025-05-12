@@ -6,9 +6,10 @@ import { Ionicons } from '@expo/vector-icons';
 export type Props = {
   title: string;
   onClick: () => void;
+  children?: React.ReactNode;
 };
   
-export const CustomNavbar: React.FC<Props> = ({ title, onClick }) => {
+export const CustomNavbar: React.FC<Props> = ({ title, onClick, children }) => {
   return (
     <View style={styles.cell}>
         <Ionicons name='chevron-back' size={20} color='#D1FF4D' style={{ marginLeft: 22, marginTop: 4 }}
@@ -16,7 +17,10 @@ export const CustomNavbar: React.FC<Props> = ({ title, onClick }) => {
         />
         <View style={styles.center}>
           <Text style={styles.title}>{title}</Text>
-        </View>   
+        </View>
+        <View  style={{ width: 44, marginTop: 4 }}>
+          {children}
+        </View>
       </View>
   );
 };
@@ -24,7 +28,7 @@ export const CustomNavbar: React.FC<Props> = ({ title, onClick }) => {
 const styles = StyleSheet.create({
   cell: {
     flexDirection:'row',
-    paddingTop: 16
+    paddingTop: 16,
   },
   center: {
     flex: 1,
@@ -32,7 +36,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    paddingRight: 44,
     fontWeight: '400',
     fontSize: 22,
     color: '#D1FF4D',

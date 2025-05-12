@@ -35,6 +35,7 @@ async def add_attendances(data: schemas.AttendanceDataCreate, session: AsyncSess
         await CRUD.add(models.Attendance, attendance, session)
     return {"isOk": True}
 
+# Tests
 @router.post("/students/tests", response_model=schemas.ResponseId, tags=["Coach"])
 async def add_student_test(data: schemas.TestCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Test, data, session)}
@@ -66,3 +67,20 @@ async def add_all_present_students_new_tests(event_id: int, group_id: int, sessi
         id = await CRUD.add(models.Test, test, session)
 
     return {"isOk": True}
+
+# Achievements
+@router.post("/students/achievements", tags=["Coach"])
+async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSession = Depends(get_session)):
+    id = await CRUD.add(models.Achievement, data, session)
+    achieve = await CRUD.read(models.Achieve, data.achieve_id, session)
+    return {
+        "id": id,
+        "image": achieve.image,
+        "name": achieve.name,
+        "desc": achieve.desc,
+        "in_profile": data.in_profile,
+        "category": achieve.category,
+        "level": data.level,
+        "trigger": achieve.trigger,
+        "effect": achieve.effect
+    }
