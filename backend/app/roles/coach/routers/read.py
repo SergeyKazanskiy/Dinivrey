@@ -102,7 +102,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
     A = models.Achieve
     S = models.Achievement
     stmt = (
-        select(S.id, A.image, A.name, S.in_profile, A.category, S.level, A.effect)
+        select(S.id, A.image, A.name, S.in_profile, A.category, S.level, A.effect, A.id)
         .join(A, S.achieve_id == A.id )
         .where( S.student_id == id )
         .order_by(asc(A.name))
@@ -117,9 +117,13 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 in_profile = row[3],
                 category = row[4],
                 level = row[5],
-                effect = row[6]
+                effect = row[6],
+                achieve_id = row[7],
             ) for row in rows]
 
+@router.get("/achieves", response_model=List[schemas.AchievementResponse], tags=["Coach"])
+async def get_achieves(category: str, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Achieve, session, filters={"category": category})
 
 # Events
 @router.get("/camps/groups/events/latest", tags=["Coach"])

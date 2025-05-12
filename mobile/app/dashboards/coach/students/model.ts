@@ -93,10 +93,10 @@ export interface StudentProfile {
   };
   
   export interface Achievement {
-    id: number; // Achievement id
+    id: number;
     image: string;
     name: string;
-    desc: string;
+    achieve_id: number;
     in_profile: boolean;
     category: string;
     level: string;
@@ -104,6 +104,7 @@ export interface StudentProfile {
     effect: string;
   }
   
+
   export interface Achieve {
     id: number;
     image: string;

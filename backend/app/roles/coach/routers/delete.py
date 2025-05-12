@@ -14,7 +14,7 @@ async def remove_achievement(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Achievement, id, session)}
 
 
-# Attendances
+# Attendance
 @router.delete("/camps/events/{event_id}/groups/{group_id}", response_model=schemas.ResponseOk, tags=["Coach"])
 async def delete_attendance(event_id: int, group_id: int, session: Session = Depends(get_session)):
     stmt = (
@@ -28,6 +28,12 @@ async def delete_attendance(event_id: int, group_id: int, session: Session = Dep
     await session.commit()
     return {"isOk": True}
 
+# Test
 @router.delete("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
 async def delete_student_test(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Test, id, session)}
+
+# Achievement
+@router.delete("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def remove_student_achievement(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.Achievement, id, session)}

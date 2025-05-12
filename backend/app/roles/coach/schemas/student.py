@@ -85,7 +85,6 @@ class AchievementResponse(BaseModel):
     id: int;
     image: str
     name: str
-    level: str
     effect: str
         
     class Config:
@@ -93,6 +92,7 @@ class AchievementResponse(BaseModel):
 
 class AchieveResponse(BaseModel):
     id: int
+    achieve_id: int
     image: str
     name: str
     in_profile: bool

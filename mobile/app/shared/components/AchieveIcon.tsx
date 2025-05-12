@@ -12,6 +12,7 @@ interface AnimatedIconProps {
   size?: number;
   effect?: string; //'fade' | 'rotate' | 'pulse' | 'jump' | 'ripple';
   isGif?: boolean;
+  isAnimate?: boolean;
 }
 
 const effectMapping: Record<string, Animatable.Animation> = {
@@ -23,7 +24,7 @@ const effectMapping: Record<string, Animatable.Animation> = {
 };
 
 
-export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label, level, size = 80, effect: selectedEffect, isGif}) => {
+export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label, level, size = 80, effect: selectedEffect, isGif, isAnimate = true}) => {
   const frameSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/frames/${level}.png` };
   const pngSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/images/${image}.png` };
   const gifSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/gifs/${image}.gif` };
@@ -47,7 +48,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label
   return (
     <Animatable.View
       animation="zoomIn"
-      duration={2000}
+      duration={isAnimate ? 2000 : 500}
       easing="ease-in-out"
       style={styles.container}
     >

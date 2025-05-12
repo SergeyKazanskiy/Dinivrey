@@ -4,10 +4,10 @@ import { GroupsSlice, createGroupsSlice } from "./GroupsScreen/state";
 
 import { ProfileSlice, createProfileSlice } from "./ProfileScreen/state";
 import { StatisticsSlice, createStatisticsSlice } from "./StatisticsScreen/state";
-import { AshievesSlice, createAshievesSlice } from "./AchievesScreen/state";
+import { AchievesSlice, createAchievesSlice } from "./AchievesScreen/state";
 
 
-export type Store = LoadingSlice & GroupsSlice & ProfileSlice & StatisticsSlice & AshievesSlice;
+export type Store = LoadingSlice & GroupsSlice & ProfileSlice & StatisticsSlice & AchievesSlice;
 
 export const useStore = create<Store>((set, get) => ({
   ...createLoadingSlice(set),
@@ -15,7 +15,7 @@ export const useStore = create<Store>((set, get) => ({
 
   ...createProfileSlice(set, get),
   ...createStatisticsSlice(set, get),
-  ...createAshievesSlice(set, get),
+  ...createAchievesSlice(set, get),
 }));
 
 export const configureStore = () => {
