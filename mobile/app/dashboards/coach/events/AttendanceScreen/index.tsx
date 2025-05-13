@@ -40,7 +40,7 @@ export default function AttendanceScreen() {
     }
     addAttendances();
   }
-
+//push("/dashboards/coach")
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Students' onClick={() => router.back()}/>

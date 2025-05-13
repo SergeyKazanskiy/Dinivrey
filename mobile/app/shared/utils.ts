@@ -154,3 +154,14 @@ export function getDayAndWeekday(timestamp: number): { day: number; weekday: str
 
   return { day, weekday };
 }
+
+export function getWeekNumber(timestamp: number): number {//номер недели в месяце
+  const date = new Date(timestamp);
+  const dayOfMonth = date.getDate();
+
+  // День недели 1-го числа: 0 (Sunday) → 6, 1 (Monday) → 0, ..., 6 (Saturday) → 5
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  const startDay = (firstDay.getDay() + 6) % 7;
+
+  return Math.ceil((dayOfMonth + startDay) / 7);
+}

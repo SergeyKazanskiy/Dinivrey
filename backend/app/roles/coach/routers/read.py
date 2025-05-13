@@ -144,9 +144,8 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
 
 @router.get("/camps/groups/events",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
-    week_start = datetime(year, month, 1) + timedelta(days=week * 7)
-    week_end = week_start + timedelta(days=6, hours=23, minutes=59)
-    
+    week_start, week_end = get_week_range(year, month,week)
+
     start_ts = int(week_start.timestamp() * 1000)
     end_ts = int(week_end.timestamp() * 1000)
 
@@ -252,3 +251,31 @@ async def get_student_names(group_id: int, session: AsyncSession = Depends(get_s
             }
             liders.append(lider)
     return liders
+
+from datetime import datetime, timedelta
+
+def get_week_range(year: int, month: int, week_number: int):
+    # Первый день месяца
+    first_day = datetime(year, month, 1)
+    
+    # Найдём первый понедельник в месяце (или первый день, если это понедельник)
+    days_to_monday = (7 - first_day.weekday()) % 7
+    first_monday = first_day + timedelta(days=days_to_monday) if first_day.weekday() != 0 else first_day
+
+    # Смещаемся на (week_number - 1) недель от первого понедельника
+    week_start = first_monday + timedelta(weeks=week_number - 1)
+    week_end = week_start + timedelta(days=6)
+
+    # Проверка: если неделя вылезает за границы месяца — обрезаем
+    if week_start.month != month:
+        return None  # неделя не входит в указанный месяц
+    if week_end.month != month:
+        # обрезаем до последнего дня месяца
+        next_month = datetime(year, month + 1, 1) if month < 12 else datetime(year + 1, 1, 1)
+        week_end = next_month - timedelta(days=1)
+
+    # Добавляем точное время
+    week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_end = week_end.replace(hour=23, minute=59, second=0, microsecond=0)
+
+    return week_start, week_end

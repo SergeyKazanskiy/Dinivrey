@@ -7,6 +7,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native-animatable';
 import { DinivreyHeader } from '../../../shared/components/DinivreyHeader';
+import { useRoute } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { useNavigation, useRouter } from 'expo-router';
+
+type TabRoutes = {
+  Groups: undefined;
+  Events: undefined;
+};
 
 const Tab = createBottomTabNavigator();
 
@@ -26,9 +35,18 @@ export default function StudentLayout() {
     return {iconName, label}
   }
 
+  // const route = useRoute();
+  // const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
+
+  const router = useRouter();
+  //alert(route.name)
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <DinivreyHeader/>
+      <DinivreyHeader
+        isGroups={true}
+        onGroups={() => {}}
+        onEvents={() => router.push("/dashboards/coach/events")}
+      />
       
       <Tab.Navigator
         screenOptions={({ route }) => ({
