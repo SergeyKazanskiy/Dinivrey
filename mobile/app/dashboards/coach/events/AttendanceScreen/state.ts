@@ -86,26 +86,26 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         if (attendance) {
             update_attendance(attendance_id, {present: !attendance.present}, (res) => {
                 if (res.isOk) {
-                    if (attendance.present) {
-                        delete_student_test(attendance.test_id!, (res => {
-                            if (res.isOk) {
-                                attendance.test_id = undefined;
-                            } 
-                        }));
-                    } else {
-                        const newTest: Omit<Test, 'id'> = {
-                            student_id: attendance.student_id,
-                            timestamp: timestamp,
-                            date: formatDateTime(timestamp).date,
-                            speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
-                        };
+                    // if (attendance.present) {
+                    //     delete_student_test(attendance.test_id!, (res => {
+                    //         if (res.isOk) {
+                    //             attendance.test_id = undefined;
+                    //         } 
+                    //     }));
+                    // } else {
+                    //     const newTest: Omit<Test, 'id'> = {
+                    //         student_id: attendance.student_id,
+                    //         timestamp: timestamp,
+                    //         date: formatDateTime(timestamp).date,
+                    //         speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
+                    //     };
                         
-                        add_student_test(newTest, (res) => {
-                            if (res.id) {
-                                attendance.test_id = res.id;
-                            }     
-                        })
-                    }
+                    //     add_student_test(newTest, (res) => {
+                    //         if (res.id) {
+                    //             attendance.test_id = res.id;
+                    //         }     
+                    //     })
+                    // }
 
                     attendance.present = !attendance.present;
                     set({
