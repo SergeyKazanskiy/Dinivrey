@@ -12,14 +12,14 @@ export type Props = {
 export const DinivreyHeader: React.FC<Props> = ({isGroups, onGroups, onEvents}) => {
   return (
     <View style={styles.cell}>
-      <TouchableOpacity onPress={onGroups} style={{paddingTop: 6}}>
-        <Ionicons name='people' size={24} color={isGroups ? '#E4FF3E' : '#888888'}/>
+      <TouchableOpacity onPress={onGroups} style={{paddingTop: 7}}>
+        <Ionicons name='people' size={24} color={isGroups ? '#E4FF3E' : '#999'}/>
       </TouchableOpacity>
        
       <Text style={styles.title}>DINIVREY</Text>
 
-      <TouchableOpacity onPress={onEvents} style={{paddingTop: 6}}>
-        <Ionicons name='document-text-outline' size={24} color={!isGroups ? '#E4FF3E' : '#888888'}/>
+      <TouchableOpacity onPress={onEvents} style={{paddingTop: 7}}>
+        <Ionicons name='document-text-outline' size={24} color={!isGroups ? '#E4FF3E' : '#999'}/>
       </TouchableOpacity>
     </View>
   );
