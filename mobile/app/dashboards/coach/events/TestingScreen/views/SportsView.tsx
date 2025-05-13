@@ -34,7 +34,7 @@ export const SportsView = () => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop:4,
+        marginTop:6,
         alignSelf:'center'
     },
     section: {

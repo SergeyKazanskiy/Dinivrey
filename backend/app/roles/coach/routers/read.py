@@ -203,9 +203,10 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
     for row in rows:
         tests = await session.execute(
             select(models.Test)
-            .where(models.Test.student_id == row[1])
+            .where(models.Test.student_id == row[1]) #& ((models.Test.timestamp == )
             .order_by(desc(models.Test.timestamp))
-            .limit(1))
+            .limit(1)
+            )
         test = tests.scalar_one_or_none()
         if test:
             lider = {

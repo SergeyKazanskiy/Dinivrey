@@ -39,14 +39,14 @@ async def add_attendances(data: schemas.AttendanceDataCreate, session: AsyncSess
 @router.post("/students/tests", response_model=schemas.ResponseId, tags=["Coach"])
 async def add_student_test(data: schemas.TestCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Test, data, session)}
-
-@router.post("/camps/events/{event_id}/groups/{group_id}/tests", response_model=schemas.ResponseId, tags=["Coach"])
+ 
+@router.post("/camps/events/{event_id}/groups/{group_id}/tests", response_model=schemas.ResponseOk, tags=["Coach"])
 async def add_all_present_students_new_tests(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
     A = models.Attendance
     E = models.Event
     stmt = (
         select(A.student_id, E.timestamp)
-        .join(E, A.event == E.id)
+        .join(E, A.event_id == E.id)
         .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
     )
     result = await session.execute(stmt)

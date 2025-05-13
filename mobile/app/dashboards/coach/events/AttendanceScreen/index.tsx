@@ -62,10 +62,10 @@ export default function AttendanceScreen() {
             <View style={[styles.section, {marginRight: 11}]}>
               {isAttendanceView && <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>}
 
-              {isAttendanceView && <CheckBox checked={isAllChecked} onPress={setAllChecked}
+              {/* {isAttendanceView && <CheckBox checked={isAllChecked} onPress={setAllChecked}
                 iconType="material-community" checkedIcon="checkbox-outline" uncheckedIcon={'checkbox-blank-outline'}
                 containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}} checkedColor='#ddd'
-              />}
+              />} */}
             </View>
           </View>
 

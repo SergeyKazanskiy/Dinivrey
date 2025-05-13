@@ -16,6 +16,7 @@ export interface TestingSlice {
     tester_id: number;
     examValue: number;
 
+    selectMenu: (item: string) => void;
     loadTesters: () => void;
     selectExam: (test: NumericFields<Tester>) => void;
 
@@ -36,11 +37,22 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
     examValue: 0,
 
 
+    selectMenu: (item: string) => {
+        if (item === 'Add participants') {
+            const { event_id, group_id }: EventsSlice = get();
+
+            add_all_present_students_new_tests(event_id, group_id, (res) => {
+                const { loadTesters }: TestingSlice = get();
+                loadTesters();
+            })
+        }
+    },
+
     loadTesters: () => {
         const { event_id, group_id }: EventsSlice = get();
 
         get_testers(event_id, group_id, (testers: Tester[]) => {
-            //alert(objectToJson(liders))
+           // alert(objectToJson(testers))
             set({ exam: 'speed', testers });
         })
     },
