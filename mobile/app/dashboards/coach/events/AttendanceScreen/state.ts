@@ -2,6 +2,7 @@ import { Alert } from 'react-native';
 import { Student, Attendance, Test } from '../model';
 import { get_attendances, get_students_names, add_student_test, delete_student_test } from '../http';
 import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
+import { add_all_present_students_new_tests } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
 import { TestingSlice } from '../TestingScreen/state';
 import { isPast, formatDateTime } from '../../../../shared/utils';
@@ -75,9 +76,10 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     },
 
     checkStudent: (attendance_id: number) => {
+       
         const { timestamp }: EventsSlice = get();
         if (isPast(timestamp)) {
-            //alert('It is not possible to change past attendance!');
+            alert('It is not possible to change past attendance!');
             return
         }
         const { attendances }: AttendanceSlice = get();
@@ -86,26 +88,26 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         if (attendance) {
             update_attendance(attendance_id, {present: !attendance.present}, (res) => {
                 if (res.isOk) {
-                    // if (attendance.present) {
-                    //     delete_student_test(attendance.test_id!, (res => {
-                    //         if (res.isOk) {
-                    //             attendance.test_id = undefined;
-                    //         } 
-                    //     }));
-                    // } else {
-                    //     const newTest: Omit<Test, 'id'> = {
-                    //         student_id: attendance.student_id,
-                    //         timestamp: timestamp,
-                    //         date: formatDateTime(timestamp).date,
-                    //         speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
-                    //     };
+                    if (attendance.present) {
+                        delete_student_test(attendance.test_id!, (res => {
+                            if (res.isOk) {
+                                attendance.test_id = undefined;
+                            } 
+                        }));
+                    } else {
+                        const newTest: Omit<Test, 'id'> = {
+                            student_id: attendance.student_id,
+                            timestamp: timestamp,
+                            date: formatDateTime(timestamp).date,
+                            speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
+                        };
                         
-                    //     add_student_test(newTest, (res) => {
-                    //         if (res.id) {
-                    //             attendance.test_id = res.id;
-                    //         }     
-                    //     })
-                    // }
+                        add_student_test(newTest, (res) => {
+                            if (res.id) {
+                                attendance.test_id = res.id;
+                            }     
+                        })
+                    }
 
                     attendance.present = !attendance.present;
                     set({
@@ -138,6 +140,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                     isAllChecked: !isAllChecked,
                     attendances: state.attendances.map(el => ({...el, present: !isAllChecked}))
                 }));
+                add_all_present_students_new_tests(event_id, group_id, (res) => {
+                    
+                })
             }
         });
     },

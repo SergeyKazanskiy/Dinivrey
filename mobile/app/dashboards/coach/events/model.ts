@@ -38,7 +38,7 @@ import { EventType } from "../../../shared/models/Event";
 
 export interface Tester {
     id: number;
-    //photo: string;
+    participate: boolean;
     first_name: string;
     last_name: string;
 

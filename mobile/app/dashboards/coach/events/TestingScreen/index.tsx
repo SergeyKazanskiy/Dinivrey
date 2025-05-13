@@ -28,9 +28,9 @@ export default function TestingScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Students' onClick={() => router.back()}>
-        <Ionicons name='add-circle-outline' size={20} color='#D1FF4D'
+        {/* <Ionicons name='add-circle-outline' size={20} color='#D1FF4D'
           onPress={() => setIsMenu(true)}
-        />
+        /> */}
       </CustomNavbar>
 
       <HeaderMenu isOpen={isMenu}

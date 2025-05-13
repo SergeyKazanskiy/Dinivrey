@@ -20,7 +20,9 @@ export interface TestingSlice {
     loadTesters: () => void;
     selectExam: (test: NumericFields<Tester>) => void;
 
+    onTesterCheck: (student_id: number) => void;
     onTesterClick: (student_id: number) => void;
+
     closeModal: () => void;
     updateTest: (examValue: number) => void;
 }
@@ -52,8 +54,8 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
         const { event_id, group_id }: EventsSlice = get();
 
         get_testers(event_id, group_id, (testers: Tester[]) => {
-           // alert(objectToJson(testers))
-            set({ exam: 'speed', testers });
+            const participants = testers.map(el => ({...el, participate: true}))
+            set({ exam: 'speed', testers: participants });
         })
     },
 
@@ -63,6 +65,18 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
         set((state: TestingSlice) => ({
             exam: selected === state.exam ? '' : selected,
         }))
+    },
+
+    onTesterCheck: (tester_id: number) => {
+        const { testers, exam }: TestingSlice = get();
+        const tester = testers.find(el => el.id === tester_id)!;
+        tester.participate = !tester.participate;
+        set({
+            tester_id,
+            examValue: tester[exam],
+            testerName: tester.first_name + ' ' + tester.last_name,
+            attendances: testers.map(el => el.id === tester_id ? tester : el)
+        });
     },
 
     onTesterClick: (tester_id: number) => {

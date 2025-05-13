@@ -18,14 +18,14 @@ export const AttendanceCell: React.FC<Props> = ({first_name, last_name, checked,
         {first_name} {last_name}
       </Text>
       <CheckBox
-           checked={checked}
-           onPress={onCheck}
-           iconType="material-community"
-           checkedIcon="checkbox-outline"
-           uncheckedIcon={'checkbox-blank-outline'}
-           containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}}
-           checkedColor='#ddd'
-         />
+        checked={checked}
+        onPress={onCheck}
+        iconType="material-community"
+        checkedIcon="checkbox-outline"
+        uncheckedIcon={'checkbox-blank-outline'}
+        containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}}
+        checkedColor='#ddd'
+      />
     </View>
   );
 };
@@ -49,5 +49,3 @@ const styles = StyleSheet.create({
     fontSize: 18
   }
 });
-
-

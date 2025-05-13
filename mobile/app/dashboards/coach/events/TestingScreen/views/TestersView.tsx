@@ -5,25 +5,25 @@ import { TesterCell } from '../../../../../shared/components/TesterCell';
 
 
 export const TestersView = () => { 
-  const { testers, exam, onTesterClick } = useStore();
+  const { testers, exam, onTesterCheck, onTesterClick } = useStore();
     
   return (
     <ScrollView style={styles.container}>
-        <FlatList data={testers} 
-            keyExtractor={(index) => index.toString()}
-            renderItem={({ item }) =>
-
-              <TouchableOpacity onPress={() => onTesterClick(item.id)}>
-                <TesterCell
-                  first_name={item.first_name}
-                  last_name={item.last_name}
-                  value={item[exam]}
-                />
-              </TouchableOpacity>
+      <FlatList data={testers} 
+        keyExtractor={(index) => index.toString()}
+        renderItem={({ item }) =>
+          <TesterCell
+            checked={item.participate}
+            onCheck={() => onTesterCheck(item.id)}
+            name={`${item.first_name} ${item.last_name}`}
+            value={item[exam]}
+            onClick={() => onTesterClick(item.id)}
+          />
         }/>
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
