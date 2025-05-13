@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     
   },
   dialog: {
-    marginTop: 158,
+    marginTop: 164,
     backgroundColor: '#AFEEEE', //E0FFFF
     borderRadius: 10,
     borderWidth: 1,
