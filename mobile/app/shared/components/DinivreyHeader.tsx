@@ -19,7 +19,7 @@ export const DinivreyHeader: React.FC<Props> = ({isGroups, onGroups, onEvents}) 
       <Text style={styles.title}>DINIVREY</Text>
 
       <TouchableOpacity onPress={onEvents} style={{paddingTop: 7}}>
-        <Ionicons name='document-text-outline' size={24} color={!isGroups ? '#E4FF3E' : '#999'}/>
+        <Ionicons name='calendar-number-outline' size={24} color={!isGroups ? '#E4FF3E' : '#999'}/>
       </TouchableOpacity>
     </View>
   );
