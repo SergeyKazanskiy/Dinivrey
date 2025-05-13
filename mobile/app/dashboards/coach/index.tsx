@@ -27,7 +27,7 @@ function getIconsData(routeName: string) {
     iconName = 'people';
     label = 'Groups';
   } else {
-    iconName = 'document-text-outline';
+    iconName = 'calendar-number-outline';
     label = 'Events';
   }
 
