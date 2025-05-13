@@ -1,42 +1,60 @@
-import { View, StyleSheet, Platform, Text } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
 import EventsScreen from './events/EventsScreen';
 import GroupsScreen from './students/GroupsScreen';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { useRoute } from '@react-navigation/native';
 
-const Tab = createBottomTabNavigator();
 
-  
+type TabRoutes = {
+  Groups: undefined;
+  Events: undefined;
+};
+
+const Tab = createBottomTabNavigator<TabRoutes>();
+
+
 function getIconsData(routeName: string) {
-  let iconName: any; let label = '';
+  let iconName: any;
+  let label = '';
 
   if (routeName === 'Groups') {
     iconName = 'people';
     label = 'Groups';
-  } else  {
+  } else {
     iconName = 'document-text-outline';
     label = 'Events';
   }
-  return {iconName, label}
+
+  return { iconName, label };
 }
 
-export default function CoachLayout() {
-  return ( 
-    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <DinivreyHeader/>
+function TabNavigatorWrapper() {
+  const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
 
+
+  return (
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
       <Tab.Navigator
-        screenOptions={({ route }) => ({ headerShown: false, tabBarShowLabel: false,
-          tabBarStyle: { backgroundColor: '#0C1B30', height: 70, borderTopWidth: 0 },
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: '#0C1B30',
+            height: 70,
+            borderTopWidth: 0,
+          },
           tabBarIcon: ({ focused }) => {
             const { iconName, label } = getIconsData(route.name);
             return (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'}/>
-                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 14, marginTop: 3 }} >
+                <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'} />
+                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 14, marginTop: 3 }}>
                   {label}
                 </Text>
               </View>
@@ -44,11 +62,46 @@ export default function CoachLayout() {
           },
         })}
       >
-        <Tab.Screen name="Groups" component={GroupsScreen}  />
-        <Tab.Screen name="Events" component={EventsScreen} />
+        <Tab.Screen name="Groups" component={GroupsScreenWithHeader} />
+        <Tab.Screen name="Events" component={EventsScreenWithHeader} />
       </Tab.Navigator>
     </LinearGradient>
   );
+}
+
+
+function GroupsScreenWithHeader(props: any) {
+  const route = useRoute();
+
+  return (
+    <View style={{ flex: 1 }}>
+      <DinivreyHeader
+        isGroups={route.name === 'Groups'}
+        onGroups={() => {}}
+        onEvents={() => props.navigation.navigate('Events')}
+      />
+      <GroupsScreen {...props} />
+    </View>
+  );
+}
+
+function EventsScreenWithHeader(props: any) {
+  const route = useRoute();
+
+  return (
+    <View style={{ flex: 1 }}>
+      <DinivreyHeader
+        isGroups={route.name === 'Groups'}
+        onGroups={() => props.navigation.navigate('Groups')}
+        onEvents={() => {}}
+      />
+      <EventsScreen {...props} />
+    </View>
+  );
+}
+
+export default function CoachLayout() {
+  return <TabNavigatorWrapper />;
 }
 
 const styles = StyleSheet.create({
@@ -63,4 +116,3 @@ const styles = StyleSheet.create({
   label: { marginLeft: 8, color: '#ddd', fontSize: 16, padding: 6 },
   content: { flex: 1 },
 });
-

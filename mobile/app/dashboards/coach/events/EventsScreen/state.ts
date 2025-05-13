@@ -1,7 +1,7 @@
 import { Event } from "../model";
 import { get_groups } from '../../students/http';
 import { get_coach_last_event, get_coach_events } from '../http';
-import { objectToJson, getTimestamp, getCurrentYear, getDayAndWeekday } from "../../../../shared/utils";
+import { objectToJson, getTimestamp, getCurrentYear, getDayAndWeekday, getWeekNumber } from "../../../../shared/utils";
 import { ShortGroup } from '../../../../shared/components/CoachEventCell';
 
 
@@ -71,7 +71,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         get_coach_events(year, month, week, group_ids, (events: Event[]) => {
             const { event_id }: EventsSlice = get();
             var eventId: Number;
-            //alert(objectToJson(events))
             if (event_id > 0) {
                 eventId = event_id;
             } else if (events.length > 0) {
@@ -91,7 +90,8 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
             for (let event of events) {
                 const {day, weekday} = getDayAndWeekday(event.timestamp)
-
+            
+                //alert(getWeekNumber(event.timestamp))
                 if (day !== currentDay) {
                     days.push({day, weekday});
                     currentDay = day;
