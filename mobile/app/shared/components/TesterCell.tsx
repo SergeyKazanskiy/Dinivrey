@@ -1,42 +1,65 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { cellStyles, groupStyles } from '../styles/appStyles';
 
 
 export type Props = {
-  first_name: string;
-  last_name: string;
+  checked: boolean;
+  onCheck: () => void;
+  name: string;
   value: number;
+  onClick: () => void;
 };
   
-export const TesterCell: React.FC<Props> = ({ first_name, last_name, value }) => {
+export const TesterCell: React.FC<Props> = ({  checked, onCheck, name, value, onClick }) => {
   return (
-    <View style={[styles.container, styles.section]}>
-      <Text style={[styles.text]}>
-        {first_name} {last_name}
-      </Text>
-      <Text style={[groupStyles.title, {marginRight: 2}]}>
-        {value}
-      </Text>
+    <View style={[styles.container, styles.sectionStart]}>
+      <CheckBox
+        checked={checked}
+        onPress={onCheck}
+        iconType="material-community"
+        checkedIcon="checkbox-outline"
+        uncheckedIcon={'checkbox-blank-outline'}
+        containerStyle={styles.check}
+        checkedColor='#ddd'
+      />
+      <TouchableOpacity style={styles.sectionBetween} onPress={() => { if (checked) onClick() }}>
+        <Text style={styles.name}>
+          {name}
+        </Text>
+        <Text style={[groupStyles.title, {marginRight: 2}]}>
+          {value}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
-    padding: 10,
     backgroundColor: 'rgba(45, 75, 10, 0.3)',
     borderWidth: 1,
     borderColor: 'rgb(110, 151, 6)',
-    marginVertical: 2
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 2 //gap???
   },
-  section: {
+  sectionStart: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  sectionBetween: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  text: {
+  check: {
+    backgroundColor: 'rgba(45, 75, 10, 0.3)',
+    padding: 0,
+    margin:0, 
+  },
+  name: {
     color: '#ddd',
     fontWeight: '400',
     fontSize: 18
