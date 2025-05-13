@@ -140,7 +140,8 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
     isEvents = True if event else False
     timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
     date = datetime.fromtimestamp(timestamp / 1000)
-    return {"year":  date.year, "month": date.month, "week": (date.day - 1) // 7, "isEvents": isEvents}
+    weekNumber = get_week_number(timestamp)
+    return {"year":  date.year, "month": date.month, "week": weekNumber, "isEvents": isEvents}
 
 @router.get("/camps/groups/events",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
@@ -252,7 +253,6 @@ async def get_student_names(group_id: int, session: AsyncSession = Depends(get_s
             liders.append(lider)
     return liders
 
-from datetime import datetime, timedelta
 
 def get_week_range(year: int, month: int, week_number: int):
     # Первый день месяца
@@ -279,3 +279,16 @@ def get_week_range(year: int, month: int, week_number: int):
     week_end = week_end.replace(hour=23, minute=59, second=0, microsecond=0)
 
     return week_start, week_end
+
+def get_week_number(timestamp_ms: int) -> int:
+    # Преобразуем миллисекунды в datetime
+    date = datetime.fromtimestamp(timestamp_ms / 1000)
+    day_of_month = date.day
+
+    # День недели первого числа месяца (0 = понедельник, 6 = воскресенье)
+    first_day = datetime(date.year, date.month, 1)
+    # Преобразуем к формату: 0 = понедельник, ..., 6 = воскресенье
+    start_day = (first_day.weekday())  # Monday=0, Sunday=6 в Python уже по нужному формату
+
+    # Пересчёт как в TS-функции: сколько дней сдвиг + текущий день → неделя
+    return (day_of_month + start_day - 1) // 7
