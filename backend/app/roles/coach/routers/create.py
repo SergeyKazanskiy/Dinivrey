@@ -47,7 +47,7 @@ async def add_all_present_students_new_tests(event_id: int, group_id: int, sessi
     stmt = (
         select(A.student_id, E.timestamp)
         .join(E, A.event_id == E.id)
-        .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
+        .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True)) 
     )
     result = await session.execute(stmt)
     rows = result.all()
@@ -64,7 +64,7 @@ async def add_all_present_students_new_tests(event_id: int, group_id: int, sessi
             evasion=0.0,
             hiding=0.0
         )
-        id = await CRUD.add(models.Test, test, session)
+        id = await CRUD.add(models.Test, test, session) # & != timestamp !!!
 
     return {"isOk": True}
 
@@ -75,12 +75,11 @@ async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSes
     achieve = await CRUD.read(models.Achieve, data.achieve_id, session)
     return {
         "id": id,
+        "achieve_id": data.achieve_id,
         "image": achieve.image,
         "name": achieve.name,
-        "desc": achieve.desc,
         "in_profile": data.in_profile,
         "category": achieve.category,
         "level": data.level,
-        "trigger": achieve.trigger,
         "effect": achieve.effect
     }

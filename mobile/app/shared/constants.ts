@@ -48,3 +48,9 @@ export const StudentsIcons = {
 
 export const ImagesPath = 'http://localhost:8000/images'
 
+export const TabIcons = {
+  Attendance: 'checkmark-done-sharp',
+  Testing: 'document-text-outline',
+  Gaming: 'trophy-outline',
+  Drills:'cube-outline'
+}

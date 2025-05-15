@@ -1,108 +1,90 @@
 import React, { useEffect, useRef } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
-
+import { Modal, View, Text, TouchableWithoutFeedback, Animated, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 
 interface Props {
   visible: boolean;
-  onClose: () => void;
-  title?: string;
-  children?: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+  handleYes?: () => void;
   buttonText?: string;
+  onClose?: () => void;
 }
 
-export const CustomAlert: React.FC<Props> = ({ visible, onClose, title, children, buttonText }) => {
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+export const CustomAlert: React.FC<Props> = ({ visible, title, children, handleYes, buttonText, onClose }) => {
+  const slideAnim = useRef(new Animated.Value(-16)).current;
+  const top = 50;
 
   useEffect(() => {
-    if (visible) {
-      Animated.parallel([
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      Animated.parallel([
-        Animated.timing(scaleAnim, {
-          toValue: 0.8,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityAnim, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
+    Animated.timing(slideAnim, {
+      toValue: visible ? top : -16,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   }, [visible]);
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="none"
-      onRequestClose={onClose}
-    >
-      <View style={styles.overlay}>
-        <Animated.View
-          style={[
-            styles.dialog,
-            {
-              opacity: opacityAnim,
-              transform: [{ scale: scaleAnim }],
-            },
-          ]}
-        >
-          {title && <Text style={styles.title}>{title}</Text>}
-          <View style={styles.content}>{children}</View>
-          <View style={styles.actions}>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.buttonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
-      </View>
+    <Modal transparent visible={visible} animationType='fade'>
+      <TouchableWithoutFeedback>
+        <View style={styles.backdrop}>
+          <Animated.View style={[styles.alertBox, { transform: [{ translateY: slideAnim }] }]}>
+            <Text style={styles.title}>{title}</Text>
+            <View style={styles.content}>{children}</View>
+            <View style={styles.buttonRow}>
+              {handleYes && buttonText && (
+                <TouchableOpacity style={styles.button} onPress={handleYes}>
+                  <Text style={styles.buttonText}>{buttonText}</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity style={styles.button} onPress={onClose}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
+  backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
+    ...StyleSheet.absoluteFillObject,
+   // justifyContent: 'flex-start',
     ...(Platform.OS === 'web' ? { width: 360, alignSelf: 'flex-start' } : {}),
   },
-  dialog: {
-    backgroundColor: '#90EE90',
-    borderRadius: 10,
+  alertBox: {
+    marginHorizontal: 16,
+    marginTop: 50,
     padding: 20,
-    marginHorizontal: 36,
-    maxWidth: Platform.OS === 'web' ? 360 : undefined,
+    backgroundColor: '#152B52',
+    borderWidth: 1,
+    borderColor: 'rgb(110, 151, 6)',
+    borderRadius: 10,
     elevation: 5,
   },
   title: {
+    color: '#fff',
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 10,
+    marginBottom: 16,
   },
   content: {
     marginBottom: 20,
   },
-  actions: {
-    alignItems: 'flex-end',
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+  },
+  button: {
+    paddingVertical: 6,
+    paddingHorizontal: 15,
+    backgroundColor: '#3478f6',
+    borderRadius: 5,
   },
   buttonText: {
-    color: '#007bff',
+    color: '#fff',
     fontWeight: '500',
   },
 });
-
