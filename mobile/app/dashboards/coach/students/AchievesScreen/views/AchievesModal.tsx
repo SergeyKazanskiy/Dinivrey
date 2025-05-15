@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { Achieve } from '../../model';
 import { AchieveIcon } from '../../../../../shared/components/AchieveIcon';
 import { RuleLevels } from '../../../../../shared/constants';
@@ -12,7 +12,8 @@ export type Props = {
 export const AchievesModal: React.FC<Props> = ({ achieves, onClick }) => {  
     return (
         <View style={styles.section}>
-            <ScrollView contentContainerStyle={styles.container}>
+            {achieves.length === 0 && <Text style={styles.emptyLabel}>No achievements</Text>}
+            {achieves.length > 0 && <ScrollView contentContainerStyle={styles.container}>
                 {achieves.map((item, index) => (
                     
                     <AchieveIcon onClick={() => onClick(item.id)} key={index}
@@ -23,7 +24,7 @@ export const AchievesModal: React.FC<Props> = ({ achieves, onClick }) => {
                         isAnimate={false}
                     />
                 ))}
-                </ScrollView>
+                </ScrollView>}
         </View>
     );
 };
@@ -50,5 +51,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         borderRadius: 6,
+      },
+      emptyLabel: {
+        paddingTop: 80,
+        color: '#ddd',
+        fontSize: 16,
+        alignSelf: 'center'
       },
 });

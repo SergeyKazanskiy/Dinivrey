@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AttendanceScreen from './AttendanceScreen';
 import TestingScreen from './TestingScreen';
 import GamingScreen from './GamingScreen';
+import DrillsScreen from './DrillsScreen';
 import { StyleSheet, Platform, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,6 +12,7 @@ import { useRoute } from '@react-navigation/native';
 //import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation, useRouter } from 'expo-router';
+import { TabIcons } from '../../../shared/constants';
 
 type TabRoutes = {
   Groups: undefined;
@@ -24,17 +26,10 @@ export default function StudentLayout() {
 
   function getIconData(routeName: string) {
     let iconName: any; let label = '';
+    type EventName = keyof typeof TabIcons;
 
-    if (routeName === 'Attendance') {
-      iconName = 'checkmark-done-sharp';
-      label = 'Attendance';
-    } else if (routeName === 'Testing') {
-      iconName = 'document-text-outline';
-      label = 'Testing';
-    } else if (routeName === 'Gaming') {
-      iconName = 'trophy-outline';
-      label = 'Gaming';
-    };
+    iconName = TabIcons[routeName as EventName]
+    label = routeName
     return {iconName, label}
   }
 
@@ -54,6 +49,7 @@ export default function StudentLayout() {
           tabBarStyle: { backgroundColor: '#0C1B30', height: 70, borderTopWidth: 0 },
           tabBarIcon: ({ focused }) => {
             const { iconName, label } = getIconData(route.name);
+            
             return (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'}/>
@@ -68,6 +64,7 @@ export default function StudentLayout() {
         <Tab.Screen name="Attendance" component={AttendanceScreen}  />
         <Tab.Screen name="Testing" component={TestingScreen} />
         <Tab.Screen name="Gaming" component={GamingScreen} />
+        <Tab.Screen name="Drills" component={DrillsScreen} />
       </Tab.Navigator>
     </LinearGradient>
   );

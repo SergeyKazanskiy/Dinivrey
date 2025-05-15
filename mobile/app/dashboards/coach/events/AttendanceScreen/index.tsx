@@ -47,7 +47,7 @@ export default function AttendanceScreen() {
 
       <CustomAlert visible={isAlert}  title="Attention!"
         onClose={() => setIsAlert(false)}>
-        <Text>Unable to create blank in the {tense}</Text>
+        <Text style={{color:'#ddd'}}>Unable to create blank in the {tense}</Text>
       </CustomAlert>
 
        <View style={styles.container}>
