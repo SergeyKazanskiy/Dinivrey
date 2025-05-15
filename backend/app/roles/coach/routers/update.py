@@ -2,23 +2,23 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_session
 from crud import CRUD
-from roles.admin import schemas
+from roles.coach import schemas
 import models
 
 router = APIRouter()
 
 
-@router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Coach"]) #???
-async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Group, id, data, session)}
+# @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Coach"]) #???
+# async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
+#     return {"isOk": await CRUD.update(models.Group, id, data, session)}
 
-@router.put("/camp/events/{id}", response_model=schemas.ResponseOk, tags=["Coach"]) #???
-async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Event, id, data, session)}
+# @router.put("/camp/events/{id}", response_model=schemas.ResponseOk, tags=["Coach"]) #???
+# async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession = Depends(get_session)):
+#     return {"isOk": await CRUD.update(models.Event, id, data, session)}
 
-@router.put("/camp/coaches/{id}", response_model=schemas.ResponseOk, tags=["Coach"]) #???
-async def update_coach(id: int, data: schemas.CoachUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Coach, id, data, session)}
+# @router.put("/camp/coaches/{id}", response_model=schemas.ResponseOk, tags=["Coach"]) #???
+# async def update_coach(id: int, data: schemas.CoachUpdate, session: AsyncSession = Depends(get_session)):
+#     return {"isOk": await CRUD.update(models.Coach, id, data, session)}
 
 # Attendances
 @router.put("/camps/events/attendances/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
@@ -36,3 +36,16 @@ async def update_all_attendances(event_id: int, group_id: int, data: schemas.Att
 @router.put("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
 async def update_student_test(id: int, data: schemas.TestUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Test, id, data, session)}
+
+# Summary
+@router.put("/students/{student_id}/tests/summary", response_model=schemas.ResponseOk, tags=["Coach"])
+async def update_summary_tests(student_id: int, data: schemas.SummaryTests, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Student, student_id, data, session)}
+
+@router.put("/students/{student_id}/achievements/summary", response_model=schemas.ResponseOk, tags=["Coach"])
+async def update_summary_achievements(student_id: int, data: schemas.SummaryAchievements, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Student, student_id, data, session)}
+
+@router.put("/students/{student_id}/games/summary", response_model=schemas.ResponseOk, tags=["Coach"])
+async def update_summary_games(student_id: int, data: schemas.SummaryGames, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Student, student_id, data, session)}

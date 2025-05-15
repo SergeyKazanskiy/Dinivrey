@@ -15,6 +15,9 @@ class StudentBase(BaseModel):
     city: Optional[str] = None
     street: Optional[str] = None
     house: Optional[str] = None
+    summary_tests: str
+    summary_achievements: str
+    summary_games: str
     model_config = {"from_attributes": True}  # Нужно для корректной работы model_validate
 
 
@@ -67,6 +70,13 @@ class TestResponse(TestBase):
     class Config:
         from_attributes = True
 
+class TestUpdate(BaseModel):
+    speed: Optional[float] = None
+    stamina: Optional[float] = None
+    climbing: Optional[float] = None
+    evasion: Optional[float] = None
+    hiding: Optional[float] = None
+
 # Game
 class GameBase(BaseModel):
     timestamp: int
@@ -105,3 +115,13 @@ class AchieveResponse(BaseModel):
 
 class AchieveUpdate(BaseModel):
     in_profile: bool
+
+#Summary
+class SummaryTests(BaseModel):
+    summary_tests: str
+
+class SummaryAchievements(BaseModel):
+    summary_achievements: str
+
+class SummaryGames(BaseModel):
+    summary_games: str        

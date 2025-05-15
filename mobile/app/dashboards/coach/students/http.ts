@@ -67,10 +67,14 @@ export function detach_student_achieve(achieve_id: number, callback: (res: {isOk
 };
 
 // Summary
-export function update_student_tests_summary(student_id: number, data: {summary: string}, callback: (res: {isOk: boolean}) => void) {
+export function update_student_tests_summary(student_id: number, data: {tests_summary: string}, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.put(`students/${student_id}/tests/summary`, data), callback);
 };
 
-export function update_student_achieves_summary(student_id: number,  data: {summary: string}, callback: (res: {isOk: boolean}) => void) {
+export function update_student_achieves_summary(student_id: number,  data: {achieves_summary: string}, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.put(`students/${student_id}/achievements/summary`, data), callback);
+};
+
+export function update_student_games_summary(student_id: number,  data: {games_summary: string}, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`students/${student_id}/games/summary`, data), callback);
 };

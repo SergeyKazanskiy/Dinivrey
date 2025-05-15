@@ -8,13 +8,13 @@ import { AchievesSection } from './views/AchievesSection';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
-import {  CustomAlert} from '../../../../shared/components/CustomAlert';
+import { CustomAlert } from '../../../../shared/components/CustomAlert';
 
 
 export const AchievesScreen = () => {
-  const { achievement_id, summary } = useStore();
-  const { loadStudentAchieves, detachAchieve, setSummary } = useStore();
-  
+  const { achievement_id, student } = useStore();
+  const { loadStudentAchieves, detachAchieve, setAchievesSummary } = useStore();
+ // alert(student.summary_achievements + "fff")
   const router = useRouter();
 
   useFocusEffect(
@@ -23,8 +23,8 @@ export const AchievesScreen = () => {
     }, [])
   );
 
-   const [isSummaryInput, setIsSummaryInput] = useState<boolean>(false);
-   const [summaryText, setSummaryText] = useState<string>('');
+  const [isSummaryInput, setIsSummaryInput] = useState<boolean>(false);
+  const [summaryText, setSummaryText] = useState<string>(student.summary_achievements);
   
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
@@ -37,7 +37,7 @@ export const AchievesScreen = () => {
       <CustomAlert visible={isSummaryInput} 
         title="Summary for student!"
         buttonText='Save'
-        handleYes={() => {setSummary(summaryText); setIsSummaryInput(false)}}
+        handleYes={() => {setAchievesSummary(summaryText); setIsSummaryInput(false)}}
         onClose={() => setIsSummaryInput(false)}>
           <TextInput
               style={styles.dialogInput}
@@ -56,8 +56,8 @@ export const AchievesScreen = () => {
       
       <Text style={[screenStyles.gold, styles.summary]}
         onPress={() => setIsSummaryInput(true)}>
-          {summary}
-        </Text>
+          {summaryText === '' ? 'Enter summary' : summaryText}
+      </Text>
     </LinearGradient>
   );
 };
@@ -96,3 +96,4 @@ const styles = StyleSheet.create({
 });
 
 export default AchievesScreen;
+

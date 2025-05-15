@@ -13,8 +13,6 @@ export interface AchievesSlice {
   achievement_id: number;
   achieve_id: number;
 
-  summary: string;
-
   loadStudentAchieves: () => void;
   loadBaseAchieves: (category: string) => void;
 
@@ -24,7 +22,7 @@ export interface AchievesSlice {
   attachAchieve:(base_achieve_id: number) => void; //AchievesModal attach BaseAchieve to the student (manual-trigger)   
   detachAchieve: () => void; //AchievesPanel detach selected in AchievesPanel achieve (manual-trigger)
 
-  setSummary:(summary: string) => void;
+  setAchievesSummary:(summary: string) => void;
 }
 
 export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
@@ -33,8 +31,6 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   
   achievement_id: 0,
   achieve_id: 0,
-
-  summary:'Enter summary',
 
   loadStudentAchieves: () => {
     const { student_id }: GroupsSlice = get();
@@ -96,10 +92,10 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
       }))
   },
 
-  setSummary:(summary: string) => {
+  setAchievesSummary:(summary: string) => {
     const { student_id }: GroupsSlice = get();
 
-    update_student_achieves_summary(student_id, {summary},(res => {
+    update_student_achieves_summary(student_id, {achieves_summary: summary},(res => {
       if (res.isOk) {
           set({summary});
       }

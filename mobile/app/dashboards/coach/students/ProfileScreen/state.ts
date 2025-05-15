@@ -18,7 +18,7 @@ export interface ProfileSlice {
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
   student: { first_name: "FirstName", last_name: "LastName", gender: "Girl", age: 10, id: 0, active: true,
-    photo: '', group_id: 3, group_extra_id: 0 },
+    photo: '', group_id: 3, group_extra_id: 0, summary_tests: '', summary_achievements: '', summary_games: '' },
   
   initialParents: [
     { id: 0, name: '', phone: '', email: ''},
