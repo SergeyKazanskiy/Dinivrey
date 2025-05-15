@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '500',
     marginBottom: 16,
   },
   content: {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: '#eee',
     fontWeight: '500',
   },
 });

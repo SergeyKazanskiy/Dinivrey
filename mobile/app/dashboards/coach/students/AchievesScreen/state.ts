@@ -95,7 +95,7 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   setAchievesSummary:(summary: string) => {
     const { student_id }: GroupsSlice = get();
 
-    update_student_achieves_summary(student_id, {achieves_summary: summary},(res => {
+    update_student_achieves_summary(student_id, {summary_achievements: summary},(res => {
       if (res.isOk) {
           set({summary});
       }

@@ -4,6 +4,7 @@ import { update_student_tests_summary, update_student_games_summary } from '../h
 import { GroupsSlice } from '../GroupsScreen/state';
 import { MeasureUnits } from '../../../../shared/constants';
 import { objectToJson, getYearAndMonth } from '../../../../shared/utils';
+import { ProfileSlice } from "../ProfileScreen/state";
 
 
 export interface StatisticsSlice {
@@ -18,6 +19,7 @@ export interface StatisticsSlice {
     metrics: Metric[];
     
     isMainMetric: boolean;
+    summary: string;
 
     loadStatistics: () => void;
     selectDate: (year: number, month: number) => void;
@@ -32,7 +34,7 @@ export interface StatisticsSlice {
     loadTest: (timestamp: number, metricName: string) => void;
     loadGame: (timestamp: number, metricName: string) => void;
 
-    setTestsSummary:(summary: string) => void;
+    setSummary:(summary: string) => void;
 }
 
 export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
@@ -47,7 +49,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     metrics: [],
 
     isMainMetric: false,
-
+    summary:'',
 
     loadStatistics: () => {
         const { student_id, isMainMetric }: GroupsSlice & StatisticsSlice = get();
@@ -113,16 +115,18 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
             //alert(objectToJson(tests))
             if (tests.length > 0) {
                 const metrics = convertTestsToMetrics(tests);
+                const { student }: ProfileSlice = get();
 
                 set((state: StatisticsSlice) => ({ 
                     timestamp: state.isMainMetric ? state.timestamp : tests[0].timestamp,
                     timestamps: tests.map(el => el.timestamp),
                     metricName,
                     metrics,
-                    isMainMetric: false
+                    isMainMetric: false,
+                    summary: student.summary_tests
                  }));
             } else {
-                set({ metricName: '', timestamps: [], metrics: [], timestamp: 0 });
+                set({ metricName: '', timestamps: [], metrics: [], timestamp: 0, summary:'' });
             }
         })
     },
@@ -133,16 +137,18 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
 
             if (games.length > 0) {
                 const metrics = convertGamesToMetrics(games);
-       
+                const { student }: ProfileSlice = get();
+                
                 set((state: StatisticsSlice) => ({ 
                     timestamp: state.isMainMetric ? state.timestamp : games[0].timestamp,
                     timestamps: games.map(el => el.timestamp),
                     metricName,
                     metrics,
-                    isMainMetric: false
+                    isMainMetric: false,
+                    summary: student.summary_games
                  }));
             } else {
-                set({ metricName: '', timestamps: [], metrics: [], timestamp: 0 });
+                set({ metricName: '', timestamps: [], metrics: [], timestamp: 0, summary:'' });
             }
         })
     },
@@ -157,14 +163,22 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
         set({ isTests: false, year, month, metricName, timestamp, isMainMetric: true })
     },
 
-    setTestsSummary:(summary: string) => {
-        const { student_id }: GroupsSlice = get();
+    setSummary:(summary: string) => {
+        const { student_id, isTests }: GroupsSlice & StatisticsSlice = get();
 
-        update_student_tests_summary(student_id, {tests_summary: summary},(res => {
-            if (res.isOk) {
-                set({summary});
-            }
-        }));
+        if (isTests) {
+            update_student_tests_summary(student_id, {summary_tests: summary},(res => {
+                if (res.isOk) {
+                    set({summary});
+                }
+            }));
+        } else {
+            update_student_games_summary(student_id, {summary_games: summary},(res => {
+                if (res.isOk) {
+                    set({summary});
+                }
+            }));
+        }
     }
 });
 
