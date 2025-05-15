@@ -1,7 +1,7 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { Platform, Pressable, Text, StyleSheet, View, TextInput } from 'react-native';
-import { useNavigation, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { screenStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../store';
@@ -15,10 +15,9 @@ import { CustomAlert } from '../../../../shared/components/CustomAlert';
 
 
 export default function StatisticsScreen() {
-  const { timestamp,  metricName, student } = useStore();
-  const { loadStatistics, togleStatistic, setTestsSummary } = useStore();
+  const { timestamp,  metricName, summary } = useStore();
+  const { loadStatistics, togleStatistic, setSummary } = useStore();
 
-  const navigation = useNavigation();
   const router = useRouter();
 
   useFocusEffect(
@@ -27,26 +26,25 @@ export default function StatisticsScreen() {
     }, [])
   );
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => 
-        <Pressable style={{ marginRight: 15 }} onPress={togleStatistic} >
-          <Ionicons name='repeat-outline' size={21} color="#D1FF4D" />
-        </Pressable>
-    });
-  }, [navigation]);
-
   const [isSummaryInput, setIsSummaryInput] = useState<boolean>(false);
-  const [summaryText, setSummaryText] = useState<string>(student.summary_tests);
+  const [summaryText, setSummaryText] = useState<string>(summary);
+
+  useEffect(() => {
+    setSummaryText(summary);
+  }, [summary]);
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <CustomNavbar title='Statistics' onClick={() => router.push("/dashboards/coach")}/>
+      <CustomNavbar title='Statistics' onClick={() => router.push("/dashboards/coach")}>
+        <Pressable style={{ marginRight: 15 }} onPress={togleStatistic} >
+          <Ionicons name='repeat-outline' size={21} color="#D1FF4D" />
+        </Pressable>
+      </CustomNavbar>
 
       <CustomAlert visible={isSummaryInput} 
         title="Summary for student!"
         buttonText='Save'
-        handleYes={() => {setTestsSummary(summaryText); setIsSummaryInput(false)}}
+        handleYes={() => {setSummary(summaryText); setIsSummaryInput(false)}}
         onClose={() => setIsSummaryInput(false)}>
           <TextInput
               style={styles.dialogInput}
@@ -103,9 +101,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   dialogInput: {
-    fontSize: 15,
+    color: '#eee',
+    fontSize: 16,
     padding: 8,
-    backgroundColor: '#FFFACD',
+    backgroundColor: '#2E4A7C',
   },
   summary: { 
     marginTop: 'auto', 

@@ -89,9 +89,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   dialogInput: {
-    fontSize: 15,
+    color: '#eee',
+    fontSize: 16,
     padding: 8,
-    backgroundColor: '#FFFACD',
+    backgroundColor: '#2E4A7C',
   },
 });
 
