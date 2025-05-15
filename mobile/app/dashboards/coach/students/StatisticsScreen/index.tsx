@@ -1,6 +1,6 @@
-import { useCallback, useLayoutEffect, useEffect } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Platform, Pressable, Text, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, Text, StyleSheet, View, TextInput } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { screenStyles } from '../../../../shared/styles/appStyles';
@@ -11,11 +11,12 @@ import { DatesView } from './views/DatesView';
 import { TableView } from './views/TableView';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
+import { CustomAlert } from '../../../../shared/components/CustomAlert';
 
 
 export default function StatisticsScreen() {
-  const { timestamp,  metricName } = useStore();
-  const { loadStatistics, togleStatistic } = useStore();
+  const { timestamp,  metricName, student } = useStore();
+  const { loadStatistics, togleStatistic, setTestsSummary } = useStore();
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -35,9 +36,27 @@ export default function StatisticsScreen() {
     });
   }, [navigation]);
 
+  const [isSummaryInput, setIsSummaryInput] = useState<boolean>(false);
+  const [summaryText, setSummaryText] = useState<string>(student.summary_tests);
+
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Statistics' onClick={() => router.push("/dashboards/coach")}/>
+
+      <CustomAlert visible={isSummaryInput} 
+        title="Summary for student!"
+        buttonText='Save'
+        handleYes={() => {setTestsSummary(summaryText); setIsSummaryInput(false)}}
+        onClose={() => setIsSummaryInput(false)}>
+          <TextInput
+              style={styles.dialogInput}
+              onChangeText={setSummaryText}
+              value={summaryText}
+              placeholder="Enter summary"
+              keyboardType='default'
+          />
+      </CustomAlert>
+
       <View style={{paddingTop: 12}}>
         <CalendarView/>
       </View>
@@ -48,7 +67,11 @@ export default function StatisticsScreen() {
           <ChartView/>
           <DatesView/>
           <TableView/>
-          <Text style={[screenStyles.gold, styles.comment]}>Comment</Text>
+
+          <Text style={[screenStyles.gold, styles.summary]}
+            onPress={() => setIsSummaryInput(true)}>
+              {summaryText === '' ? 'Enter summary' : summaryText}
+          </Text>
         </>
       }
     </LinearGradient>
@@ -75,6 +98,16 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
   comment: {
+    marginTop: 'auto', 
+    textAlign: 'center',
+    paddingBottom: 20
+  },
+  dialogInput: {
+    fontSize: 15,
+    padding: 8,
+    backgroundColor: '#FFFACD',
+  },
+  summary: { 
     marginTop: 'auto', 
     textAlign: 'center',
     paddingBottom: 20

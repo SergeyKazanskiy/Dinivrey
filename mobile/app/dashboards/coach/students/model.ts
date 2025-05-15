@@ -57,7 +57,13 @@ export interface StudentProfile {
     group_extra_id?: number;
   }
   
-  export interface Student extends StudentProfile, StudentAddress, StudentGroups {
+ interface StudentSummaries {
+  summary_tests: string;
+  summary_achievements: string;
+  summary_games: string;
+  }
+
+  export interface Student extends StudentProfile, StudentAddress, StudentGroups, StudentSummaries {
     id: number;
   }
   

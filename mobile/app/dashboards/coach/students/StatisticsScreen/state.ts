@@ -1,5 +1,6 @@
 import { Test, Game, Metric } from "../model";
 import { get_last_test_date, get_last_game_date, get_student_tests, get_student_games } from '../http';
+import { update_student_tests_summary, update_student_games_summary } from '../http';
 import { GroupsSlice } from '../GroupsScreen/state';
 import { MeasureUnits } from '../../../../shared/constants';
 import { objectToJson, getYearAndMonth } from '../../../../shared/utils';
@@ -30,6 +31,8 @@ export interface StatisticsSlice {
 
     loadTest: (timestamp: number, metricName: string) => void;
     loadGame: (timestamp: number, metricName: string) => void;
+
+    setTestsSummary:(summary: string) => void;
 }
 
 export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
@@ -107,7 +110,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     loadTests: (student_id: number, year: number, month: number, metricName = 'Speed') => {
         get_student_tests(student_id, year, month, (tests: Test[]) => {
             set({ isTests: true });
-
+            //alert(objectToJson(tests))
             if (tests.length > 0) {
                 const metrics = convertTestsToMetrics(tests);
 
@@ -152,6 +155,16 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     loadGame: (timestamp: number, metricName: string) => {
         const { year, month } = getYearAndMonth(timestamp);
         set({ isTests: false, year, month, metricName, timestamp, isMainMetric: true })
+    },
+
+    setTestsSummary:(summary: string) => {
+        const { student_id }: GroupsSlice = get();
+
+        update_student_tests_summary(student_id, {tests_summary: summary},(res => {
+            if (res.isOk) {
+                set({summary});
+            }
+        }));
     }
 });
 
