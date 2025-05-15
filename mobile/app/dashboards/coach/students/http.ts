@@ -65,3 +65,12 @@ export function attach_student_achieve(data: AchieveAttach, callback: (achieveme
 export function detach_student_achieve(achieve_id: number, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.delete(`students/achievements/${achieve_id}`), callback);
 };
+
+// Summary
+export function update_student_tests_summary(student_id: number, data: {summary: string}, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`students/${student_id}/tests/summary`, data), callback);
+};
+
+export function update_student_achieves_summary(student_id: number,  data: {summary: string}, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`students/${student_id}/achievements/summary`, data), callback);
+};
