@@ -24,8 +24,9 @@ export const CustomAlert: React.FC<Props> = ({ visible, title, children, handleY
 
   return (
     <Modal transparent visible={visible} animationType='fade'>
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback  onPress={onClose}>
         <View style={styles.backdrop}>
+        <TouchableWithoutFeedback>
           <Animated.View style={[styles.alertBox, { transform: [{ translateY: slideAnim }] }]}>
             <Text style={styles.title}>{title}</Text>
             <View style={styles.content}>{children}</View>
@@ -40,6 +41,7 @@ export const CustomAlert: React.FC<Props> = ({ visible, title, children, handleY
               </TouchableOpacity>
             </View>
           </Animated.View>
+          </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -49,8 +51,9 @@ export const CustomAlert: React.FC<Props> = ({ visible, title, children, handleY
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
+    //backgroundColor: '#0006',
     ...StyleSheet.absoluteFillObject,
-   // justifyContent: 'flex-start',
+    justifyContent: 'flex-start',
     ...(Platform.OS === 'web' ? { width: 360, alignSelf: 'flex-start' } : {}),
   },
   alertBox: {

@@ -1,5 +1,6 @@
 import { Achieve, Achievement, AchieveAttach } from "../model";
-import { get_student_achieves, get_base_achieves, attach_student_achieve, detach_student_achieve } from '../http';
+import { get_student_achieves, get_base_achieves } from '../http';
+import { attach_student_achieve, detach_student_achieve, update_student_achieves_summary } from '../http';
 import { GroupsSlice } from '../GroupsScreen/state';
 import { objectToJson } from '../../../../shared/utils';
 import {  RuleLevels } from '../../../../shared/constants';
@@ -12,6 +13,8 @@ export interface AchievesSlice {
   achievement_id: number;
   achieve_id: number;
 
+  summary: string;
+
   loadStudentAchieves: () => void;
   loadBaseAchieves: (category: string) => void;
 
@@ -20,6 +23,8 @@ export interface AchievesSlice {
 
   attachAchieve:(base_achieve_id: number) => void; //AchievesModal attach BaseAchieve to the student (manual-trigger)   
   detachAchieve: () => void; //AchievesPanel detach selected in AchievesPanel achieve (manual-trigger)
+
+  setSummary:(summary: string) => void;
 }
 
 export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
@@ -28,6 +33,8 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   
   achievement_id: 0,
   achieve_id: 0,
+
+  summary:'Enter summary',
 
   loadStudentAchieves: () => {
     const { student_id }: GroupsSlice = get();
@@ -88,5 +95,15 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
           }
       }))
   },
+
+  setSummary:(summary: string) => {
+    const { student_id }: GroupsSlice = get();
+
+    update_student_achieves_summary(student_id, {summary},(res => {
+      if (res.isOk) {
+          set({summary});
+      }
+    }))
+  }
 });
   

@@ -17,7 +17,8 @@ export default function AttendanceScreen() {
   const { isStudentsView, isAttendanceView, students, timestamp, isAllChecked } = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked } = useStore();
 
-  const [isAlert, setIsAlert] = useState<boolean>(false);
+  const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
+  const [isDeleteAlert, setIsDeleteAlert] = useState<boolean>(false);
   const [tense, setTenses] = useState<string>('');
 
   const router = useRouter();
@@ -31,23 +32,37 @@ export default function AttendanceScreen() {
   function handleAddBlank() {
     if (isPast(timestamp)) {
       setTenses('past');
-      setIsAlert(true);
+      setIsCreateAlert(true);
       return
     } else if (isFuture(timestamp)) {
       setTenses('future');
-      setIsAlert(true);
+      setIsCreateAlert(true);
       return
     }
     addAttendances();
+  }
+
+  function handleDeleteBlank() {
+      if (isAttendanceView) {
+        setIsDeleteAlert(true); //??? lenght>0
+      }
   }
 //push("/dashboards/coach")
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Students' onClick={() => router.back()}/>
 
-      <CustomAlert visible={isAlert}  title="Attention!"
-        onClose={() => setIsAlert(false)}>
+      <CustomAlert visible={isCreateAlert}  title="Attention!"
+        onClose={() => setIsCreateAlert(false)}>
         <Text style={{color:'#ddd'}}>Unable to create blank in the {tense}</Text>
+      </CustomAlert>
+
+      <CustomAlert visible={isDeleteAlert} 
+        title="Attention! Really delete?"
+        buttonText='Yes'
+        handleYes={() => {deleteAttendances(); setIsDeleteAlert(false)}}
+        onClose={() => setIsDeleteAlert(false)}>
+        <Text style={{color:'#ddd'}}>Deleting a list will delete all entered data.</Text>
       </CustomAlert>
 
        <View style={styles.container}>
@@ -57,7 +72,7 @@ export default function AttendanceScreen() {
               onPress={handleAddBlank}>Add Blank</Button>}
             {isAttendanceView && <Button size='sm' color="blue" type='outline'
               buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
-              onPress={deleteAttendances}>Delete Blank</Button>}
+              onPress={handleDeleteBlank}>Delete Blank</Button>}
 
             <View style={[styles.section, {marginRight: 11}]}>
               {isAttendanceView && <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>}

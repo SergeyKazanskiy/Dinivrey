@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView, Text, Platform } from 'react-native';
+import { StyleSheet, ScrollView, Text, Platform, View, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { screenStyles } from '../../../../shared/styles/appStyles';
@@ -8,11 +8,12 @@ import { AchievesSection } from './views/AchievesSection';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
+import {  CustomAlert} from '../../../../shared/components/CustomAlert';
 
 
 export const AchievesScreen = () => {
-  const { achievement_id } = useStore();
-  const { loadStudentAchieves, detachAchieve } = useStore();
+  const { achievement_id, summary } = useStore();
+  const { loadStudentAchieves, detachAchieve, setSummary } = useStore();
   
   const router = useRouter();
 
@@ -21,6 +22,9 @@ export const AchievesScreen = () => {
       loadStudentAchieves();
     }, [])
   );
+
+   const [isSummaryInput, setIsSummaryInput] = useState<boolean>(false);
+   const [summaryText, setSummaryText] = useState<string>('');
   
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
@@ -30,13 +34,30 @@ export const AchievesScreen = () => {
         />
       </CustomNavbar>
 
+      <CustomAlert visible={isSummaryInput} 
+        title="Summary for student!"
+        buttonText='Save'
+        handleYes={() => {setSummary(summaryText); setIsSummaryInput(false)}}
+        onClose={() => setIsSummaryInput(false)}>
+          <TextInput
+              style={styles.dialogInput}
+              onChangeText={setSummaryText}
+              value={summaryText}
+              placeholder="Enter summary"
+              keyboardType='default'
+          />
+      </CustomAlert>
+
       <ScrollView style={styles.container}>
         <AchievesSection title='Test achievements' category='Test' />
         <AchievesSection title='Game achievements' category='Game' />
         <AchievesSection title='Participate achievements' category='Participate' />
       </ScrollView>
       
-      <Text style={[screenStyles.gold, styles.summary]}>You still have a little time left !</Text>
+      <Text style={[screenStyles.gold, styles.summary]}
+        onPress={() => setIsSummaryInput(true)}>
+          {summary}
+        </Text>
     </LinearGradient>
   );
 };
@@ -66,6 +87,11 @@ const styles = StyleSheet.create({
     marginTop: 'auto', 
     textAlign: 'center',
     paddingBottom: 20
+  },
+  dialogInput: {
+    fontSize: 15,
+    padding: 8,
+    backgroundColor: '#FFFACD',
   },
 });
 

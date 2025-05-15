@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html
 from models.base import Base
@@ -60,8 +60,40 @@ async def custom_redoc_html():
         options={"hideDownloadButton": True}  # Отключает правую панель
     )
 
+
 #if __name__ == '__main__':
  #   uvicorn.run('main:app', reload=True)
 
 #uvicorn main:app --reload
 #http://127.0.0.1:8000/docs
+
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_session
+from sqlalchemy import text
+
+@router.post("/add_new_fields", tags=["Auth"])
+async def add_new_fields(session: AsyncSession = Depends(get_session)):
+    try:
+        await session.execute(text("""
+            ALTER TABLE students ADD COLUMN summary_tests TEXT NOT NULL DEFAULT '';
+        """))
+    except Exception as e:
+        print("summary_tests:", e)
+
+    try:
+        await session.execute(text("""
+            ALTER TABLE students ADD COLUMN summary_achievements TEXT NOT NULL DEFAULT '';
+        """))
+    except Exception as e:
+        print("summary_achievements:", e)
+
+    try:
+        await session.execute(text("""
+            ALTER TABLE students ADD COLUMN summary_games TEXT NOT NULL DEFAULT '';
+        """))
+    except Exception as e:
+        print("summary_games:", e)
+
+    await session.commit()
+    return {"status": "Success"}
