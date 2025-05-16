@@ -78,10 +78,10 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     checkStudent: (attendance_id: number) => {
        
         const { timestamp }: EventsSlice = get();
-        if (isPast(timestamp)) {
-            alert('It is not possible to change past attendance!');
-            return
-        }
+        // if (isPast(timestamp)) {
+        //     alert('It is not possible to change past attendance!');//???
+        //     return
+        // }
         const { attendances }: AttendanceSlice = get();
         const attendance = attendances.find(el => el.id === attendance_id);
         
