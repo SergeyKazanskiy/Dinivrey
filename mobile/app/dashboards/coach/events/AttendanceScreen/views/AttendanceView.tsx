@@ -1,15 +1,32 @@
-import React from "react";
-import { StyleSheet, FlatList, ScrollView } from "react-native";
+import {useState} from "react";
+import { StyleSheet, FlatList, ScrollView, Text } from "react-native";
 import { useStore } from '../../store';
 import { AttendanceCell } from '../../../../../shared/components/AttendanceCell';
-
+import { CustomAlert } from '../../../../../shared/components/CustomAlert';
+import { isPast, formatDateTime } from '../../../../../shared/utils';
 
 export const AttendanceView = () => { 
-  const { attendances } = useStore();
+  const { attendances, timestamp } = useStore();
   const { checkStudent } = useStore();
 
+  const [isUpdateAlert, setIsUpdateAlert] = useState<boolean>(false);
+
+  function handleCheckStudent(id: number) {
+    if (isPast(timestamp)) {
+      setIsUpdateAlert(true)
+    } else {
+      checkStudent(id);
+    }
+  }
+
   return (
-    <ScrollView style={styles.container}>
+    <>
+      <CustomAlert visible={isUpdateAlert}  title="Attention!"
+        onClose={() => setIsUpdateAlert(false)}>
+        <Text style={{color:'#ddd'}}>It is not possible to change attendance in the past</Text>
+      </CustomAlert>
+
+      <ScrollView style={styles.container}>
         <FlatList data={attendances} 
             keyExtractor={(index) => index.toString()}
             renderItem={({ item, index }) =>
@@ -17,10 +34,11 @@ export const AttendanceView = () => {
                 first_name={item.first_name}
                 last_name={item.last_name}
                 checked={item.present}
-                onCheck={() => checkStudent(item.id)}
+                onCheck={() => handleCheckStudent(item.id)}
               />
         }/>
     </ScrollView>
+    </>
   );
 };
 

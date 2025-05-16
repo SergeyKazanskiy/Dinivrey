@@ -42,8 +42,8 @@ export function delete_attendances(event_id: number, group_id: number, callback:
 
 
 // Testing
-export function get_testers(event_id: number, group_id: number,  callback: (testers: Tester[]) => void) {
-    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/testers/`), callback, 'Getting testers');
+export function get_testers(event_id: number, group_id: number, timestamp: number, callback: (testers: Tester[]) => void) {
+    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/testers?timestamp=${timestamp}`), callback, 'Getting testers');
 };
 
 

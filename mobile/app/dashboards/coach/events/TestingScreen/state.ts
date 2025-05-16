@@ -51,9 +51,9 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
     },
 
     loadTesters: () => {
-        const { event_id, group_id }: EventsSlice = get();
+        const { event_id, group_id, timestamp }: EventsSlice = get();
 
-        get_testers(event_id, group_id, (testers: Tester[]) => {
+        get_testers(event_id, group_id, timestamp, (testers: Tester[]) => {
             const participants = testers.map(el => ({...el, participate: true}))
             set({ exam: 'speed', testers: participants });
         })

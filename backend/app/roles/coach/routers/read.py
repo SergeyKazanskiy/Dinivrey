@@ -187,6 +187,59 @@ async def get_student_names(group_id: int, session: AsyncSession = Depends(get_s
 
 # Testers
 @router.get("/camps/events/{event_id}/groups/{group_id}/testers", response_model=List[schemas.Tester], tags=["Coach"]) #
+async def get_student_names(event_id: int, group_id: int, timestamp: int, session: AsyncSession = Depends(get_session)):
+    E = models.Event
+    A = models.Attendance
+    S = models.Student
+    stmt = (
+        select(A.id, A.student_id, S.first_name, S.last_name, A.present, E.timestamp )
+        .join(A, A.event_id == E.id)
+        .join(S, A.student_id == S.id)
+        .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
+        .order_by(asc(S.first_name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    
+    liders = []
+    for row in rows:
+        tests = await session.execute(
+            select(models.Test)
+            .where((models.Test.student_id == row[1]) & (E.timestamp == timestamp))
+            .limit(1)
+            )
+        test = tests.scalar_one_or_none()
+        if test:
+            lider = {
+                'id': row[1],
+                'first_name': row[2],
+                'last_name': row[3],
+
+                'test_id': test.id,
+                'speed': test.speed,
+                'stamina': test.stamina,
+                'climbing': test.climbing,
+                'evasion': test.evasion,
+                'hiding': test.hiding,  
+            }
+            liders.append(lider)
+        else:
+            lider = {
+                'id': row[1],
+                'first_name': row[2],
+                'last_name': row[3],
+
+                'test_id': 0,
+                'speed': 0,
+                'stamina': 0,
+                'climbing': 0,
+                'evasion': 0,
+                'hiding': 0,  
+            }
+            liders.append(lider)   
+    return liders
+
+@router.get("/camps/groups/{group_id}/testers2", response_model=List[schemas.Tester], tags=["Coach"]) #
 async def get_student_names(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
     A = models.Attendance
     S = models.Student
@@ -213,35 +266,6 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
                 'id': row[1],
                 'first_name': row[2],
                 'last_name': row[3],
-
-                'test_id': test.id,
-                'speed': test.speed,
-                'stamina': test.stamina,
-                'climbing': test.climbing,
-                'evasion': test.evasion,
-                'hiding': test.hiding,  
-            }
-            liders.append(lider)
-    return liders
-
-@router.get("/camps/groups/{group_id}/testers2", response_model=List[schemas.Tester], tags=["Coach"]) #
-async def get_student_names(group_id: int, session: AsyncSession = Depends(get_session)):
-    students = await CRUD.get(models.Student, session, filters={"group_id": group_id}, order_by="first_name")
-    
-    
-    liders = []
-    for student in students:
-        tests = await session.execute(
-            select(models.Test)
-            .where(models.Test.student_id == student.id)
-            .order_by(desc(models.Test.timestamp))
-            .limit(1))
-        test = tests.scalar_one_or_none()
-        if test:
-            lider = {
-                'id': student.id,
-                'first_name': student.first_name,
-                'last_name': student.last_name,
 
                 'test_id': test.id,
                 'speed': test.speed,
