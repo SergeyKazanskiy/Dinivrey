@@ -7,7 +7,7 @@ import { HStack, VStack, Text, Image } from '@chakra-ui/react';
 import { SideMenuCell } from './components/SideMenuCell';
 import { sidebarStyles } from './shared/appStyles';
 import { StudentsPage, CoachesPage, ManagersPage, EventsPage } from './pages/index';
-import { StatisticsPage, TestsPage, GamesPage, AchievementsPage } from './pages/index';
+import { StatisticsPage, DrillsPage, GamesPage, AchievementsPage } from './pages/index';
 import RedocPage from './pages/redoc'
 
 
@@ -36,7 +36,7 @@ function App() {
           <SideMenuCell img='Statistics.png' title='Statistics' to='/api/statistics'/>
 
           <Text style={sidebarStyles.group} alignSelf='start' pl={4} pt={8} pb={3} >Settings</Text>
-          <SideMenuCell img='Test.png' title='Tests' to='/api/tests'/>
+          <SideMenuCell img='Test.png' title='Drills' to='/api/drills'/>
           <SideMenuCell img='Game.png' title='Games' to='/api/games'/>
           <SideMenuCell img='Achievement.png' title='Achievements' to='/api/achievements'/>
         </VStack>
@@ -50,7 +50,7 @@ function App() {
           <Route path="/api/events" element={<EventsPage />} />
           <Route path="/api/statistics" element={<StatisticsPage />} />
 
-          <Route path="/api/tests" element={<TestsPage />} />
+          <Route path="/api/drills" element={<DrillsPage />} />
           <Route path="/api/games" element={<GamesPage />} />
           <Route path="/api/achievements" element={<AchievementsPage />} />
         </Routes>

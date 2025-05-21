@@ -100,4 +100,14 @@ async def custom_redoc_html():
 #     await session.commit()
 #     return {"status": "Success"}
 
-# app.include_router(router2)
+router3 = APIRouter()
+
+@router3.post("/add_new_tables", tags=["Auth"])
+async def create_tables():
+    async with engine.begin() as conn:
+        # создаёт только отсутствующие таблицы
+        await conn.run_sync(Base.metadata.create_all)
+    await engine.dispose()
+    return {"status": "Success"}
+
+app.include_router(router3)

@@ -14,6 +14,7 @@ class Event(Base):
     group1_id = Column(Integer, nullable=False)
     group2_id = Column(Integer)
     attendances = relationship("Attendance", back_populates="event", cascade="all, delete")
+    event_drills = relationship("EventDrill", back_populates="event", cascade="all, delete")
 
 
 class Attendance(Base):

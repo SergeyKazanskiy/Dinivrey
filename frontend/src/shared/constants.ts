@@ -46,4 +46,6 @@ export const StudentsIcons = {
   Girl: "Student_girl.png",
 };
 
-export const ImagesPath = 'http://localhost:8000/images'
+export const ImagesPath = 'http://localhost:8000/images';
+
+export const DrillLevels: string[] = ['Beginner', 'Intermediate', 'Advanced'];

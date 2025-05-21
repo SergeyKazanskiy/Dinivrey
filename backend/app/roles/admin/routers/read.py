@@ -204,3 +204,13 @@ async def getAchievements(student_id: int, session: AsyncSession = Depends(get_s
     result = await session.execute(stmt)
     rows = result.all()
     return [{"name": row[0], "image": row[1], "level": row[2]} for row in rows]
+
+
+# Drills
+@router.get("/drills/all", response_model=List[schemas.DrillResponse], tags=["Admin_select"])
+async def get_base_drills(session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Drill, session)
+
+@router.get("/drills/{id}", response_model=schemas.DrillResponse, tags=["Admin_select"])
+async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Drill, id, session)
