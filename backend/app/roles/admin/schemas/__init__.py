@@ -17,3 +17,4 @@ from .coach import CoachGroupCreate, CoachGroupResponse
 
 from .achieve import AchieveCreate, AchieveUpdate, AchieveResponse, AchieveShortResponse
 from .rule import RuleCreate, RuleUpdate, RuleResponse
+from .drill import DrillCreate, DrillResponse, DrillUpdate

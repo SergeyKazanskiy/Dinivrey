@@ -102,3 +102,9 @@ async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depend
 @router.post("/coaches/groups", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def add_coach_group(data: schemas.CoachGroupCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.CoachGroup, data, session)} 
+
+
+# Drills
+@router.post("/drills", response_model=schemas.ResponseId, tags=["Admin_create"])
+async def create_drill(data: schemas.DrillCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Drill, data, session)} 

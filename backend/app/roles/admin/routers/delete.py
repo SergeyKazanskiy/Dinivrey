@@ -71,3 +71,9 @@ async def delete_coach(id: int, session: Session = Depends(get_session)):
 @router.delete("/camps/coaches/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def remove_coach_group(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.CoachGroup, id, session)}
+
+
+# Drills
+@router.delete("/drills/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
+async def delete_drill(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.Drill, id, session)}
