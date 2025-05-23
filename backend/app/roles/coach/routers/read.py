@@ -66,9 +66,9 @@ async def get_last_test_date(id: int, session: AsyncSession = Depends(get_sessio
 async def get_last_game_date(id: int, session: AsyncSession = Depends(get_session)):
     stmt = (
         select(models.Game)
-        .where(models.Game.student_id == id)
-        .order_by(desc(models.Game.timestamp))
-        .limit(1)
+            .where(models.Game.student_id == id)
+            .order_by(desc(models.Game.timestamp))
+            .limit(1)
     )
     result = await session.execute(stmt)
     event = result.scalar_one_or_none()
@@ -125,17 +125,31 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
 async def get_achieves(category: str, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Achieve, session, filters={"category": category})
 
+
+# Schedule
+@router.get("/camps/groups/schedule", response_model=List[schemas.GroupScheduleResponse], tags=["Coach"])
+async def get_coache_schedule( group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
+    result = await session.execute(
+        select(models.GroupSchedule)
+            .where(models.GroupSchedule.group_id.in_(group_ids))
+            .order_by(desc(models.GroupSchedule.weekday),
+                      desc(models.GroupSchedule.hour),
+                      desc(models.GroupSchedule.minute))
+    )
+    return result.scalars().all()
+
 # Events
 @router.get("/camps/groups/events/latest", tags=["Coach"])
 async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     
-    result = await session.execute(select(models.Event)
-                                   .where(or_(
-                                            models.Event.group1_id.in_(group_ids),
-                                            models.Event.group2_id.in_(group_ids)
-                                        ))
-                                   .order_by(desc(models.Event.timestamp))
-                                   .limit(1))
+    result = await session.execute(
+        select(models.Event)
+            .where(or_(
+                    models.Event.group1_id.in_(group_ids),
+                    models.Event.group2_id.in_(group_ids)
+                ))
+            .order_by(desc(models.Event.timestamp))
+            .limit(1))
     event = result.scalar_one_or_none() 
     isEvents = True if event else False
     timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
@@ -152,14 +166,31 @@ async def get_events(year: int, month: int, week: int, group_ids: List[int] = Qu
 
     result = await session.execute(
         select(models.Event)
-        .where(models.Event.timestamp.between(start_ts, end_ts),
-               or_(
-                    models.Event.group1_id.in_(group_ids),
-                    models.Event.group2_id.in_(group_ids)
-                ))
-        .order_by(asc(models.Event.timestamp))
+            .where(models.Event.timestamp.between(start_ts, end_ts),
+                or_(
+                        models.Event.group1_id.in_(group_ids),
+                        models.Event.group2_id.in_(group_ids)
+                    ))
+            .order_by(asc(models.Event.timestamp))
     )
     return result.scalars().all()
+
+@router.get("/camps/groups/events/competitions",  response_model=List[schemas.EventResponse], tags=["Coach"])
+async def get_coach_competitions(group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
+    now_ts = int(datetime.now().timestamp() * 1000)
+
+    result = await session.execute(
+        select(models.Event)
+            .where(models.Event.timestamp > now_ts,
+                models.Event.type == 'Game',
+                or_(
+                        models.Event.group1_id.in_(group_ids),
+                        models.Event.group2_id.in_(group_ids)
+                    ))
+            .order_by(asc(models.Event.timestamp))
+    )
+    return result.scalars().all()
+
 
 # Attendances
 @router.get("/camps/events/{event_id}/groups/{group_id}/attendances", tags=["Coach"])
@@ -168,9 +199,9 @@ async def get_attendances(event_id:int, group_id: int, session: AsyncSession = D
     S = models.Student
     stmt = (
         select(A.id, A.student_id, S.first_name, S.last_name, A.present)
-        .join(S, A.student_id == S.id)
-        .where((A.group_id == group_id) & (A.event_id == event_id))
-        .order_by(asc(S.first_name))
+            .join(S, A.student_id == S.id)
+            .where((A.group_id == group_id) & (A.event_id == event_id))
+            .order_by(asc(S.first_name))
     )
     result = await session.execute(stmt)
     rows = result.all()
@@ -193,10 +224,10 @@ async def get_student_names(event_id: int, group_id: int, timestamp: int, sessio
     S = models.Student
     stmt = (
         select(A.id, A.student_id, S.first_name, S.last_name, A.present, E.timestamp )
-        .join(A, A.event_id == E.id)
-        .join(S, A.student_id == S.id)
-        .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
-        .order_by(asc(S.first_name))
+            .join(A, A.event_id == E.id)
+            .join(S, A.student_id == S.id)
+            .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
+            .order_by(asc(S.first_name))
     )
     result = await session.execute(stmt)
     rows = result.all()
@@ -205,8 +236,8 @@ async def get_student_names(event_id: int, group_id: int, timestamp: int, sessio
     for row in rows:
         tests = await session.execute(
             select(models.Test)
-            .where((models.Test.student_id == row[1]) & (E.timestamp == timestamp))
-            .limit(1)
+                .where((models.Test.student_id == row[1]) & (E.timestamp == timestamp))
+                .limit(1)
             )
         test = tests.scalar_one_or_none()
         if test:
@@ -245,9 +276,9 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
     S = models.Student
     stmt = (
         select(A.id, A.student_id, S.first_name, S.last_name, A.present)
-        .join(S, A.student_id == S.id)
-        .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
-        .order_by(asc(S.first_name))
+            .join(S, A.student_id == S.id)
+            .where((A.event_id == event_id) & (A.group_id == group_id) & (A.present == True))
+            .order_by(asc(S.first_name))
     )
     result = await session.execute(stmt)
     rows = result.all()
@@ -256,9 +287,9 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
     for row in rows:
         tests = await session.execute(
             select(models.Test)
-            .where(models.Test.student_id == row[1]) #& ((models.Test.timestamp == )
-            .order_by(desc(models.Test.timestamp))
-            .limit(1)
+                .where(models.Test.student_id == row[1]) #& ((models.Test.timestamp == )
+                .order_by(desc(models.Test.timestamp))
+                .limit(1)
             )
         test = tests.scalar_one_or_none()
         if test:

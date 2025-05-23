@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,7 @@ import EventsScreen from './events/EventsScreen';
 import GroupsScreen from './students/GroupsScreen';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 
 type TabRoutes = {
@@ -17,7 +18,6 @@ type TabRoutes = {
 };
 
 const Tab = createBottomTabNavigator<TabRoutes>();
-
 
 function getIconsData(routeName: string) {
   let iconName: any;
@@ -37,71 +37,37 @@ function getIconsData(routeName: string) {
 function TabNavigatorWrapper() {
   const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
 
-
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
+      <DinivreyHeader title='Coach name' onExit={()=>router.replace('/')}/>
+      <Image style={[styles.image]}
+        source={require('../../../assets/images/DinivreyCompany.png')} /> 
+
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            backgroundColor: '#0C1B30',
-            height: 70,
-            borderTopWidth: 0,
-          },
+          headerShown: false, tabBarShowLabel: false, tabBarStyle: styles.tabbar,
           tabBarIcon: ({ focused }) => {
             const { iconName, label } = getIconsData(route.name);
             return (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'} />
-                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 14, marginTop: 3 }}>
-                  {label}
-                </Text>
+                <Ionicons name={iconName} style={[styles.icon, focused && styles.focused]} />
+                <Text style={[styles.label, focused && styles.focused]}>{label}</Text>
               </View>
             );
           },
         })}
       >
-        <Tab.Screen name="Groups" component={GroupsScreenWithHeader} />
-        <Tab.Screen name="Events" component={EventsScreenWithHeader} />
+        <Tab.Screen name="Groups" component={GroupsScreen} />
+        <Tab.Screen name="Events" component={EventsScreen} />
       </Tab.Navigator>
     </LinearGradient>
   );
 }
 
-
-function GroupsScreenWithHeader(props: any) {
-  const route = useRoute();
-
-  return (
-    <View style={{ flex: 1 }}>
-      <DinivreyHeader
-        isGroups={route.name === 'Groups'}
-        onGroups={() => {}}
-        onEvents={() => props.navigation.navigate('Events')}
-      />
-      <GroupsScreen {...props} />
-    </View>
-  );
-}
-
-function EventsScreenWithHeader(props: any) {
-  const route = useRoute();
-
-  return (
-    <View style={{ flex: 1 }}>
-      <DinivreyHeader
-        isGroups={route.name === 'Groups'}
-        onGroups={() => props.navigation.navigate('Groups')}
-        onEvents={() => {}}
-      />
-      <EventsScreen {...props} />
-    </View>
-  );
-}
-
 export default function CoachLayout() {
-  return <TabNavigatorWrapper />;
+  return (
+    <TabNavigatorWrapper />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -111,8 +77,27 @@ const styles = StyleSheet.create({
     maxWidth: Platform.OS === 'web' ? 360 : undefined,
     width: '100%',
   },
-  indicator: { backgroundColor: '#c2ff00', height: 4 },
-  tab: { backgroundColor: '#152B52' },
-  label: { marginLeft: 8, color: '#ddd', fontSize: 16, padding: 6 },
-  content: { flex: 1 },
+  tabbar: {
+    backgroundColor: '#0C1B30',
+    height: 70,
+    borderTopWidth: 0
+  },
+  label: {
+    color: '#888888',
+    fontSize: 14,
+    marginTop: 3
+  },
+  focused: {
+    color: '#E4FF3E'
+  },
+  icon: {
+    color: '#888888',
+    fontSize: 24,
+  },
+  image: {
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    width: '72%',
+    height: '32%',
+  },
 });

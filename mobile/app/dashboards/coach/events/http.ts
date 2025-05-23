@@ -9,11 +9,20 @@ export function get_coach_last_event(group_ids: number[], callback: (res: {year:
     return httpWrapper(() => api.get(`camps/groups/events/latest?${query}`), callback);
 };
 
+export function get_coach_schedule(group_ids: number[], callback: (events: Event[]) => void) {
+    const query = group_ids.map(id => `group_ids=${id}`).join("&");
+    return httpWrapper(() => api.get(`/camps/groups/schedule?${query}`), callback);
+};
+
 export function get_coach_events(year: number, month: number, week: number, group_ids: number[], callback: (events: Event[]) => void) {
     const query = group_ids.map(id => `group_ids=${id}`).join("&");
     return httpWrapper(() => api.get(`camps/groups/events?year=${year}&month=${month}&week=${week}&${query}`), callback);
 };
 
+export function get_coach_competitions( group_ids: number[], callback: (events: Event[]) => void) {
+    const query = group_ids.map(id => `group_ids=${id}`).join("&");
+    return httpWrapper(() => api.get(`camps/groups/events/competitions?&${query}`), callback);
+};
 
 // Attendance
 export function get_attendances(event_id: number, group_id: number, callback: (attendances: Attendance[]) => void) {

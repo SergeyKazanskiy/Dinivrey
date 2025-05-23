@@ -1,5 +1,5 @@
 from .shared import ResponseOk, ResponseId
-from .group import GroupResponse, StudentShort
+from .group import GroupResponse, StudentShort, GroupScheduleResponse
 
 from .student import StudentResponse, ParentResponse, StudentName
 from .student import TestResponse, Tester, TestUpdate

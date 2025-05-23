@@ -65,3 +65,11 @@ export interface Attendance {
   present: boolean;
   test_id?: number;
 }
+
+export interface Schedule {
+  id: number;
+  group_id: number;
+  weekday: number;
+  hour: number;
+  minute: number;
+}
