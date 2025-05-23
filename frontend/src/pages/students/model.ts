@@ -11,6 +11,14 @@ export interface Group {
     description: string;
 }
 
+export interface Schedule {
+    id: number;
+    group_id: number;
+    weekday: number;
+    hour: number;
+    minute: number;
+}
+
 export interface Student {
     id: number;
     group_id: number;
