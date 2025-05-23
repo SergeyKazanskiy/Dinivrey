@@ -1,42 +1,50 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-  
-export type Props = {
-  isGroups: boolean;
-  onGroups: () => void;
-  onEvents: () => void;
-};
 
-export const DinivreyHeader: React.FC<Props> = ({isGroups, onGroups, onEvents}) => {
+interface Props {
+  title: string;
+  onExit: () => void;
+}
+
+export const DinivreyHeader: React.FC<Props> = ({ title, onExit }) => {
   return (
-    <View style={styles.cell}>
-      <TouchableOpacity onPress={onGroups} style={{paddingTop: 7}}>
-        <Ionicons name='people' size={24} color={isGroups ? '#E4FF3E' : '#999'}/>
-      </TouchableOpacity>
-       
-      <Text style={styles.title}>DINIVREY</Text>
-
-      <TouchableOpacity onPress={onEvents} style={{paddingTop: 7}}>
-        <Ionicons name='calendar-number-outline' size={24} color={!isGroups ? '#E4FF3E' : '#999'}/>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <Image style={[styles.image]}
+        source={require('../../../assets/images/Logo.png')} /> 
+      <Text style={styles.title}>{title}</Text>
+      <Ionicons name='exit-outline' style={[styles.icon]}
+        onPress={onExit}/>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  cell: {
+  container: {
     flexDirection:'row',
     justifyContent: 'space-around',
-    backgroundColor: '#152B52',
-    paddingVertical: 2
+    backgroundColor: '#152B52', //'#152B52' '#E4FF3E'
+    height: 60,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    paddingTop: 10
   },
+  image: {
+    height: 48,
+    width: 36,
+   // borderRadius: 12,
+},
   title: {
     fontWeight: '600',
-    fontSize: 28,
-    color: '#c2ff00',
-    paddingVertical: 3
-  }
+    fontSize: 22,
+    color: '#E4FF3E',//#D1FF4D, c2ff00
+    paddingTop: 8
+  },
+  icon: {
+    paddingTop: 4,
+    fontSize: 22,
+    color: '#E4FF3E'
+  },
 });
 

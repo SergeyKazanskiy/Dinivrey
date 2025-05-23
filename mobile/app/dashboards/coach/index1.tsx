@@ -5,7 +5,7 @@ import EventsScreen from './events/EventsScreen';
 import GroupsScreen from './students/GroupsScreen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
+import { DinivreyHeader } from '../../shared/components/DinivreyHeader2';
 
 const Tab = createBottomTabNavigator();
  

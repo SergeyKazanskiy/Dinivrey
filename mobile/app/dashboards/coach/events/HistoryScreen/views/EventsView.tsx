@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
-import { ScheduleCell } from '../../../../../shared/components/ScheduleCell';
+import { CoachEventCell } from '../../../../../shared/components/CoachEventCell';
 import { formatDateTime } from '../../../../../shared/utils';
 import { Icon } from '@rneui/themed';
 
@@ -40,13 +40,12 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
       {expanded &&
           <FlatList data={dayEvents} contentContainerStyle={{paddingBottom: 24}}
             renderItem={({ item }) =>
-              <ScheduleCell
-                checked={false}  
+              <CoachEventCell
+                type={item.type}  
                 time={formatDateTime(item.timestamp).time}
                 desc={item.desc}
                 group1={groups.find(el => el.id === item.group1_id)!}
                 onGroup={(group_id) => handlePress(item.id, group_id)}
-                onCheck={()=>{}}
                 group2={groups.find(el => el.id === item.group2_id)}
               />
             } style={styles.list}

@@ -7,7 +7,7 @@ import { StyleSheet, Platform, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native-animatable';
-import { DinivreyHeader } from '../../../shared/components/DinivreyHeader';
+import { DinivreyHeader } from '../../../shared/components/DinivreyHeader2';
 import { useRoute } from '@react-navigation/native';
 //import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';

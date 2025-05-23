@@ -13,6 +13,21 @@ class GroupResponse(GroupBase):
     class Config:
         from_attributes = True
 
+
+class GroupScheduleBase(BaseModel):
+    group_id: int
+    weekday: int
+    hour: int
+    minute: int
+
+class GroupScheduleResponse(GroupScheduleBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+
 class StudentShort(BaseModel):
     id: int
     photo: str
