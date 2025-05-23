@@ -69,8 +69,11 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
 
         update_group(group_id, data, (res)=> {
             if (res.isOk) {
+                if (data.name) group.name = name;
+                if (data.description) group.description = description;
+
                 set((state: GroupsSlice) => ({
-                    groups: state.groups.map((el) => el.id === group_id ? { ...el, name } : el),
+                    groups: state.groups.map((el) => el.id === group_id ? group : el),
                 }));
             }
         })

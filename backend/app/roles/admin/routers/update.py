@@ -11,7 +11,7 @@ from sqlalchemy import delete
 router = APIRouter()
 
 
-# Students
+# Groups
 @router.put("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Camp, id, data, session)}
@@ -19,6 +19,10 @@ async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession =
 @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Group, id, data, session)}
+
+@router.put("/camps/groups/schedule/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_group_shedule(id: int, data: schemas.GroupScheduleUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.GroupSchedule, id, data, session)}
 
 # Student
 @router.put("/students/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])

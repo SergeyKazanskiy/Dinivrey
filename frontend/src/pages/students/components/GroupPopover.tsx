@@ -41,10 +41,10 @@ export function GroupPopover({ name, desc, onUpdate, onDelete }: Props) {
           onChange={(e) => setNewName(e.target.value)}
           onClick={(event) => { event.stopPropagation() }}/>
 
-        <Text align='left' fontSize={16} color='blue.500' my='8px'>Description</Text>
+        {/* <Text align='left' fontSize={16} color='blue.500' my='8px'>Description</Text>
         <Input size='sm' value={newDesc} placeholder='Enter' w='280px'
           onChange={(e) => setNewDesc(e.target.value)}
-          onClick={(event) => { event.stopPropagation() }}/>
+          onClick={(event) => { event.stopPropagation() }}/> */}
 
         <ButtonGroup display='flex' justifyContent='flex-end' mt={2}>
           <Button size='sm' variant='solid' colorScheme='blue' px={5}

@@ -9,7 +9,7 @@ import models
 router = APIRouter()
 
 
-# Students
+# Groups
 @router.delete("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_camp(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Camp, id, session)}
@@ -21,6 +21,10 @@ async def delete_group(id: int, session: Session = Depends(get_session)):
 @router.delete("/camps/groups/students/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_student(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Student, id, session)}
+
+@router.delete("/camps/groups/schedule/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
+async def delete_student(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.GroupSchedule, id, session)}
 
 # Student
 @router.delete("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])

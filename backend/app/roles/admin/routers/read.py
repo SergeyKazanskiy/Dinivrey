@@ -8,8 +8,11 @@ import models
 from sqlalchemy.future import select
 from sqlalchemy import desc, asc
 from datetime import datetime
+from sqlalchemy.orm import selectinload
 
 router = APIRouter()
+WEEKDAYS = { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" }
+
 
 # Students
 @router.get("/camps", response_model=List[schemas.CampResponse], tags=["Admin_select"])
@@ -23,6 +26,22 @@ async def get_camp(id: int, session: AsyncSession = Depends(get_session)):
 @router.get("/camps/{id}/groups", response_model=List[schemas.GroupResponse], tags=["Admin_select"])
 async def get_camp_groups(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Group, session, filters={"camp_id": id}, order_by="name")
+
+@router.get("/camps/groups/{id}/schedule", response_model=List[schemas.GroupScheduleRead], tags=["Admin_select"])
+async def get_camp_groups(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.GroupSchedule, session, filters={"group_id": id}, order_by="weekday")
+
+@router.get("/camps/{id}/groups/schedule", response_model=List[schemas.GroupResponse], tags=["Admin_select"])
+async def get_groups_with_schedule(id: int, session: AsyncSession = Depends(get_session)):
+    groups = await CRUD.get(models.Group, session, filters={"camp_id": id}, order_by="name")
+    for group in groups:
+        schedule = await CRUD.get(models.GroupSchedule, session, filters={"group_id": group.id}, order_by="weekday")
+        times = [
+            f"{WEEKDAYS[entry.weekday]} {entry.hour:02}:{entry.minute:02}"
+            for entry in schedule
+        ]
+        group.description = f"{', '.join(times)}"
+    return groups
 
 @router.get("/camps/groups/{id}/students", response_model=List[schemas.StudentShort], tags=["Admin_select"])
 async def get_students(id: int, session: AsyncSession = Depends(get_session)):

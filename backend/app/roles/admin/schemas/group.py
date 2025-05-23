@@ -27,3 +27,31 @@ class GroupResponse(GroupBase):
 
     class Config:
         from_attributes = True
+
+
+class GroupScheduleBase(BaseModel):
+    group_id: int
+    weekday: int
+    hour: int
+    minute: int
+
+class GroupScheduleCreate(GroupScheduleBase):
+    pass
+
+class GroupScheduleUpdate(BaseModel):
+    hour: Optional[int] = None
+    minute: Optional[int] = None
+
+class GroupScheduleRead(GroupScheduleBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class GroupReadWithSchedule(BaseModel):
+    id: int
+    name: str
+    schedule: List[GroupScheduleRead]
+
+    class Config:
+        orm_mode = True

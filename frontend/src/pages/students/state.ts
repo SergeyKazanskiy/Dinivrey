@@ -1,9 +1,11 @@
 import { CampsSlice } from './store/CampsSlice';
-import { get_camps, get_groups, get_students , get_liders} from './http';
-import { Camp, Group, Lider, Student } from './model';
+import { get_camps, get_groups, get_group_schedule, get_students , get_liders} from './http';
+import { Camp, Group, Lider, Schedule, Student } from './model';
 import { GroupsSlice } from './store/GroupsSlice';
 import { StudentsSlice } from './store/StudentsSlice';
 import { LidersSlice } from './store/LidersSlice';
+import { SchedulesSlice } from './store/SchedulesSlice';
+import { objectToJson } from '../../shared/utils';
 
 
 export interface StateSlice {
@@ -11,6 +13,7 @@ export interface StateSlice {
 
     loadCamps: () => void;
     loadGroups: (camp_id: number) => void;
+    loadSchedule: (group_id: number) => void;
     loadStudents: (group_id: number) => void;
     loadLiders: (group_id: number) => void;
 
@@ -37,6 +40,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
     loadGroups: (camp_id: number) => {
         get_groups(camp_id, (groups: Group[]) => {
+            //alert(objectToJson(groups))
             const { setGroups, selectGroup, setStudents }: GroupsSlice & StudentsSlice = get();
             setGroups(groups);
             if (groups.length > 0) {
@@ -45,6 +49,13 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
             } else {
                 setStudents([]);
             }
+        })
+    },
+
+    loadSchedule: (group_id: number) => {
+        get_group_schedule(group_id, (schedules: Schedule[]) => {
+            const { setSchedules }: SchedulesSlice = get();
+            setSchedules(schedules);
         })
     },
 

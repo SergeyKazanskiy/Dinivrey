@@ -1,5 +1,5 @@
 from .camps import Camp
-from .groups import Group
+from .groups import Group, GroupSchedule
 from .students import Student, Parent, Test, Game, Achievement
 from .coaches import Coach, CoachGroup
 from .events import Event, Attendance

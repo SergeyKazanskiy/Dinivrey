@@ -1,10 +1,10 @@
 import { JSX } from "react/jsx-runtime";
-import { Accordion, AccordionItem, AccordionButton, AccordionPanel, Button, Box} from "@chakra-ui/react";
+import { Accordion, AccordionItem, AccordionButton, AccordionPanel, Button, Text} from "@chakra-ui/react";
 import { sidebarStyles } from '../../../shared/appStyles'
 import { useStore } from '../store';
 import { Group } from '../model';
 import { GroupPopover } from '../components/GroupPopover';
-
+import { SchedulePopover } from '../components/SchedulePopover';
 
 interface Props {
   children: JSX.Element[] | JSX.Element;
@@ -24,8 +24,14 @@ export function GroupsView({ children }: Props) {
 
                         {item.name}
                         {item.id === group_id &&
-                            <GroupPopover name={item.name} desc={item.description} 
-                                onUpdate={updateGroup} onDelete={deleteGroup}/>}
+                            <>
+                                <GroupPopover name={item.name} desc={item.description} 
+                                    onUpdate={updateGroup} onDelete={deleteGroup}/>
+                                
+                                <SchedulePopover/>
+                            </>
+                        }
+                        <Text ml={item.id === group_id ? '4px' : '64px'}>({item.description})</Text>
                     </AccordionButton>
 
                     <AccordionPanel px={4}>
