@@ -2,18 +2,18 @@ import { Event } from "../model";
 import { get_groups } from '../../students/http';
 import { get_coach_last_event, get_coach_events } from '../http';
 import { objectToJson, getTimestamp, getCurrentYear, getDayAndWeekday, getWeekNumber } from "../../../../shared/utils";
-import { ShortGroup } from '../../../../shared/components/CoachEventCell';
+import { Group } from '../../students/model';
 
 
 export interface HistorySlice {
-    groups: ShortGroup[];
+    groups: Group[];
     group_ids: number[];
 
     days: {day: number, weekday: string}[];
     events: Event[];
 
-    event_id: number;
-    group_id: number;
+    //event_id: number;
+    //group_id: number;
 
     timestamp: number;
     event_year: number;
@@ -25,7 +25,7 @@ export interface HistorySlice {
     loadEvents: (group_ids: number[], year: number, month: number, week: number) => void;
 
     selectDate: (year: number, month: number, week: number ) => void;
-    selectEvent: (event_id: number, group_id: number) => void;
+    //selectEvent: (event_id: number, group_id: number) => void;
 }
 
 export const createHistorySlice = (set: any, get: any): HistorySlice => ({     
@@ -35,8 +35,8 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
     days: [],
     events: [],
 
-    event_id: 0,
-    group_id: 0,
+    //event_id: 0,
+    //group_id: 0,
 
     timestamp: 0,
     event_year: getCurrentYear(),
@@ -44,7 +44,7 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
     event_week: 0,
 
     loadGroups: (coach_id: number) => {
-        get_groups(coach_id, (groups: ShortGroup[]) => {
+        get_groups(coach_id, (groups: Group[]) => {
             //alert(objectToJson(groups))
             set({ groups });
             if (groups.length > 0) {
@@ -69,18 +69,18 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
 
     loadEvents: (group_ids: number[], year: number, month: number, week: number) => {
         get_coach_events(year, month, week, group_ids, (events: Event[]) => {
-            const { event_id }: HistorySlice = get();
-            var eventId: Number;
-            if (event_id > 0) {
-                eventId = event_id;
-            } else if (events.length > 0) {
-                eventId = events[0].id;
-            } else {
-                eventId = 0;
-            }
+            // const { event_id }: HistorySlice = get();
+            // var eventId: Number;
+            // if (event_id > 0) {
+            //     eventId = event_id;
+            // } else if (events.length > 0) {
+            //     eventId = events[0].id;
+            // } else {
+            //     eventId = 0;
+            // }
             set({
                 events: events.map(el => ({...el, day: getDayAndWeekday(el.timestamp).day})),
-                event_id: eventId,
+                //event_id: eventId,
                 event_year: year,
                 event_month: month,
                 event_week: week,
@@ -108,9 +108,9 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
         loadEvents(group_ids, year, month, week);
     },
 
-    selectEvent: (event_id: number, group_id: number) => {
-        const { events }: HistorySlice = get();
-        const event = events.find(el => el.id === event_id)!;
-        set({ event_id, group_id, timestamp: event.timestamp});
-    },
+    // selectEvent: (event_id: number, group_id: number) => {
+    //     const { events }: HistorySlice = get();
+    //     const event = events.find(el => el.id === event_id)!;
+    //     set({ event_id, group_id, timestamp: event.timestamp});
+    // },
 });

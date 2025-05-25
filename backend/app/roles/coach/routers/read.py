@@ -127,16 +127,32 @@ async def get_achieves(category: str, session: AsyncSession = Depends(get_sessio
 
 
 # Schedule
-@router.get("/camps/groups/schedule", response_model=List[schemas.GroupScheduleResponse], tags=["Coach"])
+@router.get("/camps/groups/schedule", tags=["Coach"])
 async def get_coache_schedule( group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
-    result = await session.execute(
+    week_start, week_end = get_current_week_range()
+
+    start_ts = int(week_start.timestamp() * 1000)
+    end_ts = int(week_end.timestamp() * 1000)
+
+    events = await session.execute(
+        select(models.Event)
+            .where(models.Event.timestamp.between(start_ts, end_ts),
+                or_(
+                        models.Event.group1_id.in_(group_ids),
+                        models.Event.group2_id.in_(group_ids)
+                    ))
+            .order_by(asc(models.Event.timestamp))
+    )
+
+    schedule = await session.execute(
         select(models.GroupSchedule)
             .where(models.GroupSchedule.group_id.in_(group_ids))
             .order_by(desc(models.GroupSchedule.weekday),
                       desc(models.GroupSchedule.hour),
                       desc(models.GroupSchedule.minute))
     )
-    return result.scalars().all()
+    return {'events': events.scalars().all(),
+            'schedules': schedule.scalars().all()}
 
 # Events
 @router.get("/camps/groups/events/latest", tags=["Coach"])
@@ -159,7 +175,7 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
 
 @router.get("/camps/groups/events",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
-    week_start, week_end = get_week_range(year, month,week)
+    week_start, week_end = get_week_range(year, month, week)
 
     start_ts = int(week_start.timestamp() * 1000)
     end_ts = int(week_end.timestamp() * 1000)
@@ -347,3 +363,17 @@ def get_week_number(timestamp_ms: int) -> int:
 
     # Пересчёт как в TS-функции: сколько дней сдвиг + текущий день → неделя
     return (day_of_month + start_day - 1) // 7
+
+
+def get_current_week_range():
+    now = datetime.now()
+
+    # Найти понедельник текущей недели
+    start_of_week = now - timedelta(days=now.weekday())
+    start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # Воскресенье этой недели
+    end_of_week = start_of_week + timedelta(days=6)
+    end_of_week = end_of_week.replace(hour=23, minute=59, second=0, microsecond=0)
+
+    return start_of_week, end_of_week

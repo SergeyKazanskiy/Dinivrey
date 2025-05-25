@@ -1,9 +1,4 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { useStore } from '../../store';
-import { DateStepper } from '../../../../../shared/components/DateStepper';
-import { getCurrentYear, getCurrentMonth, getWeeksInMonth } from '../../../../../shared/utils';
-import { months } from '../../../../../shared/constants';
-import { NumberButtons } from '../../../../../shared/components/NumberButtons';
 import { Button } from '@rneui/themed';
 
 

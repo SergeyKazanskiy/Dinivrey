@@ -117,6 +117,6 @@ export const createSchedulesSlice = (set: any, get: any): SchedulesSlice => ({
 });
 
 function getDescription(schedules: Schedule[]): string {
-    const dates = schedules.map(el => weekDays[el.weekday - 1] + ' ' + el.hour + ':' + el.minute)
+    const dates = schedules.map(el => ' ' +  weekDays[el.weekday - 1] + ' ' + el.hour + ':' + el.minute)
     return dates.toString()
 }

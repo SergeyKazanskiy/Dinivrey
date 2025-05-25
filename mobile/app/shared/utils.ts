@@ -165,3 +165,31 @@ export function getWeekNumber(timestamp: number): number {//номер неде�
 
   return Math.ceil((dayOfMonth + startDay) / 7);
 }
+
+export function getWeekHourMinute(timestamp: number) {
+  const date = new Date(timestamp);
+
+  // Преобразуем JS day (0 - Sunday, 6 - Saturday) → (1 - Monday, 7 - Sunday)
+  const jsDay = date.getDay(); // 0 (Sun) to 6 (Sat)
+  const dayOfWeek = jsDay === 0 ? 7 : jsDay;
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  return {dayOfWeek, hours, minutes};
+}
+
+export function getTimestampForSchedule(weekday: number, hour: number, minute: number): number {
+
+  const now = new Date();
+  const currentDay = now.getDay() === 0 ? 7 : now.getDay(); // Convert JS Sunday (0) to 7
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - (currentDay - 1)); // Move to Monday
+  startOfWeek.setHours(0, 0, 0, 0); // Reset to 00:00:00.000
+
+  const targetDate = new Date(startOfWeek);
+  targetDate.setDate(startOfWeek.getDate() + (weekday - 1)); // Add days
+  targetDate.setHours(hour, minute, 0, 0); // Set time
+
+  return targetDate.getTime();
+}

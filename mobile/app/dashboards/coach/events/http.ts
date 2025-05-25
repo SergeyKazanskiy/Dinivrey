@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
-import { Attendance, Test, Game, Event, Tester, Student } from './model';
+import { Attendance, Test, Game, Event, Tester, Student, Schedule } from './model';
 
 
 // Events
@@ -9,7 +9,7 @@ export function get_coach_last_event(group_ids: number[], callback: (res: {year:
     return httpWrapper(() => api.get(`camps/groups/events/latest?${query}`), callback);
 };
 
-export function get_coach_schedule(group_ids: number[], callback: (events: Event[]) => void) {
+export function get_coach_schedule(group_ids: number[], callback: (res: {schedules: Schedule[], events: Event[]}) => void) {
     const query = group_ids.map(id => `group_ids=${id}`).join("&");
     return httpWrapper(() => api.get(`/camps/groups/schedule?${query}`), callback);
 };
@@ -22,6 +22,15 @@ export function get_coach_events(year: number, month: number, week: number, grou
 export function get_coach_competitions( group_ids: number[], callback: (events: Event[]) => void) {
     const query = group_ids.map(id => `group_ids=${id}`).join("&");
     return httpWrapper(() => api.get(`camps/groups/events/competitions?&${query}`), callback);
+};
+
+
+export function add_event(data: Omit<Event, 'id'>, callback: (res:{id: number}) => void) {
+    return httpWrapper(() => api.post(`camps/events`, data), callback);
+};
+
+export function update_event(event_id: number, data: Partial<Event>, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.put(`camps/events/${event_id}`, data), callback);
 };
 
 // Attendance
