@@ -2,6 +2,7 @@ export const months = ['January', 'February', 'March', 'April', 'May',
     'June', 'July', 'August', 'September', 'October', 'November', 'December',];
 
 export const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export const effectNames = ["fade", "rotate", "pulse", "jump", "ripple"];
 export type EffectName = (typeof effectNames)[number];

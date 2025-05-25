@@ -12,15 +12,15 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
   const [expanded, setExpanded] = useState(false);
 
   const { events, groups } = useStore();
-  const { selectEvent } = useStore();
+ // const { selectEvent } = useStore();
 
   const dayEvents = events.filter(el => el.day === day);
 
   const router = useRouter();
 
   function handlePress(event_id: number, group_id: number) {
-    selectEvent(event_id, group_id);
-    router.push(`/dashboards/coach/events`)
+    //selectEvent(event_id, group_id);
+    //router.push(`/dashboards/coach/events`)
   }
 
   return (

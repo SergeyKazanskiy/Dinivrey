@@ -1,46 +1,148 @@
-import { Schedule } from "../model";
+import { Schedule, Event } from "../model";
 import { get_groups } from '../../students/http';
-import { get_coach_schedule } from '../http';
-import { objectToJson, getTimestamp, getCurrentYear, getDayAndWeekday, getWeekNumber } from "../../../../shared/utils";
-import { ShortGroup } from '../../../../shared/components/CoachEventCell';
-import { Group } from "../../students/model";
+import { get_coach_schedule, add_event, update_event } from '../http';
+import { getTimestampForSchedule, getWeekHourMinute, objectToJson, getDayAndWeekday } from "../../../../shared/utils";
+import { Group } from '../../students/model';
+import { HistorySlice } from '../HistoryScreen/state';
+import { weekDays } from '../../../../shared/constants';
 
 
 export interface EventsSlice {
-    schedules: Schedule[];
-    schedule_id: number;
+    events_shedules: Event[];
 
-    days: {day: number, weekday: string}[];
+    event_id: number;
+    group_id: number;
+    event_timestamp: number;
+    
+    schedule_days: {day: number, weekday: string}[];
+    isEventAddAlert: boolean;
 
     loadSchedules: () => void;
-    selectSchedule: (schedule_id: number) => void;
+    openAddAlert: (group_id: number, timestamp: number) => void; //select planingEvent
+    closeAddAlert: () => void;
 
-    addEvent: () => void;
-    deleteEvent: () => void;
+    addEvent: (type: string) => void;
+    selectEvent: ( event_id: number, group_id: number, timestamp: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
-    schedules: [{id: 0, group_id: 0, weekday: 2, hour: 16, minute: 30},
-        {id: 2, group_id: 0, weekday: 4, hour: 18, minute: 30}
-    ],
-    schedule_id: 1,
-    days: [],
+    events_shedules: [],
 
+    event_id: 0,
+    group_id: 0,
+    event_timestamp: 0, 
+
+    schedule_days: [],
+    isEventAddAlert: false,
 
     loadSchedules: () => {
-        
+        const { group_ids, groups }: HistorySlice = get();
+
+        get_coach_schedule(group_ids, (res => {
+            //alert(objectToJson(res))
+            if (res) {
+                let currentDay: number = 0;
+                let days: {day: number, weekday: string}[]=[];
+                let events_shedules: Event[] = [];
+                
+                for (let s of res.schedules) {
+                    const day = s.weekday;
+                    const weekday = weekDays[day - 1];
+
+                    if (s.weekday !== currentDay) {
+                        days.push({day, weekday});
+                        currentDay = day;
+                    }
+
+                    const existingEvent = getExistingEvent(res.events, s.weekday, s.hour, s.minute)
+                    if (existingEvent) {
+                        if (!checkContentEvents(events_shedules, existingEvent.id)) {
+                            events_shedules.push(existingEvent);
+                        }
+                    } else {
+                        const group = groups.find(el => el.id === s.group_id)!
+                        const planingEvent: Event = {
+                            id: 0,
+                            camp_id: group.camp_id,
+                            timestamp: getTimestampForSchedule(s.weekday, s.hour, s.minute),
+                            type: 'Training',
+                            day,
+                            desc: 'Planning event',
+                            group1_id: s.group_id,
+                            group2_id: 0
+                        }
+                        events_shedules.push(planingEvent);
+                    }
+                }
+                const sortedDays = days.sort((a, b) => a.day - b.day);
+                const sortedEvents = events_shedules.sort((a, b) => a.timestamp - b.timestamp);
+                //alert(objectToJson(sortedEvents))
+                set({schedule_days: sortedDays, events_shedules: sortedEvents});
+            }
+        }));
     },
 
-    selectSchedule: (schedule_id: number) => {
-        
+    openAddAlert: (group_id: number, group_timestamp: number) => {
+        set({group_id, group_timestamp, isEventAddAlert: true});
+    },
+    closeAddAlert: () => set({isEventAddAlert: false}),
+
+    addEvent: (type: string) => {
+        const { events_shedules, group_id, event_timestamp, groups }: EventsSlice & HistorySlice= get();
+
+        const planingEvent = events_shedules.find(el => el.group1_id === group_id && el.timestamp === event_timestamp)!;
+        const {timestamp, desc, group1_id, group2_id } = planingEvent
+        const group = groups.find(el => el.id === group1_id)!
+
+        const event: Omit<Event, 'id'> = { camp_id: group.camp_id, type, timestamp, desc, group1_id, group2_id }
+        //alert(objectToJson(event))
+
+        add_event(event, (res => {   
+            if (res) {
+                planingEvent.id = res.id;
+                planingEvent.type = type;
+                set((state: EventsSlice) => ({
+                    events_shedules: state.events_shedules.map((el) =>
+                        el.group1_id === group_id && el.timestamp === event_timestamp ? planingEvent : el),
+                    isEventAddAlert: false
+                }));
+            }
+        }));
     },
 
-    addEvent: () => {
-        
+    selectEvent: ( event_id: number, group_id: number, timestamp: number) => {
+        set({ event_id, group_id, event_timestamp: timestamp});
     },
+    //updateEvent: (type: string) => {
+        // const { events_shedules,  }: EventsSlice = get();
+        // const existingEvent = events_shedules[events_shedules_inx];
 
-
-    deleteEvent: () => {
-        
-    },
+        // update_event(existingEvent.id, {type}, (res => {
+        //     if (res) {
+        //         existingEvent.type = type;
+        //     }
+        // }));
+    //},
 });
+
+
+function getExistingEvent(events: Event[], w: number, h: number, m: number): Event | null {
+   
+    for (let event of events) {
+        const { dayOfWeek, hours, minutes } = getWeekHourMinute(event.timestamp);
+        //alert('111  ' + w  + ',  ' + h  + ',  ' + m)
+       // alert('222  ' + dayOfWeek  + ',  ' + hours  + ',  ' + minutes)
+        if ( dayOfWeek === w &&  hours === h && minutes === m) {
+            event.day = getWeekHourMinute(event.timestamp).dayOfWeek;
+            return event;
+        }
+    }
+    return null
+}
+
+function checkContentEvents(events: Event[], id: number): boolean {
+    for (let event of events) {
+        if (event.id === id) return true;
+    }
+    return false
+}

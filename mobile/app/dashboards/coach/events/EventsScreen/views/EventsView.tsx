@@ -3,24 +3,28 @@ import { useState } from 'react';
 import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
-import { ScheduleCell } from '../../../../../shared/components/ScheduleCell';
+import { CoachEventCell } from '../../../../../shared/components/CoachEventCell';
 import { formatDateTime } from '../../../../../shared/utils';
 import { Icon } from '@rneui/themed';
 
 
-export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
+export function EventsView({ day, weekday }: {day: number, weekday: string}) {
   const [expanded, setExpanded] = useState(false);
 
-  const { events, groups } = useStore();
-  const { selectEvent } = useStore();
+  const { events_shedules, groups } = useStore();
+  const { openAddAlert, selectEvent } = useStore();
 
-  const dayEvents = events.filter(el => el.day === day);
+  const dayEvents = events_shedules.filter(el => el.day === day);
 
   const router = useRouter();
 
-  function handlePress(event_id: number, group_id: number) {
-    selectEvent(event_id, group_id);
-    router.push(`/dashboards/coach/events`)
+  function handlePressGroup( event_id: number, group_id: number, timestamp: number) {
+    if (event_id === 0) {
+      openAddAlert(group_id, timestamp);
+    } else {
+      selectEvent(event_id, group_id, timestamp);
+      router.push(`/dashboards/coach/events`);
+    }
   }
 
   return (
@@ -31,7 +35,7 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
               <Icon name={expanded ? 'chevron-down' : 'chevron-right'}
                 type="material-community" color="white" style={{ marginRight: 10 }} />
               <ListItem.Content>
-                <ListItem.Title style={styles.title}>{day}. {weekday}</ListItem.Title>
+                <ListItem.Title style={styles.title}>{weekday}</ListItem.Title>
               </ListItem.Content>
             </>
           }
@@ -39,14 +43,13 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
         />
       {expanded &&
           <FlatList data={dayEvents} contentContainerStyle={{paddingBottom: 24}}
-            renderItem={({ item }) =>
-              <ScheduleCell
-                checked={false}  
+            renderItem={({ item, index }) =>
+              <CoachEventCell
+                type={item.type}  
                 time={formatDateTime(item.timestamp).time}
                 desc={item.desc}
                 group1={groups.find(el => el.id === item.group1_id)!}
-                onGroup={(group_id) => handlePress(item.id, group_id)}
-                onCheck={()=>{}}
+                onGroup={(group_id) => handlePressGroup(item.id, group_id, item.timestamp)}
                 group2={groups.find(el => el.id === item.group2_id)}
               />
             } style={styles.list}

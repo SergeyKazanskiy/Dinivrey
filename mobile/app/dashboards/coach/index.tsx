@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     resizeMode: 'contain',
     width: '72%',
-    height: '32%',
+    height: '30%',
   },
 });

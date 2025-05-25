@@ -77,7 +77,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
     checkStudent: (attendance_id: number) => {
        
-        const { timestamp }: EventsSlice = get();
+        const { event_timestamp }: EventsSlice = get();
         // if (isPast(timestamp)) {
         //     alert('It is not possible to change past attendance!');//???
         //     return
@@ -97,8 +97,8 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                     } else {
                         const newTest: Omit<Test, 'id'> = {
                             student_id: attendance.student_id,
-                            timestamp: timestamp,
-                            date: formatDateTime(timestamp).date,
+                            timestamp: event_timestamp,
+                            date: formatDateTime(event_timestamp).date,
                             speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
                         };
                         

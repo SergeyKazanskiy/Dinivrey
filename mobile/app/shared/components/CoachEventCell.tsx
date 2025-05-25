@@ -2,20 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { cellStyles } from '../styles/appStyles';
 import { Button } from '@rneui/themed';
-
-
-export interface ShortGroup {
-  id: number;
-  name: string;
-}
+import { Group } from '../../dashboards/coach/students/model';
 
 export type Props = {
   type: string;
   time: string;
   desc: string;
-  group1: ShortGroup;
+  group1: Group;
   onGroup:(id: number) => void;
-  group2?: ShortGroup;
+  group2?: Group;
 };
   
 export const CoachEventCell: React.FC<Props> = ({type, time, desc, group1, onGroup, group2}) => {

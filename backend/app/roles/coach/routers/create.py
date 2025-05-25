@@ -83,3 +83,8 @@ async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSes
         "level": data.level,
         "effect": achieve.effect
     }
+
+# Events
+@router.post("/camps/events", response_model=schemas.ResponseId, tags=["Coach"])
+async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Event, data, session)}
