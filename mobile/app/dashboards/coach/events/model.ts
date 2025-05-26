@@ -75,3 +75,36 @@ export interface Attendance {
   present: boolean;
   test_id?: number;
 }
+
+export interface EventDrill {
+  id: number;
+  event_id: number;
+  drill_id: number;
+  completed: boolean;
+}
+
+export interface Drill {
+  id: number;
+  name: string;
+  time: string;
+  level: string;
+  link: string;
+  desc: string;
+}
+
+export interface ShortEventDrill {
+  id: number;
+  drill_id: number;
+  name: string;
+  time: string;
+  level: string;
+  completed: boolean;
+}
+
+export interface ShortDrill {
+  id: number;
+  name: string;
+  time: string;
+  level: string;
+  present: boolean;
+}

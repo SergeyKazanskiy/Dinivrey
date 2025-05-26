@@ -64,7 +64,7 @@ export default function StudentLayout() {
         <Tab.Screen name="Attendance" component={AttendanceScreen}  />
         <Tab.Screen name="Testing" component={TestingScreen} />
         <Tab.Screen name="Gaming" component={GamingScreen} />
-        <Tab.Screen name="Drills" component={DrillsScreen} />
+        {/* <Tab.Screen name="Drills" component={DrillsScreen} /> */}
       </Tab.Navigator>
     </LinearGradient>
   );

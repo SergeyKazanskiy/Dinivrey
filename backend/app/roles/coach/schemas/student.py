@@ -64,6 +64,9 @@ class TestBase(BaseModel):
     evasion: float
     hiding: float
 
+class TestCreate(TestBase):
+    pass
+
 class TestResponse(TestBase):
     id: int
     
@@ -84,13 +87,25 @@ class GameBase(BaseModel):
     freeded: float
     #description: str
 
+class GameCreate(GameBase):
+    pass
+
 class GameResponse(GameBase):
     id: int
 
     class Config:
         from_attributes = True
 
-# Achievement   
+# Achievement
+class AchievementBase(BaseModel):
+    student_id: int
+    achieve_id: int
+    in_profile: bool
+    level: str
+
+class AchievementCreate(AchievementBase):
+    pass
+ 
 class AchievementResponse(BaseModel):
     id: int;
     image: str

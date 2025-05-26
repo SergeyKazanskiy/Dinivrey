@@ -324,6 +324,36 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
             liders.append(lider)
     return liders
 
+@router.get("/camps/events/{event_id}/drills", tags=["Coach"])
+async def get_event_drills(event_id: int, session: AsyncSession = Depends(get_session)):
+    D = models.Drill
+    ED = models.EventDrill
+    stmt = (
+        select(ED.id, D.id, D.name, D.time, D.level, ED.completed)
+            .join(D, ED.drill_id == D.id)
+            .where(ED.event_id == event_id)
+            .order_by(asc(D.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"id": row[0],
+             "drill_id": row[1],
+             "name": row[2],
+             "time": row[3],
+             "level": row[4],
+             "completed": row[5]} for row in rows]
+
+
+@router.get("/drills/all", response_model=List[schemas.ShortDrillResponse], tags=["Coach"])
+async def get_base_drills(session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Drill, session)
+
+@router.get("/drills/{id}", response_model=schemas.DrillResponse, tags=["Coach"])
+async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Drill, id, session)
+
+
+# Functions
 
 def get_week_range(year: int, month: int, week_number: int):
     # Первый день месяца

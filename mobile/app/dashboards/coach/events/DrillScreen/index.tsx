@@ -1,27 +1,20 @@
-import { StyleSheet, ScrollView, Platform, View } from 'react-native';
-import { useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { useStore } from '../store';
+import { StyleSheet, Platform, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { useRouter } from 'expo-router';
+import { DrillView } from './views/DrillView';
+import { Stack } from 'expo-router';
 
 
-export default function GamingScreen() {
-    // const { loadStudent } = useStore();
-
-    const router = useRouter();
-
-    // useFocusEffect(
-    //   useCallback(() => {
-    //     loadStudent();
-    //   }, [])
-    // );
+export default function DrillScreen() {
+  const router = useRouter();
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-     <CustomNavbar title='Game' onClick={() => router.back()}/>
+      <Stack.Screen options={{ headerShown: false }} />
+     <CustomNavbar title='Drill' onClick={() => router.back()}/>
 
+      <DrillView/>
 
     </LinearGradient>
   );
@@ -38,9 +31,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-  },
-  summary: { 
-    marginTop: 'auto', 
-    paddingBottom: 20
   },
 });
