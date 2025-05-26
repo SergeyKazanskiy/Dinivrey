@@ -3,7 +3,6 @@ import { StyleSheet, ScrollView, Platform, View, Text } from 'react-native';
 import { Button, CheckBox } from '@rneui/themed';
 import { useFocusEffect } from '@react-navigation/native';
 import { useStore } from '../store';
-import { widgetStyles } from '../../../../shared/styles/appStyles';
 import { StudentsView } from './views/StudentsView';
 import { AttendanceView } from './views/AttendanceView';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,9 +10,15 @@ import { useRouter } from 'expo-router';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { CustomAlert } from '../../../../shared/components/CustomAlert';
 import { isPast, isToday, isFuture} from '../../../../shared/utils';
+import { ButtonsView } from './views/ButtonsView';
+import { DrillsView } from './views/DrillsView';
+import DrillsScreen from '../DrillsScreen';
 
 
 export default function AttendanceScreen() {
+  const {  } = useStore();
+  const { openDrillsModal, loadEventDrills } = useStore();
+
   const { isStudentsView, isAttendanceView, students, timestamp, isAllChecked } = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked } = useStore();
 
@@ -25,6 +30,7 @@ export default function AttendanceScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      loadEventDrills();
       loadAttendances();
     }, [])
   );
@@ -52,6 +58,7 @@ export default function AttendanceScreen() {
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title='Students' onClick={() => router.back()}/>
 
+
       <CustomAlert visible={isCreateAlert}  title="Attention!"
         onClose={() => setIsCreateAlert(false)}>
         <Text style={{color:'#ddd'}}>Unable to create blank in the {tense}</Text>
@@ -65,7 +72,11 @@ export default function AttendanceScreen() {
         <Text style={{color:'#ddd'}}>Deleting a list will delete all entered data.</Text>
       </CustomAlert>
 
-       <View style={styles.container}>
+      <ButtonsView onAdd={openDrillsModal} onExam={()=>{}} onGame={()=>{}}/>
+      <DrillsView/>
+      <DrillsScreen/>
+
+      <View style={styles.container}>
           <View style={styles.section}>
             {isStudentsView && <Button disabled={students.length === 0} type='outline'
               buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}

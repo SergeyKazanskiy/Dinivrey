@@ -89,28 +89,33 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     addEvent: (type: string) => {
         const { events_shedules, group_id, event_timestamp, groups }: EventsSlice & HistorySlice= get();
-
-        const planingEvent = events_shedules.find(el => el.group1_id === group_id && el.timestamp === event_timestamp)!;
-        const {timestamp, desc, group1_id, group2_id } = planingEvent
-        const group = groups.find(el => el.id === group1_id)!
-
-        const event: Omit<Event, 'id'> = { camp_id: group.camp_id, type, timestamp, desc, group1_id, group2_id }
-        //alert(objectToJson(event))
-
-        add_event(event, (res => {   
-            if (res) {
-                planingEvent.id = res.id;
-                planingEvent.type = type;
-                set((state: EventsSlice) => ({
-                    events_shedules: state.events_shedules.map((el) =>
-                        el.group1_id === group_id && el.timestamp === event_timestamp ? planingEvent : el),
-                    isEventAddAlert: false
-                }));
-            }
-        }));
+        const planingEvent = events_shedules.find(el => el.group1_id === group_id && el.timestamp === event_timestamp);
+        //alert(group_id + '   ' + event_timestamp)
+        if (planingEvent) {
+            const {timestamp, desc, group1_id, group2_id } = planingEvent
+            const group = groups.find(el => el.id === group1_id)!
+    
+            const event: Omit<Event, 'id'> = { camp_id: group.camp_id, type, timestamp, desc, group1_id, group2_id }
+            //alert(objectToJson(event))
+    
+            add_event(event, (res => {   
+                if (res) {
+                    planingEvent.id = res.id;
+                    planingEvent.type = type;
+                    set((state: EventsSlice) => ({
+                        events_shedules: state.events_shedules.map((el) =>
+                            el.group1_id === group_id && el.timestamp === event_timestamp ? planingEvent : el),
+                        isEventAddAlert: false
+                    }));
+                }
+            }));
+        } else {
+            alert('Error find planingEvent')
+        } 
     },
 
     selectEvent: ( event_id: number, group_id: number, timestamp: number) => {
+        //alert('selectEvent  ' + timestamp )
         set({ event_id, group_id, event_timestamp: timestamp});
     },
     //updateEvent: (type: string) => {

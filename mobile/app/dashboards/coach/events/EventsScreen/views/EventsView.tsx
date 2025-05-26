@@ -19,10 +19,11 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
   const router = useRouter();
 
   function handlePressGroup( event_id: number, group_id: number, timestamp: number) {
+    selectEvent(event_id, group_id, timestamp);
+    
     if (event_id === 0) {
       openAddAlert(group_id, timestamp);
     } else {
-      selectEvent(event_id, group_id, timestamp);
       router.push(`/dashboards/coach/events`);
     }
   }

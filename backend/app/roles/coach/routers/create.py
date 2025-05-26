@@ -4,16 +4,17 @@ from sqlalchemy.future import select
 from sqlalchemy import asc
 from database import get_session
 from crud import CRUD
-from roles.admin import schemas 
+from roles.coach import schemas 
 import models
 from datetime import datetime
 
 router = APIRouter()
 
 
+# Game
 @router.post("/camps/groups/game", response_model=schemas.ResponseId, tags=["Coach"]) #camp_id ???
-async def create_game(data: schemas.GroupCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Group, data, session)}
+async def create_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Game, data, session)}
 
 # Attendances
 @router.post("/camps/events/attendances", response_model=schemas.ResponseOk, tags=["Coach"])
@@ -88,3 +89,7 @@ async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSes
 @router.post("/camps/events", response_model=schemas.ResponseId, tags=["Coach"])
 async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Event, data, session)}
+
+@router.post("/camps/events/drills", response_model=schemas.ResponseId, tags=["Coach"]) #camp_id ???
+async def attach_event_drill(data: schemas.EventDrillCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.EventDrill, data, session)}

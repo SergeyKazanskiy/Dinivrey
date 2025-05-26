@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
-import { Attendance, Test, Game, Event, Tester, Student, Schedule } from './model';
+import { Attendance, Test, Game, Event, Tester, Student, Schedule, EventDrill, ShortDrill, Drill } from './model';
 
 
 // Events
@@ -93,4 +93,30 @@ export function update_student_game(id: number, data: Partial<Game>, callback: (
   
 export function delete_student_game(id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.delete(`students/games/${id}`), callback);
+};
+
+// Event drills
+export function get_event_drills(event_id: number, callback: (drills: ShortDrill[]) => void) {
+    return httpWrapper(() => api.get(`camps/events/${event_id}/drills`), callback);
+};
+
+export function attach_drill(data: Omit<EventDrill, 'id'>, callback: (res:{id: number}) => void) {
+    return httpWrapper(() => api.post(`camps/events/drills`, data), callback);
+};
+
+export function detach_drill(drill_id: number, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.delete(`camps/events/drills/${drill_id}`), callback);
+};
+
+export function update_event_drill(drill_id: number, data: Partial<EventDrill>, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.put(`camps/events/drills/${drill_id}`, data), callback);
+};
+
+// Drills
+export function get_drills(callback: (drills: Omit<ShortDrill, 'present'>[]) => void) {
+    return httpWrapper(() => api.get(`drills/all`), callback);
+};
+
+export function get_drill(drill_id: number, callback: (drill: Drill) => void) {
+    return httpWrapper(() => api.get(`drills/${drill_id}`), callback);
 };

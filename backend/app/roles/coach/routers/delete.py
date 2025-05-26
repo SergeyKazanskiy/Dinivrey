@@ -37,3 +37,8 @@ async def delete_student_test(id: int, session: Session = Depends(get_session)):
 @router.delete("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
 async def remove_student_achievement(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Achievement, id, session)}
+
+# Drill
+@router.delete("/camps/events/drills/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def detach_event_drill(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.EventDrill, id, session)}

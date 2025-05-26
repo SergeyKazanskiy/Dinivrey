@@ -1,37 +1,24 @@
-import { StyleSheet, ScrollView, Platform, View } from 'react-native';
+import { StyleSheet, Text, Platform, View } from 'react-native';
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
-import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
-import { useRouter } from 'expo-router';
+import { DrillsView } from './views/DrillsView';
+import { ScreenWrapper } from '../../../../shared/components/ScreenWrapper';
 
 
 export default function DrillsScreen() {
-    // const { loadStudent } = useStore();
-
-    const router = useRouter();
-
-    // useFocusEffect(
-    //   useCallback(() => {
-    //     loadStudent();
-    //   }, [])
-    // );
+    const { isDrillsModal } = useStore();
+    const { closeDrillsModal } = useStore();
 
   return (
-    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-     <CustomNavbar title='Stunt' onClick={() => router.back()}/>
+     <ScreenWrapper visible={isDrillsModal} title='Select drills' onClose={closeDrillsModal}>
+      <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
 
-      {/*  <ScrollView style={styles.container}>
-        <ProfileView/>
-        <PerentsView/>
-        <AddressView/>
-      </ScrollView>
-
-      <View style={styles.summary}>
-        <AttendanceView/>
-      </View> */}
-    </LinearGradient>
+        <DrillsView/>
+        
+      </LinearGradient>
+      </ScreenWrapper>
   );
 }
 
@@ -47,8 +34,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  summary: { 
-    marginTop: 'auto', 
-    paddingBottom: 20
+  title: {
+    fontSize: 16,
+    color: '#ddd'
   },
 });
