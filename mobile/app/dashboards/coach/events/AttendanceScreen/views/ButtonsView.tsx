@@ -3,12 +3,13 @@ import { Button } from '@rneui/themed';
 
 
 interface Props {
+  event_type: string;
   onAdd: () => void;
   onExam: () => void;
   onGame: () => void;
 }
 
-export function ButtonsView({onAdd, onExam, onGame}: Props) {
+export function ButtonsView({ event_type, onAdd, onExam, onGame }: Props) {
   return (
     <View style= {styles.container}>
       <Button title='Add drills' type='outline' 
@@ -19,14 +20,16 @@ export function ButtonsView({onAdd, onExam, onGame}: Props) {
       <View style= {styles.section}>
         <Text style={styles.text}>Go to </Text>
 
-        <Button title='Exam' type='outline' 
-          buttonStyle={styles.button} titleStyle={styles.title}
-          onPress={onExam}
-        />
         <Button title='Game' type='outline' 
           buttonStyle={styles.button} titleStyle={styles.title}
           onPress={onGame}
         />
+        {event_type === 'Exam' &&
+          <Button title='Exam' type='outline' 
+            buttonStyle={styles.button} titleStyle={styles.title}
+            onPress={onExam}
+          />
+        }
       </View>
     </View>
   );

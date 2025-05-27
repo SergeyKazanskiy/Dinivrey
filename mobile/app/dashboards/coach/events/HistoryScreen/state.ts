@@ -59,6 +59,7 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
 
     loadLastEvent:(group_ids: number[]) => {
         get_coach_last_event(group_ids, (res => {
+            //alert(objectToJson(res))
             if (res.isEvents) {
                 
                 const { loadEvents }: HistorySlice = get();
@@ -69,6 +70,7 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
 
     loadEvents: (group_ids: number[], year: number, month: number, week: number) => {
         get_coach_events(year, month, week, group_ids, (events: Event[]) => {
+            //alert(objectToJson(events))
             // const { event_id }: HistorySlice = get();
             // var eventId: Number;
             // if (event_id > 0) {

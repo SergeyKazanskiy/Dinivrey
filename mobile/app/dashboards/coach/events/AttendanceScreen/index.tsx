@@ -17,7 +17,7 @@ import DrillsScreen from '../DrillsScreen';
 
 
 export default function AttendanceScreen() {
-  const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked } = useStore();
+  const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type } = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, openDrillsModal, loadEventDrills } = useStore();
 
   const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
@@ -80,7 +80,8 @@ export default function AttendanceScreen() {
         <Text style={{color:'#ddd'}}>Deleting a list will delete all entered data.</Text>
       </CustomAlert>
 
-      <ButtonsView onAdd={openDrillsModal} onExam={()=>{}} onGame={()=>{}}/>
+      <ButtonsView event_type={event_type}
+        onAdd={openDrillsModal} onExam={()=>{}} onGame={()=>{}}/>
       <DrillsView/>
       <DrillsScreen/>
 
