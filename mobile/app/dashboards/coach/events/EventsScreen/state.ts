@@ -1,4 +1,4 @@
-import { Schedule, Event } from "../model";
+import { Event } from "../model";
 import { get_coach_schedule, add_event } from '../http';
 import { getTimestampForSchedule, getWeekHourMinute, objectToJson } from "../../../../shared/utils";
 import { HistorySlice } from '../HistoryScreen/state';
@@ -7,12 +7,14 @@ import { weekDays } from '../../../../shared/constants';
 
 export interface EventsSlice {
     events_shedules: Event[];
-
+    schedule_days: {day: number, weekday: string}[];
+    
     event_id: number;
     group_id: number;
+
     event_timestamp: number;
+    event_type: string;
     
-    schedule_days: {day: number, weekday: string}[];
     isEventAddAlert: boolean;
 
     loadSchedules: () => void;
@@ -23,14 +25,16 @@ export interface EventsSlice {
     selectEvent: ( event_id: number, group_id: number, timestamp: number) => void;
 }
 
-export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
+export const createEventsSlice = (set: any, get: any): EventsSlice => ({
+    schedule_days: [],  
     events_shedules: [],
 
     event_id: 0,
     group_id: 0,
-    event_timestamp: 0, 
 
-    schedule_days: [],
+    event_timestamp: 0,
+    event_type:'',
+
     isEventAddAlert: false,
 
     loadSchedules: () => {
@@ -51,7 +55,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                         days.push({day, weekday});
                         currentDay = day;
                     }
-
                     const existingEvent = getExistingEvent(res.events, s.weekday, s.hour, s.minute)
                     if (existingEvent) {
                         if (!checkContentEvents(events_shedules, existingEvent.id)) {
@@ -74,7 +77,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                 }
                 const sortedDays = days.sort((a, b) => a.day - b.day);
                 const sortedEvents = events_shedules.sort((a, b) => a.timestamp - b.timestamp);
-                //alert(objectToJson(sortedEvents))
                 set({schedule_days: sortedDays, events_shedules: sortedEvents});
             }
         }));
@@ -83,6 +85,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     openAddAlert: (group_id: number, group_timestamp: number) => {
         set({group_id, group_timestamp, isEventAddAlert: true});
     },
+
     closeAddAlert: () => set({isEventAddAlert: false}),
 
     addEvent: (type: string) => {
@@ -92,7 +95,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         if (planingEvent) {
             const {timestamp, desc, group1_id, group2_id } = planingEvent
             const group = groups.find(el => el.id === group1_id)!
-    
             const event: Omit<Event, 'id'> = { camp_id: group.camp_id, type, timestamp, desc, group1_id, group2_id }
     
             add_event(event, (res => {   
@@ -116,8 +118,10 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     },
 
     selectEvent: ( event_id: number, group_id: number, timestamp: number) => {
-        //alert('selectEvent  ' + timestamp )
-        set({ event_id, group_id, event_timestamp: timestamp});
+        const { events_shedules }: EventsSlice & HistorySlice= get()
+        const event = events_shedules.find(el => el.id === event_id)!;
+
+        set({ event_id, group_id, event_timestamp: timestamp, event_type: event.type});
     },
     //updateEvent: (type: string) => {
         // const { events_shedules,  }: EventsSlice = get();

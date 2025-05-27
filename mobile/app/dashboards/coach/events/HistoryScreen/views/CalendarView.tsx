@@ -40,8 +40,8 @@ export function CalendarView() {
                 <View>
                     <NumberButtons
                         maxNumber={getWeeksInMonth(event_year, event_month)}
-                        selectedNumber={event_week + 1}
-                        onPress={(value) => selectDate(event_year, event_month, value - 1)}
+                        selectedNumber={event_week}
+                        onPress={(value) => selectDate(event_year, event_month, value)}
                     />
                 </View>
             </View>

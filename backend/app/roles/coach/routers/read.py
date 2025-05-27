@@ -179,10 +179,10 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
 @router.get("/camps/groups/events",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     week_start, week_end = get_week_range(year, month, week)
-
+    print('!!!!!', week_start, week_end)
     start_ts = int(week_start.timestamp() * 1000)
     end_ts = int(week_end.timestamp() * 1000)
-
+    
     result = await session.execute(
         select(models.Event)
             .where(models.Event.timestamp.between(start_ts, end_ts),
@@ -360,30 +360,32 @@ async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
 # Functions
 
 def get_week_range(year: int, month: int, week_number: int):
-    # Первый день месяца
+    # Первый и последний день месяца
     first_day = datetime(year, month, 1)
-    
-    # Найдём первый понедельник в месяце (или первый день, если это понедельник)
-    days_to_monday = (7 - first_day.weekday()) % 7
-    first_monday = first_day + timedelta(days=days_to_monday) if first_day.weekday() != 0 else first_day
+    next_month = datetime(year, month + 1, 1) if month < 12 else datetime(year + 1, 1, 1)
+    last_day = next_month - timedelta(days=1)
 
-    # Смещаемся на (week_number - 1) недель от первого понедельника
+    # Найдём первый понедельник, который может пересекаться с месяцем
+    # Это понедельник на неделе, содержащей первый день месяца
+    first_monday = first_day - timedelta(days=first_day.weekday())
+
+    # Смещаемся на (week_number - 1) недель от этого понедельника
     week_start = first_monday + timedelta(weeks=week_number - 1)
     week_end = week_start + timedelta(days=6)
 
-    # Проверка: если неделя вылезает за границы месяца — обрезаем
-    if week_start.month != month:
-        return None  # неделя не входит в указанный месяц
-    if week_end.month != month:
-        # обрезаем до последнего дня месяца
-        next_month = datetime(year, month + 1, 1) if month < 12 else datetime(year + 1, 1, 1)
-        week_end = next_month - timedelta(days=1)
+    # Если неделя полностью после месяца — её нет
+    if week_start > last_day:
+        return None
 
-    # Добавляем точное время
-    week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
-    week_end = week_end.replace(hour=23, minute=59, second=0, microsecond=0)
+    # Обрезаем границами месяца
+    range_start = max(week_start, first_day)
+    range_end = min(week_end, last_day)
 
-    return week_start, week_end
+    # Устанавливаем точное время
+    range_start = range_start.replace(hour=0, minute=0, second=0, microsecond=0)
+    range_end = range_end.replace(hour=23, minute=59, second=0, microsecond=0)
+
+    return range_start, range_end
 
 def get_week_number(timestamp_ms: int) -> int:
     # Преобразуем миллисекунды в datetime
@@ -396,7 +398,7 @@ def get_week_number(timestamp_ms: int) -> int:
     start_day = (first_day.weekday())  # Monday=0, Sunday=6 в Python уже по нужному формату
 
     # Пересчёт как в TS-функции: сколько дней сдвиг + текущий день → неделя
-    return (day_of_month + start_day - 1) // 7
+    return (day_of_month + start_day - 1) // 7 + 1
 
 
 def get_current_week_range():
