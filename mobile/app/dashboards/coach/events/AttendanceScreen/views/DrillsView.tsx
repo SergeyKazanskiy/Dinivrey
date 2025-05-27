@@ -42,7 +42,7 @@ export function DrillsView() {
                 time={item.time}
                 level={item.level}
                 checked={item.completed}
-                onCheck={() => updateEventDrill(item.id, item.completed)}
+                onCheck={() => updateEventDrill(item.id, !item.completed)}
               />
             </TouchableOpacity>
           } style={styles.list}

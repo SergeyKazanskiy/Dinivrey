@@ -23,7 +23,7 @@ export function DrillsView() {
 
   return (
     <ScrollView>
-      <FlatList data={drills} contentContainerStyle={{paddingBottom: 24}}
+      <FlatList data={drills}
         renderItem={({ item }) =>
           <DrillCell
             name={item.name}
@@ -39,5 +39,8 @@ export function DrillsView() {
 }
 
 const styles = StyleSheet.create({
-  list: { borderRadius: 10, padding: 8 },
+  list: {
+    borderRadius: 10,
+    padding: 12
+  },
 });

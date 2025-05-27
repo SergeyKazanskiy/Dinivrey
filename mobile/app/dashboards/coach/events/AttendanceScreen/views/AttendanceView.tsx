@@ -5,14 +5,15 @@ import { AttendanceCell } from '../../../../../shared/components/AttendanceCell'
 import { CustomAlert } from '../../../../../shared/components/CustomAlert';
 import { isPast, formatDateTime } from '../../../../../shared/utils';
 
+
 export const AttendanceView = () => { 
-  const { attendances, timestamp } = useStore();
+  const { attendances, event_timestamp } = useStore();
   const { checkStudent } = useStore();
 
   const [isUpdateAlert, setIsUpdateAlert] = useState<boolean>(false);
 
   function handleCheckStudent(id: number) {
-    if (isPast(timestamp)) {
+    if (isPast(event_timestamp)) {
       setIsUpdateAlert(true)
     } else {
       checkStudent(id);

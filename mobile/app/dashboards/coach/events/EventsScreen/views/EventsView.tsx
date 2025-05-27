@@ -15,7 +15,6 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
   const { openAddAlert, selectEvent } = useStore();
 
   const dayEvents = events_shedules.filter(el => el.day === day);
-
   const router = useRouter();
 
   function handlePressGroup( event_id: number, group_id: number, timestamp: number) {
@@ -45,14 +44,16 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
       {expanded &&
           <FlatList data={dayEvents} contentContainerStyle={{paddingBottom: 24}}
             renderItem={({ item, index }) =>
-              <CoachEventCell
-                type={item.type}  
-                time={formatDateTime(item.timestamp).time}
-                desc={item.desc}
-                group1={groups.find(el => el.id === item.group1_id)!}
-                onGroup={(group_id) => handlePressGroup(item.id, group_id, item.timestamp)}
-                group2={groups.find(el => el.id === item.group2_id)}
-              />
+              <View style={item.id === 0 && { opacity: 0.6}} key={index}>
+                <CoachEventCell
+                  type={item.type}  
+                  time={formatDateTime(item.timestamp).time}
+                  desc={item.desc}
+                  group1={groups.find(el => el.id === item.group1_id)!}
+                  onGroup={(group_id) => handlePressGroup(item.id, group_id, item.timestamp)}
+                  group2={groups.find(el => el.id === item.group2_id)}
+                />
+              </View>
             } style={styles.list}
           />
         }

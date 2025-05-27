@@ -1,8 +1,8 @@
-import { Drill, ShortDrill, EventDrill, ShortEventDrill } from '../model';
+import { ShortDrill, EventDrill, ShortEventDrill } from '../model';
 import { get_drills, attach_drill, detach_drill, get_event_drills, update_event_drill } from '../http';
 import { objectToJson } from '../../../../shared/utils';
 import { EventsSlice } from '../EventsScreen/state';
-import { DrillSlice } from '../DrillScreen/state';
+
 
 export interface DrillsSlice {
     eventDrills: ShortEventDrill[];
@@ -35,7 +35,6 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
         const { event_id }: EventsSlice = get();
         
         get_event_drills(event_id, (eventDrills => {
-           // alert(objectToJson(eventDrills))
             set({eventDrills});
         }));
     },
@@ -92,9 +91,15 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
         loadDrills();
         set({isDrillsModal: true})
     },
-    closeDrillsModal: () => set({isDrillsModal: false, drills: [], drill_id: 0}),
+
+    closeDrillsModal: () => set({
+        isDrillsModal: false,
+        drills: [],
+        drill_id: 0
+    }),
 
     updateEventDrill: (eventDrill_id: number, completed: boolean) => {
+        
         update_event_drill(eventDrill_id, {completed}, (res => {
             if (res.isOk) {
                 set((state: DrillsSlice) => ({
@@ -106,7 +111,6 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
 });
 
 function checkPresentDrill(eventDrills: ShortEventDrill[], drill_id: number): boolean {
-   // alert(objectToJson(eventDrills));
 
     for (let eventDrill of eventDrills) {
         if (eventDrill.drill_id === drill_id) return true;

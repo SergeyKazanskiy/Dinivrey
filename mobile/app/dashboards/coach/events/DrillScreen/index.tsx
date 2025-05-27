@@ -1,4 +1,4 @@
-import { StyleSheet, Platform, View } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { useRouter } from 'expo-router';
@@ -11,8 +11,9 @@ export default function DrillScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+
       <Stack.Screen options={{ headerShown: false }} />
-     <CustomNavbar title='Drill' onClick={() => router.back()}/>
+      <CustomNavbar title='Drill' onClick={() => router.back()}/>
 
       <DrillView/>
 

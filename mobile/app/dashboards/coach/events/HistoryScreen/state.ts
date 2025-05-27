@@ -15,7 +15,7 @@ export interface HistorySlice {
     //event_id: number;
     //group_id: number;
 
-    timestamp: number;
+    //timestamp: number;
     event_year: number;
     event_month: number;
     event_week: number;
@@ -38,7 +38,7 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
     //event_id: 0,
     //group_id: 0,
 
-    timestamp: 0,
+    //timestamp: 0,
     event_year: getCurrentYear(),
     event_month: 3,
     event_week: 0,

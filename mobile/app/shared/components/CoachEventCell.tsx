@@ -24,7 +24,7 @@ export const CoachEventCell: React.FC<Props> = ({type, time, desc, group1, onGro
       </View>
 
       <View style={[styles.column, {width: '80%', paddingLeft: 8}]}>
-        <View style={styles.header}>
+        <View style={styles.section}>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Button title={group1.name} type='outline' 
               buttonStyle={styles.button} titleStyle={styles.title}
@@ -36,10 +36,13 @@ export const CoachEventCell: React.FC<Props> = ({type, time, desc, group1, onGro
             />}
           </View>
           
-          <Text style={[cellStyles.date, {paddingRight: 4}]}>{time}</Text>
+          <Text style={[styles.camp, {paddingRight: 4}]}>{group1.camp_name}</Text>
         </View>
 
-        <Text style={[cellStyles.description, {marginTop: 7}]}>{desc}</Text>
+        <View style={styles.section}>
+          <Text style={[cellStyles.description, {marginTop: 8}]}>{desc}</Text>
+          <Text style={[cellStyles.date, {paddingRight: 4, marginTop: 6}]}>{time}</Text>
+        </View>
       </View>
     </View>
   );
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: 'column',
   },
-  header: {
+  section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -79,6 +82,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     color: 'gold'
+  },
+  camp: {
+    fontSize: 16,
+    color: '#ddd'
   },
 });
 
