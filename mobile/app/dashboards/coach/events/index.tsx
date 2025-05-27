@@ -38,11 +38,11 @@ export default function StudentLayout() {
   const router = useRouter();
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <DinivreyHeader
+      {/* <DinivreyHeader
         isGroups={false}
         onGroups={() => router.push("/dashboards/coach/students")}
         onEvents={() => {}}
-      />
+      /> */}
 
       <Tab.Navigator
         screenOptions={({ route }) => ({ headerShown: false, tabBarShowLabel: false,

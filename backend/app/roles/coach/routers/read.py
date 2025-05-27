@@ -15,20 +15,23 @@ router = APIRouter()
 # Groups
 @router.get("/camps/groups", response_model=List[schemas.GroupResponse], tags=["Coach"])
 async def get_camp_groups(coach_id: int, session: AsyncSession = Depends(get_session)):
-    G = models.Group
-    C = models.CoachGroup
+    Group = models.Group
+    Coach = models.CoachGroup
+    Camp = models.Camp
     stmt = (
-        select(G.id, G.name, G.description, G.camp_id)
-        .join(C, C.group_id == G.id )
-        .where(C.coache_id == coach_id )
-        .order_by(asc(G.name))
+        select(Group.id, Group.name, Group.description, Group.camp_id, Camp.name.label("camp_name"))
+        .join(Coach, Coach.group_id == Group.id )
+        .join(Camp, Group.camp_id == Camp.id)
+        .where(Coach.coache_id == coach_id )
+        .order_by(asc(Group.name))
     )
     result = await session.execute(stmt)
     rows = result.all()
     return [{"id": row[0],
              "name": row[1],
              "description": row[2],
-             "camp_id": row[3]} for row in rows]
+             "camp_id": row[3],
+             "camp_name": row[4]} for row in rows]
 
 
 @router.get("/camps/groups/{id}/students", response_model=List[schemas.StudentShort], tags=["Coach"])
@@ -190,7 +193,7 @@ async def get_events(year: int, month: int, week: int, group_ids: List[int] = Qu
             .order_by(asc(models.Event.timestamp))
     )
     return result.scalars().all()
-
+#GET /coach_api/camps/groups/events?year=2025&month=5&week=3&group_ids=3&group_ids=4
 @router.get("/camps/groups/events/competitions",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_coach_competitions(group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     now_ts = int(datetime.now().timestamp() * 1000)
@@ -324,6 +327,7 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
             liders.append(lider)
     return liders
 
+# Drills
 @router.get("/camps/events/{event_id}/drills", tags=["Coach"])
 async def get_event_drills(event_id: int, session: AsyncSession = Depends(get_session)):
     D = models.Drill

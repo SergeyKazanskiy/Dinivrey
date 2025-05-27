@@ -9,7 +9,8 @@ class GroupBase(BaseModel):
 
 class GroupResponse(GroupBase):
     id: int
-
+    camp_name: str
+    
     class Config:
         from_attributes = True
 

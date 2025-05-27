@@ -1,6 +1,4 @@
 import { StyleSheet, Text, Platform, View } from 'react-native';
-import { useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DrillsView } from './views/DrillsView';
@@ -29,13 +27,5 @@ const styles = StyleSheet.create({
     maxWidth: Platform.OS === 'web' ? 360 : undefined,
     width: '100%',
     height: '100%',
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 16,
-    color: '#ddd'
   },
 });

@@ -1,8 +1,6 @@
 import { Schedule, Event } from "../model";
-import { get_groups } from '../../students/http';
-import { get_coach_schedule, add_event, update_event } from '../http';
-import { getTimestampForSchedule, getWeekHourMinute, objectToJson, getDayAndWeekday } from "../../../../shared/utils";
-import { Group } from '../../students/model';
+import { get_coach_schedule, add_event } from '../http';
+import { getTimestampForSchedule, getWeekHourMinute, objectToJson } from "../../../../shared/utils";
 import { HistorySlice } from '../HistoryScreen/state';
 import { weekDays } from '../../../../shared/constants';
 
@@ -96,7 +94,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
             const group = groups.find(el => el.id === group1_id)!
     
             const event: Omit<Event, 'id'> = { camp_id: group.camp_id, type, timestamp, desc, group1_id, group2_id }
-            //alert(objectToJson(event))
     
             add_event(event, (res => {   
                 if (res) {
@@ -104,8 +101,12 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                     planingEvent.type = type;
                     set((state: EventsSlice) => ({
                         events_shedules: state.events_shedules.map((el) =>
-                            el.group1_id === group_id && el.timestamp === event_timestamp ? planingEvent : el),
+                           el.group1_id === group_id && el.timestamp === event_timestamp ? planingEvent : el),
                         isEventAddAlert: false
+                    }));
+                    set((state: EventsSlice) => ({
+                        events_shedules: state.events_shedules.filter( el =>
+                            !(el.id === 0 && el.timestamp === event_timestamp)),
                     }));
                 }
             }));

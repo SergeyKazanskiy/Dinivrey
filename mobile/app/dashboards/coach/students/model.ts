@@ -9,6 +9,7 @@ export interface Group {
     camp_id: number;
     name: string;
     description: string;
+    camp_name: string;
 }
 
 export interface Achieve {

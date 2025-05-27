@@ -9,4 +9,4 @@ from .student import SummaryTests, SummaryAchievements, SummaryGames
 
 from .event import EventCreate, EventUpdate, EventResponse
 from .event import AttendanceDataCreate, AttendanceCreate, AttendanceUpdate, AttendanceResponse
-from .drill import EventDrillCreate, ShortDrillResponse, DrillResponse
+from .drill import EventDrillCreate, EventDrillUpdate, ShortDrillResponse, DrillResponse

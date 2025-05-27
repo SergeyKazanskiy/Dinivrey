@@ -49,3 +49,8 @@ async def update_summary_achievements(student_id: int, data: schemas.SummaryAchi
 @router.put("/students/{student_id}/games/summary", response_model=schemas.ResponseOk, tags=["Coach"])
 async def update_summary_games(student_id: int, data: schemas.SummaryGames, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Student, student_id, data, session)}
+
+# Drill
+@router.put("/camps/events/drills/{drill_id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def update_event_drill(drill_id: int, data: schemas.EventDrillUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.EventDrill, drill_id, data, session)}
