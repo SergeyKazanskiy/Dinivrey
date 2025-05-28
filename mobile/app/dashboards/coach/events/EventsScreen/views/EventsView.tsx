@@ -4,7 +4,7 @@ import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
 import { CoachEventCell } from '../../../../../shared/components/CoachEventCell';
-import { formatDateTime } from '../../../../../shared/utils';
+import { formatDateTime, objectToJson } from '../../../../../shared/utils';
 import { Icon } from '@rneui/themed';
 
 
@@ -14,6 +14,7 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
   const { events_shedules, groups } = useStore();
   const { openAddAlert, selectEvent } = useStore();
 
+  //alert(objectToJson(events_shedules))
   const dayEvents = events_shedules.filter(el => el.day === day);
   const router = useRouter();
 
@@ -43,8 +44,9 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
         />
       {expanded &&
           <FlatList data={dayEvents} contentContainerStyle={{paddingBottom: 24}}
-            renderItem={({ item, index }) =>
-              <View style={item.id === 0 && { opacity: 0.6}} key={index}>
+            keyExtractor={(item) => item.timestamp.toString()}
+            renderItem={({ item }) =>
+              <View style={item.id === 0 && { opacity: 0.6}}>
                 <CoachEventCell
                   type={item.type}  
                   time={formatDateTime(item.timestamp).time}

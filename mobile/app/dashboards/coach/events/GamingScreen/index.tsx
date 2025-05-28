@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
-import { useRouter } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 
 
 export default function GamingScreen() {
@@ -20,7 +20,8 @@ export default function GamingScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-     <CustomNavbar title='Game' onClick={() => router.back()}/>
+      <Stack.Screen options={{ headerShown: false }} />
+      <CustomNavbar title='Game' onClick={() => router.back()}/>
 
 
     </LinearGradient>

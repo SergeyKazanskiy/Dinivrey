@@ -47,36 +47,52 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                 let days: {day: number, weekday: string}[]=[];
                 let events_shedules: Event[] = [];
                 
-                for (let s of res.schedules) {
-                    const day = s.weekday;
+                for (let schedule of res.schedules) {
+                    const day = schedule.weekday;
                     const weekday = weekDays[day - 1];
 
-                    if (s.weekday !== currentDay) {
+                    if (schedule.weekday !== currentDay) {
                         days.push({day, weekday});
                         currentDay = day;
                     }
-                    const competition = getExistingEvent(res.events, s.weekday, s.hour, s.minute)
+                    const competition = getExistingEvent(res.events, schedule.weekday, schedule.hour, schedule.minute)
                     if (competition) {
-                        if (!checkContentEvents(events_shedules, competition.id)) {
+                        if (!checkContentEvent(events_shedules, competition.id)) {
+                            //competition.day = day;
+                            //alert(objectToJson(competition))
                             events_shedules.push(competition);
                         }
                     } else {
-                        const group = groups.find(el => el.id === s.group_id)!
+                        const group = groups.find(el => el.id === schedule.group_id)!
                         const planingEvent: Event = {
                             id: 0,
                             camp_id: group.camp_id,
-                            timestamp: getTimestampForSchedule(s.weekday, s.hour, s.minute),
+                            timestamp: getTimestampForSchedule(schedule.weekday, schedule.hour, schedule.minute),
                             type: 'Training',
                             day,
                             desc: 'Planning event',
-                            group1_id: s.group_id,
+                            group1_id: schedule.group_id,
                             group2_id: 0
                         }
                         events_shedules.push(planingEvent);
                     }
                 }
+                for (let competition of res.events) {
+                    if (!checkContentEvent(events_shedules, competition.id)) {
+                        const competition_day= getWeekHourMinute(competition.timestamp).dayOfWeek;
+
+                        competition.day = competition_day;
+                        events_shedules.push(competition);
+
+                        const isDay = days.find(el => el.day === competition_day);
+                        if (isDay) {} else {
+                            days.push({day: competition_day, weekday: weekDays[competition_day - 1]})
+                        }
+                    }
+                }
                 const sortedDays = days.sort((a, b) => a.day - b.day);
                 const sortedEvents = events_shedules.sort((a, b) => a.timestamp - b.timestamp);
+                //alert(objectToJson(sortedEvents))
                 set({schedule_days: sortedDays, events_shedules: sortedEvents});
             }
         }));
@@ -150,9 +166,16 @@ function getExistingEvent(events: Event[], w: number, h: number, m: number): Eve
     return null
 }
 
-function checkContentEvents(events: Event[], id: number): boolean {
+function checkContentEvent(events: Event[], id: number): boolean {
     for (let event of events) {
         if (event.id === id) return true;
     }
     return false
 }
+
+// function checkContentDay(days: Event[], day: number): boolean {
+//     for (let event of events) {
+//         if (event.id === id) return true;
+//     }
+//     return false
+// }

@@ -82,7 +82,10 @@ export default function AttendanceScreen() {
       </CustomAlert>
 
       <ButtonsView event_type={event_type}
-        onAdd={openDrillsModal} onExam={()=>{}} onGame={()=>{}}/>
+        onAdd={openDrillsModal}
+        onExam={()=>router.push(`/dashboards/coach/events/TestingScreen`)}
+        onGame={()=>router.push(`/dashboards/coach/events/GamingScreen`)}/>
+
       <DrillsView/>
       <DrillsScreen/>
 

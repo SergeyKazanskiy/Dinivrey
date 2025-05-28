@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 import { StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,6 +27,8 @@ export default function TestingScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+      <Stack.Screen options={{ headerShown: false }} />
+
       <CustomNavbar title='Students' onClick={() => router.back()}>
         {/* <Ionicons name='add-circle-outline' size={20} color='#D1FF4D'
           onPress={() => setIsMenu(true)}

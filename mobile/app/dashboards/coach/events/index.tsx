@@ -43,8 +43,28 @@ export default function StudentLayout() {
         onGroups={() => router.push("/dashboards/coach/students")}
         onEvents={() => {}}
       /> */}
+      <AttendanceScreen/>
+      
+    </LinearGradient>
+  );
+}
 
-      <Tab.Navigator
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
+    maxWidth: Platform.OS === 'web' ? 360 : undefined,
+    width: '100%',
+    backgroundColor: '#fff',
+  },
+  indicator: { backgroundColor: '#c2ff00', height: 4 },
+  tab: { backgroundColor: '#444' },
+  label: { marginLeft: 8, color: '#ddd' },
+  content: { flex: 1 },
+});
+
+/*
+<Tab.Navigator
         screenOptions={({ route }) => ({ headerShown: false, tabBarShowLabel: false,
           tabBarStyle: { backgroundColor: '#0C1B30', height: 70, borderTopWidth: 0 },
           tabBarIcon: ({ focused }) => {
@@ -64,23 +84,6 @@ export default function StudentLayout() {
         <Tab.Screen name="Attendance" component={AttendanceScreen}  />
         <Tab.Screen name="Testing" component={TestingScreen} />
         <Tab.Screen name="Gaming" component={GamingScreen} />
-        {/* <Tab.Screen name="Drills" component={DrillsScreen} /> */}
+        {/* <Tab.Screen name="Drills" component={DrillsScreen} /> }
       </Tab.Navigator>
-    </LinearGradient>
-  );
-}
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
-    maxWidth: Platform.OS === 'web' ? 360 : undefined,
-    width: '100%',
-    backgroundColor: '#fff',
-  },
-  indicator: { backgroundColor: '#c2ff00', height: 4 },
-  tab: { backgroundColor: '#444' },
-  label: { marginLeft: 8, color: '#ddd' },
-  content: { flex: 1 },
-});
-
+      */
