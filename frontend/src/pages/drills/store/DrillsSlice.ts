@@ -17,7 +17,7 @@ export interface DrillsSlice {
     unselectDrill:() => void;
 
     addDrill: () => void;
-    updateDrill: (value: string) => void;
+    updateDrill: (value: string | number) => void;
     deleteDrill: () => void;
 }
 
@@ -40,10 +40,12 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
         get_drill(drill_id, (drill => {
             set({ drill_id, column});
        
-            const { setName, setLink, setDesc }: DrillSlice = get();
+            const { setName, setLink, setDesc, setCategory, setLevel }: DrillSlice = get();
             setName(drill.name);
             setLink(drill.link);
             setDesc(drill.desc);
+            setCategory(drill.category);
+            setLevel(drill.level);
         }));
     },
 
@@ -77,12 +79,12 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
         closeModal();
     },
 
-    updateDrill: (value: string) => {
+    updateDrill: (value: string | number) => {
         const { drill_id, column }: DrillsSlice = get();
 
         update_drill(drill_id, {[column]: value}, (res) => {
             if (res.isOk) {
-                if (column === 'name' || column === 'time' || column === 'level') {
+                if (column === 'name' || column === 'time' || column === 'level'|| column === 'category' || column === 'actors') {
                     set((state: DrillsSlice) => ({
                         drills: state.drills.map(el => el.id !== drill_id ? el : {...el, [column]: value}),
                     }));

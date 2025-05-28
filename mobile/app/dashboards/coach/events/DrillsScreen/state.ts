@@ -41,7 +41,7 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
 
     loadDrills: () => {
         get_drills((baseDrils => {
-            //alert(objectToJson(baseDrils))
+            alert(objectToJson(baseDrils))
             const { eventDrills }:DrillsSlice =  get();
             const drills = baseDrils.map(el => ({...el, present: checkPresentDrill(eventDrills, el.id)}));
             set({drills});
@@ -65,6 +65,8 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
                     name: drill.name,
                     time: drill.time,
                     level: drill.level,
+                    category: drill.category,
+                    actors: drill.actors,
                     completed: false
                 }
                 set((state: DrillsSlice) => ({

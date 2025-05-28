@@ -6,37 +6,38 @@ import { CheckBox } from '@rneui/themed';
 
 export type Props = {
   name: string;
+  actors: number;
   time: string;
   level: string;
   checked: boolean;
   onCheck: () => void;
 };
   
-export const DrillCell: React.FC<Props> = ({name, time, level, checked, onCheck}) => {
+export const DrillCell: React.FC<Props> = ({name, actors, time, level, checked, onCheck}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={{paddingLeft: 6, marginBottom: 4}}>
-          <Text style={styles.title}>{name}</Text>
+        <Text style={styles.title}>{name}</Text>
+        <CheckBox
+          checked={checked}
+          onPress={onCheck}
+          iconType="material-community"
+          checkedIcon="checkbox-outline"
+          uncheckedIcon={'checkbox-blank-outline'}
+          containerStyle={{padding: 0, top: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}}
+          checkedColor='#ddd'
+        />
+      </View>
 
-          <View style={styles.section}>
-            <Text style={styles.label}>time: </Text>
-            <Text style={styles.value}>{time},</Text>
+      <View style={styles.section}>
+        <Text style={styles.label}>actors: </Text>
+        <Text style={styles.value}>{actors},</Text>
 
-            <Text style={styles.label}>level: </Text>
-            <Text style={styles.value}>{level}</Text>
-          </View>
-        </View>
+        <Text style={styles.label}>time: </Text>
+        <Text style={styles.value}>{time},</Text>
 
-          <CheckBox
-            checked={checked}
-            onPress={onCheck}
-            iconType="material-community"
-            checkedIcon="checkbox-outline"
-            uncheckedIcon={'checkbox-blank-outline'}
-            containerStyle={{padding: 0, top: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}}
-            checkedColor='#ddd'
-          />
+        <Text style={styles.label}>level: </Text>
+        <Text style={styles.value}>{level}</Text>
       </View>
     </View>
   );
@@ -60,7 +61,8 @@ const styles = StyleSheet.create({
   section: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingLeft: 4,
+    paddingLeft: 8,
+    paddingBottom: 2
   },
   title: {
     fontSize: 16,

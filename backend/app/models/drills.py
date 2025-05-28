@@ -12,6 +12,8 @@ class Drill(Base):
     level = Column(String, nullable=False)
     link = Column(String, default="", nullable=False)
     desc = Column(String, default="", nullable=False)
+    category = Column(String, default="", nullable=False)
+    actors = Column(Integer)
     event_drills = relationship("EventDrill", back_populates="drill", cascade="all, delete")
 
 

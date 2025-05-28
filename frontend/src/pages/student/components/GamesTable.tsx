@@ -1,7 +1,7 @@
 import { Box, Text, Modal, ModalContent } from "@chakra-ui/react";
 import { useStore } from "../store";
 import { TableView } from '../../../components/TableView';
-import { NumberPopover } from './NumberPopover';
+import { NumberPopover } from '../../../components/NumberPopover';
 import { DescMenu } from './DescMenu';
 import { ActionButton } from '../../../components/ActionButton';
 import { getCurrentYear, getCurrentMonth } from '../../../shared/utils';

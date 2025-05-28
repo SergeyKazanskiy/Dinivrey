@@ -4,8 +4,10 @@ from typing import Optional
 
 #Drill
 class DrillCreate(BaseModel):
+    category: str
     name: str
     time: str
+    actors: int
     level: str
 
 class DrillUpdate(BaseModel):
@@ -14,6 +16,8 @@ class DrillUpdate(BaseModel):
     level: Optional[str] = None
     link: Optional[str] = None
     desc: Optional[str] = None
+    category: Optional[str] = None
+    actors: Optional[int] = None
 
 class DrillResponse(BaseModel):
     id: int
@@ -22,6 +26,8 @@ class DrillResponse(BaseModel):
     level: str
     link: str
     desc: str
+    category: str
+    actors: int
 
     class Config:
         from_attributes = True

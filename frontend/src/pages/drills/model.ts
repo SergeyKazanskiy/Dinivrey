@@ -1,10 +1,12 @@
 export interface Drill {
-    id: number;
-    name: string;
-    time: string;
-    level: string;
-    link: string;
-    desc: string;
+  id: number;
+  name: string;
+  time: string;
+  level: string;
+  link: string;
+  desc: string;
+  category: string;
+  actors: number;
 }
 
 export interface ShortDrill {

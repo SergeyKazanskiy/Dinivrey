@@ -4,16 +4,17 @@ import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { useRouter } from 'expo-router';
 import { DrillView } from './views/DrillView';
 import { Stack } from 'expo-router';
-
+import { useStore } from '../store';
 
 export default function DrillScreen() {
+  const { drill } = useStore();
   const router = useRouter();
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
 
       <Stack.Screen options={{ headerShown: false }} />
-      <CustomNavbar title='Drill' onClick={() => router.back()}/>
+      <CustomNavbar title={ drill.name } onClick={() => router.back()}/>
 
       <DrillView/>
 
