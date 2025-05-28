@@ -73,6 +73,7 @@ export interface Attendance {
   first_name: string;
   last_name: string;
   present: boolean;
+  comment: string;
   test_id?: number;
 }
 

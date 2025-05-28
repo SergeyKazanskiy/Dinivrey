@@ -25,6 +25,7 @@ class Attendance(Base):
     group_id = Column(Integer, nullable=False)
     student_id = Column(Integer, ForeignKey("students.id"))
     present = Column(Boolean, default=False)
+    comment = Column(String)
     event = relationship("Event", back_populates="attendances")
     students = relationship("Student", back_populates="attendances")   
     

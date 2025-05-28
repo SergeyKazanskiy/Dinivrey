@@ -55,10 +55,10 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                         days.push({day, weekday});
                         currentDay = day;
                     }
-                    const existingEvent = getExistingEvent(res.events, s.weekday, s.hour, s.minute)
-                    if (existingEvent) {
-                        if (!checkContentEvents(events_shedules, existingEvent.id)) {
-                            events_shedules.push(existingEvent);
+                    const competition = getExistingEvent(res.events, s.weekday, s.hour, s.minute)
+                    if (competition) {
+                        if (!checkContentEvents(events_shedules, competition.id)) {
+                            events_shedules.push(competition);
                         }
                     } else {
                         const group = groups.find(el => el.id === s.group_id)!

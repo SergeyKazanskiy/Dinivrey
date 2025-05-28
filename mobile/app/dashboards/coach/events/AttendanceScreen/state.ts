@@ -5,7 +5,7 @@ import { add_attendances, update_attendance, delete_attendances, update_all_atte
 import { add_all_present_students_new_tests } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
 import { TestingSlice } from '../TestingScreen/state';
-import { isPast, formatDateTime } from '../../../../shared/utils';
+import { isPast, formatDateTime, objectToJson } from '../../../../shared/utils';
 
 
 export interface AttendanceSlice {
@@ -18,14 +18,18 @@ export interface AttendanceSlice {
     isStudentsView: boolean;
     isAttendanceView: boolean;
 
+    studentsAmount: number;
+    attendancesAmount: number;
+
     loadAttendances:() => void;
     loadStudentsNames: (group_id: number) => void;
 
-    addAttendances: () => void;
     checkStudent: (id: number) => void;
-    deleteAttendances: () => void;
-    
     setAllChecked: () => void;
+
+    addAttendances: () => void;
+    updateComment: (attendance_id: number, comment: string) => void;
+    deleteAttendances: () => void;
 }
 
 export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
@@ -44,13 +48,24 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     isStudentsView: false,
     isAttendanceView: false,
 
+    studentsAmount: 0,
+    attendancesAmount: 0,
+
     loadAttendances: () => {
         const { event_id, group_id }: EventsSlice = get();
         set({ isAllChecked: false});
         
         get_attendances(event_id, group_id, (attendances: Attendance[]) => {
+            //alert(objectToJson(attendances))
             if (attendances.length > 0) {
-                set({ attendances, isStudentsView: false, isAttendanceView: true });
+                const attendancesAmount = attendances.reduce((acc, item) => {
+                    if (item.present) {
+                        return acc + 1;
+                    }
+                        return acc;
+                    }, 0)
+                set({ attendances, studentsAmount: attendances.length, attendancesAmount,
+                    isStudentsView: false, isAttendanceView: true });
             } else {
                 const { loadStudentsNames }: AttendanceSlice = get();
                 loadStudentsNames(group_id);
@@ -64,24 +79,8 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         });
     },
 
-    addAttendances: () => {
-        const {event_id, group_id}: AttendanceSlice & EventsSlice = get();
-
-        add_attendances({event_id, group_id}, (res) => {
-            if (res.isOk) {
-                const {loadAttendances}: AttendanceSlice = get();
-                loadAttendances();
-            }
-        });
-    },
-
     checkStudent: (attendance_id: number) => {
-       
         const { event_timestamp }: EventsSlice = get();
-        // if (isPast(timestamp)) {
-        //     alert('It is not possible to change past attendance!');//???
-        //     return
-        // }
         const { attendances }: AttendanceSlice = get();
         const attendance = attendances.find(el => el.id === attendance_id);
         
@@ -101,33 +100,28 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                             date: formatDateTime(event_timestamp).date,
                             speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
                         };
-                        
                         add_student_test(newTest, (res) => {
                             if (res.id) {
                                 attendance.test_id = res.id;
                             }     
                         })
                     }
-
                     attendance.present = !attendance.present;
+                    
+                    const attendancesAmount = attendances.reduce((acc, item) => {
+                    if (item.present) {
+                        return acc + 1;
+                    }
+                        return acc;
+                    }, 0)
+                    
                     set({
-                        attendance_id,
-                        attendances: attendances.map(el => el.id === attendance_id ? attendance : el)
+                        attendance_id, attendancesAmount,
+                        attendances: attendances.map(el => el.id === attendance_id ? attendance : el),
                     });
                 }
             });
         };
-    },
-
-    deleteAttendances: () => {
-        const { event_id, group_id }: EventsSlice = get();
-        delete_attendances(event_id, group_id, (res) => {
-            if (res.isOk) {
-                const { loadStudentsNames }: AttendanceSlice = get();
-                loadStudentsNames(group_id);
-                set({ attendances: [], isAllChecked: false });
-            }
-        });
     },
 
     setAllChecked: () => {
@@ -143,6 +137,40 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                 add_all_present_students_new_tests(event_id, group_id, (res) => {
                     
                 })
+            }
+        });
+    },
+
+    addAttendances: () => {
+        const {event_id, group_id}: AttendanceSlice & EventsSlice = get();
+
+        add_attendances({event_id, group_id}, (res) => {
+            if (res.isOk) {
+                const {loadAttendances}: AttendanceSlice = get();
+                loadAttendances();
+            }
+        });
+    },
+
+    updateComment: (attendance_id: number, comment: string)  => {
+        //alert(comment)
+        update_attendance(attendance_id, {comment}, (res) => {
+            if (res.isOk) {
+                set((state: AttendanceSlice) => ({
+                    attendances: state.attendances.map(el => el.id === attendance_id ? {...el, comment} : el)
+                }));
+            }
+        });
+    },
+
+    deleteAttendances: () => {
+        const { event_id, group_id }: EventsSlice = get();
+
+        delete_attendances(event_id, group_id, (res) => {
+            if (res.isOk) {
+                const { loadStudentsNames }: AttendanceSlice = get();
+                loadStudentsNames(group_id);
+                set({ attendances: [], isAllChecked: false });
             }
         });
     },

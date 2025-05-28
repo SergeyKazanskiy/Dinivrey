@@ -1,7 +1,7 @@
 from .shared import ResponseOk, ResponseId
 from .group import GroupResponse, StudentShort, GroupScheduleResponse
 
-from .student import StudentResponse, ParentResponse, StudentName
+from .student import StudentResponse, ParentResponse, StudentName, CoachResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate
 from .student import GameResponse, GameCreate
 from .student import AchievementResponse, AchieveUpdate, AchieveResponse, AchievementCreate

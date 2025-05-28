@@ -68,37 +68,40 @@ async def custom_redoc_html():
 #http://127.0.0.1:8000/docs
 
 
-# from sqlalchemy.ext.asyncio import AsyncSession
-# from database import get_session
-# from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_session
+from sqlalchemy import text
 
-# router2 = APIRouter()
+router2 = APIRouter()
 
-# @router2.post("/add_new_fields", tags=["Auth"])
-# async def add_new_fields(session: AsyncSession = Depends(get_session)):
-#     try:
-#         await session.execute(text("""
-#             ALTER TABLE students ADD COLUMN summary_tests TEXT NOT NULL DEFAULT '';
-#         """))
-#     except Exception as e:
-#         print("summary_tests:", e)
+@router2.post("/add_new_fields", tags=["Auth"])
+async def add_new_fields(session: AsyncSession = Depends(get_session)):
+    try:
+        await session.execute(text("""
+            ALTER TABLE attendances ADD COLUMN comment TEXT;
+        """))
+    except Exception as e:
+        print("!!!!! comment:", e)
 
-#     try:
-#         await session.execute(text("""
-#             ALTER TABLE students ADD COLUMN summary_achievements TEXT NOT NULL DEFAULT '';
-#         """))
-#     except Exception as e:
-#         print("summary_achievements:", e)
+    # try:
+    #     await session.execute(text("""
+    #         ALTER TABLE students ADD COLUMN summary_achievements TEXT NOT NULL DEFAULT '';
+    #     """))
+    # except Exception as e:
+    #     print("summary_achievements:", e)
 
-#     try:
-#         await session.execute(text("""
-#             ALTER TABLE students ADD COLUMN summary_games TEXT NOT NULL DEFAULT '';
-#         """))
-#     except Exception as e:
-#         print("summary_games:", e)
+    # try:
+    #     await session.execute(text("""
+    #         ALTER TABLE students ADD COLUMN summary_games TEXT NOT NULL DEFAULT '';
+    #     """))
+    # except Exception as e:
+    #     print("summary_games:", e)
 
-#     await session.commit()
-#     return {"status": "Success"}
+    await session.commit()
+    return {"status": "Success"}
+
+app.include_router(router2)
+
 
 router3 = APIRouter()
 
