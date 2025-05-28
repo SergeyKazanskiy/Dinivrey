@@ -91,6 +91,8 @@ export interface Drill {
   level: string;
   link: string;
   desc: string;
+  category: string;
+  actors: number;
 }
 
 export interface ShortEventDrill {
@@ -99,6 +101,8 @@ export interface ShortEventDrill {
   name: string;
   time: string;
   level: string;
+  category: string;
+  actors: number;
   completed: boolean;
 }
 
@@ -107,5 +111,7 @@ export interface ShortDrill {
   name: string;
   time: string;
   level: string;
+  category: string;
+  actors: number;
   present: boolean;
 }

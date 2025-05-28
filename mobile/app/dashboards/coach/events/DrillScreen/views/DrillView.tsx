@@ -30,11 +30,14 @@ export function DrillView() {
       )}
 
       {/* <Text style={styles.label}>{drill.link}</Text> */}
-      <Text style={styles.label}>Название</Text>
-      <Text style={styles.text}>{drill.name}</Text>
+      <Text style={styles.label}>Category</Text>
+      <Text style={styles.text}>{drill.category}</Text>
 
-      <Text style={styles.label}>Ссылка</Text>
-      <Text style={styles.text}>https://www.youtube.com/embed/{drill.link}</Text>
+      <Text style={styles.label}>Estimate time duration:</Text>
+      <Text style={styles.text}>{drill.time}</Text>
+
+      <Text style={styles.label}>Players amount during drill:</Text>
+      <Text style={styles.text}>{drill.actors}</Text>
 
       <Text style={styles.label}>Description</Text>
       <Text style={styles.textArea}>{drill.desc}</Text>
@@ -78,15 +81,15 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     padding: 10,
     fontSize: 15,
-    minHeight: 150,
-    color: '#ccc',
+    minHeight: 100,
+    color: '#A7CFF5',
   },
   text: {
     borderWidth: 1,
     borderColor: 'green',
     borderRadius: 6,
     padding: 10,
-    fontSize: 15,
-    color: '#ccc',
+    fontSize: 16,
+    color: '#A7CFF5',
   },
 });

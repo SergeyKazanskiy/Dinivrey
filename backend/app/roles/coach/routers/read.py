@@ -346,13 +346,13 @@ async def get_student_names(event_id: int, group_id: int, session: AsyncSession 
 # Drills
 @router.get("/camps/events/{event_id}/drills", tags=["Coach"])
 async def get_event_drills(event_id: int, session: AsyncSession = Depends(get_session)):
-    D = models.Drill
+    Drill = models.Drill
     ED = models.EventDrill
     stmt = (
-        select(ED.id, D.id, D.name, D.time, D.level, ED.completed)
-            .join(D, ED.drill_id == D.id)
+        select(ED.id, Drill.id, Drill.name, Drill.time, Drill.level, Drill.category, Drill.actors, ED.completed)
+            .join(Drill, ED.drill_id == Drill.id)
             .where(ED.event_id == event_id)
-            .order_by(asc(D.name))
+            .order_by(asc(Drill.name))
     )
     result = await session.execute(stmt)
     rows = result.all()
@@ -361,7 +361,9 @@ async def get_event_drills(event_id: int, session: AsyncSession = Depends(get_se
              "name": row[2],
              "time": row[3],
              "level": row[4],
-             "completed": row[5]} for row in rows]
+             "category": row[5],
+             "actors": row[6],
+             "completed": row[7]} for row in rows]
 
 
 @router.get("/drills/all", response_model=List[schemas.ShortDrillResponse], tags=["Coach"])

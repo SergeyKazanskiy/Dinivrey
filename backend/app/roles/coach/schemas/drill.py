@@ -15,10 +15,12 @@ class EventDrillUpdate(BaseModel):
 
 class ShortDrillResponse(BaseModel):
     id: int
+    category: str
     name: str
     time: str
+    actors: int
     level: str
-
+    
     class Config:
         from_attributes = True
 
@@ -30,6 +32,8 @@ class DrillResponse(BaseModel):
     level: str
     link: str
     desc: str
+    category: str
+    actors: int
 
     class Config:
         from_attributes = True

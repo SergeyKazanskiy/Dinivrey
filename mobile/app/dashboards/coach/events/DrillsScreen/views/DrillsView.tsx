@@ -7,6 +7,7 @@ import { CompetitionCell } from '../../../../../shared/components/CompetitionCel
 import { formatDateTime } from '../../../../../shared/utils';
 import { Icon } from '@rneui/themed';
 import { DrillCell } from '../../../../../shared/components/DrillCell';
+import { ShortDrill } from '../../model';
 
 
 export function DrillsView() {
@@ -21,12 +22,17 @@ export function DrillsView() {
     }
   }
 
+  function getName(item: ShortDrill) {
+    return item.category + ' ' + item.name
+  }
+
   return (
     <ScrollView>
       <FlatList data={drills}
         renderItem={({ item }) =>
           <DrillCell
-            name={item.name}
+            name={getName(item)}
+            actors={item.actors}
             time={item.time}
             level={item.level}
             checked={item.present}

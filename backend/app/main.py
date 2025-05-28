@@ -78,17 +78,17 @@ router2 = APIRouter()
 async def add_new_fields(session: AsyncSession = Depends(get_session)):
     try:
         await session.execute(text("""
-            ALTER TABLE attendances ADD COLUMN comment TEXT;
+            ALTER TABLE drills ADD COLUMN actors INTEGER DEFAULT 1;
         """))
     except Exception as e:
-        print("!!!!! comment:", e)
+        print("!!!!! error:", e)
 
-    # try:
-    #     await session.execute(text("""
-    #         ALTER TABLE students ADD COLUMN summary_achievements TEXT NOT NULL DEFAULT '';
-    #     """))
-    # except Exception as e:
-    #     print("summary_achievements:", e)
+    try:
+        await session.execute(text("""
+            ALTER TABLE drills ADD COLUMN category TEXT NOT NULL DEFAULT '';
+        """))
+    except Exception as e:
+        print("!!!!! error:", e)
 
     # try:
     #     await session.execute(text("""

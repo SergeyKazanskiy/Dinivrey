@@ -38,9 +38,10 @@ export function DrillsView() {
           renderItem={({ item }) =>
             <TouchableOpacity onPress={() => handleSelect(item.drill_id)}>
               <DrillCell
-                name={item.name}
+                name={item.category + ' ' + item.name}
                 time={item.time}
                 level={item.level}
+                actors={item.actors}
                 checked={item.completed}
                 onCheck={() => updateEventDrill(item.id, !item.completed)}
               />
