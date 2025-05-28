@@ -32,6 +32,7 @@ class AttendanceBase(BaseModel):
     group_id: int
     student_id: int
     present: bool
+    comment: str
 
 class AttendanceDataCreate(BaseModel):
     event_id: int
@@ -41,7 +42,8 @@ class AttendanceCreate(AttendanceBase):
     pass
 
 class AttendanceUpdate(BaseModel):
-    present: bool
+    present: Optional[bool] = None
+    comment: Optional[str] = None
 
 class AttendanceResponse(BaseModel):
     id: int
@@ -49,6 +51,7 @@ class AttendanceResponse(BaseModel):
     first_name: str
     last_name: str
     present: bool
+    comment: str
 
     class Config:
         from_attributes = True

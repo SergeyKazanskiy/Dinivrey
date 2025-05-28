@@ -48,6 +48,21 @@ async def get_student(id: int, session: AsyncSession = Depends(get_session)):
 async def get_student_parents(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Parent, session, filters={"student_id": id})
 
+@router.get("/students/{id}/coach/comments", response_model=List[schemas.CoachResponse], tags=["Coach"])
+async def get_student_coach_comments(id: int, session: AsyncSession = Depends(get_session)):
+    Event = models.Event
+    Attendance = models.Attendance
+    stmt = (
+        select(Event.timestamp, Attendance.comment)
+            .join(Attendance, Attendance.event_id == Event.id)
+            .where(Attendance.student_id == id, Attendance.comment != None)
+            .order_by(asc(Event.timestamp))
+            .limit(10)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"timestamp": row[0],
+             "comment": row[1]} for row in rows]
 
 # Statistics
 @router.get("/students/{id}/tests/last/date", tags=["Coach"])
@@ -166,7 +181,7 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
             .where(or_(
                     models.Event.group1_id.in_(group_ids),
                     models.Event.group2_id.in_(group_ids)
-                ))
+                ), models.Event.timestamp < int(datetime.now().timestamp() * 1000))
             .order_by(desc(models.Event.timestamp))
             .limit(1))
     event = result.scalar_one_or_none() 
@@ -217,7 +232,7 @@ async def get_attendances(event_id:int, group_id: int, session: AsyncSession = D
     A = models.Attendance
     S = models.Student
     stmt = (
-        select(A.id, A.student_id, S.first_name, S.last_name, A.present)
+        select(A.id, A.student_id, S.first_name, S.last_name, A.present, A.comment)
             .join(S, A.student_id == S.id)
             .where((A.group_id == group_id) & (A.event_id == event_id))
             .order_by(asc(S.first_name))
@@ -228,7 +243,8 @@ async def get_attendances(event_id:int, group_id: int, session: AsyncSession = D
              "student_id": row[1],
              "first_name": row[2],
              "last_name": row[3],
-             "present": row[4]} for row in rows]
+             "present": row[4],
+             "comment": row[5]} for row in rows]
 
 
 @router.get("/camps/groups/{group_id}/students/names", response_model=List[schemas.StudentName], tags=["Coach"]) #

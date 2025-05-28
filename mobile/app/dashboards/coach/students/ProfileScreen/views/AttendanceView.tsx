@@ -1,13 +1,21 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useStore } from "../../store";
+import { Button } from '@rneui/themed';
 
 
 export const AttendanceView: React.FC = () => {
   const { attendance } = useStore();
+  //const { showComments } = useStore();
 
   return (
     <>
-    <Text style={styles.title}>Attendance</Text>
+    <View style={styles.header}>
+      <Text style={styles.title}>Attendance</Text>
+      {/* <Button title='Comments' type='outline' 
+        buttonStyle={styles.button} titleStyle={styles.label}
+        onPress={()=>showComments(true)}
+      /> */}
+    </View>
 
     <View style={[styles.container, styles.section]}>
       <View style={styles.cell}>
@@ -38,16 +46,21 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(110, 151, 6)',
     backgroundColor: 'rgba(45, 75, 10, 0.3)',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    alignItems: 'baseline'
+  },
   section: {
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
   title: {
-    marginLeft: 26,
     fontWeight: '600',
     fontSize: 16,
     color: '#F8E187',
-    marginBottom: 6,
+    //marginBottom: 2,
   },
   cell: {
     flexDirection: 'row',
@@ -60,6 +73,16 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 15,
     color: '#A7CFF5',
+  },
+  button: {
+    height: 28,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+   // marginBottom: 4
+  },
+  label: {
+    fontSize: 15,
+    color: '#ddd'
   },
 });
 

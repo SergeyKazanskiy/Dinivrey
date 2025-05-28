@@ -12,8 +12,10 @@ export interface ProfileSlice {
   parents: Parent[];
 
   attendance: Attendance;
+  isCommentsScreen: boolean;
 
   loadStudent: () => void;
+  showComments: (isCommentsScreen: boolean) => void;
 }
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
@@ -30,6 +32,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   ],
 
   attendance: {trainings: 97, tests: 55, games: 34},
+  isCommentsScreen: false,
 
   loadStudent: () => {
     const { student_id }: GroupsSlice = get();
@@ -49,4 +52,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
       });
     })
   },
+
+  showComments: (isCommentsScreen: boolean) => set({isCommentsScreen}),
+  
 });

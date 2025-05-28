@@ -1,6 +1,8 @@
 import {useState} from "react";
+import { useRouter } from 'expo-router';
 import { StyleSheet, FlatList, ScrollView, Text } from "react-native";
 import { useStore } from '../../store';
+import { useStore as useStudentsStore } from '../../../students/store';
 import { AttendanceCell } from '../../../../../shared/components/AttendanceCell';
 import { CustomAlert } from '../../../../../shared/components/CustomAlert';
 import { isPast, formatDateTime } from '../../../../../shared/utils';
@@ -8,17 +10,25 @@ import { isPast, formatDateTime } from '../../../../../shared/utils';
 
 export const AttendanceView = () => { 
   const { attendances, event_timestamp } = useStore();
-  const { checkStudent } = useStore();
+  const { checkStudent, updateComment } = useStore();
+  const { selectStudent } = useStudentsStore();
 
   const [isUpdateAlert, setIsUpdateAlert] = useState<boolean>(false);
 
   function handleCheckStudent(id: number) {
-    if (isPast(event_timestamp)) {
-      setIsUpdateAlert(true)
-    } else {
+    // if (isPast(event_timestamp)) {
+    //   setIsUpdateAlert(true)
+    // } else {
       checkStudent(id);
-    }
+    //}
   }
+
+    const router = useRouter();
+  
+    function handleSelect(id: number) {
+      selectStudent(id);
+      router.push(`/dashboards/coach/students`)
+    }
 
   return (
     <>
@@ -36,6 +46,9 @@ export const AttendanceView = () => {
                 last_name={item.last_name}
                 checked={item.present}
                 onCheck={() => handleCheckStudent(item.id)}
+                comment={item.comment ?? ""}
+                onUpdate={(comment) => updateComment(item.id, comment)}
+                onSelect={()=>handleSelect(item.id)}
               />
         }/>
     </ScrollView>

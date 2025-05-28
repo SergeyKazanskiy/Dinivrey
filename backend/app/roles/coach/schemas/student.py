@@ -57,7 +57,9 @@ class Tester(BaseModel):
 
 # Test
 class TestBase(BaseModel):
+    student_id: int
     timestamp: int
+    date: str
     speed: float
     stamina: float
     climbing: float
@@ -140,3 +142,8 @@ class SummaryAchievements(BaseModel):
 
 class SummaryGames(BaseModel):
     summary_games: str        
+
+#Coach
+class CoachResponse(BaseModel):
+    timestamp: int
+    comment: str

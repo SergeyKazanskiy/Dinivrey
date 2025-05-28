@@ -46,7 +46,7 @@ export function add_attendances(data: {event_id: number, group_id: number}, call
     return httpWrapper(() => api.post(`camps/events/attendances`, data), callback);
 };
 
-export function update_attendance(attendance_id: number, data: {present: boolean}, callback: (res: {isOk: boolean}) => void) {
+export function update_attendance(attendance_id: number, data: {present?: boolean, comment?: string}, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.put(`camps/events/attendances/${attendance_id}`, data), callback);
 };
 

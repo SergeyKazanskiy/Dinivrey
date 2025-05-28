@@ -1,6 +1,7 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
-import { Group, Lider, Student, Test, Game, Achievement, Achieve, Attendance, Parent, AchieveAttach } from './model';
+import { Group, Lider, Student, Test, Game, Achievement} from './model';
+import { Achieve, Attendance, Parent, AchieveAttach, Comment } from './model';
 
 
 // Groups
@@ -30,8 +31,11 @@ export function get_student_attendance(student_id: number, callback: (attendance
   return httpWrapper(() => api.get(`students/${student_id}/attendance`), callback);
 };
 
+export function get_student_coach_comments(student_id: number, callback: (comments: Comment[]) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/coach/comments`), callback);
+};
 
-// Statistics
+// Statistics 
 export function get_last_test_date(student_id: number, callback: (res: {year: number, month: number, isEvents: boolean}) => void) {
   return httpWrapper(() => api.get(`students/${student_id}/tests/last/date`), callback);
 };

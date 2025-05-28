@@ -132,3 +132,8 @@ export interface StudentProfile {
     score: number;
     unit: string;
   };
+
+  export interface Comment {
+    timestamp: number;
+    comment: string;
+}

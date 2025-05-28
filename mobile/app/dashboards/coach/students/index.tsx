@@ -42,11 +42,11 @@ export default function StudentLayout() {
   //alert(route.name)
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <DinivreyHeader
+      {/* <DinivreyHeader
         isGroups={true}
         onGroups={() => {}}
         onEvents={() => router.push("/dashboards/coach/events")}
-      />
+      /> */}
       
       <Tab.Navigator
         screenOptions={({ route }) => ({

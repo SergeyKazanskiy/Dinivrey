@@ -18,6 +18,7 @@ import DrillsScreen from '../DrillsScreen';
 
 export default function AttendanceScreen() {
   const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type } = useStore();
+  const { studentsAmount, attendancesAmount} = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, openDrillsModal, loadEventDrills } = useStore();
 
   const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
@@ -55,7 +56,7 @@ export default function AttendanceScreen() {
 //push("/dashboards/coach")
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <CustomNavbar title='Students' onClick={() => router.back()}>
+      <CustomNavbar title={`Students (${attendancesAmount}/${studentsAmount})`} onClick={() => router.back()}>
       <Ionicons name='airplane-outline' size={20} color='#D1FF4D' style={{ marginRight: 8, marginTop: 0 }}
           onPress={()=>setIsMailAlert(true)}
         />
