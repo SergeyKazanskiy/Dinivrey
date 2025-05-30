@@ -48,7 +48,7 @@ export const AttendanceView = () => {
                 onCheck={() => handleCheckStudent(item.id)}
                 comment={item.comment ?? ""}
                 onUpdate={(comment) => updateComment(item.id, comment)}
-                onSelect={()=>handleSelect(item.id)}
+                onSelect={()=>handleSelect(item.student_id)}
               />
         }/>
     </ScrollView>
