@@ -81,3 +81,9 @@ async def remove_coach_group(id: int, session: Session = Depends(get_session)):
 @router.delete("/drills/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_drill(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Drill, id, session)}
+
+@router.delete("/settings/metrics/all", response_model=schemas.ResponseOk, tags=["Admin_delete"])
+async def delete_all_metrics(session: Session = Depends(get_session)):
+    await session.execute(delete(models.Metric))
+    await session.commit()
+    return {"isOk": True}

@@ -88,3 +88,7 @@ async def update_coach(id: int, data: schemas.CoachUpdate, session: AsyncSession
 @router.put("/drills/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_drill(id: int, data: schemas.DrillUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Drill, id, data, session)}
+
+@router.put("/settings/metrics/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_metric(id: int, data: schemas.MetricUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Metric, id, data, session)}
