@@ -5,3 +5,4 @@ from .coaches import Coach, CoachGroup
 from .events import Event, Attendance
 from .achieves import Achieve, Rule
 from .drills import Drill, EventDrill
+from .settings import Metric

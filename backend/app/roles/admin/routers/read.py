@@ -233,3 +233,8 @@ async def get_base_drills(session: AsyncSession = Depends(get_session)):
 @router.get("/drills/{id}", response_model=schemas.DrillResponse, tags=["Admin_select"])
 async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.read(models.Drill, id, session)
+
+# Metrics
+@router.get("/settings/metrics/all", response_model=List[schemas.MetricResponse], tags=["Admin_select"])
+async def get_base_drills(session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Metric, session)

@@ -112,3 +112,18 @@ async def add_coach_group(data: schemas.CoachGroupCreate, session: AsyncSession 
 @router.post("/drills", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def create_drill(data: schemas.DrillCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Drill, data, session)} 
+
+# Settings
+@router.post("/settings/metrics/initial", response_model=schemas.ResponseOk, tags=["Admin_create"])
+async def add_metric(data: schemas.MetricCreate, session: AsyncSession = Depends(get_session)):
+   
+    for i in range(10, 0, -1):
+        metric = schemas.MetricBase(
+            camp_id = data.camp_id,
+            test= data.test,
+            start = 0,
+            stop = 0,
+            score = i
+        )
+        await CRUD.add(models.Metric, metric, session)
+    return {"isOk": True}
