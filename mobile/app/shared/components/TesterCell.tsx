@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { cellStyles, groupStyles } from '../styles/appStyles';
+import { formatSeconds } from '../../shared/utils';
 
 
 export type Props = {
@@ -29,7 +30,7 @@ export const TesterCell: React.FC<Props> = ({  checked, onCheck, name, value, on
           {name}
         </Text>
         <Text style={[groupStyles.title, {marginRight: 2}]}>
-          {value}
+          {formatSeconds(value)}
         </Text>
       </TouchableOpacity>
     </View>

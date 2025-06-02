@@ -12,9 +12,11 @@ import { AttendanceView } from './views/AttendanceView';
 import { useRouter } from 'expo-router';
 import { ScreenWrapper } from '../../../../shared/components/ScreenWrapper';
 import CommentsScreen from '../CommentsScreen';
+import { RadarChart } from './views/RadarChart';
+
 
 export default function ProfileScreen() {
-  const { isCommentsScreen } = useStore();
+  const { isCommentsScreen, last_test } = useStore();
   const { loadStudent, showComments } = useStore();
 
   const router = useRouter();
@@ -41,6 +43,7 @@ export default function ProfileScreen() {
         <ProfileView/>
         <PerentsView/>
         <AddressView/>
+        <RadarChart test={last_test} onExam={(exam)=>{}}/>
       </ScrollView>
 
       <View style={styles.summary}>

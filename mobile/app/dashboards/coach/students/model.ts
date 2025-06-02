@@ -90,7 +90,7 @@ export interface StudentProfile {
     evasion: number;
     hiding: number;
   };
-  
+
   export type Game = {
     id: number;
     timestamp: number;

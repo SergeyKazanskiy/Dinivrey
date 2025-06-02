@@ -1,71 +1,84 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput} from 'react-native';
 import { useStore } from '../../store';
-import { CustomDialog } from '../../../../../shared/components/CustomDialog';
+import { CustomAlert } from '../../../../../shared/components/CustomAlert';
 
 
 export function ExamModal() {
   const { exam, isModal, testerName, examValue } = useStore();
   const { closeModal, updateTest } = useStore();
 
-  const [input, setInput] = useState<string>(String(examValue));
-  
-  useEffect(() => {
-    setInput(String(examValue));
-  }, [examValue]);
+  const toMin = Math.floor(examValue / 60);
+  const toSec = examValue % 60;
 
+  const [minutes, setMinutes] = useState(toMin.toString());
+  const [secs, setSecs] = useState(toSec.toString());
 
-  const handleChange = (text: string) => {
+  const pad2 = (val: string | number): string =>
+    val.toString().padStart(2, '0');
 
-    const cleaned = text.replace(/[^0-9.]/g, "");
-    const parts = cleaned.split(".");
+  const handleBlur = (val: string, setter: (v: string) => void) => {
+    let num = parseInt(val, 10);
+    if (isNaN(num) || num < 0) num = 0;
+    if (num > 59) num = 59;
+    setter(pad2(num));
+  };
 
-    if (parts.length > 2) return; 
-    setInput(cleaned);
+  const handleSave = () => {
+    const min = parseInt(minutes, 10) || 0;
+    const sec = parseInt(secs, 10) || 0;
+    updateTest(min * 60 + sec);
+    closeModal();
+  };
+
+  const handleCancel = () => {
+    setMinutes(toMin.toString());
+    setSecs(toSec.toString());
+    closeModal();
   };
 
   return (
-    <View style={styles.container} >
-      <CustomDialog visible={isModal} title={testerName}
-        buttonText1='Cancel' buttonText2='Save'
-        onButton1={closeModal} onButton2={() => updateTest(Number(input))}>
+    <CustomAlert visible={isModal} 
+      title={testerName}
+      buttonText='Save'
+      handleYes={handleSave}
+      onClose={handleCancel}>
 
-            <View style={styles.section} >
-                <Text style={styles.dialogText} >{"Enter "+exam}: </Text>
-                <TextInput
-                    style={styles.dialogInput}
-                    onChangeText={handleChange}
-                    value={input}
-                    placeholder="0.0"
-                    keyboardType="decimal-pad"
-                />
-            </View>
-      </CustomDialog>
-    </View>
+          <View style={styles.inputRow}>
+            <Text style={[styles.colon, {marginRight: 20}]}>Enter {exam}</Text>
+            <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
+              value={minutes}
+              onChangeText={setMinutes}
+              onBlur={() => handleBlur(minutes, setMinutes)}
+            />
+            <Text style={styles.colon}>:</Text>
+            <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
+              value={secs}
+              onChangeText={setSecs}
+              onBlur={() => handleBlur(secs, setSecs)}
+            />
+          </View>
+    </CustomAlert>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    //flex: 1,
-  },
-  section: {
+  inputRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    alignItems: 'center',
+    marginBottom: 8,
   },
-  dialogText: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#222',
-    paddingTop: 4,
-    paddingRight: 4
+  colon: {
+    fontSize: 18,
+    color: '#ccc',
+    marginHorizontal: 8,
   },
-  dialogInput: {
-    height: 28,
-    width: 44,
-    fontSize: 15,
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    backgroundColor: '#FFFACD',
+  input: {
+    width: 60,
+    height: 30,
+    backgroundColor: '#2E4A7C',
+    textAlign: 'center',
+    color: '#eee',
+    fontSize: 18,
   },
 });
