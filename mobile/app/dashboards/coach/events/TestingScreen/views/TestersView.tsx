@@ -38,18 +38,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#555"
   },
 });
-
-
-/*
-  const renderItem = ({ student }) => { // filter
-    if (searchPhrase === "") {
-      return <LiderCell name={item.name} details={item.details} />;
-    }
-    if (item.name.toUpperCase().includes(searchPhrase.toUpperCase().trim().replace(/\s/g, ""))) {
-      return <Item name={item.name} details={item.details} />;
-    }
-    if (item.name.toUpperCase().includes(searchPhrase.toUpperCase().trim().replace(/\s/g, ""))) {
-        return <Item name={item.name} details={item.details} />;
-    }
-  };
-*/

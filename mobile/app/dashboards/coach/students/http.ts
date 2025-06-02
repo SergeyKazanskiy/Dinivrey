@@ -35,6 +35,10 @@ export function get_student_coach_comments(student_id: number, callback: (commen
   return httpWrapper(() => api.get(`students/${student_id}/coach/comments`), callback);
 };
 
+export function get_last_test(student_id: number, callback: (tests: Test[]) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/tests/last`), callback);
+};
+
 // Statistics 
 export function get_last_test_date(student_id: number, callback: (res: {year: number, month: number, isEvents: boolean}) => void) {
   return httpWrapper(() => api.get(`students/${student_id}/tests/last/date`), callback);

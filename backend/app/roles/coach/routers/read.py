@@ -64,6 +64,18 @@ async def get_student_coach_comments(id: int, session: AsyncSession = Depends(ge
     return [{"timestamp": row[0],
              "comment": row[1]} for row in rows]
 
+@router.get("/students/{id}/tests/last", response_model=List[schemas.TestResponse], tags=["Student"])
+async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Test)
+        .where(models.Test.student_id == id)
+        .order_by(desc(models.Test.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    return [event] if event else []
+
 # Statistics
 @router.get("/students/{id}/tests/last/date", tags=["Coach"])
 async def get_last_test_date(id: int, session: AsyncSession = Depends(get_session)):
