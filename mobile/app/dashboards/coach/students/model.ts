@@ -83,12 +83,18 @@ export interface StudentProfile {
   
   export type Test = {
     id: number;
+    student_id: number;
     timestamp: number;
+
     speed: number;
     stamina: number;
     climbing: number;
     evasion: number;
     hiding: number;
+
+    speed_time: number;
+    stamina_time: number;
+    climbing_time: number;
   };
 
   export type Game = {
@@ -130,6 +136,7 @@ export interface StudentProfile {
     timestamp: number;
     name: string;
     score: number;
+    time: string;
     unit: string;
   };
 

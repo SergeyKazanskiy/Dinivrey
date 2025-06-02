@@ -52,6 +52,10 @@ class Tester(BaseModel):
     evasion: float
     hiding: float
 
+    speed_time: int
+    stamina_time: int
+    climbing_time: int
+
     class Config:
             from_attributes = True
 
@@ -60,11 +64,16 @@ class TestBase(BaseModel):
     student_id: int
     timestamp: int
     date: str
+
     speed: float
     stamina: float
     climbing: float
     evasion: float
     hiding: float
+
+    speed_time: int
+    stamina_time: int
+    climbing_time: int
 
 class TestCreate(TestBase):
     pass
@@ -81,6 +90,15 @@ class TestUpdate(BaseModel):
     climbing: Optional[float] = None
     evasion: Optional[float] = None
     hiding: Optional[float] = None
+
+    speed_time: Optional[float] = None
+    stamina_time: Optional[float] = None
+    climbing_time: Optional[float] = None
+
+class TestUpdate2(BaseModel):
+    exam: str
+    value: int
+    camp_id: int
 
 # Game
 class GameBase(BaseModel):

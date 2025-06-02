@@ -265,7 +265,7 @@ async def get_student_names(group_id: int, session: AsyncSession = Depends(get_s
 
 # Testers
 @router.get("/camps/events/{event_id}/groups/{group_id}/testers", response_model=List[schemas.Tester], tags=["Coach"]) #
-async def get_student_names(event_id: int, group_id: int, timestamp: int, session: AsyncSession = Depends(get_session)):
+async def get_testers(event_id: int, group_id: int, timestamp: int, session: AsyncSession = Depends(get_session)):
     E = models.Event
     A = models.Attendance
     S = models.Student
@@ -298,7 +298,11 @@ async def get_student_names(event_id: int, group_id: int, timestamp: int, sessio
                 'stamina': test.stamina,
                 'climbing': test.climbing,
                 'evasion': test.evasion,
-                'hiding': test.hiding,  
+                'hiding': test.hiding,
+
+                'speed_time': test.speed_time,
+                'stamina_time': test.stamina_time,
+                'climbing_time': test.climbing_time,
             }
             liders.append(lider)
         else:

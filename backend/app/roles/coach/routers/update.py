@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from database import get_session
 from crud import CRUD
 from roles.coach import schemas
@@ -33,9 +34,31 @@ async def update_all_attendances(event_id: int, group_id: int, data: schemas.Att
     return {"isOk": True}
 
 # Test
-@router.put("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
-async def update_student_test(id: int, data: schemas.TestUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Test, id, data, session)}
+@router.put("/students/tests/{id}", tags=["Coach"])
+async def update_student_test(id: int, data: schemas.TestUpdate2, session: AsyncSession = Depends(get_session)):
+    metric = models.Metric
+    
+    if data.exam == 'speed' or data.exam == 'stamina'  or data.exam == 'climbing':
+        stmt = (
+            select(metric.score)
+            .where(
+                metric.camp_id == data.camp_id,
+                metric.test == data.exam.capitalize(),
+                metric.start <= data.value,
+                metric.stop > data.value
+            )
+        )
+        result = await session.execute(stmt)
+        score = result.scalar_one_or_none() or 0
+        fields = schemas.TestUpdate(**{data.exam: score, data.exam + '_time': data.value})
+        await CRUD.update(models.Test, id, fields, session)
+
+        return {"score": score, 'time': data.value}
+    else: 
+        fields = schemas.TestUpdate(**{data.exam: data.value})
+        await CRUD.update(models.Test, id, fields, session)
+        return {"score": data.value }
+
 
 # Summary
 @router.put("/students/{student_id}/tests/summary", response_model=schemas.ResponseOk, tags=["Coach"])

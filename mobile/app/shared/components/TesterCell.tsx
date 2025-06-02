@@ -9,7 +9,7 @@ export type Props = {
   checked: boolean;
   onCheck: () => void;
   name: string;
-  value: number;
+  value: string;
   onClick: () => void;
 };
   
@@ -30,7 +30,7 @@ export const TesterCell: React.FC<Props> = ({  checked, onCheck, name, value, on
           {name}
         </Text>
         <Text style={[groupStyles.title, {marginRight: 2}]}>
-          {formatSeconds(value)}
+          {value}
         </Text>
       </TouchableOpacity>
     </View>
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(110, 151, 6)',
     borderRadius: 8,
     padding: 10,
+    paddingLeft: 2,
     marginVertical: 2 //gap???
   },
   sectionStart: {
@@ -63,7 +64,8 @@ const styles = StyleSheet.create({
   name: {
     color: '#ddd',
     fontWeight: '400',
-    fontSize: 18
+    fontSize: 17,
+    paddingTop: 2
   }
 });
 
