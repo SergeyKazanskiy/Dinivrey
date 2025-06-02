@@ -34,11 +34,11 @@ export const RuleConditions: string[] = ['<', '>', '='];
 export const RulePersonal: string[] = ['first', 'last', 'max', 'min', 'agv'];
 
 export const MeasureUnits: Record<string, string> = {
-  Speed: "m/s",
+  Speed: "sec",
   Stamina: "min",
-  Climbing: "grade",
+  Climbing: "sec",
   Evasion: "ball",
-  Hiding: "sec",
+  Hiding: "ball",
 };
 
 export const Genders = ['Boy', 'Girl'];

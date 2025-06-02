@@ -78,17 +78,24 @@ router2 = APIRouter()
 async def add_new_fields(session: AsyncSession = Depends(get_session)):
     try:
         await session.execute(text("""
-            ALTER TABLE drills ADD COLUMN actors INTEGER DEFAULT 1;
+            ALTER TABLE tests ADD COLUMN speed_score INTEGER NOT NULL DEFAULT 0;
         """))
     except Exception as e:
         print("!!!!! error:", e)
 
     try:
         await session.execute(text("""
-            ALTER TABLE drills ADD COLUMN category TEXT NOT NULL DEFAULT '';
+            ALTER TABLE tests ADD COLUMN stamina_score INTEGER NOT NULL DEFAULT 0;
         """))
     except Exception as e:
         print("!!!!! error:", e)
+
+    try:
+        await session.execute(text("""
+            ALTER TABLE tests ADD COLUMN climbing_score INTEGER NOT NULL DEFAULT 0;
+        """))
+    except Exception as e:
+        print("!!!!! error:", e)    
 
     # try:
     #     await session.execute(text("""
@@ -114,3 +121,20 @@ async def create_tables():
     return {"status": "Success"}
 
 app.include_router(router3)
+
+
+router4 = APIRouter()
+
+@router4.put("/rename_fields", tags=["Auth"])
+async def rename_fields(session: AsyncSession = Depends(get_session)):
+    try:
+        await session.execute(text("""
+            ALTER TABLE tests RENAME COLUMN climbing_score TO climbing_time;
+        """))
+    except Exception as e:
+        print("!!!!! error:", e)
+    
+    await session.commit()
+    return {"status": "Success"}
+
+app.include_router(router4)

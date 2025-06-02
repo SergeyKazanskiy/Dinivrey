@@ -35,7 +35,7 @@ export default function GroupsScreen() {
                   <Icon name={group.id === group_id ? 'chevron-down' : 'chevron-right'}
                     type="material-community" color="white" style={{ marginRight: 10 }} />
                   <ListItem.Content>
-                    <ListItem.Title style={styles.title}>{group.name}</ListItem.Title>
+                    <ListItem.Title style={styles.title}>{group.camp_name}, {group.name}</ListItem.Title>
                     <ListItem.Subtitle style={styles.subtitle}>{group.description}</ListItem.Subtitle>
                   </ListItem.Content>
                   {/* <Badge value={students.length} status="primary" /> */}

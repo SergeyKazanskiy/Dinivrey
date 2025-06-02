@@ -16,6 +16,7 @@ export function MetricTable({ metricName, metrics, onClick }: Props) {
         <View style={styles.tableRow}>
             <Text style={styles.tableCol}>Metric</Text>
             <Text style={styles.tableCol}>Score</Text>
+            <Text style={styles.tableCol}>Time</Text>
             <Text style={styles.tableCol}>Unit</Text>
         </View>
 
@@ -27,6 +28,7 @@ export function MetricTable({ metricName, metrics, onClick }: Props) {
 
                     <Text style={styles.tableCol1}>{item.name}</Text>
                     <Text style={styles.tableCol2}>{item.score}</Text>
+                    <Text style={styles.tableCol3}>{item.time}</Text>
                     <Text style={styles.tableCol3}>{item.unit}</Text>
                 </TouchableOpacity>
             } style={styles.list} />

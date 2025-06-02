@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput} from 'react-native';
 import { useStore } from '../../store';
 import { CustomAlert } from '../../../../../shared/components/CustomAlert';
@@ -8,11 +8,18 @@ export function ExamModal() {
   const { exam, isModal, testerName, examValue } = useStore();
   const { closeModal, updateTest } = useStore();
 
-  const toMin = Math.floor(examValue / 60);
-  const toSec = examValue % 60;
+  const [minutes, setMinutes] = useState("00");
+  const [secs, setSecs] = useState("00");
 
-  const [minutes, setMinutes] = useState(toMin.toString());
-  const [secs, setSecs] = useState(toSec.toString());
+  useEffect(() => {
+    if (isModal) {
+      const toMin = Math.floor(examValue / 60);
+      const toSec = examValue % 60;
+      setMinutes(toMin.toString().padStart(2, "0"));
+      setSecs(toSec.toString().padStart(2, "0"));
+    }
+  }, [isModal, examValue]);
+
 
   const pad2 = (val: string | number): string =>
     val.toString().padStart(2, '0');
@@ -31,18 +38,12 @@ export function ExamModal() {
     closeModal();
   };
 
-  const handleCancel = () => {
-    setMinutes(toMin.toString());
-    setSecs(toSec.toString());
-    closeModal();
-  };
-
   return (
     <CustomAlert visible={isModal} 
       title={testerName}
       buttonText='Save'
       handleYes={handleSave}
-      onClose={handleCancel}>
+      onClose={closeModal}>
 
           <View style={styles.inputRow}>
             <Text style={[styles.colon, {marginRight: 20}]}>Enter {exam}</Text>

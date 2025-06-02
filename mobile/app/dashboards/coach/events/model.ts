@@ -30,6 +30,7 @@ export type Test = {
   student_id: number;
   timestamp: number;
   date: string;
+
   speed: number;
   stamina: number;
   climbing: number;
@@ -58,6 +59,10 @@ export interface Tester {
     climbing: number;
     evasion: number;
     hiding: number;
+
+    speed_time: number;
+    stamina_time: number;
+    climbing_time: number;
 }
 
 export interface Metric {
@@ -114,4 +119,10 @@ export interface ShortDrill {
   category: string;
   actors: number;
   present: boolean;
+}
+
+export interface TestUpdate {
+  exam: string;
+  value: number;
+  camp_id: number;
 }

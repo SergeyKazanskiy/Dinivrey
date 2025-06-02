@@ -3,7 +3,7 @@ import { get_last_test_date, get_last_game_date, get_student_tests, get_student_
 import { update_student_tests_summary, update_student_games_summary } from '../http';
 import { GroupsSlice } from '../GroupsScreen/state';
 import { MeasureUnits } from '../../../../shared/constants';
-import { objectToJson, getYearAndMonth } from '../../../../shared/utils';
+import { objectToJson, getYearAndMonth, formatSeconds } from '../../../../shared/utils';
 import { ProfileSlice } from "../ProfileScreen/state";
 
 
@@ -185,19 +185,16 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
   
 function convertTestsToMetrics(tests: Test[]): Metric[] {
     const metrics: Metric[] = [];
-
+    
     for (const test of tests) {
-        const { id, timestamp, ...fields } = test;
+        const { timestamp, speed, stamina, climbing, evasion, hiding, speed_time, stamina_time, climbing_time } = test;
         
-        for (const key of Object.keys(fields) as (keyof typeof fields)[]) {
-            const name = key.charAt(0).toUpperCase() + key.slice(1);
-            const score = test[key];
-            const unit = MeasureUnits[name];
-
-            metrics.push({ timestamp, name, score, unit, });
-        }
+        metrics.push({ timestamp, name: 'Speed', score: speed, unit:'m/s', time: formatSeconds(speed_time)});
+        metrics.push({ timestamp, name: 'Stamina', score: stamina, unit:'min', time: formatSeconds(stamina_time)});
+        metrics.push({ timestamp, name: 'Climbing', score: climbing, unit:'grade', time: formatSeconds(climbing_time)});
+        metrics.push({ timestamp, name: 'Evasion', score: evasion, unit:'ball', time:''});
+        metrics.push({ timestamp, name: 'Hiding', score: hiding, unit:'sec', time:''});
     }
-
     return metrics;
 }
   
@@ -212,7 +209,7 @@ function convertGamesToMetrics(tests: Game[]): Metric[] {
             const score = test[key];
             const unit = MeasureUnits[name];
 
-            metrics.push({ timestamp, name, score, unit, });
+            metrics.push({ timestamp, name, score, unit, time:''});
         }
     }
 

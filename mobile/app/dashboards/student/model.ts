@@ -86,4 +86,5 @@ export interface Metric {
   name: string;
   score: number;
   unit: string;
+  time: string;
 };
