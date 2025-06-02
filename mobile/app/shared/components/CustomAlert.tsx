@@ -12,7 +12,7 @@ interface Props {
 
 export const CustomAlert: React.FC<Props> = ({ visible, title, children, handleYes, buttonText, onClose }) => {
   const slideAnim = useRef(new Animated.Value(-16)).current;
-  const top = 50;
+  const top = 5;
 
   useEffect(() => {
     Animated.timing(slideAnim, {
