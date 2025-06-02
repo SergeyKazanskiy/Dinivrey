@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { ScreenWrapper } from '../../../../shared/components/ScreenWrapper';
 import CommentsScreen from '../CommentsScreen';
 import { RadarChart } from './views/RadarChart';
-
+import { StatsIndicators } from '../../../../shared/components/StatsIndicators';
 
 export default function ProfileScreen() {
   const { isCommentsScreen, last_test } = useStore();
@@ -43,7 +43,11 @@ export default function ProfileScreen() {
         <ProfileView/>
         <PerentsView/>
         <AddressView/>
-        <RadarChart test={last_test} onExam={(exam)=>{}}/>
+
+        <View style={styles.section}>
+          <RadarChart test={last_test} onExam={(exam)=>{}}/>
+          <StatsIndicators stats={[last_test.climbing, last_test.stamina, last_test.speed, last_test.evasion, last_test.hiding]}/>  
+        </View>
       </ScrollView>
 
       <View style={styles.summary}>
@@ -64,6 +68,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  section: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between'
   },
   summary: { 
     marginTop: 'auto', 

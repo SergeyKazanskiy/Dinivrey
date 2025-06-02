@@ -16,7 +16,6 @@ export default function TestingScreen() {
   const { loadTesters, selectMenu } = useStore();
 
   const [isMenu, setIsMenu] = useState(false);
-  
   const router = useRouter();
 
   useFocusEffect(
@@ -28,12 +27,7 @@ export default function TestingScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <Stack.Screen options={{ headerShown: false }} />
-
-      <CustomNavbar title='Students' onClick={() => router.back()}>
-        {/* <Ionicons name='add-circle-outline' size={20} color='#D1FF4D'
-          onPress={() => setIsMenu(true)}
-        /> */}
-      </CustomNavbar>
+      <CustomNavbar title='Students' onClick={() => router.back()}/>
 
       <HeaderMenu isOpen={isMenu}
         items={['Add participants', 'Remove participants']}
@@ -42,6 +36,7 @@ export default function TestingScreen() {
         containerStyle={{ borderWidth: 1, borderColor: 'gold', backgroundColor: '#152B52', width: 200, top: 76}}
         textStyle={{color: '#ddd'}}
       />
+
       <ExamModal/>
 
       <SportsView/>
