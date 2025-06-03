@@ -189,11 +189,11 @@ function convertTestsToMetrics(tests: Test[]): Metric[] {
     for (const test of tests) {
         const { timestamp, speed, stamina, climbing, evasion, hiding, speed_time, stamina_time, climbing_time } = test;
         
-        metrics.push({ timestamp, name: 'Speed', score: speed, unit:'m/s', time: formatSeconds(speed_time)});
+        metrics.push({ timestamp, name: 'Speed', score: speed, unit:'sec', time: formatSeconds(speed_time)});
         metrics.push({ timestamp, name: 'Stamina', score: stamina, unit:'min', time: formatSeconds(stamina_time)});
-        metrics.push({ timestamp, name: 'Climbing', score: climbing, unit:'grade', time: formatSeconds(climbing_time)});
-        metrics.push({ timestamp, name: 'Evasion', score: evasion, unit:'ball', time:''});
-        metrics.push({ timestamp, name: 'Hiding', score: hiding, unit:'sec', time:''});
+        metrics.push({ timestamp, name: 'Climbing', score: climbing, unit:'sec', time: formatSeconds(climbing_time)});
+        metrics.push({ timestamp, name: 'Evasion', score: evasion, unit:'point', time:''});
+        metrics.push({ timestamp, name: 'Hiding', score: hiding, unit:'point', time:''});
     }
     return metrics;
 }

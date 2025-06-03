@@ -206,7 +206,7 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
 @router.get("/camps/groups/events",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     week_start, week_end = get_week_range(year, month, week)
-    print('!!!!!', week_start, week_end)
+    # print('!!!!!', week_start, week_end)
     start_ts = int(week_start.timestamp() * 1000)
     end_ts = int(week_end.timestamp() * 1000)
     
@@ -283,7 +283,11 @@ async def get_testers(event_id: int, group_id: int, timestamp: int, session: Asy
     for row in rows:
         tests = await session.execute(
             select(models.Test)
-                .where((models.Test.student_id == row[1]) & (E.timestamp == timestamp))
+                .where(
+                    models.Test.student_id == row[1],
+                      # models.Test.timestamp == row[5]
+                      )
+                .order_by(desc(models.Test.timestamp))
                 .limit(1)
             )
         test = tests.scalar_one_or_none()

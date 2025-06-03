@@ -35,7 +35,7 @@ export const StatsIndicators: React.FC<Props> = ({ stats }) => {
             colors={[item.color, '#000']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            locations={[0, Math.max(Math.min(item.value / 5, 1), 0)]}
+            locations={[0, Math.max(Math.min(item.value / 6, 1), 0)]}
             style={[ styles.bar,{ width: 88}]}
           />
           <Text style={styles.label}>{item.label}</Text>

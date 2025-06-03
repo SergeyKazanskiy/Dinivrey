@@ -80,32 +80,37 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     },
 
     checkStudent: (attendance_id: number) => {
-        const { event_timestamp }: EventsSlice = get();
+        const { event_timestamp, events_shedules, event_id }: EventsSlice = get();
         const { attendances }: AttendanceSlice = get();
         const attendance = attendances.find(el => el.id === attendance_id);
-        
+        const currentEvent = events_shedules.find(el => el.id === event_id);
+
         if (attendance) {
             update_attendance(attendance_id, {present: !attendance.present}, (res) => {
                 if (res.isOk) {
-                    if (attendance.present) {
-                        delete_student_test(attendance.test_id!, (res => {
-                            if (res.isOk) {
-                                attendance.test_id = undefined;
-                            } 
-                        }));
-                    } else {
-                        const newTest: Omit<Test, 'id'> = {
-                            student_id: attendance.student_id,
-                            timestamp: event_timestamp,
-                            date: formatDateTime(event_timestamp).date,
-                            speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
-                        };
-                        add_student_test(newTest, (res) => {
-                            if (res.id) {
-                                attendance.test_id = res.id;
-                            }     
-                        })
+
+                    if (currentEvent && currentEvent.type === 'Exam') {
+                        if (attendance.present) {
+                            delete_student_test(attendance.test_id!, (res => {
+                                if (res.isOk) {
+                                    attendance.test_id = undefined;
+                                } 
+                            }));
+                        } else {
+                            const newTest: Omit<Test, 'id'> = {
+                                student_id: attendance.student_id,
+                                timestamp: event_timestamp,
+                                date: formatDateTime(event_timestamp).date,
+                                speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
+                            };
+                            add_student_test(newTest, (res) => {
+                                if (res.id) {
+                                    attendance.test_id = res.id;
+                                }     
+                            })
+                        }
                     }
+
                     attendance.present = !attendance.present;
                     
                     const attendancesAmount = attendances.reduce((acc, item) => {
@@ -165,7 +170,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
     deleteAttendances: () => {
         const { event_id, group_id }: EventsSlice = get();
-
+        
         delete_attendances(event_id, group_id, (res) => {
             if (res.isOk) {
                 const { loadStudentsNames }: AttendanceSlice = get();
