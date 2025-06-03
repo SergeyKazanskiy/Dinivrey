@@ -36,7 +36,7 @@ export function getMetric(key: string) {
     if (key in MeasureUnits) {
       return MeasureUnits[key as keyof typeof MeasureUnits]; 
     }
-    return 'ball'; 
+    return 'point'; 
   }
 
   export function formatDateTime(timestamp: number) {

@@ -47,11 +47,12 @@ export function ExamModal() {
 
           <View style={styles.inputRow}>
             <Text style={[styles.colon, {marginRight: 20}]}>Enter {exam}</Text>
+            {(exam === 'speed' || exam === 'stamina' || exam === 'climbing') &&
             <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
               value={minutes}
               onChangeText={setMinutes}
               onBlur={() => handleBlur(minutes, setMinutes)}
-            />
+            />}
             <Text style={styles.colon}>:</Text>
             <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
               value={secs}

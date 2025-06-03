@@ -37,8 +37,8 @@ export const MeasureUnits: Record<string, string> = {
   Speed: "sec",
   Stamina: "min",
   Climbing: "sec",
-  Evasion: "ball",
-  Hiding: "ball",
+  Evasion: "point",
+  Hiding: "point",
 };
 
 export const Genders = ['Boy', 'Girl'];
