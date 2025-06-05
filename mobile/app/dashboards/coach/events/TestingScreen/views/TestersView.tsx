@@ -4,7 +4,7 @@ import { useStore } from '../../store';
 import { TesterCell } from '../../../../../shared/components/TesterCell';
 import { Tester } from "../../model";
 import {  MeasureUnits } from '../../../../../shared/constants';
-import { formatSeconds } from '../../../../../shared/utils';
+import { formatSeconds, formatSecondsWithMilli } from '../../../../../shared/utils';
 
 
 export const TestersView = () => { 
@@ -14,7 +14,7 @@ export const TestersView = () => {
     let value: string = ''
 
     if (exam === 'speed') value = item.speed + ' (' + formatSeconds(item.speed_time) + MeasureUnits['Speed'] + ')'
-    if (exam === 'stamina') value = item.stamina + ' (' + formatSeconds(item.stamina_time) + MeasureUnits['Stamina'] + ')'
+    if (exam === 'stamina') value = item.stamina + ' (' + formatSecondsWithMilli(item.stamina_time) + ')'
     if (exam === 'climbing') value = item.climbing + ' (' + formatSeconds(item.climbing_time) + MeasureUnits['Climbing'] + ')'
     if (exam === 'evasion') value = item.evasion + ' (' + MeasureUnits['Evasion'] + ')'
     if (exam === 'hiding') value = item.hiding + ' (' + MeasureUnits['Hiding'] + ')'

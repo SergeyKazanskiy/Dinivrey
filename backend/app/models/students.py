@@ -52,7 +52,7 @@ class Test(Base):
     evasion = Column(Float, nullable=False)
     hiding = Column(Float, nullable=False)
     speed_time = Column(Integer, default=0, nullable=False)
-    stamina_time = Column(Integer, default=0, nullable=False)
+    stamina_time = Column(Float, default=0, nullable=False)
     climbing_time = Column(Integer, default=0, nullable=False)
     student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
     student = relationship("Student", back_populates="tests")    

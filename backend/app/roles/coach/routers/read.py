@@ -152,8 +152,8 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
             ) for row in rows]
 
 @router.get("/achieves", response_model=List[schemas.AchievementResponse], tags=["Coach"])
-async def get_achieves(category: str, session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Achieve, session, filters={"category": category})
+async def get_achieves(category: str, trigger: str, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Achieve, session, filters={"trigger": trigger, "category": category})
 
 
 # Schedule

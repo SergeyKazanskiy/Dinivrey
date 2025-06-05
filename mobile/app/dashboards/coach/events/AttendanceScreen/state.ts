@@ -82,17 +82,18 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     checkStudent: (attendance_id: number) => {
         const { event_timestamp, events_shedules, event_id }: EventsSlice = get();
         const { attendances }: AttendanceSlice = get();
-        const attendance = attendances.find(el => el.id === attendance_id);
-        const currentEvent = events_shedules.find(el => el.id === event_id);
-
+        const attendance = attendances.find(el => el.id === attendance_id);  
+        
         if (attendance) {
             update_attendance(attendance_id, {present: !attendance.present}, (res) => {
                 if (res.isOk) {
+                    const currentEvent = events_shedules.find(el => el.id === event_id);
 
                     if (currentEvent && currentEvent.type === 'Exam') {
                         if (attendance.present) {
                             delete_student_test(attendance.test_id!, (res => {
                                 if (res.isOk) {
+                                    alert('test deleted')
                                     attendance.test_id = undefined;
                                 } 
                             }));
@@ -101,10 +102,12 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                                 student_id: attendance.student_id,
                                 timestamp: event_timestamp,
                                 date: formatDateTime(event_timestamp).date,
-                                speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0
+                                speed: 0.0, stamina: 0.0, climbing: 0.0, evasion: 0.0, hiding: 0.0,
+                                speed_time: 0, stamina_time: 0, climbing_time: 0
                             };
                             add_student_test(newTest, (res) => {
                                 if (res.id) {
+                                    alert('test created')
                                     attendance.test_id = res.id;
                                 }     
                             })
@@ -130,7 +133,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     },
 
     setAllChecked: () => {
-        const {event_id, group_id, isAllChecked}: EventsSlice & AttendanceSlice  = get();
+        const {event_id, group_id, isAllChecked, events_shedules}: EventsSlice & AttendanceSlice  = get();
         const data = {present: !isAllChecked};
 
         update_all_attendances(event_id, group_id, data, (res) => {
@@ -139,9 +142,14 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                     isAllChecked: !isAllChecked,
                     attendances: state.attendances.map(el => ({...el, present: !isAllChecked}))
                 }));
-                add_all_present_students_new_tests(event_id, group_id, (res) => {
+                
+                const currentEvent = events_shedules.find(el => el.id === event_id);
                     
-                })
+                if (currentEvent && currentEvent.type === 'Exam') {
+                    add_all_present_students_new_tests(event_id, group_id, (res) => {
+                        
+                    })
+                }
             }
         });
     },
