@@ -105,13 +105,12 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
             value: examValue,
             camp_id: exam === 'speed' ? 0: event.camp_id
         }
-
+        //alert(objectToJson(data))
         update_student_test(tester.test_id, data, (res => {
             if (res) {
-                //alert(objectToJson(res));
                 tester[exam] = res.score;
                 tester[exam + '_time'] = res.time;
-                
+               // alert(objectToJson(tester));
                 set((state: TestingSlice) => ({
                     examValue,
                     testers: state.testers.map(el => el.id === tester_id ? tester : el),

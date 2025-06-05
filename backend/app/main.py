@@ -131,6 +131,9 @@ async def rename_fields(session: AsyncSession = Depends(get_session)):
         await session.execute(text("""
             ALTER TABLE tests RENAME COLUMN climbing_score TO climbing_time;
         """))
+        # await session.execute(text("""
+        #     ALTER TABLE tests ALTER COLUMN stamina_time TYPE REAL;
+        # """))
     except Exception as e:
         print("!!!!! error:", e)
     
@@ -138,3 +141,59 @@ async def rename_fields(session: AsyncSession = Depends(get_session)):
     return {"status": "Success"}
 
 app.include_router(router4)
+
+
+router5 = APIRouter()
+
+@router5.put("/change_field_type", tags=["Auth"])
+async def change_field_type(session: AsyncSession = Depends(get_session)):
+
+    try:
+        # 1. Создаём временную таблицу с изменённым типом поля `stamina_time` (FLOAT)
+        await session.execute(text("""
+            CREATE TABLE tests_temp (
+                id INTEGER PRIMARY KEY,
+                timestamp INTEGER NOT NULL,
+                date TEXT NOT NULL,
+                speed FLOAT NOT NULL,
+                stamina FLOAT NOT NULL,
+                climbing FLOAT NOT NULL,
+                evasion FLOAT NOT NULL,
+                hiding FLOAT NOT NULL,
+                speed_time INTEGER NOT NULL DEFAULT 0,
+                stamina_time FLOAT NOT NULL DEFAULT 0,
+                climbing_time INTEGER NOT NULL DEFAULT 0,
+                student_id INTEGER,
+                FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
+            );
+        """))
+
+        # 2. Копируем данные из старой таблицы
+        await session.execute(text("""
+            INSERT INTO tests_temp (
+                id, timestamp, date, speed, stamina, climbing,
+                evasion, hiding, speed_time, stamina_time, climbing_time, student_id
+            )
+            SELECT
+                id, timestamp, date, speed, stamina, climbing,
+                evasion, hiding, speed_time, stamina_time, climbing_time, student_id
+            FROM tests;
+        """))
+
+        # 3. Удаляем старую таблицу
+        await session.execute(text("DROP TABLE tests;"))
+
+        # 4. Переименовываем временную таблицу обратно
+        await session.execute(text("ALTER TABLE tests_temp RENAME TO tests;"))
+
+        await session.commit()
+        print("Поле stamina_time успешно изменено на FLOAT.")
+    except Exception as e:
+        await session.rollback()
+        print(f"Ошибка при изменении: {e}")
+
+    
+    #await session.commit()
+    return {"status": "Success"}
+
+app.include_router(router5)

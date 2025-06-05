@@ -53,7 +53,7 @@ class Tester(BaseModel):
     hiding: float
 
     speed_time: int
-    stamina_time: int
+    stamina_time: float
     climbing_time: int
 
     class Config:
@@ -72,7 +72,7 @@ class TestBase(BaseModel):
     hiding: float
 
     speed_time: int
-    stamina_time: int
+    stamina_time: float
     climbing_time: int
 
 class TestCreate(TestBase):
@@ -97,7 +97,7 @@ class TestUpdate(BaseModel):
 
 class TestUpdate2(BaseModel):
     exam: str
-    value: int
+    value: float
     camp_id: int
 
 # Game

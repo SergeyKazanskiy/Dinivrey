@@ -199,3 +199,12 @@ export function formatSeconds(seconds: number): string {
   const s = seconds % 60;
   return `${m},${s.toString().padStart(2, "0")}`;
 }
+
+export function formatSecondsWithMilli(seconds: number): string {
+  const millis = Math.round((seconds % 1) * 100);
+  const pureSeconds = Math.floor(seconds);
+
+  const m = Math.floor(pureSeconds / 60);
+  const s = pureSeconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
+}

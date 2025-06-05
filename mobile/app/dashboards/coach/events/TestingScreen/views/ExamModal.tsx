@@ -10,13 +10,18 @@ export function ExamModal() {
 
   const [minutes, setMinutes] = useState("00");
   const [secs, setSecs] = useState("00");
+  const [millis, setMillis] = useState("00");
 
   useEffect(() => {
     if (isModal) {
-      const toMin = Math.floor(examValue / 60);
-      const toSec = examValue % 60;
+      const toMilli = Math.round((examValue % 1) * 100);
+      const pureSeconds = Math.floor(examValue);
+
+      const toMin = Math.floor(pureSeconds / 60);
+      const toSec = pureSeconds % 60;
       setMinutes(toMin.toString().padStart(2, "0"));
       setSecs(toSec.toString().padStart(2, "0"));
+      setMillis(toMilli.toString().padStart(2, "0"));
     }
   }, [isModal, examValue]);
 
@@ -34,7 +39,8 @@ export function ExamModal() {
   const handleSave = () => {
     const min = parseInt(minutes, 10) || 0;
     const sec = parseInt(secs, 10) || 0;
-    updateTest(min * 60 + sec);
+    const milli = parseInt(millis, 10) || 0;
+    updateTest(min * 60 + sec + milli / 100);
     closeModal();
   };
 
@@ -46,19 +52,29 @@ export function ExamModal() {
       onClose={closeModal}>
 
           <View style={styles.inputRow}>
-            <Text style={[styles.colon, {marginRight: 20}]}>Enter {exam}</Text>
+            <Text style={[styles.colon, {marginRight: 16}]}>Enter {exam}</Text>
+
             {(exam === 'speed' || exam === 'stamina' || exam === 'climbing') &&
             <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
               value={minutes}
               onChangeText={setMinutes}
               onBlur={() => handleBlur(minutes, setMinutes)}
             />}
+
             <Text style={styles.colon}>:</Text>
             <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
               value={secs}
               onChangeText={setSecs}
               onBlur={() => handleBlur(secs, setSecs)}
             />
+
+            {exam === 'stamina' && <>
+            <Text style={styles.colon}>:</Text>
+            <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
+              value={millis}
+              onChangeText={setMillis}
+              onBlur={() => handleBlur(millis, setMillis)}
+            /></>}
           </View>
     </CustomAlert>
   );
@@ -73,7 +89,7 @@ const styles = StyleSheet.create({
   colon: {
     fontSize: 18,
     color: '#ccc',
-    marginHorizontal: 8,
+    marginHorizontal: 4,
   },
   input: {
     width: 60,

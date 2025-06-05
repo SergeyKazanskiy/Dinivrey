@@ -40,7 +40,7 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   },
 
   loadBaseAchieves: (category: string) => {
-    get_base_achieves(category, (achieves: Achieve[]) => {
+    get_base_achieves(category, 'Manual', (achieves: Achieve[]) => {
        const {studentAchieves}: AchievesSlice = get();
        const ids: number[] = studentAchieves.map(el => el.achieve_id);
        const unik: Achieve[] = achieves.filter(el => !ids.includes(el.id))

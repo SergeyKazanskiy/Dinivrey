@@ -18,7 +18,7 @@ export const EnumSelect: React.FC<Props> = ({ label, value, options, onChange, w
       <Text style={widgetStyles.text} fontWeight="medium" w={w1}>
         {label}:
       </Text>
-      <Select placeholder='Select' style={widgetStyles.value} size='sm' defaultValue={value}
+      <Select placeholder='Select' style={widgetStyles.value} size='sm' value={value}
         fontWeight="medium" borderColor='gray.200' w={w2}
         onChange={(e) => onChange(e.target.value)}>
           {options.map((option) => (

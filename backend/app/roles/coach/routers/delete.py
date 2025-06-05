@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete
 from database import get_session
-from crud import CRUD
+from crud import CRUD    
 from roles.admin import schemas
 import models
+from sqlalchemy.future import select
 
 router = APIRouter()
 
@@ -16,15 +18,28 @@ async def remove_achievement(id: int, session: Session = Depends(get_session)):
 
 # Attendance
 @router.delete("/camps/events/{event_id}/groups/{group_id}", response_model=schemas.ResponseOk, tags=["Coach"])
-async def delete_attendance(event_id: int, group_id: int, session: Session = Depends(get_session)):
-    # !!! Need delete test if event type == Exam and Attendance present
-    # event = await CRUD.read(models.Event, event_id, session)
-    # if event.type == 'Exam':
-    #     attendances = await session.execute(stmt)
-    #     for attendance in attendances:
-    #         await session.execute(delete test) where event.timestamp
-    
-
+async def delete_attendance(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
+    event = await CRUD.read(models.Event, event_id, session)
+   
+    if event.type == 'Exam':
+        result = await session.execute(
+            select(models.Attendance)
+            .where(
+                models.Attendance.event_id == event_id,
+                models.Attendance.group_id == group_id
+                )
+            )
+        attendances = result.scalars().all()
+        
+        for attendance in attendances:
+            if attendance.present:
+                await session.execute(
+                    delete(models.Test)
+                    .where(
+                        models.Test.student_id == attendance.student_id,
+                        models.Test.timestamp == event.timestamp
+                    )
+            )
     stmt = (
         delete(models.Attendance)
         .where(
