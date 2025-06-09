@@ -7,7 +7,7 @@ from roles.coach import schemas
 import models
 from datetime import datetime, timedelta
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc, or_
+from sqlalchemy import desc, asc, or_, func
 
 router = APIRouter()
 
@@ -204,7 +204,7 @@ async def get_latest_event( group_ids: List[int] = Query(...), session: AsyncSes
     return {"year":  date.year, "month": date.month, "week": weekNumber, "isEvents": isEvents}
 
 @router.get("/camps/groups/events",  response_model=List[schemas.EventResponse], tags=["Coach"])
-async def get_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
+async def get_coach_events(year: int, month: int, week: int, group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     week_start, week_end = get_week_range(year, month, week)
     # print('!!!!!', week_start, week_end)
     start_ts = int(week_start.timestamp() * 1000)
@@ -220,7 +220,69 @@ async def get_events(year: int, month: int, week: int, group_ids: List[int] = Qu
             .order_by(asc(models.Event.timestamp))
     )
     return result.scalars().all()
-#GET /coach_api/camps/groups/events?year=2025&month=5&week=3&group_ids=3&group_ids=4
+
+@router.get("/camps/groups/{group_id}/events",  response_model=List[schemas.GroupEventsResponse], tags=["Coach"])
+async def get_group_events(year: int, month: int, group_id: int, session: AsyncSession = Depends(get_session)):
+    month_start, month_end = get_month_range(year, month)
+    
+    start_ts = int(month_start.timestamp() * 1000)
+    end_ts = int(month_end.timestamp() * 1000)
+    event = models.Event
+
+    result = await session.execute(
+        select(event.id, event.timestamp, event.type, event.desc)
+            .where(event.timestamp.between(start_ts, end_ts),
+                or_(
+                        event.group1_id == group_id,
+                        event.group2_id == group_id
+                    ))
+            .order_by(asc(event.timestamp))
+    )
+    rows = result.all()
+    response = []
+    for row in rows:
+        desc = row[3] if row[2] == "Game" else await getEventDrills(row[0], session)
+        amount = await getParticipantsAmount(row[0], session)
+
+        response.append(schemas.GroupEventsResponse(
+            id=row[0],
+            timestamp=row[1],
+            type=row[2],
+            desc=desc,
+            amound=amount
+        ))
+    return response
+
+async def getEventDrills(event_id: int, session: AsyncSession) -> str:
+    drill = models.Drill
+    eventDrill = models.EventDrill
+
+    stmt = (
+        select(drill.name)
+        .join(eventDrill, eventDrill.drill_id == drill.id)
+        .where(eventDrill.event_id == event_id, eventDrill.completed == True)
+        .order_by(asc(drill.name))
+    )
+
+    result = await session.execute(stmt)
+    rows = result.scalars().all()
+
+    return ", ".join(rows)
+
+async def getParticipantsAmount(event_id: int, session: AsyncSession) -> int:
+    attendance = models.Attendance  # Предположим, что у тебя есть models.Attendance
+
+    stmt = (
+        select(func.count())
+        .where(attendance.event_id == event_id, attendance.present == True)
+    )
+
+    result = await session.execute(stmt)
+    count = result.scalar_one()  # Получаем одно значение (int)
+
+    return count
+
+
 @router.get("/camps/groups/events/competitions",  response_model=List[schemas.EventResponse], tags=["Coach"])
 async def get_coach_competitions(group_ids: List[int] = Query(...), session: AsyncSession = Depends(get_session)):
     now_ts = int(datetime.now().timestamp() * 1000)
@@ -451,3 +513,20 @@ def get_current_week_range():
     end_of_week = end_of_week.replace(hour=23, minute=59, second=0, microsecond=0)
 
     return start_of_week, end_of_week
+
+
+def get_month_range(year: int, month: int):
+    # Первый день месяца
+    range_start = datetime(year, month, 1, 0, 0, 0)
+
+    # Первый день следующего месяца
+    if month == 12:
+        next_month = datetime(year + 1, 1, 1)
+    else:
+        next_month = datetime(year, month + 1, 1)
+
+    # Последний день месяца
+    range_end = next_month - timedelta(seconds=1)
+    range_end = range_end.replace(microsecond=0)  # Убираем микросекунды
+
+    return range_start, range_end

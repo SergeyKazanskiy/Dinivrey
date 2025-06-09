@@ -20,6 +20,14 @@ export interface Event {
   group2_id: number;
 }
 
+export interface GroupEvent {
+  id: number;
+  timestamp: number; // San 7, 16:30
+  type: string;
+  desc: string;
+  amound: number;
+}
+
 export interface Student {
   first_name: string;
   last_name: string;
