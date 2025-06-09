@@ -1,6 +1,7 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
-import { Attendance, Test, Game, Event, Tester, Student, Schedule, EventDrill, ShortDrill, Drill, TestUpdate } from './model';
+import { Attendance, Test, Game, Event, Tester, Student, Schedule } from './model';
+import { EventDrill, ShortDrill, Drill, TestUpdate, GroupEvent } from './model';
 
 
 // Events
@@ -17,6 +18,10 @@ export function get_coach_schedule(group_ids: number[], callback: (res: {schedul
 export function get_coach_events(year: number, month: number, week: number, group_ids: number[], callback: (events: Event[]) => void) {
     const query = group_ids.map(id => `group_ids=${id}`).join("&");
     return httpWrapper(() => api.get(`camps/groups/events?year=${year}&month=${month}&week=${week}&${query}`), callback);
+};
+
+export function get_group_events(group_id: number, year: number, month: number, callback: (events: GroupEvent[]) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/events?year=${year}&month=${month}`), callback);
 };
 
 export function get_coach_competitions( group_ids: number[], callback: (events: Event[]) => void) {

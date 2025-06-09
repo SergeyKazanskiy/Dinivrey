@@ -8,7 +8,7 @@ import { formatDateTime } from '../../../../../shared/utils';
 import { Icon } from '@rneui/themed';
 
 
-export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
+export function WeekEventsView({ day,  weekday }: {day: number, weekday: string}) {
   const [expanded, setExpanded] = useState(false);
 
   const { events, groups } = useStore();
@@ -40,7 +40,7 @@ export function EventsView({ day,  weekday }: {day: number, weekday: string}) {
       {expanded &&
           <FlatList data={dayEvents} contentContainerStyle={{paddingBottom: 24}}
             renderItem={({ item }) =>
-              <CoachEventCell
+              <CoachEventCell key={item.id}
                 type={item.type}  
                 time={formatDateTime(item.timestamp).time}
                 desc={item.desc}

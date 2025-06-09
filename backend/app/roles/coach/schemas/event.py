@@ -27,6 +27,14 @@ class EventResponse(EventBase):
         from_attributes = True
 
 
+class GroupEventsResponse(BaseModel):
+    id: int
+    timestamp: int
+    type: str
+    desc: str
+    amound: int
+
+
 class AttendanceBase(BaseModel):
     event_id: int
     group_id: int
