@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { StyleSheet, ScrollView, Platform, View, Text } from 'react-native';
+import { StyleSheet, Platform, View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, CheckBox } from '@rneui/themed';
 import { useFocusEffect } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { CustomAlert } from '../../../../shared/components/CustomAlert';
+import { LoadingAlert } from '../../../../shared/components/LoadingAlert';
 import { isPast, isToday, isFuture, getWeekHourMinute} from '../../../../shared/utils';
 import { ButtonsView } from './views/ButtonsView';
 import { DrillsView } from './views/DrillsView';
@@ -18,8 +19,9 @@ import DrillsScreen from '../DrillsScreen';
 
 export default function AttendanceScreen() {
   const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type } = useStore();
-  const { studentsAmount, attendancesAmount} = useStore();
-  const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, openDrillsModal, loadEventDrills } = useStore();
+  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent} = useStore();
+  const { loadAttendances, addAttendances, deleteAttendances, setAllChecked } = useStore();
+  const { openDrillsModal, loadEventDrills, sendAttedanceReport, closeSuccessAlert } = useStore();
 
   const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
   const [isDeleteAlert, setIsDeleteAlert] = useState<boolean>(false);
@@ -49,11 +51,16 @@ export default function AttendanceScreen() {
   }
 
   function handleDeleteBlank() {
-      if (isAttendanceView) {
-        setIsDeleteAlert(true); //??? lenght>0
-      }
+    if (isAttendanceView) {
+      setIsDeleteAlert(true); //??? lenght>0
+    }
   }
-//push("/dashboards/coach")
+
+  function handleSendEmail() {
+    sendAttedanceReport();
+    setIsMailAlert(false)
+  }
+
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title={`Students (${attendancesAmount}/${studentsAmount})`} onClick={() => router.back()}>
@@ -62,15 +69,23 @@ export default function AttendanceScreen() {
         />
       </CustomNavbar>
 
-      <CustomAlert visible={isMailAlert}  title="Send email!" buttonText='Send'
-        handleYes={() => setIsMailAlert(false)}
+      <CustomAlert visible={isMailAlert} title="Send email!"
+        buttonText='Send'
+        handleYes={handleSendEmail}
         onClose={() => setIsMailAlert(false)}>
-        <Text style={{color:'#ddd'}}>An email will be sent with a list of attendees.</Text>
+        <Text style={styles.alertText}>An email will be sent with a list of attendees.</Text>
       </CustomAlert>
 
-      <CustomAlert visible={isCreateAlert}  title="Attention!"
+      <LoadingAlert visible={isSendingReport} title="Sending email!"/>
+
+      <CustomAlert visible={isReportSent} title="Successfully!"
+        onClose={closeSuccessAlert}>
+        <Text style={styles.alertText}>The attendance report has been sent.</Text>
+      </CustomAlert>
+
+      <CustomAlert visible={isCreateAlert} title="Attention!"
         onClose={() => setIsCreateAlert(false)}>
-        <Text style={{color:'#ddd'}}>Unable to create blank in the {tense}</Text>
+        <Text style={styles.alertText}>Unable to create blank in the {tense}</Text>
       </CustomAlert>
 
       <CustomAlert visible={isDeleteAlert} 
@@ -78,7 +93,7 @@ export default function AttendanceScreen() {
         buttonText='Yes'
         handleYes={() => {deleteAttendances(); setIsDeleteAlert(false)}}
         onClose={() => setIsDeleteAlert(false)}>
-        <Text style={{color:'#ddd'}}>Deleting a list will delete all entered data.</Text>
+        <Text style={styles.alertText}>Deleting a list will delete all entered data.</Text>
       </CustomAlert>
 
       <ButtonsView event_type={event_type}
@@ -148,5 +163,9 @@ const styles = StyleSheet.create({
   allSelect: {
     fontSize: 16,
     color: 'gold'
+  },
+  alertText: {
+    fontSize: 15,
+    color: '#ddd'
   },
 });

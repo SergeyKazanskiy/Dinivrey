@@ -43,7 +43,9 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
     event_week: 0,
 
     isWeekFilter: true,
-    group_events: [{id: 0, type: "Training", timestamp: 0, desc: "sfsdfsdf, saffsaf", amound: 5}],
+    group_events: [
+        //{id: 0, type: "Training", timestamp: 0, desc: "sfsdfsdf, saffsaf", amound: 5}
+    ],
     group_inx: -1,
 
     loadGroups: (coach_id: number) => {

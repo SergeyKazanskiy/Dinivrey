@@ -1,11 +1,12 @@
 import { Alert } from 'react-native';
-import { Student, Attendance, Test } from '../model';
+import { Student, Attendance, Test, AttendanceDataForReport } from '../model';
 import { get_attendances, get_students_names, add_student_test, delete_student_test } from '../http';
 import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
-import { add_all_present_students_new_tests } from '../http';
+import { add_all_present_students_new_tests, send_attendance_report } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
 import { TestingSlice } from '../TestingScreen/state';
 import { isPast, formatDateTime, objectToJson } from '../../../../shared/utils';
+import { GroupsSlice } from '../../students/GroupsScreen/state';
 
 
 export interface AttendanceSlice {
@@ -21,6 +22,9 @@ export interface AttendanceSlice {
     studentsAmount: number;
     attendancesAmount: number;
 
+    isSendingReport: boolean;
+    isReportSent: boolean;
+
     loadAttendances:() => void;
     loadStudentsNames: (group_id: number) => void;
 
@@ -30,6 +34,9 @@ export interface AttendanceSlice {
     addAttendances: () => void;
     updateComment: (attendance_id: number, comment: string) => void;
     deleteAttendances: () => void;
+
+    sendAttedanceReport: () => void;
+    closeSuccessAlert: () => void;
 }
 
 export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
@@ -50,6 +57,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
     studentsAmount: 0,
     attendancesAmount: 0,
+
+    isSendingReport: false,
+    isReportSent: false,
 
     loadAttendances: () => {
         const { event_id, group_id }: EventsSlice = get();
@@ -187,5 +197,31 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
             }
         });
     },
+
+    sendAttedanceReport: () => {
+        set({ isSendingReport: true });
+
+        const { event_id, group_id, events_shedules, groups }: EventsSlice & GroupsSlice = get();
+        const event = events_shedules.find(el => el.id === event_id)!;
+        const group = groups.find(el => el.id === group_id)!;
+
+        const data: AttendanceDataForReport = {
+            date: formatDateTime(event.timestamp).date,
+            time: formatDateTime(event.timestamp).time,
+            group_id: group_id,
+            event_id: event_id,
+            camp_name: group.camp_name,
+            group_name: group.name,
+            coach_name: 'Test coach'
+        }
+
+        send_attendance_report(data, (res) => {
+            if (res.isOk) {
+                set({ isSendingReport: false, isReportSent: true});
+            }
+        });
+    },
+
+     closeSuccessAlert: () =>  set({ isReportSent: false })
 });
 

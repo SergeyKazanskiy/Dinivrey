@@ -46,7 +46,7 @@ class GroupScheduleRead(GroupScheduleBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class GroupReadWithSchedule(BaseModel):
     id: int
@@ -54,4 +54,4 @@ class GroupReadWithSchedule(BaseModel):
     schedule: List[GroupScheduleRead]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

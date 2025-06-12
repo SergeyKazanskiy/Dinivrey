@@ -42,7 +42,7 @@ class StudentResponse(StudentBase):
     group_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class GroupBase(BaseModel):
     name: str
@@ -55,7 +55,7 @@ class GroupResponse(GroupBase):
     students: List[StudentResponse] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Dependency to get DB session
 def get_db():
