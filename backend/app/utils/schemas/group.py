@@ -10,8 +10,9 @@ class StudentCreate(StudentBase):
 class StudentResponse(StudentBase):
     id: int
     group_id: int
+    
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class GroupBase(BaseModel):
     name: str
@@ -22,5 +23,6 @@ class GroupCreate(GroupBase):
 class GroupResponse(GroupBase):
     id: int
     students: List[StudentResponse] = []
+
     class Config:
-        orm_mode = True
+        from_attributes = True

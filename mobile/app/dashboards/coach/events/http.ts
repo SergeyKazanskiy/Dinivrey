@@ -1,7 +1,7 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
 import { Attendance, Test, Game, Event, Tester, Student, Schedule } from './model';
-import { EventDrill, ShortDrill, Drill, TestUpdate, GroupEvent } from './model';
+import { EventDrill, ShortDrill, Drill, TestUpdate, GroupEvent, AttendanceDataForReport } from './model';
 
 
 // Events
@@ -63,12 +63,15 @@ export function delete_attendances(event_id: number, group_id: number, callback:
     return httpWrapper(() => api.delete(`camps/events/${event_id}/groups/${group_id}`), callback);
 };
 
+export function send_attendance_report(data: AttendanceDataForReport, callback: (res:{isOk: boolean}) => void) {
+    return httpWrapper(() => api.post(`coaches/events/attendance/send-report`, data), callback);
+};
 
-// Testing
+
+// Testing 
 export function get_testers(event_id: number, group_id: number, timestamp: number, callback: (testers: Tester[]) => void) {
     return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/testers?timestamp=${timestamp}`), callback, 'Getting testers');
 };
-
 
 export function add_all_present_students_new_tests(event_id: number, group_id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.post(`camps/events/${event_id}/groups/${group_id}/tests`), callback);

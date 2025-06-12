@@ -138,3 +138,13 @@ export interface TestUpdate {
   value: number;
   camp_id: number;
 }
+
+export interface AttendanceDataForReport {
+    date: string;
+    time: string;
+    group_id: number;
+    event_id: number;
+    camp_name: string;
+    group_name: string;
+    coach_name: string;
+}

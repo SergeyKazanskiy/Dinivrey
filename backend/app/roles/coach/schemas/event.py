@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class EventBase(BaseModel):
@@ -64,3 +64,28 @@ class AttendanceResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+class StudentReport(BaseModel):
+    name: str
+    present: bool
+
+class AttendanceReport(BaseModel):
+    date: str
+    place: str
+    group: str
+    time: str
+    total_members: int
+    present_members: int
+    coach_name: str
+    signature: str
+    students: List[StudentReport]
+
+class AttendanceDataForReport(BaseModel):
+    date: str
+    time: str
+    group_id: int
+    event_id: int
+    camp_name: str
+    group_name: str
+    coach_name: str
+  

@@ -242,7 +242,7 @@ async def get_group_events(year: int, month: int, group_id: int, session: AsyncS
     response = []
     for row in rows:
         desc = row[3] if row[2] == "Game" else await getEventDrills(row[0], session)
-        amount = await getParticipantsAmount(row[0], session)
+        amount = await getParticipantsAmount(row[0], group_id, session)
 
         response.append(schemas.GroupEventsResponse(
             id=row[0],
@@ -269,12 +269,12 @@ async def getEventDrills(event_id: int, session: AsyncSession) -> str:
 
     return ", ".join(rows)
 
-async def getParticipantsAmount(event_id: int, session: AsyncSession) -> int:
+async def getParticipantsAmount(event_id: int, group_id: int, session: AsyncSession) -> int:
     attendance = models.Attendance  # Предположим, что у тебя есть models.Attendance
 
     stmt = (
         select(func.count())
-        .where(attendance.event_id == event_id, attendance.present == True)
+        .where(attendance.event_id == event_id, attendance.group_id == group_id, attendance.present == True)
     )
 
     result = await session.execute(stmt)

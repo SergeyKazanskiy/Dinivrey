@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import asc
+from sqlalchemy import asc, func
 from database import get_session
 from crud import CRUD
 from roles.coach import schemas 
 import models
 from datetime import datetime
+from ..utils import report_service, email_service, test_report_data
+from jinja2 import Environment, FileSystemLoader
+from typing import List
+from fastapi.responses import JSONResponse
+from pathlib import Path
 
 router = APIRouter()
 
@@ -95,3 +100,67 @@ async def create_event(data: schemas.EventCreate, session: AsyncSession = Depend
 @router.post("/camps/events/drills", response_model=schemas.ResponseId, tags=["Coach"]) #camp_id ???
 async def attach_event_drill(data: schemas.EventDrillCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.EventDrill, data, session)}
+
+
+# Email
+@router.post("/coaches/events/attendance/send-report", tags=["Coach"])
+async def send_attendance_report(data: schemas.AttendanceDataForReport, session: AsyncSession = Depends(get_session)):
+
+    report = schemas.AttendanceReport(
+        date=data.date,
+        place=data.camp_name,
+        group=data.group_name,
+        time=data.time,
+        total_members= await getParticipantsAmount(data.event_id, data.group_id, session),
+        present_members= await getParticipantsPresent(data.event_id, data.group_id, session),
+        coach_name=data.coach_name,
+        signature="_________________",
+        students= await get_attendances(data.event_id, data.group_id, session)
+    )
+    # report = test_report_data.get_test_attendance_data()
+    env = Environment(loader=FileSystemLoader("roles/coach/templates"))
+    template = env.get_template("attendance_report.html")
+    html_content = template.render(**report.model_dump(exclude_unset=True))
+
+    # output_path = Path("roles/coach/templates/test_attendance_report.html")
+    # with output_path.open("w", encoding="utf-8") as f:
+    #     f.write(html_content)
+
+    try:
+        await email_service.send_html_email('artura12334@gmail.com', html_content)
+        return {"isOk": True}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"isOk": False, "error": str(e)})
+
+async def get_attendances(event_id:int, group_id: int, session: AsyncSession) -> List[schemas.StudentReport]:
+    A = models.Attendance
+    S = models.Student
+    stmt = (
+        select(S.first_name, S.last_name, A.present)
+            .join(S, A.student_id == S.id)
+            .where(A.group_id == group_id, A.event_id == event_id)
+            .order_by(asc(S.first_name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"name": row[0] + ' ' + row[1], "present": row[2]} for row in rows]
+
+async def getParticipantsAmount(event_id: int, group_id: int, session: AsyncSession) -> int:
+    attendance = models.Attendance
+
+    stmt = (
+        select(func.count())
+        .where(attendance.event_id == event_id, attendance.group_id == group_id)
+    )
+    result = await session.execute(stmt)
+    return  result.scalar_one()
+
+async def getParticipantsPresent(event_id: int, group_id: int, session: AsyncSession) -> int:
+    attendance = models.Attendance
+
+    stmt = (
+        select(func.count())
+        .where(attendance.event_id == event_id, attendance.group_id == group_id, attendance.present == True)
+    )
+    result = await session.execute(stmt)
+    return  result.scalar_one()
