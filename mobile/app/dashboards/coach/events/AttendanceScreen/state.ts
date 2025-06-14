@@ -2,7 +2,7 @@ import { Alert } from 'react-native';
 import { Student, Attendance, Test, AttendanceDataForReport } from '../model';
 import { get_attendances, get_students_names, add_student_test, delete_student_test } from '../http';
 import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
-import { add_all_present_students_new_tests, send_attendance_report } from '../http';
+import { add_all_present_students_new_tests, send_attendance_report, get_is_report } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
 import { TestingSlice } from '../TestingScreen/state';
 import { isPast, formatDateTime, objectToJson } from '../../../../shared/utils';
@@ -24,6 +24,7 @@ export interface AttendanceSlice {
 
     isSendingReport: boolean;
     isReportSent: boolean;
+    wasReportSent: boolean;
 
     loadAttendances:() => void;
     loadStudentsNames: (group_id: number) => void;
@@ -37,6 +38,8 @@ export interface AttendanceSlice {
 
     sendAttedanceReport: () => void;
     closeSuccessAlert: () => void;
+
+    loadWasReportSent: () => void;
 }
 
 export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
@@ -60,6 +63,8 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
     isSendingReport: false,
     isReportSent: false,
+    wasReportSent: false,
+
 
     loadAttendances: () => {
         const { event_id, group_id }: EventsSlice = get();
@@ -201,7 +206,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     sendAttedanceReport: () => {
         set({ isSendingReport: true });
 
-        const { event_id, group_id, events_shedules, groups }: EventsSlice & GroupsSlice = get();
+        const { event_id, group_id, events_shedules, groups, group_number }: EventsSlice & GroupsSlice = get();
         const event = events_shedules.find(el => el.id === event_id)!;
         const group = groups.find(el => el.id === group_id)!;
 
@@ -212,16 +217,27 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
             event_id: event_id,
             camp_name: group.camp_name,
             group_name: group.name,
-            coach_name: 'Test coach'
+            group_number,
+            coach_id: 1 //???
         }
 
         send_attendance_report(data, (res) => {
             if (res.isOk) {
-                set({ isSendingReport: false, isReportSent: true});
+                set({ isSendingReport: false, isReportSent: true, wasReportSent: true });
             }
         });
     },
 
-     closeSuccessAlert: () =>  set({ isReportSent: false })
+    closeSuccessAlert: () =>  set({ isReportSent: false }),
+
+    loadWasReportSent: () => {
+        const { event_id, group_number}: EventsSlice = get();
+        //alert(event_id + '_' + group_number)
+        get_is_report(event_id, group_number, (res)=> {
+            if (res) {
+                set({ wasReportSent: res.is_report});
+            }
+        });
+    }
 });
 

@@ -18,8 +18,8 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
   const dayEvents = events_shedules.filter(el => el.day === day);
   const router = useRouter();
 
-  function handlePressGroup( event_id: number, group_id: number, timestamp: number) {
-    selectEvent(event_id, group_id, timestamp);
+  function handlePressGroup( event_id: number, group_id: number, timestamp: number, group_number: number) {
+    selectEvent(event_id, group_id, timestamp, group_number);
     
     if (event_id === 0) {
       openAddAlert(group_id, timestamp);
@@ -52,7 +52,7 @@ export function EventsView({ day, weekday }: {day: number, weekday: string}) {
                   time={formatDateTime(item.timestamp).time}
                   desc={item.desc}
                   group1={groups.find(el => el.id === item.group1_id)!}
-                  onGroup={(group_id) => handlePressGroup(item.id, group_id, item.timestamp)}
+                  onGroup={(group_id, group_number) => handlePressGroup(item.id, group_id, item.timestamp, group_number)}
                   group2={groups.find(el => el.id === item.group2_id)}
                 />
               </View>

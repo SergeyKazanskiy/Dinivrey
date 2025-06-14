@@ -7,9 +7,10 @@ from .student import GameResponse, GameCreate
 from .student import AchievementResponse, AchieveUpdate, AchieveResponse, AchievementCreate
 from .student import SummaryTests, SummaryAchievements, SummaryGames
 
-from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse
+from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse, EventReportResponse
 from .event import AttendanceDataCreate, AttendanceCreate, AttendanceUpdate, AttendanceResponse
 from .event import AttendanceDataForReport, StudentReport, AttendanceReport
 from .drill import EventDrillCreate, EventDrillUpdate, ShortDrillResponse, DrillResponse
 
 from .settings import MetricBase, MetricCreate, MetricResponse, MetricUpdate
+from .coach import CoachResponse

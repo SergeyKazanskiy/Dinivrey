@@ -9,6 +9,7 @@ class CoachBase(BaseModel):
     phone: str
     email: str
     active: bool = True
+    signature: Optional[str]
     camp_id: int
 
 class CoachCreate(CoachBase):

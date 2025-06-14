@@ -13,6 +13,8 @@ class Event(Base):
     desc = Column(String)
     group1_id = Column(Integer, nullable=False)
     group2_id = Column(Integer)
+    group1_report = Column(Boolean, nullable=False, default=False)
+    group2_report = Column(Boolean, nullable=False, default=False)
     attendances = relationship("Attendance", back_populates="event", cascade="all, delete")
     event_drills = relationship("EventDrill", back_populates="event", cascade="all, delete")
 

@@ -1,25 +1,48 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy import asc, func
 from database import get_session
 from crud import CRUD
-from roles.admin import schemas 
+from roles.manager import schemas 
 import models
+from datetime import datetime
+from jinja2 import Environment, FileSystemLoader
+from typing import List
+from fastapi.responses import JSONResponse
+from pathlib import Path
+import base64
+import os
 
 router = APIRouter()
 
 
-@router.post("/camps/groups", response_model=schemas.ResponseId, tags=["Manager"]) #camp_id ???
-async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Group, data, session)}
+# @router.post("/coaches/upload-signature", response_model=schemas.ResponseOk, tags=["Coach"])
+# async def upload_coache_signature(data: schemas.SignatureUpload):
+#     try:
+#         header, b64data = data.image.split(",")
+#         file_data = base64.b64decode(b64data)
+#         filepath = os.path.join("roles/coach/signatures", data.file_name)
 
-@router.post("/events", response_model=schemas.ResponseId, tags=["Manager"])
-async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Event, data, session)}
+#         with open(filepath, "wb") as f:
+#             f.write(file_data)
+#         return {"isOk": True}
+#     except Exception as e:
+#         return JSONResponse(status_code=500, content={"isOk": False, "error": str(e)})
 
-@router.post("/achieves", response_model=schemas.ResponseId, tags=["Manager"])
-async def create_achieve(data: schemas.AchieveCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Achieve, data, session)} 
 
-@router.post("/coaches", response_model=schemas.ResponseId, tags=["Manager"])
-async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Coach, data, session)} 
+# @router.post("/camps/groups", response_model=schemas.ResponseId, tags=["Manager"]) #camp_id ???
+# async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depends(get_session)):
+#     return {"id": await CRUD.add(models.Group, data, session)}
+
+# @router.post("/events", response_model=schemas.ResponseId, tags=["Manager"])
+# async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
+#     return {"id": await CRUD.add(models.Event, data, session)}
+
+# @router.post("/achieves", response_model=schemas.ResponseId, tags=["Manager"])
+# async def create_achieve(data: schemas.AchieveCreate, session: AsyncSession = Depends(get_session)):
+#     return {"id": await CRUD.add(models.Achieve, data, session)} 
+
+# @router.post("/coaches", response_model=schemas.ResponseId, tags=["Manager"])
+# async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
+#     return {"id": await CRUD.add(models.Coach, data, session)} 

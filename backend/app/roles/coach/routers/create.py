@@ -105,7 +105,9 @@ async def attach_event_drill(data: schemas.EventDrillCreate, session: AsyncSessi
 # Email
 @router.post("/coaches/events/attendance/send-report", tags=["Coach"])
 async def send_attendance_report(data: schemas.AttendanceDataForReport, session: AsyncSession = Depends(get_session)):
-
+    coach: schemas.CoachResponse = await CRUD.read(models.Coach, data.coach_id, session)
+    signature = f"data:image/png;base64,{coach.signature}"
+    
     report = schemas.AttendanceReport(
         date=data.date,
         place=data.camp_name,
@@ -113,8 +115,8 @@ async def send_attendance_report(data: schemas.AttendanceDataForReport, session:
         time=data.time,
         total_members= await getParticipantsAmount(data.event_id, data.group_id, session),
         present_members= await getParticipantsPresent(data.event_id, data.group_id, session),
-        coach_name=data.coach_name,
-        signature="_________________",
+        coach_name=coach.first_name + ' ' +  coach.last_name,
+        signature= signature,
         students= await get_attendances(data.event_id, data.group_id, session)
     )
     # report = test_report_data.get_test_attendance_data()
@@ -122,9 +124,13 @@ async def send_attendance_report(data: schemas.AttendanceDataForReport, session:
     template = env.get_template("attendance_report.html")
     html_content = template.render(**report.model_dump(exclude_unset=True))
 
-    # output_path = Path("roles/coach/templates/test_attendance_report.html")
-    # with output_path.open("w", encoding="utf-8") as f:
-    #     f.write(html_content)
+    output_path = Path("roles/coach/templates/test_attendance_report.html")
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write(html_content)
+
+    field_name = f"group{data.group_number}_report" 
+    fields = schemas.EventUpdate(**{field_name: True})
+    await CRUD.update(models.Event, data.event_id, fields, session)
 
     try:
         await email_service.send_html_email('artura12334@gmail.com', html_content)

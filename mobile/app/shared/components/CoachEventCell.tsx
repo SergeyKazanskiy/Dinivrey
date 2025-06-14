@@ -9,7 +9,7 @@ export type Props = {
   time: string;
   desc: string;
   group1: Group;
-  onGroup:(id: number) => void;
+  onGroup:(id: number, group_number: number) => void;
   group2?: Group;
 };
   
@@ -28,11 +28,11 @@ export const CoachEventCell: React.FC<Props> = ({type, time, desc, group1, onGro
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Button title={group1.name} type='outline' 
               buttonStyle={styles.button} titleStyle={styles.title}
-              onPress={() => onGroup(group1.id)}
+              onPress={() => onGroup(group1.id, 1)}
             />
             {group2 && <Button title={group2.name} type='outline' 
               buttonStyle={styles.button} titleStyle={styles.title}
-              onPress={() => onGroup(group2.id)}
+              onPress={() => onGroup(group2.id, 2)}
             />}
           </View>
           
