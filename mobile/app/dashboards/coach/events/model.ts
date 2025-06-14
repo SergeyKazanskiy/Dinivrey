@@ -146,5 +146,6 @@ export interface AttendanceDataForReport {
     event_id: number;
     camp_name: string;
     group_name: string;
-    coach_name: string;
+    group_number: number;
+    coach_id: number;
 }

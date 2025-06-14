@@ -29,6 +29,9 @@ export function get_coach_competitions( group_ids: number[], callback: (events: 
     return httpWrapper(() => api.get(`camps/groups/events/competitions?&${query}`), callback);
 };
 
+export function get_is_report( event_id: number, group_number: number, callback: (res: {is_report: boolean}) => void) {
+    return httpWrapper(() => api.get(`camps/events/${event_id}/is-report?group_number=${group_number}`), callback);
+};
 
 export function add_event(data: Omit<Event, 'id'>, callback: (res:{id: number}) => void) {
     return httpWrapper(() => api.post(`camps/events`, data), callback);

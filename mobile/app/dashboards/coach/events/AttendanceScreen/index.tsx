@@ -19,8 +19,8 @@ import DrillsScreen from '../DrillsScreen';
 
 export default function AttendanceScreen() {
   const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type } = useStore();
-  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent} = useStore();
-  const { loadAttendances, addAttendances, deleteAttendances, setAllChecked } = useStore();
+  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent, wasReportSent} = useStore();
+  const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, loadWasReportSent } = useStore();
   const { openDrillsModal, loadEventDrills, sendAttedanceReport, closeSuccessAlert } = useStore();
 
   const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
@@ -34,6 +34,7 @@ export default function AttendanceScreen() {
     useCallback(() => {
       loadEventDrills();
       loadAttendances();
+      loadWasReportSent();
     }, [])
   );
 
@@ -64,16 +65,20 @@ export default function AttendanceScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <CustomNavbar title={`Students (${attendancesAmount}/${studentsAmount})`} onClick={() => router.back()}>
-      <Ionicons name='airplane-outline' size={20} color='#D1FF4D' style={{ marginRight: 8, marginTop: 0 }}
+        {!wasReportSent && <Ionicons name='airplane-outline' size={20} color='#D1FF4D' style={{ marginRight: 8, marginTop: 0 }}
           onPress={()=>setIsMailAlert(true)}
-        />
+        />}
+        {wasReportSent && <Ionicons name='checkmark-done-circle-outline' size={22} color='#D1FF4D' style={{ marginRight: 8, marginTop: -1 }}
+          onPress={()=>setIsMailAlert(true)}
+        />}
       </CustomNavbar>
 
       <CustomAlert visible={isMailAlert} title="Send email!"
         buttonText='Send'
         handleYes={handleSendEmail}
         onClose={() => setIsMailAlert(false)}>
-        <Text style={styles.alertText}>An email will be sent with a list of attendees.</Text>
+        {!wasReportSent && <Text style={styles.alertText}>An email will be sent with a list of attendees.</Text>}  
+        {wasReportSent && <Text style={styles.alertText}>The report has already been sent, should send it again?</Text>}  
       </CustomAlert>
 
       <LoadingAlert visible={isSendingReport} title="Sending email!"/>

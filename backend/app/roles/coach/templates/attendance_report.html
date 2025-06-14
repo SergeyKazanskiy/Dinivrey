@@ -81,7 +81,10 @@
 
 <footer>
     <div>Coach: {{ coach_name }}</div>
-    <div>Signature: {{ signature }}</div>
+    <div style="display: flex; justify-content: flex-start;">
+        <div style="margin-right: 16px;">Signature:</div>
+        <img src="{{ signature }}" alt="____________" style="height: 20px; width: auto;" />
+    </div>
 </footer>
 
 </body>

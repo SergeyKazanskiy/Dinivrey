@@ -11,6 +11,7 @@ export interface EventsSlice {
     
     event_id: number;
     group_id: number;
+    group_number: number;
 
     event_timestamp: number;
     event_type: string;
@@ -22,7 +23,7 @@ export interface EventsSlice {
     closeAddAlert: () => void;
 
     addEvent: (type: string) => void;
-    selectEvent: ( event_id: number, group_id: number, timestamp: number) => void;
+    selectEvent: ( event_id: number, group_id: number, timestamp: number, group_number: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({
@@ -31,6 +32,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     event_id: 0,
     group_id: 0,
+    group_number: 0,
 
     event_timestamp: 0,
     event_type:'',
@@ -133,11 +135,11 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         } 
     },
 
-    selectEvent: ( event_id: number, group_id: number, timestamp: number) => {
+    selectEvent: ( event_id: number, group_id: number, timestamp: number, group_number: number) => {
         const { events_shedules }: EventsSlice & HistorySlice= get()
         const event = events_shedules.find(el => el.id === event_id)!;
 
-        set({ event_id, group_id, event_timestamp: timestamp, event_type: event.type});
+        set({ event_id, group_id, event_timestamp: timestamp, event_type: event.type, group_number});
     },
     //updateEvent: (type: string) => {
         // const { events_shedules,  }: EventsSlice = get();

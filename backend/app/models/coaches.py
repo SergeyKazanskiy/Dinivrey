@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Text
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -12,6 +12,7 @@ class Coach(Base):
     phone = Column(String, nullable=False)
     email = Column(String, nullable=False)
     active = Column(Boolean, default=True)
+    signature = Column(Text, nullable=True)
     camp_id = Column(Integer, ForeignKey('camps.id', ondelete='CASCADE'))
 
 class CoachGroup(Base):

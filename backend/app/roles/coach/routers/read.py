@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Depends
+from fastapi import APIRouter, Query, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from database import get_session
@@ -301,6 +301,21 @@ async def get_coach_competitions(group_ids: List[int] = Query(...), session: Asy
 
 
 # Attendances
+@router.get("/camps/events/{event_id}/is-report", response_model=schemas.EventReportResponse, tags=["Coach"])
+async def get_is_report_sent(event_id: int, group_number: int, session: AsyncSession = Depends(get_session)):
+    if group_number not in {1, 2}:
+        raise HTTPException(status_code=400, detail="Invalid group number")
+    field_name = f"group{group_number}_report"
+
+    stmt = (
+        select(getattr(models.Event, field_name ))
+        .where(models.Event.id == event_id)
+    )
+    result = await session.execute(stmt)
+    return {"is_report": result.scalar()}
+
+
+
 @router.get("/camps/events/{event_id}/groups/{group_id}/attendances", tags=["Coach"])
 async def get_attendances(event_id:int, group_id: int, session: AsyncSession = Depends(get_session)):
     A = models.Attendance
