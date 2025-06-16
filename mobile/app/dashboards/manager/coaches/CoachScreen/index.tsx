@@ -1,10 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, ScrollView, Platform, Text } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
-import { useRouter } from 'expo-router';
 import { SignatureView } from './views/SignatureView';
 import { useStore } from '../store';
 
