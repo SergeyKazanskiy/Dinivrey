@@ -53,7 +53,7 @@ async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession
     return {"isOk": await CRUD.update(models.Event, id, data, session)}
 
 @router.put("/camps/events/attendances/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
-async def update_event(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
+async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Attendance, id, data, session)}
 
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Admin_update"])

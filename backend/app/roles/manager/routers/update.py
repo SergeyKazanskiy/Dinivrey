@@ -8,6 +8,11 @@ import models
 router = APIRouter()
 
 
+# Events
+@router.put("/camps/events/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
+async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Event, id, data, session)}
+
 # @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
 # async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
 #     return {"isOk": await CRUD.update(models.Group, id, data, session)}

@@ -20,7 +20,7 @@ export interface HistorySlice {
     group_inx: number;
     group_events: GroupEvent[];
 
-    loadGroups: (coach_id: number) => void;
+    loadGroups: (coach_id: number, callback: () => void) => void;
     loadLastEvent:(group_ids: number[]) => void;
     loadEvents: (group_ids: number[], year: number, month: number, week: number) => void;
 
@@ -48,7 +48,7 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
     ],
     group_inx: -1,
 
-    loadGroups: (coach_id: number) => {
+    loadGroups: (coach_id: number, callback: () => void) => {
         get_groups(coach_id, (groups: Group[]) => {
             //alert(objectToJson(groups))
             set({ groups });
@@ -58,6 +58,8 @@ export const createHistorySlice = (set: any, get: any): HistorySlice => ({
 
                 const { loadLastEvent }: HistorySlice = get();
                 loadLastEvent(group_ids);
+
+                callback();
             }
         })
     },

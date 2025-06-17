@@ -162,6 +162,6 @@ class SummaryGames(BaseModel):
     summary_games: str        
 
 #Coach
-class CommentResponse(BaseModel):
+class CoachResponse(BaseModel):
     timestamp: int
     comment: str

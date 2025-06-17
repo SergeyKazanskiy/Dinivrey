@@ -15,7 +15,7 @@ export default function HistoryScreen() {
   
   useFocusEffect(
     useCallback(() => {
-      loadGroups(1);
+      loadGroups(1, () => {});
     }, [])
   );
 

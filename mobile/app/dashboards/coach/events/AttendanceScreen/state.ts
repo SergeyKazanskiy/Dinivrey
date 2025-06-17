@@ -122,7 +122,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                             };
                             add_student_test(newTest, (res) => {
                                 if (res.id) {
-                                    alert('test created')
+                                   // alert('test created')
                                     attendance.test_id = res.id;
                                 }     
                             })
