@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput} from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { useStore } from '../../store';
 import { CustomAlert } from '../../../../../shared/components/CustomAlert';
 
@@ -12,16 +12,22 @@ export function ExamModal() {
   const [secs, setSecs] = useState("00");
   const [millis, setMillis] = useState("00");
 
+  const [points, setPoints] = useState('0');
+
   useEffect(() => {
     if (isModal) {
-      const toMilli = Math.round((examValue % 1) * 100);
-      const pureSeconds = Math.floor(examValue);
+      if (exam === 'speed' || exam === 'stamina' || exam === 'climbing') {
+        const toMilli = Math.round((examValue % 1) * 100);
+        const pureSeconds = Math.floor(examValue);
 
-      const toMin = Math.floor(pureSeconds / 60);
-      const toSec = pureSeconds % 60;
-      setMinutes(toMin.toString().padStart(2, "0"));
-      setSecs(toSec.toString().padStart(2, "0"));
-      setMillis(toMilli.toString().padStart(2, "0"));
+        const toMin = Math.floor(pureSeconds / 60);
+        const toSec = pureSeconds % 60;
+        setMinutes(toMin.toString().padStart(2, "0"));
+        setSecs(toSec.toString().padStart(2, "0"));
+        setMillis(toMilli.toString().padStart(2, "0"));
+      } else {
+        setPoints(examValue.toString());
+      }
     }
   }, [isModal, examValue]);
 
@@ -36,11 +42,22 @@ export function ExamModal() {
     setter(pad2(num));
   };
 
+  const handleBlurPoints = (val: string, setter: (v: string) => void) => {
+    let num = parseInt(val, 10);
+    if (isNaN(num) || num < 0) num = 0;
+    if (num > 10) num = 10;
+    setter(num.toString());
+  };
+
   const handleSave = () => {
-    const min = parseInt(minutes, 10) || 0;
-    const sec = parseInt(secs, 10) || 0;
-    const milli = parseInt(millis, 10) || 0;
-    updateTest(min * 60 + sec + milli / 100);
+    if (exam === 'speed' || exam === 'stamina' || exam === 'climbing') {
+      const min = parseInt(minutes, 10) || 0;
+      const sec = parseInt(secs, 10) || 0;
+      const milli = parseInt(millis, 10) || 0;
+      updateTest(min * 60 + sec + milli / 100);
+    } else {
+        updateTest(parseInt(points, 10));
+      }
     closeModal();
   };
 
@@ -54,19 +71,18 @@ export function ExamModal() {
           <View style={styles.inputRow}>
             <Text style={[styles.colon, {marginRight: 16}]}>Enter {exam}</Text>
 
-            {(exam === 'speed' || exam === 'stamina' || exam === 'climbing') &&
+            {(exam === 'speed' || exam === 'stamina' || exam === 'climbing') && <>
             <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
               value={minutes}
               onChangeText={setMinutes}
               onBlur={() => handleBlur(minutes, setMinutes)}
-            />}
-
+            />
             <Text style={styles.colon}>:</Text>
             <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
               value={secs}
               onChangeText={setSecs}
               onBlur={() => handleBlur(secs, setSecs)}
-            />
+            /></>}
 
             {exam === 'stamina' && <>
             <Text style={styles.colon}>:</Text>
@@ -75,6 +91,13 @@ export function ExamModal() {
               onChangeText={setMillis}
               onBlur={() => handleBlur(millis, setMillis)}
             /></>}
+
+            {(exam === 'evasion' || exam === 'hiding' ) && 
+            <TextInput style={styles.input} keyboardType="numeric" maxLength={2} placeholder="00"
+              value={points}
+              onChangeText={setPoints}
+              onBlur={() => handleBlurPoints(points, setPoints)}
+            />}
           </View>
     </CustomAlert>
   );

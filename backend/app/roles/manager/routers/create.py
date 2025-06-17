@@ -17,6 +17,12 @@ import os
 router = APIRouter()
 
 
+# Events
+@router.post("/camps/events", response_model=schemas.ResponseId, tags=["Manager"])
+async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Event, data, session)}
+
+
 # @router.post("/coaches/upload-signature", response_model=schemas.ResponseOk, tags=["Coach"])
 # async def upload_coache_signature(data: schemas.SignatureUpload):
 #     try:
@@ -35,9 +41,9 @@ router = APIRouter()
 # async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depends(get_session)):
 #     return {"id": await CRUD.add(models.Group, data, session)}
 
-# @router.post("/events", response_model=schemas.ResponseId, tags=["Manager"])
-# async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
-#     return {"id": await CRUD.add(models.Event, data, session)}
+
+
+
 
 # @router.post("/achieves", response_model=schemas.ResponseId, tags=["Manager"])
 # async def create_achieve(data: schemas.AchieveCreate, session: AsyncSession = Depends(get_session)):
