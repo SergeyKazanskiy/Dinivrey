@@ -108,7 +108,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                         if (attendance.present) {
                             delete_student_test(attendance.test_id!, (res => {
                                 if (res.isOk) {
-                                    alert('test deleted')
+                                    //alert('test deleted')
                                     attendance.test_id = undefined;
                                 } 
                             }));
