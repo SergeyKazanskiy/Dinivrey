@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
-import EventsScreen from './events';
+import CampsScreen from './events/CampsScreen';
 import GroupsScreen from './groups';
 import CoachesScreen from './coaches/CoachesScreen';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -64,7 +64,7 @@ function TabNavigatorWrapper() {
       >
         <Tab.Screen name="Coaches" component={CoachesScreen} />
         <Tab.Screen name="Groups" component={GroupsScreen} />
-        <Tab.Screen name="Events" component={EventsScreen} />
+        <Tab.Screen name="Events" component={CampsScreen} />
       </Tab.Navigator>
     </LinearGradient>
   );

@@ -1,13 +1,13 @@
 import { StyleSheet, FlatList, TouchableOpacity, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
-
+import { cellStyles } from '../../../../../shared/styles/appStyles'
   
 const CampProp: React.FC<{label: string, value: number}> = ({label, value}) => {
   return (
         <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-            <Text style={styles.label}>{label}</Text>
-            <Text style={styles.value}>{value}</Text>
+            <Text style={cellStyles.description}>{label}</Text>
+            <Text style={cellStyles.type}>{value}</Text>
         </View>
   );
 };
@@ -20,7 +20,7 @@ export function CampsView() {
 
   function handleSelect( group_id: number) {
     //loadDrill(eventDrill_id);
-    //router.push(`/dashboards/coach/events/DrillScreen`);
+    router.push(`/dashboards/manager/events/EventsScreen`);
   }
 
   return (
@@ -47,16 +47,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderColor: 'green',
-    marginVertical: 3
+    marginVertical: 3,
+    padding: 10,
+    borderRadius: 4
   },
   sections: {
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
   list: {
-    borderRadius: 10
+    marginTop: 8
   },
-  title: { color: '#ddd', fontWeight: '500', fontSize: 16 },
+  title: { color: '#ddd', fontWeight: '500', fontSize: 16, paddingBottom: 8 },
   label: { color: '#ddd', fontWeight: '500', fontSize: 16 },
   value: { color: '#ddd', fontWeight: '500', fontSize: 16 },
 });
