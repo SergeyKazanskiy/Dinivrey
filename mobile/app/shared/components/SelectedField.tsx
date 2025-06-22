@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2089dc',
     borderRadius: 8,
-    marginVertical: 10,
-    marginRight: 4
+    marginVertical: 8,
+    marginRight: 4,
   },
   selectText: {
     fontSize: 15,

@@ -9,11 +9,12 @@ export interface CampsSlice {
 
     camps: Camp[];
     camp_id: number;
+    camp_inx: number;
 
     selectDate: (year: number, month: number) => void;
 
     loadCamps: () => void;
-    selectCamp: (camp_id: number) => void;
+    selectCamp: (camp_id: number, camp_inx: number) => void;
 }
 
 export const createCampsSlice = (set: any, get: any): CampsSlice => ({
@@ -22,7 +23,8 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
 
     camps: [],
     camp_id: 0,
-    
+    camp_inx: 0,
+
     selectDate: (year: number, month: number) =>  set({year, month}),
 
     loadCamps: () => { 
@@ -31,6 +33,5 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
         }));
     },
 
-    selectCamp: (camp_id: number) => set({camp_id}),
-
+    selectCamp: (camp_id: number, camp_inx: number) => set({camp_id, camp_inx}),
 });

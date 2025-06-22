@@ -1,18 +1,75 @@
-import React, { useCallback, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView, Platform, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ProfileScreen from './ProfileScreen';
+import StatisticsScreen from './StatisticsScreen';
+import AchievesScreen from './AchievesScreen';
+import { StyleSheet, Platform, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native-animatable';
+import { DinivreyHeader } from '../../../shared/components/DinivreyHeader2';
+import { useRoute } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { useNavigation, useRouter } from 'expo-router';
+
+type TabRoutes = {
+  Groups: undefined;
+  Events: undefined;
+};
+
+const Tab = createBottomTabNavigator();
 
 
+export default function StudentLayout() {
 
-export default function GroupsScreen() {
+  function getIconData(routeName: string) {
+    let iconName: any; let label = '';
 
+    if (routeName === 'Profile') {
+      iconName = 'person-outline'; label = 'Profile';
+    } else if (routeName === 'Statistics') {
+      iconName = 'document-text-outline'; label = 'Statistics';
+    } else if (routeName === 'Achievements') {
+      iconName = 'bookmark-outline'; label = 'Achievements';
+    };
+    return {iconName, label}
+  }
 
+  // const route = useRoute();
+  // const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
+
+  const router = useRouter();
+  //alert(route.name)
   return (
-    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
-        <ScrollView> 
-            <Text>GroupsScreen</Text>
-        </ScrollView>
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+      {/* <DinivreyHeader
+        isGroups={true}
+        onGroups={() => {}}
+        onEvents={() => router.push("/dashboards/coach/events")}
+      /> */}
+      
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: { backgroundColor: '#0C1B30', height: 70, borderTopWidth: 0 },
+          tabBarIcon: ({ focused }) => {
+            const { iconName, label } = getIconData(route.name);
+            return (
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name={iconName} size={24} color={focused ? '#E4FF3E' : '#888888'}/>
+                <Text style={{ color: focused ? '#E4FF3E' : '#888888', fontSize: 14, marginTop: 4 }} >
+                  {label}
+                </Text>
+              </View>
+            );
+          },
+        })}
+      >
+        <Tab.Screen name="Profile" component={ProfileScreen}  />
+        <Tab.Screen name="Statistics" component={StatisticsScreen} />
+        <Tab.Screen name="Achievements" component={AchievesScreen} />
+      </Tab.Navigator>
     </LinearGradient>
   );
 }
@@ -23,10 +80,11 @@ const styles = StyleSheet.create({
     alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
     maxWidth: Platform.OS === 'web' ? 360 : undefined,
     width: '100%',
-    paddingHorizontal: 16,
+    backgroundColor: '#fff',
   },
-  title: {   
-    paddingTop: 60,
-    alignSelf:'center'
-  },
+  indicator: { backgroundColor: '#c2ff00', height: 4 },
+  tab: { backgroundColor: '#444' },
+  label: { marginLeft: 8, color: '#ddd' },
+  content: { flex: 1 },
 });
+

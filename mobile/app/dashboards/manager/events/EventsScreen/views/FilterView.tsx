@@ -1,32 +1,40 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { useStore } from '../../store';
 import { getWeeksInMonth } from '../../../../../shared/utils';
-import { NumberButtons } from '../../../../../shared/components/NumberButtons';
+import { TypesView } from './TypesView';
 import { SelectedField, Option } from '../../../../../shared/components/SelectedField';
+import { Button } from '@rneui/themed';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export function FilterView() {
-    const { year, month, week, isWeekFilter, groups, group_inx } = useStore();
-    const { selectWeek, togleFilter, selectGroup } = useStore();
+    const { isSchedulesView, groups, group_inx } = useStore();
+    const { togleFilter, selectGroup, clearGroup } = useStore();
    
     const groupNames: Option[] = groups.map(el => ({"id": el.id, "name": el.name}));
 
     return (
         <View style={styles.container}>
-            <View style={[styles.calendar, styles.section]}>
-                <View style={{flexDirection:'row', justifyContent:'flex-start'}}>
-                    <Text onPress={togleFilter}>🔁</Text>
-                    <Text style={[styles.weeks, {marginLeft: 8}]}>{isWeekFilter ? "Weeks: " : "Groups: "}</Text>
-                </View>
-                {isWeekFilter &&
-                    <NumberButtons
-                        maxNumber={getWeeksInMonth(year, month)}
-                        selectedNumber={week}
-                        onPress={(value) => selectWeek(value)}
-                    />
-                }
-                {!isWeekFilter && <SelectedField data={groupNames} selectedIndex={group_inx} onSelect={selectGroup}/>}
+          <View style={styles.section}>
+            <View style={[styles.row, {marginTop: 10}]}>
+              <Button title='Schedule' type='solid' //disabled={!isSchedulesView}
+                buttonStyle={[styles.button, {backgroundColor: !isSchedulesView ? '#2E4A7C' : '#152B52'}]}
+                titleStyle={styles.title}
+                onPress={togleFilter}
+              />
+              <Button title='Events' type='solid'// disabled={isSchedulesView}
+                buttonStyle={[styles.button, {backgroundColor: isSchedulesView ? '#2E4A7C' : '#152B52'}]}
+                titleStyle={styles.title}
+                onPress={togleFilter}
+              />
             </View>
+            <View style={styles.row}>
+              <SelectedField data={groupNames} selectedIndex={group_inx} onSelect={selectGroup}/>
+              <Ionicons name='close-circle-outline' size={24} color="#2089dc"
+                style={{marginTop: 12, paddingLeft: 8, paddingRight: 2}}
+                onPress={clearGroup}/>
+            </View>
+          </View>
         </View>
     );
 };
@@ -34,11 +42,17 @@ export function FilterView() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 8,
-    marginVertical: 4
+    paddingHorizontal: 12,
+    marginTop: 4,
+    marginBottom: 12,
   },
   section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
   calendar: {
     paddingLeft: 8,
@@ -47,5 +61,15 @@ const styles = StyleSheet.create({
   weeks: {
     color: 'white',
     fontSize: 16,
+  },
+  button: {
+    height: 32,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#ddd'
   },
 });

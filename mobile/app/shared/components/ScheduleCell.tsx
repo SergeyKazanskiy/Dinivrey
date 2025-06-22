@@ -4,11 +4,6 @@ import { cellStyles } from '../styles/appStyles';
 import { Button, CheckBox } from '@rneui/themed';
 
 
-export interface ShortGroup {
-  id: number;
-  name: string;
-}
-
 export type Props = {
   group: string;
   type: string;

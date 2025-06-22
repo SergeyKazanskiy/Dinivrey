@@ -28,7 +28,8 @@ export const CustomNavbar: React.FC<Props> = ({ title, onClick, children }) => {
 const styles = StyleSheet.create({
   cell: {
     flexDirection:'row',
-    paddingTop: 16,
+    paddingVertical: 16,
+    backgroundColor: '#152B52'
   },
   center: {
     flex: 1,

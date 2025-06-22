@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { useStore } from '../../store';
 import { eventTypes } from '../../../../../shared/constants';
@@ -12,15 +12,18 @@ type TypeProps = {
 };
 
 const FilterCheckBox: React.FC<TypeProps> = ({ label, checked, onPress }) => (
-  <View style={styles.section}>
+  <TouchableOpacity style={styles.section} onPress={onPress}>
     <CheckBox
-      containerStyle={{padding: 0, margin: 0}}
       checked={checked}
-      onPress={onPress}
+      iconType="material-community"
+      checkedIcon="checkbox-outline"
+      uncheckedIcon={'checkbox-blank-outline'}
+      containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}}
+      checkedColor='#ddd'
       size={18}
     />
     <Text style={styles.label}>{label}</Text>
-  </View>
+  </TouchableOpacity>
 );
 
 export const TypesView: React.FC = () => {
@@ -28,6 +31,7 @@ export const TypesView: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.type}>Type: </Text>
       <FilterCheckBox label={eventTypes[0]} checked={isGame} onPress={setIsGame} />
       <FilterCheckBox label={eventTypes[1]} checked={isTest} onPress={setIsTest} />
       <FilterCheckBox label={eventTypes[2]} checked={isTraning} onPress={setIsTraning} />
@@ -37,15 +41,10 @@ export const TypesView: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 4,
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#D1D5DB', // gray.300
-    paddingHorizontal: 12,
-    height: 35,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginVertical: 12,
   },
   section: {
     flexDirection: 'row',
@@ -53,7 +52,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    color: '#3B82F6', // blue.500
-    paddingRight: 12,
+    color: 'gold', 
+    marginLeft: -8,
+    marginRight: 4
+  },
+  type:{
+    fontSize: 16,
+    color: '#eee', 
   },
 });
