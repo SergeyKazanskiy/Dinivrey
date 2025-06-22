@@ -21,11 +21,64 @@ async def get_coaches(session: AsyncSession = Depends(get_session)):
 # Events
 @router.get("/camps", response_model=List[schemas.CampResponse], tags=["Manager"])
 async def get_camps(session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Camp, session)
+
+    result = await session.execute(select(models.Camp))
+    camps = result.scalars().all()
+
+    camp_list = []
+
+    for camp in camps:
+        group_stmt = select(func.count()).where(models.Group.camp_id == camp.id)
+        group_count = (await session.execute(group_stmt)).scalar_one()
+
+        student_stmt = (
+            select(func.count())
+            .select_from(models.Student)
+            .join(models.Group, models.Student.group_id == models.Group.id)
+            .where(models.Group.camp_id == camp.id)
+        )
+        student_count = (await session.execute(student_stmt)).scalar_one()
+
+        camp_list.append(schemas.CampResponse(
+            id=camp.id,
+            name=camp.name,
+            groups=group_count,
+            students=student_count
+        ))
+    return camp_list
 
 @router.get("/camps/{id}/groups", response_model=List[schemas.GroupResponse], tags=["Manager"])
 async def get_camp_groups(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Group, session, filters={"camp_id": id}, order_by="name")
+
+@router.get("/camps/{id}/events", response_model=List[schemas.EventResponse], tags=["Manager"])
+async def get_camp_groups(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    month_start, month_end = get_month_range(year, month)
+    
+    start_ts = int(month_start.timestamp() * 1000)
+    end_ts = int(month_end.timestamp() * 1000)
+    event = models.Event
+
+    result = await session.execute(
+        select(event)
+            .where(event.timestamp.between(start_ts, end_ts), event.camp_id == id )
+            .order_by(asc(event.timestamp))
+    )
+    return result.scalars().all()
+    
+
+@router.get("/camps/{id}/schedule", tags=["Manager"])
+async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_session)):
+
+    schedule = await session.execute(
+        select(models.GroupSchedule)
+            .join(models.Group, models.Group.id == models.GroupSchedule.group_id)
+            .where(models.Group.camp_id == id)
+            .order_by(asc(models.GroupSchedule.weekday),
+                      asc(models.GroupSchedule.hour),
+                      asc(models.GroupSchedule.minute))
+    )
+    return schedule.scalars().all()
 
 @router.get("/camps/groups/{group_id}/events",  response_model=List[schemas.GroupEventsResponse], tags=["Manager"])
 async def get_group_events(year: int, month: int, group_id: int, session: AsyncSession = Depends(get_session)):

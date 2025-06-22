@@ -17,7 +17,9 @@ export function DatesBar({ camp_id, camps, onClick }: Props) {
       contentContainerStyle={{ justifyContent: 'space-around', alignItems: 'center', flexGrow: 1}}
       keyExtractor={(item) => '№' + item}
       renderItem={({ item }) => 
-        <Button title={item.name} type='outline' 
+        <Button key={item.id.toString()}
+            title={item.name}
+            type='outline' 
             buttonStyle={styles.item} titleStyle={styles.text}
             onPress={() => onClick(item.id)}
         />

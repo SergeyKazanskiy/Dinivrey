@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
 import CampsScreen from './events/CampsScreen';
-import GroupsScreen from './groups';
+import GroupsScreen from './groups/GroupsScreen';
 import CoachesScreen from './coaches/CoachesScreen';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
