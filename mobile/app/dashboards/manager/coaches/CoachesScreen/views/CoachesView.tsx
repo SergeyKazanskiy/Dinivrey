@@ -1,15 +1,13 @@
-import {useState} from "react";
 import { useRouter } from 'expo-router';
-import { StyleSheet, FlatList, ScrollView, Text } from "react-native";
+import { StyleSheet, FlatList, ScrollView, Pressable } from "react-native";
 import { useStore } from '../../store';
 import { CoachCell } from '../../../../../shared/components/CoachCell';
-import { CustomAlert } from '../../../../../shared/components/CustomAlert';
-import { isPast, formatDateTime } from '../../../../../shared/utils';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export const CoachesView = () => { 
     const { coaches} = useStore();
-    const { selectCoach } = useStore();
+    const { selectCoach, showAddAlert } = useStore();
     
     const router = useRouter();
   
@@ -29,6 +27,9 @@ export const CoachesView = () => {
                 onSelect={()=>handleSelect(item.id)}
               />
         }/>
+        <Pressable onPress={showAddAlert} style={{ marginTop: 16, marginLeft: 8}}>
+          <Ionicons name='add-circle-outline' size={26} color='rgb(180, 216, 158)' />
+        </Pressable>
     </ScrollView>
   );
 };

@@ -11,6 +11,9 @@ class CoachBase(BaseModel):
     signature: Optional[str]
     camp_id: int
 
+class CoachCreate(CoachBase):
+    pass  
+
 class CoachUpdate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None

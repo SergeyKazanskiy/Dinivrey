@@ -23,6 +23,10 @@ router = APIRouter()
 async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Event, data, session)}
 
+@router.post("/camps/coaches", response_model=schemas.ResponseId, tags=["Manager"])
+async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Coach, data, session)} 
+
 @router.post("/camps/coaches/groups", response_model=List[schemas.CoachGroupResponse], tags=["Manager"])
 async def coach_group_add(data: schemas.CoachGroupAdd, session: AsyncSession = Depends(get_session)):
     id = await CRUD.add(models.CoachGroup, data, session)
@@ -55,6 +59,3 @@ async def coach_group_add(data: schemas.CoachGroupAdd, session: AsyncSession = D
 # async def create_achieve(data: schemas.AchieveCreate, session: AsyncSession = Depends(get_session)):
 #     return {"id": await CRUD.add(models.Achieve, data, session)} 
 
-# @router.post("/coaches", response_model=schemas.ResponseId, tags=["Manager"])
-# async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
-#     return {"id": await CRUD.add(models.Coach, data, session)} 

@@ -1,5 +1,6 @@
 import { Coach, CoachGroup, FreeGroup } from '../model';
-import { get_coach, update_coach, get_coache_groups, remove_coach_group, get_free_groups, add_coach_group } from '../http';
+import { get_coach, update_coach, add_coach_group } from '../http';
+import { get_coache_groups, remove_coach_group, get_free_groups } from '../http';
 import { objectToJson } from '../../../../shared/utils';
 import { CoachesSlice } from '../CoachesScreen/state';
 
@@ -15,7 +16,7 @@ export interface CoachSlice {
     coachGroups: CoachGroup[];
 
     coach_group_id: number;
-    isDeleteAlert: boolean;
+    isGroupDeleteAlert: boolean;
     isFreeGroups: boolean;
 
     loadCoach: (coach_id: number) => void;
@@ -23,7 +24,7 @@ export interface CoachSlice {
     loadFreeGroups: () => void;
     closeFreeGroups: () => void;
 
-    updateCoach: (field: string, data: Partial<Coach>) => void;
+    updateCoach: (data: Partial<Coach>) => void;
 
     toggleSignature: () => void;
     saveSignature: (signature: string | null) => void;
@@ -31,8 +32,8 @@ export interface CoachSlice {
     selectGroup: (coach_group_id: number) => void;
     addGroup: (group_id: number) => void;
 
-    showDeleteAlert:() => void;
-    hideDeleteAlert:() => void;
+    showGroupDeleteAlert:() => void;
+    hideGroupDeleteAlert:() => void;
     removeGroup: () => void;
 }
 
@@ -55,7 +56,7 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
     freeGroups: [],
 
     coach_group_id: 0,
-    isDeleteAlert: false,
+    isGroupDeleteAlert: false,
     isFreeGroups: false,
 
     loadCoach: (coach_id: number) => {
@@ -83,9 +84,9 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
 
     closeFreeGroups: () => set({isFreeGroups: false}),
 
-    updateCoach: (field: string, data: Partial<Coach>) => {
+    updateCoach: (data: Partial<Coach>) => {
         const {coach_id}: CoachesSlice = get();
-
+        //alert(objectToJson(data))
         update_coach(coach_id, data, (res => {
             if (res.isOk) {
                 //alert('Updated')
@@ -102,7 +103,7 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
             const data: Partial<Coach> = {signature: base64Data};
             const { updateCoach }: CoachSlice = get();
 
-            updateCoach('signature', data);
+            updateCoach(data);
             set({signature});
          }
     },
@@ -120,11 +121,11 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
         }));
     },
 
-    showDeleteAlert:() => set({isDeleteAlert: true}),
-    hideDeleteAlert:() => set({isDeleteAlert: false}),
+    showGroupDeleteAlert:() => set({isGroupDeleteAlert: true}),
+    hideGroupDeleteAlert:() => set({isGroupDeleteAlert: false}),
 
     removeGroup: () => {
-        set({ isDeleteAlert: false });
+        set({ isGroupDeleteAlert: false });
         const {coach_group_id}: CoachSlice = get();
         
         remove_coach_group(coach_group_id, (res) => {
