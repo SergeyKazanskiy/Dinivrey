@@ -1,5 +1,7 @@
 from .shared import ResponseOk, ResponseId
-from .coach import CoachResponse, CoachUpdate, CoachShortResponse, CoachGroupResponse, CoachGroupAdd
+
+from .coach import CoachResponse, CoachShortResponse, CoachCreate, CoachUpdate
+from .coach import CoachGroupResponse, CoachGroupAdd
 
 from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse, EventReportResponse
 from .event import AttendanceResponse

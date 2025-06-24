@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TextInput } from 'react-native';
 import { Button } from '@rneui/themed';
 import { useStore } from '../../store';
 import { ImagesPath } from '../../../../../shared/constants';
@@ -7,7 +7,19 @@ import { ImagesPath } from '../../../../../shared/constants';
 
 export const ProfileView = () => {
     const { coach } = useStore();
-    const { toggleSignature } = useStore();
+    const { updateCoach } = useStore();
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+
+    useEffect(() => {
+        setFirstName(coach.first_name);
+        setLastName(coach.last_name);
+        setPhone(coach.phone);
+        setEmail(coach.email);
+    }, [coach]);
 
     return (
         <View style={styles.container}>
@@ -16,31 +28,36 @@ export const ProfileView = () => {
 
                 <View style={styles.group}>
                     <Text style={styles.label}>First name</Text>
-                    <Text style={styles.value}>{coach.first_name}</Text>
+                    <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
+                        value={firstName}
+                        onChangeText={setFirstName}
+                        onBlur={() => updateCoach({first_name: firstName})}
+                    />
                     <Text style={styles.label}>Last name</Text>
-                    <Text style={styles.value}>{coach.last_name}</Text>
+                    <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
+                        value={lastName}
+                        onChangeText={setLastName}
+                        onBlur={() => updateCoach({last_name: lastName})}
+                    />
                 </View>
             </View>
             <View style={{marginTop: 4}}>
                 <View style={styles.section}>
                     <Text style={[styles.label, {width: 64}]}>Phone: </Text>
-                    <Text style={styles.value}>{coach.phone}</Text>
+                    <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
+                        value={phone}
+                        onChangeText={setPhone}
+                        onBlur={() => updateCoach({phone: phone})}
+                    />
                 </View>
                 <View style={styles.section}>
                     <Text style={[styles.label, {width: 64}]}>Email: </Text>
-                    <Text style={styles.value}>{coach.email}</Text>
+                    <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
+                        value={email}
+                        onChangeText={setEmail}
+                        onBlur={() => updateCoach({email: email})}
+                    />
                 </View>
-                {/* <View style={styles.section}>
-                    <Text style={[styles.label]}>Signature: </Text>
-                    <Image source={{ uri: '/^data:image\/png;base64,/'+coach.signature }}
-                        resizeMode="contain"
-                        style={{ width: 120, height: 32, backgroundColor: '#ddd', marginRight: 8 }}
-                    />
-                    <Button title='Edit signature' type='outline' 
-                        buttonStyle={styles.button} titleStyle={styles.title}
-                        onPress={() => showSignature(!isSignature)}
-                    />
-                </View> */}
             </View>
         </View>
     );
@@ -80,6 +97,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: 8,
         backgroundColor: 'rgb(180, 216, 158)',
+        minHeight: 30,
     },
     button: {
         height: 28,

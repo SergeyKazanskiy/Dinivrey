@@ -14,6 +14,7 @@ class Coach(Base):
     active = Column(Boolean, default=True)
     signature = Column(Text, nullable=True)
     camp_id = Column(Integer, ForeignKey('camps.id', ondelete='CASCADE'))
+    groupCoaches = relationship("CoachGroup", back_populates="coach", cascade="all, delete")
 
 class CoachGroup(Base):
     __tablename__ = 'coache_groups'
@@ -22,3 +23,4 @@ class CoachGroup(Base):
     coache_id = Column(Integer, ForeignKey('coaches.id', ondelete='CASCADE'))
     group_id = Column(Integer, ForeignKey('groups.id', ondelete='CASCADE'))
     group = relationship("Group", back_populates="coaches")
+    coach = relationship("Coach", back_populates="groupCoaches")

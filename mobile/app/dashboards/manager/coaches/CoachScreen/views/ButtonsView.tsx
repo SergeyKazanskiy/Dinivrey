@@ -6,7 +6,7 @@ import { useStore } from '../../store';
 
 export const ButtonsView = () => {
     const { signature, isSignature, coach_group_id } = useStore();
-    const { toggleSignature, showDeleteAlert } = useStore();
+    const { toggleSignature, showGroupDeleteAlert } = useStore();
 
     return (
         <View style={styles.container}>
@@ -28,7 +28,7 @@ export const ButtonsView = () => {
                     <Image source={{ uri: signature }} resizeMode="contain" style={styles.image}/>}
 
                 {!isSignature && coach_group_id > 0 &&
-                    <Pressable onPress={showDeleteAlert} style={{marginTop: 8, marginRight: 4}}>
+                    <Pressable onPress={showGroupDeleteAlert} style={{marginTop: 8, marginRight: 4}}>
                         <Ionicons name='trash-outline' size={22} color="rgb(180, 216, 158)" />
                     </Pressable>
                 }    

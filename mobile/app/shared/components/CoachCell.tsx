@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { CheckBox } from '@rneui/themed';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { cellStyles, groupStyles } from '../styles/appStyles';
 
 
@@ -12,11 +11,11 @@ export type Props = {
   
 export const CoachCell: React.FC<Props> = ({first_name, last_name, onSelect}) => {
   return (
-    <View style={[styles.container, styles.section]}>
-      <Text style={[styles.text]} onPress={onSelect}>
+    <TouchableOpacity style={[styles.container, styles.section]} onPress={onSelect}>
+      <Text style={[styles.text]}>
         {first_name} {last_name}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
