@@ -35,7 +35,7 @@ export default function StatisticsScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <CustomNavbar title='Statistics' onClick={() => router.push("/dashboards/coach")}>
+      <CustomNavbar title='Statistics' onClick={() => router.push("/dashboards/manager/groups/StudentsScreen")}>
         <Pressable style={{ marginRight: 15 }} onPress={togleStatistic} >
           <Ionicons name='repeat-outline' size={21} color="#D1FF4D" />
         </Pressable>

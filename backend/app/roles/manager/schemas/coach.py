@@ -31,3 +31,18 @@ class CoachShortResponse(BaseModel):
     id: int
     first_name: str
     last_name: str
+
+
+class CoachGroupResponse(BaseModel):
+    id: int
+    group_id: int
+    name: str 
+    desc: str
+
+class CoachGroupBase(BaseModel):
+    coache_id: int
+    group_id: int
+    
+
+class CoachGroupAdd(CoachGroupBase):
+    pass    

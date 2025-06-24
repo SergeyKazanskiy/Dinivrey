@@ -4,19 +4,24 @@ import { StyleSheet, ScrollView, Platform, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useStore } from '../store';
 import { CoachesView } from './views/CoachesView';
+import { CampsView } from './views/CampsView';
 
 
 export default function CoachesScreen() {
+  const { campId } = useStore();
   const { loadCoaches } = useStore();
 
   useFocusEffect(
     useCallback(() => {
-      loadCoaches();
+     // alert(campId)
+      loadCoaches(campId);
     }, [])
   );
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
+
+        <CampsView/>
         <CoachesView/>
     </LinearGradient>
   );

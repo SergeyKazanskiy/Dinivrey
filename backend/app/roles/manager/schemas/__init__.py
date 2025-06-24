@@ -1,13 +1,13 @@
 from .shared import ResponseOk, ResponseId
-from .coach import CoachResponse, CoachUpdate, CoachShortResponse
+from .coach import CoachResponse, CoachUpdate, CoachShortResponse, CoachGroupResponse, CoachGroupAdd
 
 from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse, EventReportResponse
 from .event import AttendanceResponse
 
 from .camp import CampResponse
-from .group import GroupResponse, StudentName #GroupScheduleResponse
+from .group import GroupResponse, StudentName, FreeGroupResponse #GroupScheduleResponse
 
-from .student import StudentResponse, ParentResponse, StudentName, CoachResponse
+from .student import StudentShort, StudentResponse, ParentResponse, StudentName, CommentResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate, TestUpdate2
 from .student import GameResponse, GameCreate
 from .student import AchievementResponse, AchieveUpdate, AchieveResponse, AchievementCreate

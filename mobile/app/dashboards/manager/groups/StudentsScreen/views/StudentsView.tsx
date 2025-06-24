@@ -5,7 +5,7 @@ import { useStore } from '../../store';
 import { ImagesPath } from '../../../../../shared/constants';
 
 
-export function StudentList() {
+export function StudentsView() {
   const { students, student_id } = useStore();
   const { selectStudent } = useStore();
 
@@ -13,11 +13,11 @@ export function StudentList() {
 
   function handlePress(id: number) {
     selectStudent(id);
-    router.push(`/dashboards/coach/students`)
+    router.push(`/dashboards/manager/groups`)
   }
 
   return (
-    <>
+    <View style={styles.container}>
         {students.map(student => {
             const itemStyle = styles.item;
 
@@ -42,11 +42,14 @@ export function StudentList() {
                 </ListItem>
             )})
         }
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 12
+  },
   item: { 
     margin: 4,
     padding: 10,

@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 from pathlib import Path
 import base64
 import os
+from .read import get_coache_groups
 
 router = APIRouter()
 
@@ -21,6 +22,11 @@ router = APIRouter()
 @router.post("/camps/events", response_model=schemas.ResponseId, tags=["Manager"])
 async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Event, data, session)}
+
+@router.post("/camps/coaches/groups", response_model=List[schemas.CoachGroupResponse], tags=["Manager"])
+async def coach_group_add(data: schemas.CoachGroupAdd, session: AsyncSession = Depends(get_session)):
+    id = await CRUD.add(models.CoachGroup, data, session)
+    return await get_coache_groups(data.coache_id, session)
 
 
 # @router.post("/coaches/upload-signature", response_model=schemas.ResponseOk, tags=["Coach"])

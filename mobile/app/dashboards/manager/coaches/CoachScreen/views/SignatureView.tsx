@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, View, Image, Platform, Button } from 'react-native';
+import { StyleSheet, View, Image, Platform } from 'react-native';
+import { Button } from '@rneui/themed';
 import SignatureCanvas, { SignatureViewRef }  from 'react-native-signature-canvas';
 import SignaturePad from 'react-signature-canvas';
 import { useStore } from '../../store';
 
 
 export const SignatureView = () => {
-  const { signature} = useStore();
-  const { setSignature } = useStore();
+  const { saveSignature } = useStore();
 
   const ref = useRef<SignatureViewRef>(null);
   const webSigPadRef = useRef<any>(null);
@@ -15,57 +15,46 @@ export const SignatureView = () => {
   const handleSave = () => {
     if (Platform.OS === 'web') {
       const b64 = webSigPadRef.current.getTrimmedCanvas().toDataURL('image/png');
-      setSignature(b64);
+      saveSignature(b64);
     }
   };
 
   const handleClear = () => {
     if (Platform.OS === 'web') {
       webSigPadRef.current.clear();
-      setSignature(null);
+      saveSignature(null);
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.preview}>
-        {signature && (
-          <Image
-            resizeMode="contain"
-            style={{ width: 120, height: 40 }}
-            source={{ uri: signature }}
-          />
-        )}
-      </View>
       {Platform.OS === 'web' ? (
         <>
           <View style={{ borderWidth: 1, borderColor: '#000' }}>
-            <SignaturePad
-              ref={webSigPadRef}
-              canvasProps={{
-                width: 300,
-                height: 200,
-                className: 'sigCanvas'
-              }}
+            <SignaturePad ref={webSigPadRef}
+              canvasProps={{ width: 300, height: 200, className: 'sigCanvas'}}
             />
           </View>
-          <View style={{ marginTop: 10 }}>
-            <Button title="Save Signature" onPress={handleSave} />
-            <Button title="Clear" onPress={handleClear} />
+          <View style={styles.section}>
+            <Button title='Save' type='outline' 
+              buttonStyle={styles.button} titleStyle={styles.title}
+              onPress={handleSave}
+            />
+            <Button title='Clear' type='outline' 
+              buttonStyle={styles.button} titleStyle={styles.title}
+              onPress={handleClear}
+            />
           </View>
         </>
       ) : (
-      <SignatureCanvas
-        ref={ref}
-        //onEnd={handleEnd}
-        onOK={(sig) => setSignature(sig)} // already base64 format
-        //onEmpty={handleEmpty}
-        onClear={handleClear}
-        autoClear={true}
-        descriptionText="Sign here"
-        clearText="Clear"
-        confirmText="Save"
-      />
+        <SignatureCanvas ref={ref}
+          onOK={(sig) => saveSignature(sig)} // already base64 format
+          onClear={handleClear}
+          autoClear={true}
+          descriptionText="Sign here"
+          clearText="Clear"
+          confirmText="Save"
+        />
       )}
     </View>
   );
@@ -74,6 +63,12 @@ export const SignatureView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
+  },
+  section: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 10,
   },
   preview: {
     width: 120,
@@ -81,5 +76,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button: {
+    height: 28,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+    marginHorizontal: 4
+  },
+  title: {
+    fontSize: 16,
+    color: 'gold'
   },
 });

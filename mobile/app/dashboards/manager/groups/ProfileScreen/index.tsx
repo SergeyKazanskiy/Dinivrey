@@ -16,14 +16,14 @@ import { RadarChart } from './views/RadarChart';
 import { StatsIndicators } from '../../../../shared/components/StatsIndicators';
 
 export default function ProfileScreen() {
-  const { isCommentsScreen, last_test } = useStore();
+  const { isCommentsScreen, last_test, student_id } = useStore();
   const { loadStudent, showComments } = useStore();
 
   const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
-      loadStudent();
+      loadStudent(student_id);
     }, [])
   );
 
