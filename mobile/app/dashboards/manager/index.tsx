@@ -62,8 +62,8 @@ function TabNavigatorWrapper() {
           },
         })}
       >
-        <Tab.Screen name="Coaches" component={CoachesScreen} />
         <Tab.Screen name="Groups" component={GroupsScreen} />
+        <Tab.Screen name="Coaches" component={CoachesScreen} />
         <Tab.Screen name="Events" component={CampsScreen} />
       </Tab.Navigator>
     </LinearGradient>

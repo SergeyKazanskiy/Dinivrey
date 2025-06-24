@@ -24,3 +24,17 @@ export interface CoachShort {
   first_name: string;
   last_name: string;
 }
+
+export interface CoachGroup {
+  id: number;
+  group_id: number;
+  name: string;
+  desc: string;
+}
+
+export interface FreeGroup {
+  camp_name: string;
+  id: number;
+  name: string;
+  desc: string;
+}

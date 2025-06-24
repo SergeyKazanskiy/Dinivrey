@@ -1,13 +1,17 @@
-import { CoachShort } from '../model';
+import { Camp, CoachShort } from '../model';
 import { get_coaches } from '../http';
 import { objectToJson } from '../../../../shared/utils';
 
 
 export interface CoachesSlice {
     coaches: CoachShort[];
+
+    campId: number;
     coach_id: number;
 
-    loadCoaches: () => void;
+    loadCoaches: (camp_id: number) => void;
+
+    selectCamp: (camp_id: number) => void;
     selectCoach: (coach_id: number) => void;
 
     addCoach: () => void;
@@ -16,12 +20,22 @@ export interface CoachesSlice {
 
 export const createCoachesSlice = (set: any, get: any): CoachesSlice => ({
     coaches: [],
+
+    campId: 0,
     coach_id: 0,
     
-    loadCoaches: () => { 
-        get_coaches((coaches => {
+    loadCoaches: (camp_id: number) => { 
+        get_coaches(camp_id, (coaches => {
             set({coaches});
         }));
+    },
+
+    selectCamp: (camp_id: number) => {
+        const { campId, loadCoaches }: CoachesSlice = get();
+        if (campId !== camp_id) {
+            set({ campId: camp_id });
+            loadCoaches(camp_id);
+        } 
     },
 
     selectCoach: (coach_id: number) => set({coach_id}),

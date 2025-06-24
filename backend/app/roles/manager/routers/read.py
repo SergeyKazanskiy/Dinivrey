@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc, or_, func
+from sqlalchemy import desc, asc, or_, func, outerjoin
 from typing import List
+from datetime import datetime, timedelta
 from database import get_session
 from crud import CRUD
 from roles.manager import schemas
@@ -13,12 +14,55 @@ router = APIRouter()
 
 
 # Coaches
-@router.get("/coaches", response_model=List[schemas.CoachShortResponse], tags=["Manager"])
-async def get_coaches(session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Coach, session)
+@router.get("/camps/{id}/coaches", response_model=List[schemas.CoachShortResponse], tags=["Manager"])
+async def get_coaches(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Coach, session, filters={"camp_id": id}, order_by="first_name")
 
+@router.get("/camps/coaches/{id}", response_model=schemas.CoachResponse, tags=["Manager"])
+async def read_coach( id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Coach, id, session)
 
-# Events
+@router.get("/camps/coaches/{id}/groups", response_model=List[schemas.CoachGroupResponse], tags=["Manager"])
+async def get_coache_groups( id: int, session: AsyncSession = Depends(get_session)):
+    group = models.Group
+    coachGroup = models.CoachGroup
+    stmt = (
+        select(coachGroup.id, coachGroup.group_id, group.name, group.description)
+            .join(group, group.id == coachGroup.group_id)
+            .where(coachGroup.coache_id == id)
+            .order_by(asc(group.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [ schemas.CoachGroupResponse(
+                id = row[0],
+                group_id = row[1],
+                name = row[2],
+                desc = row[3]) for row in rows]
+
+@router.get("/groups/free", response_model=List[schemas.FreeGroupResponse], tags=["Manager"])
+async def get_groups_without_coach( session: AsyncSession = Depends(get_session)):
+    Camp = models.Camp
+    Group = models.Group
+    CoachGroup = models.CoachGroup
+    stmt = (
+        select(Camp.name, Group.id, Group.name, Group.description)
+            .select_from(
+                outerjoin(Group, CoachGroup, Group.id == CoachGroup.group_id)
+                .join(Camp, Camp.id == Group.camp_id)
+            )
+            .where(CoachGroup.group_id == None)
+            .order_by(Camp.name, Group.name)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [ schemas.FreeGroupResponse(
+                camp_name = row[0],
+                id = row[1],
+                name = row[2],
+                desc = row[3]) for row in rows]
+
+# Groups
 @router.get("/camps", response_model=List[schemas.CampResponse], tags=["Manager"])
 async def get_camps(session: AsyncSession = Depends(get_session)):
 
@@ -50,6 +94,10 @@ async def get_camps(session: AsyncSession = Depends(get_session)):
 @router.get("/camps/{id}/groups", response_model=List[schemas.GroupResponse], tags=["Manager"])
 async def get_camp_groups(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Group, session, filters={"camp_id": id}, order_by="name")
+
+@router.get("/camps/groups/{id}/students", response_model=List[schemas.StudentShort], tags=["Manager"])
+async def get_students(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Student, session, filters={"group_id": id}, order_by="first_name")
 
 @router.get("/camps/{id}/events", response_model=List[schemas.EventResponse], tags=["Manager"])
 async def get_camp_groups(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
@@ -136,10 +184,120 @@ async def get_attendances(event_id:int, group_id: int, session: AsyncSession = D
              "present": row[4],
              "comment": row[5]} for row in rows]
 
-# @router.get("/camps/groups/{id}/students", response_model=List[schemas.StudentShort], tags=["Manager"])
-# async def get_students(id: int, session: AsyncSession = Depends(get_session)):
-#     return await CRUD.read(models.Student, id, session)
 
-# @router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Manager"])
-# async def get_student(id: int, session: AsyncSession = Depends(get_session)):
-#     return await CRUD.read(models.Student, id, session)
+# Student
+@router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Manager"])
+async def get_student(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Student, id, session)
+
+@router.get("/students/{id}/parents", response_model=List[schemas.ParentResponse], tags=["Manager"])
+async def get_student_parents(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Parent, session, filters={"student_id": id})
+
+@router.get("/students/{id}/coach/comments", response_model=List[schemas.CommentResponse], tags=["Manager"])
+async def get_student_coach_comments(id: int, session: AsyncSession = Depends(get_session)):
+    Event = models.Event
+    Attendance = models.Attendance
+    stmt = (
+        select(Event.timestamp, Attendance.comment)
+            .join(Attendance, Attendance.event_id == Event.id)
+            .where(Attendance.student_id == id, Attendance.comment.isnot(None), Attendance.comment != "")
+            .order_by(desc(Event.timestamp))
+            .limit(10)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"timestamp": row[0],
+             "comment": row[1]} for row in rows]
+
+@router.get("/students/{id}/tests/last", response_model=List[schemas.TestResponse], tags=["Manager"])
+async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Test)
+        .where(models.Test.student_id == id)
+        .order_by(desc(models.Test.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    return [event] if event else []
+
+# Statistics
+@router.get("/students/{id}/tests/last/date", tags=["Manager"])
+async def get_last_test_date(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Test)
+        .where(models.Test.student_id == id)
+        .order_by(desc(models.Test.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    isEvents = True if event else False
+    timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
+    date = datetime.fromtimestamp(timestamp / 1000)
+    return {"year": date.year, "month": date.month, "isEvents": isEvents}
+
+@router.get("/students/{id}/games/last/date", tags=["Manager"])
+async def get_last_game_date(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Game)
+            .where(models.Game.student_id == id)
+            .order_by(desc(models.Game.timestamp))
+            .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    isEvents = True if event else False
+    timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
+    date = datetime.fromtimestamp(timestamp / 1000)
+    return {"year": date.year, "month": date.month, "isEvents": isEvents}
+
+@router.get("/students/{id}/tests", response_model=List[schemas.TestResponse], tags=["Manager"])
+async def get_student_tests(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+    result = await session.execute(
+        select(models.Test).where(models.Test.timestamp.between(start_ts, end_ts), models.Test.student_id == id)
+    )
+    return result.scalars().all()
+
+@router.get("/students/{id}/games", response_model=List[schemas.GameResponse], tags=["Manager"])
+async def get_student_games(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+    result = await session.execute(
+        select(models.Game).where(models.Game.timestamp.between(start_ts, end_ts), models.Game.student_id == id)
+    )
+    return result.scalars().all()
+
+
+# Achievements
+@router.get("/students/{id}/achievements", response_model=List[schemas.AchieveResponse], tags=["Manager"])
+async def get_student_achieves(id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Achieve
+    S = models.Achievement
+    stmt = (
+        select(S.id, A.image, A.name, S.in_profile, A.category, S.level, A.effect, A.id)
+        .join(A, S.achieve_id == A.id )
+        .where( S.student_id == id )
+        .order_by(asc(A.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [ schemas.AchieveResponse(
+                id = row[0],
+                image = row[1],
+                name = row[2],
+                in_profile = row[3],
+                category = row[4],
+                level = row[5],
+                effect = row[6],
+                achieve_id = row[7],
+            ) for row in rows]
+
+@router.get("/achieves", response_model=List[schemas.AchievementResponse], tags=["Manager"])
+async def get_achieves(category: str, trigger: str, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Achieve, session, filters={"trigger": trigger, "category": category})
+

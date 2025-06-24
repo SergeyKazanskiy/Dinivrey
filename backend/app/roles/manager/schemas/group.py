@@ -55,3 +55,11 @@ class GroupReadWithSchedule(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class FreeGroupResponse(BaseModel):
+    camp_name: str
+    id: int
+    name: str
+    desc: str
+    

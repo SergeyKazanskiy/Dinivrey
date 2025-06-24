@@ -27,6 +27,18 @@ class StudentResponse(StudentBase):
     class Config:
         from_attributes = True
 
+class StudentShort(BaseModel):
+    id: int
+    photo: str
+    first_name: str
+    last_name: str
+    gender: str
+    age: int
+    active: bool
+
+    class Config:
+        from_attributes = True  
+        
 class ParentResponse(BaseModel):
     id: int
     name: str
@@ -161,7 +173,7 @@ class SummaryAchievements(BaseModel):
 class SummaryGames(BaseModel):
     summary_games: str        
 
-#Coach
-class CoachResponse(BaseModel):
+#Comment from coach
+class CommentResponse(BaseModel):
     timestamp: int
     comment: str

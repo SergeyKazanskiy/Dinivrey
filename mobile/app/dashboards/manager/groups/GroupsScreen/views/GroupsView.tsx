@@ -1,4 +1,5 @@
 import { StyleSheet, FlatList, TouchableOpacity, Text, View } from 'react-native';
+import { cellStyles } from '../../../../../shared/styles/appStyles';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
 
@@ -11,7 +12,7 @@ export function GroupsView() {
 
   function handleSelect(group_id: number) {
     selectGroup(group_id);
-    //router.push(`/dashboards/manager/events/EventsScreen`);
+    router.push(`/dashboards/manager/groups/StudentsScreen`);
   }
 
   return (
@@ -21,6 +22,7 @@ export function GroupsView() {
             onPress={() => handleSelect(item.id)}>
 
             <Text style={styles.title}>{item.name}</Text>
+            <Text style={cellStyles.description}>{item.description}</Text>
         </TouchableOpacity>
       } style={styles.list}
     />

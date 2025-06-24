@@ -6,29 +6,23 @@ import { objectToJson } from '@/app/shared/utils';
 export interface GroupsSlice {
   camps: Camp[];
   groups: Group[];
-  students: Student[];
 
   camp_id: number;
   group_id: number;
-  student_id: number;
 
   loadCamps: () => void;
   loadGroups: (camp_id: number) => void;
-  loadStudents: (group_id: number) => void;
 
   selectCamp: (campId: number) => void;
   selectGroup: (group_id: number) => void;
-  selectStudent: (student_id: number) => void;
 }
 
 export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
   camps: [],
-  students: [],
   groups: [],
 
   camp_id: 0,
   group_id: 0,
-  student_id: 0,
 
 
   loadCamps: () => {
@@ -50,13 +44,6 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
     })
   },
 
-  loadStudents: (group_id: number) => {
-    get_students(group_id, (students: Student[]) => {
-      //alert(objectToJson(students))
-      set({ students, group_id });
-    })
-  },
-
   selectCamp: (campId: number) => {
     const { camp_id, loadGroups }: GroupsSlice = get();
     if (campId !== camp_id) {
@@ -65,14 +52,5 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
     } 
   },
 
-  selectGroup: (groupId: number) => {
-    const { group_id, loadStudents }: GroupsSlice = get();
-    if (groupId !== group_id) {
-      loadStudents(groupId);
-    } else {
-      set({ group_id: 0, students: [] });
-    }
-  },
-
-  selectStudent: (student_id: number) => set({ student_id }),
+  selectGroup: (group_id: number) => set({ group_id }),
 });
