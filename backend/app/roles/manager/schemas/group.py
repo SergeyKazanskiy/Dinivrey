@@ -14,6 +14,8 @@ class GroupUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
 
+class GroupCoachUpdate(BaseModel):
+    coach_id: int
 
 class Group_Students(GroupBase):
     id: int
@@ -38,9 +40,16 @@ class GroupScheduleBase(BaseModel):
 class GroupScheduleCreate(GroupScheduleBase):
     pass
 
+class GroupScheduleResponse(GroupScheduleBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
 class GroupScheduleUpdate(BaseModel):
     hour: Optional[int] = None
     minute: Optional[int] = None
+    #coach_id: Optional[int] = None  #Temp !!!
 
 class GroupScheduleRead(GroupScheduleBase):
     id: int

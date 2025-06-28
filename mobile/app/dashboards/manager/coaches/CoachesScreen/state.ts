@@ -78,9 +78,6 @@ export const createCoachesSlice = (set: any, get: any): CoachesSlice => ({
                     coach_id: 0, isDeleteAlert: false,
                     coaches: state.coaches.filter(el => el.id !== coach_id),
                 }));
-
-                // const { coaches }: CoachesSlice = get();
-                // alert(objectToJson(coaches))
             }
         }));
     },

@@ -128,6 +128,22 @@ async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_sessio
     )
     return schedule.scalars().all()
 
+@router.get("/camps/groups/{id}/schedule", response_model=List[schemas.GroupScheduleResponse], tags=["Manager"])
+async def get_group_schedule(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.GroupSchedule, session, filters={"group_id": id}, order_by="weekday")
+
+@router.get("/camps/groups/{id}/coach", response_model=schemas.ResponseId, tags=["Manager"])
+async def get_group_coach(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.CoachGroup)
+        .where(models.CoachGroup.group_id == id)
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    coachGroup = result.scalar_one_or_none()
+    return {'id': coachGroup.coache_id} if coachGroup else {'id': 0}
+
+
 @router.get("/camps/groups/{group_id}/events",  response_model=List[schemas.GroupEventsResponse], tags=["Manager"])
 async def get_group_events(year: int, month: int, group_id: int, session: AsyncSession = Depends(get_session)):
     month_start, month_end = get_month_range(year, month)

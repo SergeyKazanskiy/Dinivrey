@@ -7,7 +7,9 @@ from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse,
 from .event import AttendanceResponse
 
 from .camp import CampResponse
-from .group import GroupResponse, StudentName, FreeGroupResponse #GroupScheduleResponse
+
+from .group import GroupCreate, GroupResponse, GroupUpdate, StudentName, FreeGroupResponse
+from .group import GroupScheduleResponse, GroupScheduleUpdate, GroupScheduleCreate, GroupCoachUpdate
 
 from .student import StudentShort, StudentResponse, ParentResponse, StudentName, CommentResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate, TestUpdate2

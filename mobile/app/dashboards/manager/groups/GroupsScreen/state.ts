@@ -1,5 +1,5 @@
 import { Camp, Group, Student } from '../model';
-import { get_camps, get_groups, get_students } from '../http';
+import { get_camps, get_groups, get_students, create_group, delete_group } from '../http';
 import { objectToJson } from '@/app/shared/utils';
 
 
@@ -9,12 +9,20 @@ export interface GroupsSlice {
 
   camp_id: number;
   group_id: number;
+  groupInx: number;
+
+  isAddGroupAlert: boolean;
 
   loadCamps: () => void;
   loadGroups: (camp_id: number) => void;
 
   selectCamp: (campId: number) => void;
   selectGroup: (group_id: number) => void;
+
+  createGroup: (camp_id: number, name: string)=> void;
+
+  showAddGroupAlert: () => void;
+  hideAddGroupAlert: () => void;
 }
 
 export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
@@ -23,6 +31,9 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
 
   camp_id: 0,
   group_id: 0,
+  groupInx: -1,
+
+  isAddGroupAlert: false,
 
 
   loadCamps: () => {
@@ -40,7 +51,7 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
 
   loadGroups: (camp_id: number) => {
     get_groups(camp_id, (groups: Group[]) => {
-      set({ groups });
+      set({ groups, group_id: 0 });
     })
   },
 
@@ -53,4 +64,19 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
   },
 
   selectGroup: (group_id: number) => set({ group_id }),
+
+  createGroup: (camp_id: number, name: string) => {
+    set({isAddGroupAlert: false});
+      const data: Omit<Group, 'id'> = { camp_id, name, description: 'Enter' }
+
+      create_group(data, (res => {
+        if (res) {
+          const newGroup: Group = {id: res.id, camp_id, name, description: 'Enter' };
+          set((state: GroupsSlice) => ({ groups: [...state.groups, newGroup] }));
+        }
+      }));
+  },
+
+  showAddGroupAlert: () => set({isAddGroupAlert: true}),
+  hideAddGroupAlert: () => set({isAddGroupAlert: false}),
 });

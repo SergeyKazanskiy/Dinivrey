@@ -7,8 +7,17 @@ export interface Group {
     id: number;
     camp_id: number;
     name: string;
-    description: string;
-    camp_name: string;
+    description?: string;
+    camp_name?: string;
+}
+
+export interface Schedule {
+    id: number;
+    group_id: number;
+    weekday: number;
+    hour: number;
+    minute: number;
+    coach_id: number;
 }
 
 export interface Achieve {

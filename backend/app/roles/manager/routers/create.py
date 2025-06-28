@@ -18,11 +18,16 @@ from .read import get_coache_groups
 router = APIRouter()
 
 
-# Events
-@router.post("/camps/events", response_model=schemas.ResponseId, tags=["Manager"])
-async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Event, data, session)}
+# Groups
+@router.post("/camps/groups", response_model=schemas.ResponseId, tags=["Manager"])
+async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Group, data, session)}
 
+@router.post("/camps/groups/schedule", response_model=schemas.ResponseId, tags=["Manager"])
+async def create_schedule(data: schemas.GroupScheduleCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.GroupSchedule, data, session)}
+
+# Coaches
 @router.post("/camps/coaches", response_model=schemas.ResponseId, tags=["Manager"])
 async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Coach, data, session)} 
@@ -32,6 +37,18 @@ async def coach_group_add(data: schemas.CoachGroupAdd, session: AsyncSession = D
     id = await CRUD.add(models.CoachGroup, data, session)
     return await get_coache_groups(data.coache_id, session)
 
+
+# Events
+@router.post("/camps/events", response_model=schemas.ResponseId, tags=["Manager"])
+async def create_event(data: schemas.EventCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Event, data, session)}
+
+
+
+
+# @router.post("/achieves", response_model=schemas.ResponseId, tags=["Manager"])
+# async def create_achieve(data: schemas.AchieveCreate, session: AsyncSession = Depends(get_session)):
+#     return {"id": await CRUD.add(models.Achieve, data, session)} 
 
 # @router.post("/coaches/upload-signature", response_model=schemas.ResponseOk, tags=["Coach"])
 # async def upload_coache_signature(data: schemas.SignatureUpload):
@@ -45,17 +62,3 @@ async def coach_group_add(data: schemas.CoachGroupAdd, session: AsyncSession = D
 #         return {"isOk": True}
 #     except Exception as e:
 #         return JSONResponse(status_code=500, content={"isOk": False, "error": str(e)})
-
-
-# @router.post("/camps/groups", response_model=schemas.ResponseId, tags=["Manager"]) #camp_id ???
-# async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depends(get_session)):
-#     return {"id": await CRUD.add(models.Group, data, session)}
-
-
-
-
-
-# @router.post("/achieves", response_model=schemas.ResponseId, tags=["Manager"])
-# async def create_achieve(data: schemas.AchieveCreate, session: AsyncSession = Depends(get_session)):
-#     return {"id": await CRUD.add(models.Achieve, data, session)} 
-

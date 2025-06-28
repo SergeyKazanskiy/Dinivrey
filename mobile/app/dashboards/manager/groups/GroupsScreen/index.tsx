@@ -4,6 +4,7 @@ import { StyleSheet, ScrollView, Platform } from 'react-native';
 import { useStore } from '../store';
 import { CampsView } from './views/CampsView';
 import { GroupsView } from './views/GroupsView';
+import { AddGroupAlert } from './alerts/AddGroupAlert';
 import { Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -20,7 +21,8 @@ export default function GroupsScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-
+      <AddGroupAlert/>
+      
       <CampsView/>
       <GroupsView/>
     </LinearGradient>
