@@ -52,7 +52,9 @@ export const SchedulesView = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12
+    padding: 12,
+    backgroundColor: '#152B52',
+    borderRadius: 8,
   },
   row: {
     flexDirection: 'row',

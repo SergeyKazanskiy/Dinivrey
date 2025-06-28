@@ -1,5 +1,6 @@
-import { Event, GroupEvent, Group, Schedule, Filters, FormatedEvent } from "../model";
-import { get_camp_groups, get_camp_events, get_camp_schedule } from '../http';
+import { Event, CoachShort, Group, Schedule, Filters } from "../model";
+import { get_camp_groups, get_camp_events, get_camp_schedule, get_all_coaches } from '../http';
+import { change_group_schedule_coach } from '../http';
 import { objectToJson, getDayAndWeekday, getWeekNumber, formatDateTime } from "../../../../shared/utils";
 import { CampsSlice } from "../CampsScreen/state";
 import { eventTypes, weekDays } from '../../../../shared/constants';
@@ -10,6 +11,7 @@ export interface EventsSlice {
     days: {day: number, weekday: string}[];
     groups: Group[];
     
+    coaches: CoachShort[];
     schedules: Schedule[];
     events: Event[];
 
@@ -19,9 +21,11 @@ export interface EventsSlice {
     group_inx: number;
     group_id: number;
     event_id: number;
+    schedule_id: number;
 
     isSchedulesView: boolean;
     isAddAlert: boolean;
+    isCoachesView: boolean;
 
     isGame: boolean;
     isTest: boolean;
@@ -50,12 +54,17 @@ export interface EventsSlice {
     showAddAlert: () => void;
     hideAddAlert: () => void;
 
+    showCoachesView: (id: number) => void; // load all coaches
+    hideCoachesView: () => void;
+
     selectEventGroup1: (group_inx: number) => void;
     selectEventGroup2: (group_inx: number) => void;
+    selectNewCoach: (coach_id: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
     days: [],
+    coaches: [],
     schedules: [],
     events: [],
     groups: [],
@@ -66,9 +75,11 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     group_inx: -1,
     group_id: 0,
     event_id: 0,
+    schedule_id: 0,
 
     isSchedulesView: true,
-    isAddAlert: true,
+    isAddAlert: false,
+    isCoachesView: false,
 
     isGame: true,
     isTest: true,
@@ -78,7 +89,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     group1_inx: 0,
     group2_inx: 0,
 
-
+      
     loadGroups: (camp_id: number, callback: () => void) => {
         get_camp_groups(camp_id, (groups: Group[]) => {
             set({ groups });
@@ -90,6 +101,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     loadShedules: (camp_id: number) => {
         get_camp_schedule(camp_id, (schedules: Schedule[]) => {
+            //alert(objectToJson(schedules))
             const { group_id, filterShedules }: EventsSlice = get();
 
             set({ schedules });
@@ -162,7 +174,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     filterEvents: (filters: Filters) => {
         const { groups, events }: EventsSlice = get();
         const filtredEvents = filterEvents(events, filters);
-       // const formatedEvents = formatEvents(filtredEvents, groups);
+
         set({ filtredEvents });
     },
 
@@ -191,8 +203,38 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     showAddAlert: () => set({isAddAlert: true}),
     hideAddAlert: () => set({isAddAlert: false}),
 
+    showCoachesView: (id: number) => {
+        get_all_coaches((coaches => {
+            set({coaches, schedule_id: id});
+        }));
+
+        set({isCoachesView: true})
+    },
+    hideCoachesView: () => set({isCoachesView: false}),
+
     selectEventGroup1: (group_inx: number) => {},
     selectEventGroup2: (group_inx: number) => {},
+
+    selectNewCoach: (coach_id: number) => {
+        set({isCoachesView: false});
+        const { schedule_id }: EventsSlice = get();
+
+        change_group_schedule_coach(schedule_id, {coach_id}, (res => {
+            if (res.isOk) {
+                const { coaches, camp_id, filterShedules }: EventsSlice & CampsSlice = get();
+
+                const coach: CoachShort = coaches.find(el => el.id === coach_id)!
+                let coach_name = coach.first_name + ' ' + coach.last_name;
+                coach_name = camp_id === coach.camp_id ? coach_name : coach_name + ' (' + coach.camp_name + ')';
+                
+                set((state: EventsSlice) => ({
+                    schedules: state.schedules.map(el => el.id === schedule_id ? {...el, coach_name} : el)
+                }));
+                
+                filterShedules(0);
+            }
+        }));
+    },
 });
 
 
@@ -203,24 +245,6 @@ function filterEvents(events: Event[], filters: Filters): Event[] {
         (filters.group === 0 || el.group1_id === filters.group || el.group2_id === filters.group)
     ));
 }
-
-// function formatEvents(events: Event[], groups: Group[]): FormatedEvent[] {
-//     return events.map((event) => {
-//         return formatEvent(event, groups);
-//     });
-// };
-
-// function formatEvent({id, timestamp, type, desc, group1_id, group2_id }: Event, groups: Group[]): FormatedEvent {
-//     return {
-//         id,
-//         date: formatDateTime(timestamp).date, 
-//         time: formatDateTime(timestamp).time,
-//         type,
-//         desc,
-//         group1: groups.find(group => group.id === group1_id)?.name || (group1_id === 0 ? '' : ''+group1_id),
-//         group2: groups.find(group => group.id === group2_id)?.name || (group2_id === 0 ? '' : ''+group2_id)
-//     };
-// };
 
 function getScheduleDays(schedules: Schedule[]): {day: number, weekday: string}[] {
     let currentDay: number = 0;

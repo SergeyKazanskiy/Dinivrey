@@ -11,6 +11,8 @@ export function SchedulesView({ day, weekday }: {day: number, weekday: string}) 
   const [expanded, setExpanded] = useState(false);
 
   const { filtredSchedules, groups } = useStore();
+  const { showCoachesView } = useStore();
+
   const dayEvents = filtredSchedules.filter(el => el.weekday === day);
 
   return (
@@ -31,12 +33,15 @@ export function SchedulesView({ day, weekday }: {day: number, weekday: string}) 
           <FlatList data={dayEvents} 
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) =>
-              <View style={item.id === 0 && { opacity: 0.6}}>
+              <TouchableOpacity style={item.id === 0 && { opacity: 0.6}}
+                onPress={() => showCoachesView(item.id)}
+              >
                 <ScheduleEventCell
-                  group={groups.find(el => el.id === item.group_id)!.name}
+                  group={groups.find(el => el.id === item.group_id)?.name || ''}
                   time={item.hour + ':' + item.minute}
+                  coach={item.coach_name}
                 />
-              </View>
+              </TouchableOpacity>
             } style={styles.list}
           />
         }

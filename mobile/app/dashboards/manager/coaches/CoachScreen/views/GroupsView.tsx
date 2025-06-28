@@ -20,9 +20,9 @@ export function GroupsView() {
           </TouchableOpacity>
         } style={styles.list}
       />
-      {coach_group_id === 0 && <Pressable onPress={loadFreeGroups} style={{ marginLeft: 8}}>
+      <Pressable onPress={loadFreeGroups} style={{ marginLeft: 8}}>
           <Ionicons name='add-circle-outline' size={26} color='rgb(180, 216, 158)' />
-      </Pressable>}
+      </Pressable>
     </View>
   );
 }

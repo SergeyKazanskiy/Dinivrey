@@ -13,6 +13,14 @@ export interface Group {
     camp_name: string;
 }
 
+export interface CoachShort {
+  id: number;
+  first_name: string;
+  last_name: string;
+  camp_name: string;
+  camp_id: number;
+}
+
 export interface Event {
   id: number;
   camp_id: number
@@ -46,7 +54,15 @@ export interface Schedule {
   group_id: number;
   hour: number;
   minute: number;
+  coach_name: string
 }
+
+    // id: int
+    // weekday: int
+    // hour: int
+    // minute: int
+    // group_name: int
+    // coach_name: str
 
 export interface Filters {
     types: string[];

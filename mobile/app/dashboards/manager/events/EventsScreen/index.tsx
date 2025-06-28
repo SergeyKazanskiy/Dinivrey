@@ -12,7 +12,7 @@ import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { Ionicons } from '@expo/vector-icons';
 import { months } from '../../../../shared/constants';
 import { AddCompetitionAlert } from './alerts/AddCompetitionAlert';
-
+import { CoachesScreen } from './views/CoachesScreen';
 
 export default function EventsScreen() {
   const { isSchedulesView, days, camp_id, year, month, group_inx, groups, camps, camp_inx } = useStore();
@@ -32,7 +32,7 @@ export default function EventsScreen() {
     }, [])
   );
 
-  const title: string = camps[camp_inx].name + ' - ' + months[month] + ''
+  const title = group_inx > -1 ? camps[camp_inx].name + ' - ' + months[month] + '' : 'Camp'
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
@@ -59,6 +59,7 @@ export default function EventsScreen() {
         </>
       }
       {!isSchedulesView && <EventsView/>}
+      <CoachesScreen/>
     </LinearGradient>
   );
 }
