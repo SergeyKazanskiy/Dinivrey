@@ -24,5 +24,6 @@ class GroupSchedule(Base):
     weekday = Column(Integer, nullable=False)  # 1 (Monday) to 7 (Sunday)
     hour = Column(Integer, nullable=False)     # 0-23
     minute = Column(Integer, nullable=False)   # 0-59
+    coach_id = Column(Integer, default=0, nullable=False)
     group = relationship("Group", back_populates="schedule")
 

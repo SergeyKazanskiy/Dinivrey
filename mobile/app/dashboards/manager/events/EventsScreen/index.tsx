@@ -11,11 +11,12 @@ import { useRouter, Stack } from 'expo-router';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { Ionicons } from '@expo/vector-icons';
 import { months } from '../../../../shared/constants';
+import { AddCompetitionAlert } from './alerts/AddCompetitionAlert';
 
 
 export default function EventsScreen() {
   const { isSchedulesView, days, camp_id, year, month, group_inx, groups, camps, camp_inx } = useStore();
-  const { loadGroups, loadEvents, loadShedules, togleFilter } = useStore();
+  const { loadGroups, loadEvents, loadShedules, togleFilter, showAddAlert } = useStore();
   
   const router = useRouter();
 
@@ -38,9 +39,11 @@ export default function EventsScreen() {
       <Stack.Screen options={{ headerShown: false }} />
 
       <CustomNavbar title={title}onClick={() => router.back()}>
-        <Ionicons name='repeat-outline' size={21} color="#D1FF4D" onPress={togleFilter}/>
+        {!isSchedulesView &&
+          <Ionicons name='add-circle-outline' size={21} color="#D1FF4D" onPress={showAddAlert}/>}
       </CustomNavbar>
 
+      <AddCompetitionAlert/>
       <FilterView/>
 
       {isSchedulesView &&

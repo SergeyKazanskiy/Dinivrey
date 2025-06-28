@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/manager_api';
-import { Camp, Group, Lider, Student, Test, Game, Achievement} from './model';
+import { Camp, Group, Lider, Student, Test, Game, Achievement, Schedule } from './model';
 import { Achieve, Attendance, Parent, AchieveAttach, Comment } from './model';
 
 
@@ -21,6 +21,44 @@ export function get_liders(group_id: number, callback: (liders: Lider[]) => void
   return httpWrapper(() => api.get(`camps/groups/${group_id}/liders/`), callback, 'Getting liders');
 };
 
+export function create_group(data: Omit<Group, 'id'>, callback: (res: {id: number}) => void) {
+    return httpWrapper(() => api.post(`camps/groups`, data), callback);
+};
+
+export function update_group(group_id: number, data: Partial<Group>, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`camps/groups/${group_id}`, data), callback);
+};
+
+export function delete_group(id: number, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.delete(`camps/groups/${id}`), callback);
+};
+
+// Coach
+export function get_group_coach(group_id: number, callback: (res: {id: number}) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/coach`), callback, 'Getting group coach');
+};
+
+export function change_group_coach(group_id: number, data: {coach_id: number}, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.put(`camps/groups/${group_id}/new_coach`, data), callback);
+};
+
+
+// Schedule
+export function get_group_schedule(group_id: number, callback: (schedules: Schedule[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/schedule`), callback, 'Getting schedule');
+};
+
+export function create_group_schedule(data: Omit<Schedule, 'id'>, callback: (res: {id: number}) => void) {
+  return httpWrapper(() => api.post(`camps/groups/schedule`, data), callback);
+};
+
+export function update_group_schedule(schedule_id: number, data: Partial<Schedule>, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`camps/groups/schedule/${schedule_id}`, data), callback);
+};
+
+export function delete_group_schedule(id: number, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.delete(`camps/groups/schedule/${id}`), callback);
+};
 
 // Profile
 export function get_student(id: number, callback: (student: Student) => void) {

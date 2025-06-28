@@ -21,10 +21,15 @@ export interface EventsSlice {
     event_id: number;
 
     isSchedulesView: boolean;
+    isAddAlert: boolean;
+
     isGame: boolean;
     isTest: boolean;
     isTraning: boolean;
     types: string[];
+
+    group1_inx: number;
+    group2_inx: number;
 
     loadGroups: (camp_id: number, callback: () => void) => void;
     loadShedules: (camp_id: number) => void;
@@ -41,6 +46,12 @@ export interface EventsSlice {
     setIsGame: () => void;
     setIsTest: () => void;
     setIsTraning: () => void;
+
+    showAddAlert: () => void;
+    hideAddAlert: () => void;
+
+    selectEventGroup1: (group_inx: number) => void;
+    selectEventGroup2: (group_inx: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
@@ -57,10 +68,15 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     event_id: 0,
 
     isSchedulesView: true,
+    isAddAlert: true,
+
     isGame: true,
     isTest: true,
     isTraning: true,
     types: eventTypes,
+
+    group1_inx: 0,
+    group2_inx: 0,
 
 
     loadGroups: (camp_id: number, callback: () => void) => {
@@ -171,6 +187,12 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         filterEvents(filters);
         set((prevState: EventsSlice) => ({ isTraning: !prevState.isTraning, types: updatedTypes }));
     },
+
+    showAddAlert: () => set({isAddAlert: true}),
+    hideAddAlert: () => set({isAddAlert: false}),
+
+    selectEventGroup1: (group_inx: number) => {},
+    selectEventGroup2: (group_inx: number) => {},
 });
 
 

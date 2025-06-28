@@ -61,6 +61,7 @@ export const SelectedField: React.FC<SelectProps> = ({ data, selectedIndex, onSe
 
 const styles = StyleSheet.create({
   selectBox: {
+    //width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 6,
