@@ -10,4 +10,12 @@ class CampResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        
+
+
+class CampScheduleResponse(BaseModel):
+    id: int
+    weekday: int
+    hour: int
+    minute: int
+    group_id: int
+    coach_name: str

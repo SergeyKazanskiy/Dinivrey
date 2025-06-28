@@ -30,7 +30,7 @@ export interface CoachesSlice {
 export const createCoachesSlice = (set: any, get: any): CoachesSlice => ({
     coaches: [],
 
-    campId: 0,
+    campId: 1,
     coach_id: 0,
     
     isAddAlert: false,

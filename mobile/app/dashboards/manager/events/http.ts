@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/manager_api';
-import { Camp, Group, Event, Attendance, GroupEvent, Schedule} from './model';
+import { Camp, Group, Event, Attendance, CoachShort, Schedule} from './model';
 
 
 // Get
@@ -20,7 +20,9 @@ import { Camp, Group, Event, Attendance, GroupEvent, Schedule} from './model';
     return httpWrapper(() => api.get(`camps/${camp_id}/events?year=${year}&month=${month}`), callback);
   };
 
-
+  export function get_all_coaches(callback: (camps: CoachShort[]) => void) {
+    return httpWrapper(() => api.get(`coaches/short`), callback);
+  };
 
   // export function get_group_events(group_id: number, year: number, month: number, callback: (events: GroupEvent[]) => void) {
   //   return httpWrapper(() => api.get(`camps/groups/${group_id}/events?year=${year}&month=${month}`), callback);
@@ -42,6 +44,9 @@ import { Camp, Group, Event, Attendance, GroupEvent, Schedule} from './model';
     return httpWrapper(() => api.put(`camps/events/${event_id}`, data), callback);
   };
 
+  export function change_group_schedule_coach(id: number, data: {coach_id: number}, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.put(`camps/groups/schedule/${id}`, data), callback);
+  };
   
   // Delete
   export function delete_event(event_id: number, callback: (res: {isOk: boolean}) => void) {

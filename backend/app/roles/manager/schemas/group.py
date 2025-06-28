@@ -49,7 +49,7 @@ class GroupScheduleResponse(GroupScheduleBase):
 class GroupScheduleUpdate(BaseModel):
     hour: Optional[int] = None
     minute: Optional[int] = None
-    #coach_id: Optional[int] = None  #Temp !!!
+    coach_id: Optional[int] = None 
 
 class GroupScheduleRead(GroupScheduleBase):
     id: int

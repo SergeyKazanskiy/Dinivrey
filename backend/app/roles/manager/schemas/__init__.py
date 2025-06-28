@@ -1,12 +1,12 @@
 from .shared import ResponseOk, ResponseId
 
 from .coach import CoachResponse, CoachShortResponse, CoachCreate, CoachUpdate
-from .coach import CoachGroupResponse, CoachGroupAdd
+from .coach import CoachGroupResponse, CoachGroupAdd, CoachSchedualResponse
 
 from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse, EventReportResponse
 from .event import AttendanceResponse
 
-from .camp import CampResponse
+from .camp import CampResponse, CampScheduleResponse
 
 from .group import GroupCreate, GroupResponse, GroupUpdate, StudentName, FreeGroupResponse
 from .group import GroupScheduleResponse, GroupScheduleUpdate, GroupScheduleCreate, GroupCoachUpdate

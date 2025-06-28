@@ -35,6 +35,12 @@ class CoachShortResponse(BaseModel):
     first_name: str
     last_name: str
 
+class CoachSchedualResponse(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    camp_name: Optional[str]
+    camp_id: Optional[int]
 
 class CoachGroupResponse(BaseModel):
     id: int
