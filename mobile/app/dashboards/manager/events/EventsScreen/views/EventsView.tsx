@@ -1,16 +1,14 @@
-import { ListItem } from '@rneui/themed';
-import { useState } from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, FlatList, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
 import { CampEventCell } from '../../../../../shared/components/CampEventCell';
-import { formatDateTime } from '../../../../../shared/utils';
-import { Icon } from '@rneui/themed';
+import { formatDateTime, objectToJson } from '../../../../../shared/utils';
 import { TypesView } from '../views/TypesView';
 
 
 export function EventsView() {
-  const { filtredEvents, groups } = useStore();
+  const { filtredEvents, groups, event_id, today } = useStore();
+  const { selectEvent } = useStore();
 
   function handlePressGroup( event_id: number, group_id: number, timestamp: number, group_number: number) {
     // selectEvent(event_id, group_id, timestamp, group_number);
@@ -22,19 +20,34 @@ export function EventsView() {
     // }
   }
 
+  function handlePressEvent(event_id: number, timestamp: number) {
+    if (timestamp >= today) {
+      selectEvent(event_id);
+    }
+  }
+
   return (
     <>
       <FlatList data={filtredEvents}
+        contentContainerStyle={{ paddingBottom: 300 }}
+        keyExtractor={(index) => index.toString()}
         renderItem={({ item }) =>
-          <CampEventCell key={item.id}
-            type={item.type}  
-            date={formatDateTime(item.timestamp).date}
-            time={formatDateTime(item.timestamp).time}
-            desc={item.desc}
-            group1={groups.find(el => el.id === item.group1_id)!}
-            onGroup={(group_id, group_number) => handlePressGroup(item.id, group_id, item.timestamp, group_number)}
-            group2={groups.find(el => el.id === item.group2_id)}
-          />
+          <TouchableOpacity style={[
+            item.id === event_id && {backgroundColor: '#152B52'},
+            item.timestamp < today && {opacity: 0.7},
+          ]}
+            onPress={()=>handlePressEvent(item.id, item.timestamp)}>
+
+            <CampEventCell key={item.id}
+              type={item.type}  
+              date={formatDateTime(item.timestamp).date}
+              time={formatDateTime(item.timestamp).time}
+              desc={item.desc}
+              group1={groups.find(el => el.id === item.group1_id)!}
+              onGroup={(group_id, group_number) => handlePressGroup(item.id, group_id, item.timestamp, group_number)}
+              group2={groups.find(el => el.id === item.group2_id)}
+            />
+          </TouchableOpacity>
         } style={styles.list}
       />
       <View style={styles.types}>

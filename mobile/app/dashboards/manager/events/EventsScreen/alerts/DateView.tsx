@@ -2,9 +2,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from '@rneui/themed';
 import { daysOfWeek } from '../../../../../shared/constants';
 
+
 interface Props {
   timestamp: number;
-  setDate: (hour: number) => void;
+  setDate: (timestamp: number, day: number) => void;
 }
 
 export const DateView: React.FC<Props> = ({ timestamp, setDate }) => {
@@ -14,10 +15,11 @@ export const DateView: React.FC<Props> = ({ timestamp, setDate }) => {
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
+  const today = new Date();
 
   const handleDateClick = (day: number) => {
     const newDate = new Date(year, month, day, dateTime.getHours(), dateTime.getMinutes());
-    setDate(newDate.getTime());
+    setDate(newDate.getTime(), day);
   };
 
   return (
@@ -45,9 +47,10 @@ export const DateView: React.FC<Props> = ({ timestamp, setDate }) => {
 
             <Button key={day}
               title={day.toString()}
-              type={day < dateTime.getDate() ? 'solid' : 'outline'}
+              type={day === dateTime.getDate() ? 'solid' : 'outline'}
               buttonStyle={styles.dayButton}
               titleStyle={[styles.buttonText]}
+              disabled={day < today.getDate()}
               onPress={() => handleDateClick(day)}
             />
           );
