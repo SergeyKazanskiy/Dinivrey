@@ -9,15 +9,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
 import { useRouter, Stack } from 'expo-router';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
+import { EditAlert } from './alerts/EditAlert';
 import { Ionicons } from '@expo/vector-icons';
 import { months } from '../../../../shared/constants';
 import { AddCompetitionAlert } from './alerts/AddCompetitionAlert';
 import { CoachesScreen } from './views/CoachesScreen';
+import { DeleteEventAlert } from './alerts/DeleteEventAlert';
+import { getTimestamp } from '../../../../shared/utils';
+
 
 export default function EventsScreen() {
-  const { isSchedulesView, days, camp_id, year, month, group_inx, groups, camps, camp_inx } = useStore();
-  const { loadGroups, loadEvents, loadShedules, togleFilter, showAddAlert } = useStore();
-  
+  const { days, camp_id, year, month, camps, camp_inx, event_id } = useStore();
+  const { isSchedulesView, isEditAlert} = useStore();
+  const { loadGroups, loadEvents, loadShedules, setToday } = useStore();
+  const { showEditAlert, hideEditAlert, showAddAlert, showDeleteAlert } = useStore();
+
   const router = useRouter();
 
   useFocusEffect(
@@ -29,21 +35,28 @@ export default function EventsScreen() {
           loadEvents(camp_id, year, month)
         }
       })
+      const dateTime = new Date();
+      setToday(dateTime.getTime());
     }, [])
   );
 
-  const title = group_inx > -1 ? camps[camp_inx].name + ' - ' + months[month] + '' : 'Camp'
+  const title = camp_inx > -1 ? camps[camp_inx]?.name + ' - ' + months[month] + '' : 'Camp'
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
       <Stack.Screen options={{ headerShown: false }} />
 
-      <CustomNavbar title={title}onClick={() => router.back()}>
-        {!isSchedulesView &&
+      <CustomNavbar title={title} onClick={() => router.back()}>
+        {!isSchedulesView && event_id > 0 &&
+          <Ionicons name='menu-outline' size={21} color="#D1FF4D" onPress={showEditAlert}/>}
+        {!isSchedulesView && event_id === 0 &&
           <Ionicons name='add-circle-outline' size={21} color="#D1FF4D" onPress={showAddAlert}/>}
       </CustomNavbar>
 
+      <EditAlert isOpen={isEditAlert} onEdit={showAddAlert} onDelete={showDeleteAlert} onClose={hideEditAlert}/>
       <AddCompetitionAlert/>
+      <DeleteEventAlert/>
+
       <FilterView/>
 
       {isSchedulesView &&
@@ -59,6 +72,7 @@ export default function EventsScreen() {
         </>
       }
       {!isSchedulesView && <EventsView/>}
+
       <CoachesScreen/>
     </LinearGradient>
   );

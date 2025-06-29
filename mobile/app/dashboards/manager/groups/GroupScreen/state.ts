@@ -24,6 +24,9 @@ export interface GroupSlice {
   hour: number;
   minute: number;
 
+  isAchievesScreen: boolean;
+  isStatisticsScreen: boolean;
+
   setGroup: (group: Group) => void;
 
   loadCoaches: (camp_id: number) => void;
@@ -49,6 +52,13 @@ export interface GroupSlice {
 
   createSchedule: () => void;
   deleteSchedule: () => void;
+
+  //Reports
+  showAchievesScreen: () => void;
+  hideAchievesScreen: () => void;
+
+  showStatisticsScreen: () => void;
+  hideStatisticsScreen: () => void;
 }
 
 export const createGroupSlice = (set: any, get: any): GroupSlice => ({
@@ -67,6 +77,8 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
   hour: 0,
   minute: 0,
 
+  isAchievesScreen: false,
+  isStatisticsScreen: false,
 
   setGroup: (group: Group) => {
       set({ group });
@@ -229,6 +241,12 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
           };
       });
   },
+
+  showAchievesScreen: () => set({isAchievesScreen: true}),
+  hideAchievesScreen: () => set({isAchievesScreen: false}),
+
+  showStatisticsScreen: () => set({isStatisticsScreen: true}),
+  hideStatisticsScreen: () => set({isStatisticsScreen: false}),
 });
 
 function getDescription(schedules: Schedule[]): string {

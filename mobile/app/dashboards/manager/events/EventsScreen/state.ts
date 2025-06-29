@@ -1,7 +1,7 @@
 import { Event, CoachShort, Group, Schedule, Filters } from "../model";
 import { get_camp_groups, get_camp_events, get_camp_schedule, get_all_coaches } from '../http';
-import { change_group_schedule_coach } from '../http';
-import { objectToJson, getDayAndWeekday, getWeekNumber, formatDateTime } from "../../../../shared/utils";
+import { change_group_schedule_coach, add_event, update_event, delete_event } from '../http';
+import { objectToJson, getChanges } from "../../../../shared/utils";
 import { CampsSlice } from "../CampsScreen/state";
 import { eventTypes, weekDays } from '../../../../shared/constants';
 import { EventSlice } from '../EventScreen/state';
@@ -24,16 +24,18 @@ export interface EventsSlice {
     schedule_id: number;
 
     isSchedulesView: boolean;
-    isAddAlert: boolean;
     isCoachesView: boolean;
+
+    isAddAlert: boolean;
+    isEditAlert: boolean;
+    isDeleteAlert: boolean;
 
     isGame: boolean;
     isTest: boolean;
     isTraning: boolean;
     types: string[];
 
-    group1_inx: number;
-    group2_inx: number;
+    today: number; //currentTimestamp
 
     loadGroups: (camp_id: number, callback: () => void) => void;
     loadShedules: (camp_id: number) => void;
@@ -54,12 +56,22 @@ export interface EventsSlice {
     showAddAlert: () => void;
     hideAddAlert: () => void;
 
+    showEditAlert: () => void;
+    hideEditAlert: () => void;
+
+    showDeleteAlert: () => void;
+    hideDeleteAlert: () => void;
+
     showCoachesView: (id: number) => void; // load all coaches
     hideCoachesView: () => void;
-
-    selectEventGroup1: (group_inx: number) => void;
-    selectEventGroup2: (group_inx: number) => void;
     selectNewCoach: (coach_id: number) => void;
+
+    selectEvent: (event_id: number) => void;
+    addEvent: (event: Omit<Event, "id">) => void;
+    updateEvent: (event: Event) => void;
+    deleteEvent: (event_id: number) => void;
+
+    setToday: (today: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
@@ -78,18 +90,19 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     schedule_id: 0,
 
     isSchedulesView: true,
-    isAddAlert: false,
     isCoachesView: false,
+
+    isAddAlert: false,
+    isEditAlert: false,
+    isDeleteAlert: false,
 
     isGame: true,
     isTest: true,
     isTraning: true,
     types: eventTypes,
 
-    group1_inx: 0,
-    group2_inx: 0,
+    today: 0,
 
-      
     loadGroups: (camp_id: number, callback: () => void) => {
         get_camp_groups(camp_id, (groups: Group[]) => {
             set({ groups });
@@ -200,8 +213,14 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         set((prevState: EventsSlice) => ({ isTraning: !prevState.isTraning, types: updatedTypes }));
     },
 
-    showAddAlert: () => set({isAddAlert: true}),
+    showAddAlert: () => set({isAddAlert: true, isEditAlert: false}),
     hideAddAlert: () => set({isAddAlert: false}),
+
+    showEditAlert: () => set({isEditAlert: true}),
+    hideEditAlert: () => set({isEditAlert: false}),
+
+    showDeleteAlert: () => set({isDeleteAlert: true, isEditAlert: false}),
+    hideDeleteAlert: () => set({isDeleteAlert: false}),
 
     showCoachesView: (id: number) => {
         get_all_coaches((coaches => {
@@ -211,9 +230,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         set({isCoachesView: true})
     },
     hideCoachesView: () => set({isCoachesView: false}),
-
-    selectEventGroup1: (group_inx: number) => {},
-    selectEventGroup2: (group_inx: number) => {},
 
     selectNewCoach: (coach_id: number) => {
         set({isCoachesView: false});
@@ -230,16 +246,79 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
                 set((state: EventsSlice) => ({
                     schedules: state.schedules.map(el => el.id === schedule_id ? {...el, coach_name} : el)
                 }));
-                
+
                 filterShedules(0);
             }
         }));
     },
+
+    // Events
+    selectEvent: (event_id: number) => set((state: EventsSlice) => ({
+        event_id: state.event_id === event_id ? 0 : event_id
+    })),
+
+
+    addEvent: (newEvent: Omit<Event, 'id'>) => {
+        set({isAddAlert: false});
+
+        add_event(newEvent, (res) => {
+            if (res.id) {
+                const event: Event = {...newEvent, id: res.id};
+                const { events }: EventsSlice  = get();
+
+                const eventsWithNew = [ ...events, event];
+                const sortedEvents = eventsWithNew.sort((a, b) => a.timestamp - b.timestamp);
+                set({ events: sortedEvents, event_id: res.id });
+        
+                const { types, group_id, filterEvents }: EventsSlice = get();
+                const filters: Filters = { types: types, group: group_id };
+                filterEvents(filters);
+            }     
+        })
+    },
+
+    updateEvent: (updatedEvent: Event) => {
+        set({isAddAlert: false});
+
+        const { events, event_id }: EventsSlice = get();
+        const event = events.find(event => event.id === event_id)!
+        const data = getChanges(event, updatedEvent);
+  
+        update_event(event_id, data, (res) => {
+            if (res.isOk) {
+                const updatedEvents = events.map((el) => el.id === event_id ? updatedEvent : el);
+                set({ events: updatedEvents.sort((a, b) => a.timestamp - b.timestamp) });
+ 
+                const { types, group_id, filterEvents }: EventsSlice   = get();
+                const filters: Filters = { types: types, group: group_id };
+                filterEvents(filters);
+            }
+        });
+        // const { closeModal }: StateSlice = get();
+        // closeModal();
+    },
+
+    deleteEvent: (event_id: number) => {
+        set({isDeleteAlert: false, event_id: 0});
+
+        delete_event(event_id, (res => {
+            if (res.isOk) {
+                set((state: EventsSlice) => ({
+                    events: state.events.filter(el => el.id !== state.event_id),
+                }));
+
+                const { types, group_id, filterEvents }: EventsSlice  = get();
+                const filters: Filters = { types: types, group: group_id };
+                filterEvents(filters);
+            }
+        }));
+    },
+
+    setToday: (today: number) => set({today}),
 });
 
 
 function filterEvents(events: Event[], filters: Filters): Event[] {
-    //alert(objectToJson(events))
     return events.filter(el => (
         filters.types.includes(el.type) &&
         (filters.group === 0 || el.group1_id === filters.group || el.group2_id === filters.group)

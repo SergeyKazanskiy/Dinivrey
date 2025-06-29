@@ -15,11 +15,12 @@ interface Props {
   time: string;
   onDate: () => void;
   onTime: () => void;
-  hideButtons: boolean;
+  isTime: boolean;
+  isDate: boolean;
 }
 
 export const CustomAlert: React.FC<Props> = (
-  { visible, title, children, handleYes, buttonText, onClose, date, time, onDate, onTime, hideButtons }) => {
+  { visible, title, children, handleYes, buttonText, onClose, date, time, onDate, onTime, isTime, isDate }) => {
     
   const slideAnim = useRef(new Animated.Value(-16)).current;
   const top = 5;
@@ -42,14 +43,14 @@ export const CustomAlert: React.FC<Props> = (
               <Text style={styles.title}>{title}</Text>
 
               <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                <Text style={styles.date} onPress={onDate}>{date}</Text>
-                <Text style={styles.date} onPress={onTime}>{time}</Text>
+                <Text style={[styles.date, isDate && {backgroundColor: '#2E4A7C'}]} onPress={onDate}>{date}</Text>
+                <Text style={[styles.date, isTime && {backgroundColor: '#2E4A7C'}]} onPress={onTime}>{time}</Text>
               </View>
             </View>
 
             <View style={styles.content}>{children}</View>
 
-            {!hideButtons && <View style={styles.buttonRow}>
+            {!isDate && !isTime && <View style={styles.buttonRow}>
               {handleYes && buttonText && (
                 <TouchableOpacity style={styles.button} onPress={handleYes}>
                   <Text style={styles.buttonText}>{buttonText}</Text>

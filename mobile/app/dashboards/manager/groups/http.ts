@@ -128,3 +128,8 @@ export function update_student_achieves_summary(student_id: number,  data: {summ
 export function update_student_games_summary(student_id: number,  data: {summary_games: string}, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.put(`students/${student_id}/games/summary`, data), callback);
 };
+
+// Reports
+export function get_group_achieves(group_id: number, callback: (achieves: Achievement[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/achievements`), callback);
+};
