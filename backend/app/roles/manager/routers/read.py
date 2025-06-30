@@ -373,3 +373,62 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
 async def get_achieves(category: str, trigger: str, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Achieve, session, filters={"trigger": trigger, "category": category})
 
+
+@router.get("/camps/groups/{id}/achievements", tags=["Manager"])
+async def get_group_achieves(id: int, session: AsyncSession = Depends(get_session)):
+    Achieve = models.Achieve
+    StudentAchieve = models.Achievement
+    Student=models.Student
+
+    stmt = (
+        select(Achieve.id, Achieve.image, Achieve.name, Achieve.category,
+               func.count(StudentAchieve.student_id).label("count"))
+        .join(StudentAchieve, StudentAchieve.achieve_id == Achieve.id)
+        .join(Student, Student.id == StudentAchieve.student_id)
+        .where(Student.group_id == id)
+        .group_by(Achieve.id, Achieve.image, Achieve.name)
+        .order_by(Achieve.category, Achieve.name)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [{"id": row[0],
+            "image": row[1],
+            "name": row[2],
+            "category": row[3],
+            "count": row[4]}
+            for row in rows]
+
+@router.get("/camps/groups/{id}/statistics", response_model=List[schemas.GroupTestResponse], tags=["Manager"])
+async def get_group_statistics(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+
+    Test = models.Test
+    Student=models.Student
+
+    stmt = (
+        select(
+            Test.timestamp,
+            func.avg(Test.speed).label("avg_speed"),
+            func.avg(Test.stamina).label("avg_stamina"),
+            func.avg(Test.climbing).label("avg_climbing"),
+            func.avg(Test.evasion).label("avg_evasion"),
+            func.avg(Test.hiding).label("avg_hiding"),
+        )
+        .join(Student, Student.id == Test.student_id)
+        .where(Student.group_id == id, Test.timestamp.between(start_ts, end_ts))
+        .group_by(Test.timestamp)
+        .order_by(Test.timestamp)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [{"timestamp": row[0],
+            "speed": row[1],
+            "stamina": row[2],
+            "climbing": row[3],
+            "evasion": row[4],
+            "hiding": row[5]}
+            for row in rows]
+

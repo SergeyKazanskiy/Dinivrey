@@ -10,6 +10,7 @@ from .camp import CampResponse, CampScheduleResponse
 
 from .group import GroupCreate, GroupResponse, GroupUpdate, StudentName, FreeGroupResponse
 from .group import GroupScheduleResponse, GroupScheduleUpdate, GroupScheduleCreate, GroupCoachUpdate
+from .group import GroupTestResponse
 
 from .student import StudentShort, StudentResponse, ParentResponse, StudentName, CommentResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate, TestUpdate2
