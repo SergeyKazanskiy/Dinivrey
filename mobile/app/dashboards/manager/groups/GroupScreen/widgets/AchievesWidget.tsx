@@ -26,7 +26,7 @@ export const AchievesWidget: React.FC<Props> = ({ title, achieves, category }) =
                         <AchieveIcon onClick={() => {}}
                             size={80}
                             image={item.image}
-                            label={item.name + ' (' + item.count + ')'}
+                            label={item.name + ' x' + item.count}
                             level={'Common'}
                         />
                     }

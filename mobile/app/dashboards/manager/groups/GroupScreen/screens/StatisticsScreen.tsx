@@ -10,6 +10,7 @@ import { Statistic, Metric } from '../../model';
 import { formatDateTime, objectToJson } from '../../../../../shared/utils';
 import { CalendarWidget } from '../widgets/CalendarWidget';
 
+
 export const StatisticsScreen = () => {
   const { isStatisticsScreen, group_id } = useStore();
   const { hideStatisticsScreen } = useStore();
@@ -37,9 +38,8 @@ export const StatisticsScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      //alert('useFocusEffect')
       get_group_statistics(group_id, year, month, (statistics => {
-        alert(objectToJson(statistics))
+        //alert(objectToJson(statistics))
         const dates = statistics.map(el => formatDateTime(el.timestamp).date);
         setDates(dates);
 
