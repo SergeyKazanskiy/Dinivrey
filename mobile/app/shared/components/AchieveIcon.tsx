@@ -8,7 +8,7 @@ interface AnimatedIconProps {
   onClick: () => void;
   image: string;
   label: string;
-  level: string;
+  level: string; //'Common', 'Rare', 'Super', 'Epic']
   size?: number;
   effect?: string; //'fade' | 'rotate' | 'pulse' | 'jump' | 'ripple';
   isGif?: boolean;

@@ -94,7 +94,7 @@ class TestResponse(TestBase):
     id: int
     
     class Config:
-        from_attributes = True
+        from_attributes = True 
 
 class TestUpdate(BaseModel):
     speed: Optional[float] = None

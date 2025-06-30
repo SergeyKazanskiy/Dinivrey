@@ -72,3 +72,11 @@ class FreeGroupResponse(BaseModel):
     name: str
     desc: str
     
+class GroupTestResponse(BaseModel):
+    timestamp: int
+
+    speed: float
+    stamina: float
+    climbing: float
+    evasion: float
+    hiding: float

@@ -1,7 +1,7 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/manager_api';
 import { Camp, Group, Lider, Student, Test, Game, Achievement, Schedule } from './model';
-import { Achieve, Attendance, Parent, AchieveAttach, Comment } from './model';
+import { Achieve, Attendance, Parent, AchieveAttach, Comment, Statistic } from './model';
 
 
 // Groups
@@ -130,6 +130,10 @@ export function update_student_games_summary(student_id: number,  data: {summary
 };
 
 // Reports
-export function get_group_achieves(group_id: number, callback: (achieves: Achievement[]) => void) {
+export function get_group_achieves(group_id: number, callback: (achieves: Achieve[]) => void) {
   return httpWrapper(() => api.get(`camps/groups/${group_id}/achievements`), callback);
+};
+
+export function get_group_statistics(group_id: number, year: number, month: number, callback: (statistics: Statistic[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/statistics?year=${year}&month=${month}`), callback);
 };

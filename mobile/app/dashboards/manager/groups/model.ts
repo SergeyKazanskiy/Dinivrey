@@ -20,12 +20,12 @@ export interface Schedule {
     coach_id: number;
 }
 
-export interface Achieve {
-    image: string;
-    level: string;
-    name: string;
-    effect: string;
-}
+// export interface Achieve {
+//     image: string;
+//     level: string;
+//     name: string;
+//     effect: string;
+// }
 
 export interface Lider {
     id: number;
@@ -131,6 +131,8 @@ export interface StudentProfile {
     image: string;
     name: string;
     category: string;
+    effect?: string ;
+    count?: number;
   }
   
   export interface AchieveAttach {
@@ -151,4 +153,14 @@ export interface StudentProfile {
   export interface Comment {
     timestamp: number;
     comment: string;
+}
+
+export interface Statistic {
+    timestamp: number;
+
+    speed: number;
+    stamina: number;
+    climbing: number;
+    evasion: number;
+    hiding: number;
 }

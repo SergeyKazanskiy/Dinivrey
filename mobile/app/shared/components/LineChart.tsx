@@ -6,9 +6,10 @@ interface Props {
   labels: string[];
   values: number[];
   w: number;
+  h?: number;
 }
 
-export function LineChart({ labels, values, w }: Props) {
+export function LineChart({ labels, values, w, h=200 }: Props) {
 
   const data = {
     labels: labels, // days
@@ -26,7 +27,7 @@ export function LineChart({ labels, values, w }: Props) {
     <RNLineChart
       data={data}
       width={w}
-      height={200}
+      height={h}
       chartConfig={{
         propsForLabels: {
           fontSize: 14,

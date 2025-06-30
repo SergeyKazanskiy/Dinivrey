@@ -10,13 +10,13 @@ export type Props = {
     category: string;
 };
 
-export const AchievesPanel: React.FC<Props> = ({ title, achieves, category }) => {  
+export const AchievesWidget: React.FC<Props> = ({ title, achieves, category }) => {  
     const data = achieves.filter(achieve => achieve.category === category);
 
     return (
         <>
             <Text style={styles.title}>{title}</Text>
-            
+
             <View style={[ styles.container]}>
                 <FlatList data={data} horizontal
                     keyExtractor={(achieve) => achieve.image}
@@ -26,9 +26,8 @@ export const AchievesPanel: React.FC<Props> = ({ title, achieves, category }) =>
                         <AchieveIcon onClick={() => {}}
                             size={80}
                             image={item.image}
-                            label={item.name}
-                            level={item.level}
-                            effect={item.effect}
+                            label={item.name + ' (' + item.count + ')'}
+                            level={'Common'}
                         />
                     }
                 />
@@ -41,7 +40,6 @@ const styles = StyleSheet.create({
     container: {
         height: 120,
         borderRadius: 10,
-        paddingLeft: 12,
         backgroundColor: 'rgba(45, 75, 10, 0.3)',
         borderWidth: 1,
         borderColor: 'rgb(110, 151, 6)'
@@ -52,9 +50,9 @@ const styles = StyleSheet.create({
         flexGrow: 1
     },
     title: {
-        color: 'white',
+        color: '#ddd',
         fontSize: 16,
-        fontWeight: 'medium',
+        fontWeight: '400',
         paddingTop: 20,
         paddingBottom: 8
     }

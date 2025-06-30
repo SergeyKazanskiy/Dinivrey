@@ -11,11 +11,14 @@ import { InfoView } from './views/InfoView';
 import { SchedulesView } from './views/SchedulesView';
 import { TimeView } from './views/TimeView';
 import { ButtonsView } from './views/ButtonsView';
+import { AchievesScreen } from './screens/AchievesScreen';
+import { StatisticsScreen } from './screens/StatisticsScreen';
 
 
 export default function GroupScreen() {
   const { camp_id, group_id, isTimeMenu } = useStore();
-  const { loadSchedule, showDeleteGroupAlert, loadCoaches, loadGroupCoache } = useStore();
+  const { loadSchedule, showDeleteGroupAlert, loadCoaches } = useStore();
+  const { showAchievesScreen, showStatisticsScreen } = useStore();
 
   const router = useRouter();
 
@@ -47,9 +50,12 @@ export default function GroupScreen() {
       
       <ButtonsView
         onStudents={() => router.push(`/dashboards/manager/groups/StudentsScreen`)}
-        onStatistics={() => router.push(`/dashboards/manager/groups/StatisticsScreen`)}
-        onAchievemens={() => router.push(`/dashboards/manager/groups/AchievesScreen`)}
+        onStatistics={showStatisticsScreen}
+        onAchievemens={showAchievesScreen}
       />
+      
+      <AchievesScreen/>
+      <StatisticsScreen/>
     </LinearGradient>
   );
 }
