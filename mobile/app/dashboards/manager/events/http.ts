@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/manager_api';
-import { Camp, Group, Event, Attendance, CoachShort, Schedule} from './model';
+import { Camp, Group, Event, Attendance, CoachShort, Schedule, ShortDrill} from './model';
 
 
 // Get
@@ -24,9 +24,9 @@ import { Camp, Group, Event, Attendance, CoachShort, Schedule} from './model';
     return httpWrapper(() => api.get(`coaches/short`), callback);
   };
 
-  // export function get_group_events(group_id: number, year: number, month: number, callback: (events: GroupEvent[]) => void) {
-  //   return httpWrapper(() => api.get(`camps/groups/${group_id}/events?year=${year}&month=${month}`), callback);
-  // };
+  export function get_event_drills(event_id: number, callback: (drills: ShortDrill[]) => void) {
+      return httpWrapper(() => api.get(`camps/events/${event_id}/drills`), callback);
+  };
 
   export function get_attendances(event_id: number, group_id: number, callback: (attendances: Attendance[]) => void) {
     return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/attendances`), callback);

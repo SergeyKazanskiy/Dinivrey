@@ -30,13 +30,13 @@ export const ProfileView = () => {
                     <Text style={styles.label}>First name</Text>
                     <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
                         value={firstName}
-                        onChangeText={setFirstName}
+                        onChangeText={(text) => setFirstName(text.trim())}
                         onBlur={() => updateCoach({first_name: firstName})}
                     />
                     <Text style={styles.label}>Last name</Text>
                     <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
                         value={lastName}
-                        onChangeText={setLastName}
+                        onChangeText={(text) => setLastName(text.trim())}
                         onBlur={() => updateCoach({last_name: lastName})}
                     />
                 </View>

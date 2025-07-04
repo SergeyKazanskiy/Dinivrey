@@ -46,6 +46,7 @@ export interface Attendance {
   first_name: string;
   last_name: string;
   present: boolean;
+  comment: string
 }
 
 export interface Schedule {
@@ -57,12 +58,16 @@ export interface Schedule {
   coach_name: string
 }
 
-    // id: int
-    // weekday: int
-    // hour: int
-    // minute: int
-    // group_name: int
-    // coach_name: str
+export interface ShortDrill {
+  id: number;
+  name: string;
+  time: string;
+  level: string;
+  category: string;
+  actors: number;
+  present: boolean;
+  completed: boolean;
+}
 
 export interface Filters {
     types: string[];

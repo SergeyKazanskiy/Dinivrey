@@ -11,8 +11,8 @@ import { InfoView } from './views/InfoView';
 import { SchedulesView } from './views/SchedulesView';
 import { TimeView } from './views/TimeView';
 import { ButtonsView } from './views/ButtonsView';
-import { AchievesScreen } from './screens/AchievesScreen';
-import { StatisticsScreen } from './screens/StatisticsScreen';
+import { AchievesReport } from './reports/AchievesReport';
+import { StatisticsReport } from './reports/StatisticsReport';
 
 
 export default function GroupScreen() {
@@ -54,8 +54,8 @@ export default function GroupScreen() {
         onAchievemens={showAchievesScreen}
       />
       
-      <AchievesScreen/>
-      <StatisticsScreen/>
+      <AchievesReport/>
+      <StatisticsReport/>
     </LinearGradient>
   );
 }

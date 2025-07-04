@@ -31,13 +31,13 @@ function App() {
           <Text style={sidebarStyles.group} alignSelf='start' pl={4} pb={3} >Main</Text>
           <SideMenuCell img='Students.png' title='Students' to='/api/students'/>
           <SideMenuCell img='Coach.png' title='Coaches' to='/api/coaches'/>
-          <SideMenuCell img='Manager.png' title='Managers' to='/api/managers'/>
-          <SideMenuCell img='Event.png' title='Events' to='/api/events'/>
+          <SideMenuCell img='Event.png' title='Schedule' to='/api/managers'/>
+          <SideMenuCell img='Game.png' title='Events' to='/api/events'/>
           <SideMenuCell img='Statistics.png' title='Statistics' to='/api/statistics'/>
 
           <Text style={sidebarStyles.group} alignSelf='start' pl={4} pt={8} pb={3} >Settings</Text>
-          <SideMenuCell img='Test.png' title='Drills' to='/api/drills'/>
-          <SideMenuCell img='Game.png' title='Metrics' to='/api/metrics'/>
+          <SideMenuCell img='climbing.png' title='Drills' to='/api/drills'/>
+          <SideMenuCell img='Test.png' title='Metrics' to='/api/metrics'/>
           <SideMenuCell img='Achievement.png' title='Achievements' to='/api/achievements'/>
         </VStack>
         <Routes>

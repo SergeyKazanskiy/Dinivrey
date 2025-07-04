@@ -31,23 +31,11 @@ export const StaticticsWidget: React.FC<Props> = ({ metrics, metricName, dates }
 };
 
 const styles = StyleSheet.create({
-    container: {
-        height: 120,
-        borderRadius: 10,
-        backgroundColor: 'rgba(45, 75, 10, 0.3)',
-        borderWidth: 1,
-        borderColor: 'rgb(110, 151, 6)'
-    },
-    content: {
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        flexGrow: 1
-    },
     title: {
-        color: 'gold',
+        color: '#eee',
         fontSize: 16,
-        fontWeight: '400',
-        paddingTop: 20,
+        fontWeight: '500',
+        paddingTop: 28,
         paddingBottom: 8
     }
 });

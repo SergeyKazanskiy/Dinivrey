@@ -23,8 +23,8 @@ export default function StudentsScreen() {
   );
 
   function handleBack() {
-    router.push("/dashboards/manager")
-    //router.back();
+    //router.push("/dashboards/manager/groups/GroupScreen")
+    router.back();
     clearStudents();
   }
 

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { StyleSheet, Platform, View, Text } from 'react-native';
+import { StyleSheet, Platform, View, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, CheckBox } from '@rneui/themed';
 import { useFocusEffect } from '@react-navigation/native';
@@ -106,31 +106,34 @@ export default function AttendanceScreen() {
         onExam={()=>router.push(`/dashboards/coach/events/TestingScreen`)}
         onGame={()=>router.push(`/dashboards/coach/events/GamingScreen`)}/>
 
-      <DrillsView/>
-      <DrillsScreen/>
+      <ScrollView>
+        <DrillsView/>
 
-      <View style={styles.container}>
-          <View style={styles.section}>
-            {isStudentsView && <Button disabled={students.length === 0} type='outline'
-              buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
-              onPress={handleAddBlank}>Add Blank</Button>}
-            {isAttendanceView && <Button size='sm' color="blue" type='outline'
-              buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
-              onPress={handleDeleteBlank}>Delete Blank</Button>}
+        <View style={styles.container}>
+            <View style={styles.section}>
+              {isStudentsView && <Button disabled={students.length === 0} type='outline'
+                buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
+                onPress={handleAddBlank}>Add Blank</Button>}
+              {isAttendanceView && <Button size='sm' color="blue" type='outline'
+                buttonStyle={styles.button} titleStyle={styles.title} containerStyle={{marginLeft: 2}}
+                onPress={handleDeleteBlank}>Delete Blank</Button>}
 
-            <View style={[styles.section, {marginRight: 11}]}>
-              {isAttendanceView && <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>}
+              <View style={[styles.section, {marginRight: 11}]}>
+                {isAttendanceView && <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>}
 
-              {isAttendanceView && <CheckBox checked={isAllChecked} onPress={setAllChecked}
-                iconType="material-community" checkedIcon="checkbox-outline" uncheckedIcon={'checkbox-blank-outline'}
-                containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}} checkedColor='#ddd'
-              />}
+                {isAttendanceView && <CheckBox checked={isAllChecked} onPress={setAllChecked}
+                  iconType="material-community" checkedIcon="checkbox-outline" uncheckedIcon={'checkbox-blank-outline'}
+                  containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}} checkedColor='#ddd'
+                />}
+              </View>
             </View>
-          </View>
+        
+            {isStudentsView && <StudentsView/>}
+            {isAttendanceView && <AttendanceView/>}
+        </View>
+      </ScrollView>
 
-          {isStudentsView && <StudentsView/>}
-          {isAttendanceView && <AttendanceView/>}
-      </View>  
+      <DrillsScreen/>
     </LinearGradient>
   );
 }
