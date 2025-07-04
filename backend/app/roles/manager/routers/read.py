@@ -256,6 +256,27 @@ async def get_attendances(event_id:int, group_id: int, session: AsyncSession = D
              "present": row[4],
              "comment": row[5]} for row in rows]
 
+# Drills
+@router.get("/camps/events/{event_id}/drills", tags=["Coach"])
+async def get_event_drills(event_id: int, session: AsyncSession = Depends(get_session)):
+    Drill = models.Drill
+    ED = models.EventDrill
+    stmt = (
+        select(ED.id, Drill.id, Drill.name, Drill.time, Drill.level, Drill.category, Drill.actors, ED.completed)
+            .join(Drill, ED.drill_id == Drill.id)
+            .where(ED.event_id == event_id)
+            .order_by(asc(Drill.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [{"id": row[0],
+             "drill_id": row[1],
+             "name": row[2],
+             "time": row[3],
+             "level": row[4],
+             "category": row[5],
+             "actors": row[6],
+             "completed": row[7]} for row in rows]
 
 # Student
 @router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Manager"])

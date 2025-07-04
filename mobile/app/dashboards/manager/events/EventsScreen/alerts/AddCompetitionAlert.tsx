@@ -105,7 +105,7 @@ export const AddCompetitionAlert = () => {
 
         <Text style={styles.label}>Description</Text>
         <TextInput style={styles.input} multiline={true} textAlignVertical="top"
-          keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
+          keyboardType='name-phone-pad' maxLength={100} placeholder="Enter"
           value={desc} onChangeText={setDesc}
         />
       </>}

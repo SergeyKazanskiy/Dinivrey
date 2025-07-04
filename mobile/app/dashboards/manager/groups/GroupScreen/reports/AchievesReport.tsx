@@ -9,7 +9,7 @@ import { get_group_achieves } from '../../http';
 import { Achieve } from '../../model';
 
 
-export const AchievesScreen = () => {
+export const AchievesReport = () => {
   const { isAchievesScreen, group_id } = useStore();
   const { hideAchievesScreen } = useStore();
 
@@ -26,7 +26,7 @@ export const AchievesScreen = () => {
   );
 
   return (
-    <ScreenWrapper visible={isAchievesScreen} title='Achieves report' onClose={hideAchievesScreen}>
+    <ScreenWrapper visible={isAchievesScreen} title='Group Achievements' onClose={hideAchievesScreen}>
       <LinearGradient colors={['#2E4A7C', '#152B52']}>
         <View style={styles.container}>
           

@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
 import { useRouter, Stack } from 'expo-router';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
+import { CustomAlert } from '../../../../shared/components/CustomAlert';
 import { EditAlert } from './alerts/EditAlert';
 import { Ionicons } from '@expo/vector-icons';
 import { months } from '../../../../shared/constants';
@@ -16,13 +17,15 @@ import { AddCompetitionAlert } from './alerts/AddCompetitionAlert';
 import { CoachesScreen } from './views/CoachesScreen';
 import { DeleteEventAlert } from './alerts/DeleteEventAlert';
 import { getTimestamp } from '../../../../shared/utils';
+import { AttendanceReport } from '../EventsScreen/reports/AttendanceReport';
+import { ScreenWrapper } from '../../../../shared/components/ScreenWrapper';
 
 
 export default function EventsScreen() {
   const { days, camp_id, year, month, camps, camp_inx, event_id } = useStore();
-  const { isSchedulesView, isEditAlert} = useStore();
-  const { loadGroups, loadEvents, loadShedules, setToday } = useStore();
-  const { showEditAlert, hideEditAlert, showAddAlert, showDeleteAlert } = useStore();
+  const { isSchedulesView, isEditAlert, isAddingErrorAlert} = useStore();
+  const { loadGroups, loadEvents, loadShedules, setToday, hideAddingErrorAlert } = useStore();
+  const { showEditAlert, hideEditAlert, showAddAlert, showDeleteAlert, hideAttendanceReport } = useStore();
 
   const router = useRouter();
 
@@ -40,7 +43,7 @@ export default function EventsScreen() {
     }, [])
   );
 
-  const title = camp_inx > -1 ? camps[camp_inx]?.name + ' - ' + months[month] + '' : 'Camp'
+  const title = camp_inx > -1 ? camps[camp_inx]?.name + ' - ' + months[month - 1] + '' : 'Camp'
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
@@ -55,6 +58,9 @@ export default function EventsScreen() {
 
       <EditAlert isOpen={isEditAlert} onEdit={showAddAlert} onDelete={showDeleteAlert} onClose={hideEditAlert}/>
       <AddCompetitionAlert/>
+      <CustomAlert visible={isAddingErrorAlert} title="Attention!" onClose={() => hideAddingErrorAlert()}>
+        <Text style={styles.alertText}>Unable to create event in the past</Text>
+      </CustomAlert>
       <DeleteEventAlert/>
 
       <FilterView/>
@@ -74,6 +80,7 @@ export default function EventsScreen() {
       {!isSchedulesView && <EventsView/>}
 
       <CoachesScreen/>
+      <AttendanceReport/>
     </LinearGradient>
   );
 }
@@ -92,5 +99,9 @@ const styles = StyleSheet.create({
   title: {   
     paddingTop: 60,
     alignSelf:'center'
+  },
+  alertText: {
+    fontSize: 15,
+    color: '#ddd'
   },
 });

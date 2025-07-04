@@ -8,16 +8,10 @@ import { TypesView } from '../views/TypesView';
 
 export function EventsView() {
   const { filtredEvents, groups, event_id, today } = useStore();
-  const { selectEvent } = useStore();
+  const { selectEvent, showAttendanceReport } = useStore();
 
-  function handlePressGroup( event_id: number, group_id: number, timestamp: number, group_number: number) {
-    // selectEvent(event_id, group_id, timestamp, group_number);
-    
-    // if (event_id === 0) {
-    //   openAddAlert(group_id, timestamp);
-    // } else {
-    //   router.push(`/dashboards/coach/events`);
-    // }
+  function handlePressGroup( event_id: number, group_id: number ) {
+    showAttendanceReport(event_id, group_id);
   }
 
   function handlePressEvent(event_id: number, timestamp: number) {
@@ -44,7 +38,7 @@ export function EventsView() {
               time={formatDateTime(item.timestamp).time}
               desc={item.desc}
               group1={groups.find(el => el.id === item.group1_id)!}
-              onGroup={(group_id, group_number) => handlePressGroup(item.id, group_id, item.timestamp, group_number)}
+              onGroup={(group_id, group_number) => handlePressGroup(item.id, group_id)}
               group2={groups.find(el => el.id === item.group2_id)}
             />
           </TouchableOpacity>

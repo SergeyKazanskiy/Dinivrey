@@ -1,7 +1,7 @@
 import { Event, CoachShort, Group, Schedule, Filters } from "../model";
 import { get_camp_groups, get_camp_events, get_camp_schedule, get_all_coaches } from '../http';
 import { change_group_schedule_coach, add_event, update_event, delete_event } from '../http';
-import { objectToJson, getChanges } from "../../../../shared/utils";
+import { objectToJson, getChanges, isToday } from "../../../../shared/utils";
 import { CampsSlice } from "../CampsScreen/state";
 import { eventTypes, weekDays } from '../../../../shared/constants';
 import { EventSlice } from '../EventScreen/state';
@@ -22,13 +22,16 @@ export interface EventsSlice {
     group_id: number;
     event_id: number;
     schedule_id: number;
+    attendance_group_id: number;
 
     isSchedulesView: boolean;
     isCoachesView: boolean;
+    isAttendanceReport: boolean;
 
     isAddAlert: boolean;
     isEditAlert: boolean;
     isDeleteAlert: boolean;
+    isAddingErrorAlert: boolean;
 
     isGame: boolean;
     isTest: boolean;
@@ -55,12 +58,16 @@ export interface EventsSlice {
 
     showAddAlert: () => void;
     hideAddAlert: () => void;
+    hideAddingErrorAlert: () => void;
 
     showEditAlert: () => void;
     hideEditAlert: () => void;
 
     showDeleteAlert: () => void;
     hideDeleteAlert: () => void;
+
+    showAttendanceReport: (event_id: number, attendance_group_id: number) => void;
+    hideAttendanceReport: () => void;
 
     showCoachesView: (id: number) => void; // load all coaches
     hideCoachesView: () => void;
@@ -88,13 +95,16 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     group_id: 0,
     event_id: 0,
     schedule_id: 0,
+    attendance_group_id: 0,
 
     isSchedulesView: true,
     isCoachesView: false,
+    isAttendanceReport: false,
 
     isAddAlert: false,
     isEditAlert: false,
     isDeleteAlert: false,
+    isAddingErrorAlert: false,
 
     isGame: true,
     isTest: true,
@@ -215,12 +225,17 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     showAddAlert: () => set({isAddAlert: true, isEditAlert: false}),
     hideAddAlert: () => set({isAddAlert: false}),
+    hideAddingErrorAlert: () => set({isAddingErrorAlert: false}),
 
     showEditAlert: () => set({isEditAlert: true}),
     hideEditAlert: () => set({isEditAlert: false}),
 
     showDeleteAlert: () => set({isDeleteAlert: true, isEditAlert: false}),
     hideDeleteAlert: () => set({isDeleteAlert: false}),
+
+    showAttendanceReport: (event_id: number,attendance_group_id: number) => set({
+        isAttendanceReport: true, event_id, attendance_group_id}),
+    hideAttendanceReport: () => set({isAttendanceReport: false, event_id: 0}),
 
     showCoachesView: (id: number) => {
         get_all_coaches((coaches => {
@@ -259,8 +274,14 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
 
     addEvent: (newEvent: Omit<Event, 'id'>) => {
-        set({isAddAlert: false});
+        const today = new Date();
+        if (newEvent.timestamp < today.getTime()) {
+            set({isAddingErrorAlert: true});
+            return;
+        }
 
+        set({isAddAlert: false});
+        
         add_event(newEvent, (res) => {
             if (res.id) {
                 const event: Event = {...newEvent, id: res.id};
@@ -304,7 +325,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
         delete_event(event_id, (res => {
             if (res.isOk) {
                 set((state: EventsSlice) => ({
-                    events: state.events.filter(el => el.id !== state.event_id),
+                    events: state.events.filter(el => el.id !== event_id),
                 }));
 
                 const { types, group_id, filterEvents }: EventsSlice  = get();

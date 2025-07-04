@@ -11,7 +11,7 @@ import { formatDateTime, objectToJson } from '../../../../../shared/utils';
 import { CalendarWidget } from '../widgets/CalendarWidget';
 
 
-export const StatisticsScreen = () => {
+export const StatisticsReport = () => {
   const { isStatisticsScreen, group_id } = useStore();
   const { hideStatisticsScreen } = useStore();
 
@@ -50,21 +50,17 @@ export const StatisticsScreen = () => {
   );
 
   return (
-    <ScreenWrapper visible={isStatisticsScreen} title='Statistics report' onClose={hideStatisticsScreen}>
-      <LinearGradient colors={['#2E4A7C', '#152B52']}>
-        <ScrollView>
-          <View style={styles.container}>
-            <CalendarWidget year={year} month={month}
-              selectDate={(year, month) => (setYear(year), setMonth(month))}/>
+    <ScreenWrapper visible={isStatisticsScreen} title='Group Statistics' onClose={hideStatisticsScreen}>
+      <CalendarWidget year={year} month={month}
+        selectDate={(year, month) => (setYear(year), setMonth(month))}/>
 
-            <StaticticsWidget dates={dates} metrics={metrics} metricName='Speed'/>
-            <StaticticsWidget dates={dates} metrics={metrics} metricName='Stamina'/>
-            <StaticticsWidget dates={dates} metrics={metrics} metricName='Climbing'/>
-            <StaticticsWidget dates={dates} metrics={metrics} metricName='Evasion'/>
-            <StaticticsWidget dates={dates} metrics={metrics} metricName='Hiding'/>
-          </View>  
-        </ScrollView>
-      </LinearGradient>
+      <ScrollView style={styles.container}>
+        <StaticticsWidget dates={dates} metrics={metrics} metricName='Speed'/>
+        <StaticticsWidget dates={dates} metrics={metrics} metricName='Stamina'/>
+        <StaticticsWidget dates={dates} metrics={metrics} metricName='Climbing'/>
+        <StaticticsWidget dates={dates} metrics={metrics} metricName='Evasion'/>
+        <StaticticsWidget dates={dates} metrics={metrics} metricName='Hiding'/>
+      </ScrollView>
     </ScreenWrapper>
   )
 }
