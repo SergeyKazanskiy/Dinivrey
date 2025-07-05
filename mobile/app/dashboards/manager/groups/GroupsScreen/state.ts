@@ -17,7 +17,7 @@ export interface GroupsSlice {
   loadGroups: (camp_id: number) => void;
 
   selectCamp: (campId: number) => void;
-  selectGroup: (group_id: number) => void;
+  selectGroup: (group_id: number, groupInx: number) => void;
 
   createGroup: (camp_id: number, name: string)=> void;
 
@@ -63,7 +63,7 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
     } 
   },
 
-  selectGroup: (group_id: number) => set({ group_id }),
+  selectGroup: (group_id: number, groupInx: number) => set({ group_id, groupInx }),
 
   createGroup: (camp_id: number, name: string) => {
     set({isAddGroupAlert: false});

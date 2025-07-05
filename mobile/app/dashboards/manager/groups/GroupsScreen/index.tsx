@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, ScrollView, Platform } from 'react-native';
 import { useStore } from '../store';
@@ -11,13 +11,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function GroupsScreen() {
   const {  } = useStore();
-  const { loadCamps } = useStore();
+  const { loadCamps, updateGroup } = useStore();
 
-  useFocusEffect(
-    useCallback(() => {
-      loadCamps();
-    }, [])
-  );
+  useEffect(() => {
+    loadCamps();
+  }, [updateGroup]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     loadCamps();
+  //   }, [])
+  // );
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >

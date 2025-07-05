@@ -128,6 +128,7 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
   },
 
   updateGroup: (name: string, description: string) => {
+    //alert('updateGroup2')
     const { camp_id, group_id, groups }: GroupsSlice = get();
     const updatedGroup: Group = {id: group_id, camp_id, name, description}; 
     const group = groups.find(item => item.id === group_id)!
@@ -148,10 +149,10 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
   deleteGroup: (group_id: number) => {
     delete_group(group_id, (res => {
       if (res.isOk) {
-        // set((state: GroupsSlice) => ({
-        //   group_id: 0, isDeleteGroupAlert: false,
-        //   groups: state.groups.filter(el => el.id !== group_id),
-        // }));
+        set((state: GroupsSlice) => ({
+          group_id: 0, isDeleteGroupAlert: false,
+          groups: state.groups.filter(el => el.id !== group_id),
+        }));
       }
     }));
   },
@@ -183,14 +184,14 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
 
   setTime: (h: number, m: number) => {
       const { schedule_id, hour, minute, schedules, updateGroup, groups, groupInx }: GroupSlice & GroupsSlice= get();
-     
+      
       if ( h !== hour) {
           update_group_schedule(schedule_id, {hour: h}, (res)=> {
               if (res.isOk) {
                   const schedule = schedules.find(el => el.id === schedule_id)!;
                   schedule.hour = h;
                   set({ hour: h });
-
+      
                   updateGroup(groups[groupInx].name, getDescription(schedules));
               }
           })

@@ -27,6 +27,21 @@ async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depend
 async def create_schedule(data: schemas.GroupScheduleCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.GroupSchedule, data, session)}
 
+
+# Students
+@router.post("/camps/groups/students", response_model=schemas.ResponseId, tags=["Manager"])
+async def create_student(data: schemas.StudentCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Student, data, session)}
+
+@router.post("/students/parents", tags=["Manager"])
+async def add_student_parents(data: List[schemas.ParentCreate], session: AsyncSession = Depends(get_session)):
+    ids = []
+    for parent in data:
+        id = await CRUD.add(models.Parent, parent, session)
+        ids.append(id)
+    return ids 
+
+
 # Coaches
 @router.post("/camps/coaches", response_model=schemas.ResponseId, tags=["Manager"])
 async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):

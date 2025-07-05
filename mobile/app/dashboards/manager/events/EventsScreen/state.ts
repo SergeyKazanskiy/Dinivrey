@@ -124,7 +124,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     loadShedules: (camp_id: number) => {
         get_camp_schedule(camp_id, (schedules: Schedule[]) => {
-            //alert(objectToJson(schedules))
+            alert(objectToJson(schedules))
             const { group_id, filterShedules }: EventsSlice = get();
 
             set({ schedules });
@@ -289,7 +289,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
                 const eventsWithNew = [ ...events, event];
                 const sortedEvents = eventsWithNew.sort((a, b) => a.timestamp - b.timestamp);
-                set({ events: sortedEvents, event_id: res.id });
+                set({ events: sortedEvents }); //, event_id: res.id
         
                 const { types, group_id, filterEvents }: EventsSlice = get();
                 const filters: Filters = { types: types, group: group_id };

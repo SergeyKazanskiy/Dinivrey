@@ -37,6 +37,14 @@ async def change_group_coach(id: int, data: schemas.GroupCoachUpdate, session: A
         new_record = schemas.CoachGroupAdd(coache_id=data.coach_id, group_id=id)
         await CRUD.add(models.CoachGroup, new_record, session)
     
+    query = select(models.GroupSchedule).where(models.GroupSchedule.group_id == id)
+    result = await session.execute(query)
+    schedules = result.scalars().all()
+
+    for item in schedules:
+        item.coach_id = data.coach_id
+
+    await session.commit()
     return {"isOk": True}
 
 # Events

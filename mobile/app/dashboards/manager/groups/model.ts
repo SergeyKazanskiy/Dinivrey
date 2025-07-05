@@ -76,8 +76,20 @@ export interface StudentProfile {
     id: number;
   }
   
+  export interface StudentShort {
+    id: number;
+    group_id: number;
+    photo: string;
+    first_name: string;
+    last_name: string;
+    gender: string;
+    age: number;
+    active: boolean;
+}
+
   export interface Parent {
     id: number;
+    student_id: number;
     name: string;
     phone: string;
     email: string;

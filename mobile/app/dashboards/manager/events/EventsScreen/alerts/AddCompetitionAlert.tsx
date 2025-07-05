@@ -48,7 +48,8 @@ export const AddCompetitionAlert = () => {
         setTimestamp(today);
       } else {
         setTimestamp(getTimestamp(year, month));
-      } 
+      }
+      setDesc('');
     }
   }, [event_id]);
 
