@@ -7,11 +7,13 @@ import { StudentsView } from './views/StudentsView';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
+import { Ionicons } from '@expo/vector-icons';
+import { AddStudentAlert } from './alerts/AddStudentAlert';
 
 
 export default function StudentsScreen() {
   const { group_id, groups } = useStore();
-  const { loadStudents, clearStudents } = useStore();
+  const { loadStudents, clearStudents, showAddAlert } = useStore();
 
   const group = groups.find(el => el.id === group_id)
   const router = useRouter();
@@ -23,7 +25,6 @@ export default function StudentsScreen() {
   );
 
   function handleBack() {
-    //router.push("/dashboards/manager/groups/GroupScreen")
     router.back();
     clearStudents();
   }
@@ -31,7 +32,11 @@ export default function StudentsScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <Stack.Screen options={{ headerShown: false }} />
-      <CustomNavbar title={ group?.name || 'Group'} onClick={handleBack}/>
+      <CustomNavbar title={ group?.name || 'Group'} onClick={handleBack}>
+        <Ionicons name='add-circle-outline' size={21} color="#D1FF4D" onPress={showAddAlert}/>
+      </CustomNavbar>
+
+      <AddStudentAlert/>
 
       <StudentsView/>
     </LinearGradient>

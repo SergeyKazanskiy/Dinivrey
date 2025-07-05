@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/manager_api';
-import { Camp, Group, Lider, Student, Test, Game, Achievement, Schedule } from './model';
+import { Camp, Group, Lider, StudentShort, Student, Test, Game, Achievement, Schedule } from './model';
 import { Achieve, Attendance, Parent, AchieveAttach, Comment, Statistic } from './model';
 
 
@@ -11,10 +11,6 @@ export function get_camps(callback: (camps: Camp[]) => void) {
 
 export function get_groups(camp_id: number, callback: (camps: Group[]) => void) {
   return httpWrapper(() => api.get(`camps/${camp_id}/groups`), callback, 'Getting camp groups');
-};
-
-export function get_students(group_id: number, callback: (students: Student[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
 };
 
 export function get_liders(group_id: number, callback: (liders: Lider[]) => void) { //???
@@ -32,6 +28,21 @@ export function update_group(group_id: number, data: Partial<Group>, callback: (
 export function delete_group(id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.delete(`camps/groups/${id}`), callback);
 };
+
+
+// Students
+export function get_students(group_id: number, callback: (students: StudentShort[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
+};
+
+export function create_student(data: Omit<StudentShort, 'id'>, callback: (res: {id: number}) => void) {
+  return httpWrapper(() => api.post(`camps/groups/students`, data), callback);
+};
+
+export function create_student_parents(data: Omit<Parent, 'id'>[], callback: (res: number[]) => void) {
+  return httpWrapper(() => api.post(`students/parents`, data), callback);
+};
+
 
 // Coach
 export function get_group_coach(group_id: number, callback: (res: {id: number}) => void) {

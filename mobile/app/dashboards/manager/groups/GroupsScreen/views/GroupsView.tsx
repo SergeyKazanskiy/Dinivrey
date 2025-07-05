@@ -11,7 +11,7 @@ export function GroupsView() {
   const router = useRouter();
 
   function handleSelect(group_id: number, groupInx: number) {
-    selectGroup(group_id);
+    selectGroup(group_id, groupInx);
     setGroup(groups[groupInx]);
     router.push(`/dashboards/manager/groups/GroupScreen`);
   }

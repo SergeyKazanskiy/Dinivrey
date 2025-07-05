@@ -12,6 +12,7 @@ from .group import GroupCreate, GroupResponse, GroupUpdate, StudentName, FreeGro
 from .group import GroupScheduleResponse, GroupScheduleUpdate, GroupScheduleCreate, GroupCoachUpdate
 from .group import GroupTestResponse
 
+from .student import StudentCreate, ParentCreate
 from .student import StudentShort, StudentResponse, ParentResponse, StudentName, CommentResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate, TestUpdate2
 from .student import GameResponse, GameCreate

@@ -27,6 +27,15 @@ class StudentResponse(StudentBase):
     class Config:
         from_attributes = True
 
+class StudentCreate(BaseModel):
+    group_id: int
+    photo: str
+    first_name: str
+    last_name: str
+    age: int
+    gender: str
+    active: bool
+
 class StudentShort(BaseModel):
     id: int
     photo: str
@@ -41,6 +50,12 @@ class StudentShort(BaseModel):
         
 class ParentResponse(BaseModel):
     id: int
+    name: str
+    email: str
+    phone: str
+
+class ParentCreate(BaseModel):
+    student_id: int
     name: str
     email: str
     phone: str

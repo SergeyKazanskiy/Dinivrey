@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { Avatar, Badge, ListItem } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
@@ -17,7 +17,7 @@ export function StudentsView() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
         {students.map(student => {
             const itemStyle = styles.item;
 
@@ -42,7 +42,7 @@ export function StudentsView() {
                 </ListItem>
             )})
         }
-    </View>
+    </ScrollView>
   );
 }
 
