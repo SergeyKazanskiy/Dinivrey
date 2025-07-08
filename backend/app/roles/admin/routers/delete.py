@@ -5,6 +5,8 @@ from database import get_session
 from crud import CRUD
 from roles.admin import schemas
 import models
+# import utils
+# import read
 
 router = APIRouter()
 
@@ -12,6 +14,13 @@ router = APIRouter()
 # Groups
 @router.delete("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_camp(id: int, session: Session = Depends(get_session)):
+    # camp: schemas.CampResponse = await read.get_camp(id, session)
+
+    # try:
+    #     utils.delete_folder("images/photos", f"{camp.city}_{camp.name}")
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=f"Failed to delete folder: {e}")
+    
     return {"isOk": await CRUD.delete(models.Camp, id, session)}
 
 @router.delete("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])

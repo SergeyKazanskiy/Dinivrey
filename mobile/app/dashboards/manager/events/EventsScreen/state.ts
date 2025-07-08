@@ -124,7 +124,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     loadShedules: (camp_id: number) => {
         get_camp_schedule(camp_id, (schedules: Schedule[]) => {
-            alert(objectToJson(schedules))
+            //alert(objectToJson(schedules))
             const { group_id, filterShedules }: EventsSlice = get();
 
             set({ schedules });

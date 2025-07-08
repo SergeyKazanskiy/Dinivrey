@@ -94,7 +94,11 @@ export const AddCompetitionAlert = () => {
       {isTime && <TimeView hour={hour} minute={minute} setHour={setHour} setMinute={setMinute}/>}
 
       {!isTime && !isDate &&  <>
-        <View style={styles.row}>
+        <View style={styles.section}>
+          <Text style={{fontSize: 16, color: '#ccc', fontWeight: '500', left: 4}}>Finish time: </Text>
+          <Text style={[styles.time]}>19:00</Text>
+        </View>
+        <View style={[styles.row, {borderColor: '#555', borderTopWidth: 1}]}>
           {!isError && <Text style={styles.label}>Groups: </Text>}
           {isError && <Text style={styles.error}>Select groups! </Text>}
 
@@ -120,11 +124,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 8,
   },
+  section: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+  },
   label: {
     width: 140,
     fontSize: 16,
     color: 'gold',
-    marginTop: 10,
+    marginTop: 8,
   },
   error: {
     width: 140,
@@ -141,12 +150,24 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 72,
+    height: 60,
     backgroundColor: '#2E4A7C',
     color: '#eee',
     fontSize: 15,
     padding: 8,
     marginTop: 12,
+    borderRadius: 8
+  },
+  time: {
+    fontSize: 15,
+    color: '#A4FAAA',
+    fontWeight: '500',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    marginLeft: 4,
+    height: 28,
+    borderWidth: 1,
+    borderColor: 'green',
     borderRadius: 8
   },
 });
