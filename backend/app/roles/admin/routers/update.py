@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_session
@@ -7,6 +7,8 @@ from roles.admin import schemas
 import models
 from sqlalchemy.future import select
 from sqlalchemy import delete
+# import utils
+# import read
 
 router = APIRouter()
 
@@ -14,7 +16,18 @@ router = APIRouter()
 # Groups
 @router.put("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession = Depends(get_session)):
+    # camp: schemas.CampResponse = await read.get_camp(id, session)
+
+    # city = data.city or camp.city
+    # name = data.name or camp.name
+
+    # try:
+    #     utils.rename_folder("images/photos", f"{camp.city}_{camp.name}", f"{city}_{name}")
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=f"Failed to rename folder: {e}")
+
     return {"isOk": await CRUD.update(models.Camp, id, data, session)}
+
 
 @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):

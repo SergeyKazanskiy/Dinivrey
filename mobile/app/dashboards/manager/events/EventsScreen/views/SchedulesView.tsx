@@ -38,9 +38,9 @@ export function SchedulesView({ day, weekday }: {day: number, weekday: string}) 
               >
                 <ScheduleEventCell
                   group={groups.find(el => el.id === item.group_id)?.name || ''}
-                  time={item.hour + ':' + item.minute}
+                  time={item.hour + ':' + item.minute + ' - ' + (item.hour + 1) + ':' + item.minute }
                   coach={item.coach_name}
-                />
+                />  
               </TouchableOpacity>
             } style={styles.list}
           />

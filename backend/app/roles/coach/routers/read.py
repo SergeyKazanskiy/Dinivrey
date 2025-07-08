@@ -8,7 +8,8 @@ import models
 from datetime import datetime, timedelta
 from sqlalchemy.future import select
 from sqlalchemy import desc, asc, or_, func
-from utils.timeFunctions import get_week_range, get_current_week_range, get_week_number, get_month_range
+
+from helpers import get_week_range, get_current_week_range, get_week_number, get_month_range
 
 router = APIRouter()
 

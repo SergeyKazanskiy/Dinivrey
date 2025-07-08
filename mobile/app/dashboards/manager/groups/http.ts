@@ -148,3 +148,48 @@ export function get_group_achieves(group_id: number, callback: (achieves: Achiev
 export function get_group_statistics(group_id: number, year: number, month: number, callback: (statistics: Statistic[]) => void) {
   return httpWrapper(() => api.get(`camps/groups/${group_id}/statistics?year=${year}&month=${month}`), callback);
 };
+
+
+// Photo
+export function add_student_photo(student_id: number, formData: FormData, callback: (path: string) => void) {
+  return httpWrapper(() => api.post(`students/${student_id}/photo`, formData,
+      { headers: {'Content-Type': 'multipart/form-data'}}), callback);
+};
+
+// await uploadStudentPhoto({
+//   studentId: 123,
+//   imageUri: result.assets[0].uri,
+//   folder: 'avatars',
+//   filename: 'photo.jpg',
+// });
+
+// const uploadStudentPhoto = async ({
+//   studentId,
+//   imageUri,
+//   folder,
+//   filename,
+// }: {
+//   studentId: number;
+//   imageUri: string;
+//   folder: string;
+//   filename: string;
+// }) => {
+//   try {
+//     const fileType = imageUri.substring(imageUri.lastIndexOf('.') + 1);
+//     const formData = new FormData();
+
+//     formData.append('folder', folder);
+//     formData.append('filename', filename);
+//     formData.append('file', { uri: imageUri, name: filename, type: `image/${fileType}`} as any);
+
+//     const response = await axios.post(
+//       `http://your-server.com/api/students/${studentId}/photo`,
+//       formData,
+//       { headers: {'Content-Type': 'multipart/form-data'}}
+//     );
+
+//     console.log('Файл успешно отправлен:', response.data);
+//   } catch (error) {
+//     console.error('Ошибка при загрузке файла:', error);
+//   }
+// };
