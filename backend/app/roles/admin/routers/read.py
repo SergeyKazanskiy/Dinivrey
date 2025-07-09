@@ -238,3 +238,40 @@ async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
 @router.get("/settings/metrics/all", response_model=List[schemas.MetricResponse], tags=["Admin_select"])
 async def get_base_drills(session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Metric, session)
+
+
+# Schedule
+@router.get("/camps/{id}/schedule", response_model=List[schemas.CampScheduleResponse], tags=["Manager"])
+async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_session)):
+    Camp = models.Camp
+    Group = models.Group
+    Coach = models.Coach
+    GS = models.GroupSchedule
+
+    stmt = (
+        select( GS.id, GS.weekday, GS.hour, GS.minute, Group.name, Coach.first_name, Coach.last_name, Coach.camp_id, Camp.name)
+            .join(GS, GS.group_id == Group.id)
+            .join(Coach, Coach.id == GS.coach_id)
+            .join(Camp, Camp.id == Group.camp_id )
+            .where(Camp.id == id)
+            .order_by(GS.weekday, GS.hour, GS.minute)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    schedule = []
+    for row in rows:
+        coach_name = f"{row[5]} {row[6]}"
+
+        if row[7] != id:
+            coach_name += f" ({row[8]})"
+
+        schedule.append(
+            schemas.CampScheduleResponse(
+                id=row[0],
+                weekday=row[1],
+                time=f"{row[2]}:{row[3]}",
+                group=row[4],
+                coach=coach_name,
+            )
+        )
+    return schedule

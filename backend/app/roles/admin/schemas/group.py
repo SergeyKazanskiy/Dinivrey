@@ -41,6 +41,7 @@ class GroupScheduleCreate(GroupScheduleBase):
 class GroupScheduleUpdate(BaseModel):
     hour: Optional[int] = None
     minute: Optional[int] = None
+    coach_id: Optional[int] = None 
 
 class GroupScheduleRead(GroupScheduleBase):
     id: int
@@ -55,3 +56,7 @@ class GroupReadWithSchedule(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class GroupCoachUpdate(BaseModel):
+    coach_id: int
