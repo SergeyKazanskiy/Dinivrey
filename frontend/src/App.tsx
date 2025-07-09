@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { HStack, VStack, Text, Image } from '@chakra-ui/react';
 import { SideMenuCell } from './components/SideMenuCell';
 import { sidebarStyles } from './shared/appStyles';
-import { StudentsPage, CoachesPage, ManagersPage, EventsPage } from './pages/index';
+import { StudentsPage, CoachesPage, SchedulePage, EventsPage } from './pages/index';
 import { StatisticsPage, DrillsPage, MetricsPage, AchievementsPage } from './pages/index';
 import RedocPage from './pages/redoc'
 
@@ -46,7 +46,7 @@ function App() {
           } />
           <Route path="/api/students" element={<StudentsPage />} />
           <Route path="/api/coaches" element={<CoachesPage />} />
-          <Route path="/api/managers" element={<ManagersPage />} />
+          <Route path="/api/managers" element={<SchedulePage />} />
           <Route path="/api/events" element={<EventsPage />} />
           <Route path="/api/statistics" element={<StatisticsPage />} />
 

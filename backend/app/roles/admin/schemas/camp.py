@@ -19,3 +19,10 @@ class CampResponse(CampBase):
     class Config:
         from_attributes = True
         
+
+class CampScheduleResponse(BaseModel):
+    id: int
+    weekday: int
+    time: str
+    group: str
+    coach: str        

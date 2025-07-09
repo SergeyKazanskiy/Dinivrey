@@ -1,6 +1,6 @@
 from .shared import ResponseOk, ResponseId
-from .camp import CampCreate, CampUpdate, CampResponse
-from .group import GroupCreate, GroupUpdate, GroupResponse, Group_Students
+from .camp import CampCreate, CampUpdate, CampResponse, CampScheduleResponse
+from .group import GroupCreate, GroupUpdate, GroupResponse, Group_Students, GroupCoachUpdate
 from .group import GroupReadWithSchedule, GroupScheduleRead, GroupScheduleCreate, GroupScheduleUpdate
 
 from .student import StudentCreate, StudentUpdate, StudentResponse, StudentShort, StudentName

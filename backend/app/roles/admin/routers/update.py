@@ -33,9 +33,11 @@ async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession =
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Group, id, data, session)}
 
-@router.put("/camps/groups/schedule/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+@router.put("/camps/groups/schedule/{id}", tags=["Admin_update"])
 async def update_group_shedule(id: int, data: schemas.GroupScheduleUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.GroupSchedule, id, data, session)}
+    await CRUD.update(models.GroupSchedule, id, data, session)
+    coach = await CRUD.read(models.Coach, data.coach_id, session)
+    return {"name": coach.first_name + ' ' + coach.last_name}
 
 # Student
 @router.put("/students/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
@@ -105,3 +107,28 @@ async def update_drill(id: int, data: schemas.DrillUpdate, session: AsyncSession
 @router.put("/settings/metrics/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_metric(id: int, data: schemas.MetricUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Metric, id, data, session)}
+
+
+# Schedule
+@router.put("/camps/groups/{id}/new_coach", response_model=schemas.ResponseOk, tags=["Manager"]) #???
+async def change_group_coach(id: int, data: schemas.GroupCoachUpdate, session: AsyncSession = Depends(get_session)):
+    
+    query = select(models.CoachGroup).where(models.CoachGroup.group_id == id)
+    result = await session.execute(query)
+    entry = result.scalars().first()
+    if entry:
+        setattr(entry, 'coache_id', data.coach_id)
+        await session.commit()
+    else:
+        new_record = schemas.CoachGroupAdd(coache_id=data.coach_id, group_id=id)
+        await CRUD.add(models.CoachGroup, new_record, session)
+    
+    query = select(models.GroupSchedule).where(models.GroupSchedule.group_id == id)
+    result = await session.execute(query)
+    schedules = result.scalars().all()
+
+    for item in schedules:
+        item.coach_id = data.coach_id
+
+    await session.commit()
+    return {"isOk": True}
