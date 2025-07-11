@@ -1,6 +1,6 @@
 from .shared import ResponseOk, ResponseId
 from .camp import CampCreate, CampUpdate, CampResponse, CampScheduleResponse
-from .group import GroupCreate, GroupUpdate, GroupResponse, Group_Students, GroupCoachUpdate
+from .group import GroupCreate, GroupUpdate, GroupResponse, Group_Students, GroupCoachUpdate, FreeGroupResponse
 from .group import GroupReadWithSchedule, GroupScheduleRead, GroupScheduleCreate, GroupScheduleUpdate
 
 from .student import StudentCreate, StudentUpdate, StudentResponse, StudentShort, StudentName
@@ -14,7 +14,7 @@ from .event import AttendanceDataCreate, AttendanceCreate, AttendanceUpdate, Att
 
 
 from .coach import CoachCreate, CoachUpdate, CoachResponse
-from .coach import CoachGroupCreate, CoachGroupResponse
+from .coach import CoachGroupCreate, CoachGroupResponse, CoachGroup, CoachSchedule, CoachEvent
 
 from .achieve import AchieveCreate, AchieveUpdate, AchieveResponse, AchieveShortResponse
 from .rule import RuleCreate, RuleUpdate, RuleResponse

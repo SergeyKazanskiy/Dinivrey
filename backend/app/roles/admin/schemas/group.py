@@ -60,3 +60,9 @@ class GroupReadWithSchedule(BaseModel):
 
 class GroupCoachUpdate(BaseModel):
     coach_id: int
+
+class FreeGroupResponse(BaseModel):
+    camp_name: str
+    id: int
+    name: str
+    desc: str    
