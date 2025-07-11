@@ -37,3 +37,24 @@ class CoachGroupResponse(CoachGroupBase):
 
     class Config:
         from_attributes = True
+
+
+class CoachGroup(BaseModel):
+    id: int
+    coache_id: int
+    name: str 
+    desc: str
+
+class CoachSchedule(BaseModel):
+    coache_id: int
+    weekday: str 
+    groups: str
+
+class CoachEvent(BaseModel):
+    timestamp: int
+    desc: str
+    group1_id: int
+    group2_id: int
+    group1: str 
+    group2: str
+

@@ -1,32 +1,16 @@
 import {  Event } from '../model';
-//import { Store } from '../store';
+import { StateSlice } from '../state';
+import { CampsSlice } from './CampsSlice';
 
 
 export interface EventsSlice {
-    month: string;
     events: Event[];
     
-    addEvent: () => void;
-    removeEvent: (inx: number) => void;
-    setMonth: (month: string) => void;
+    setEvents: (events: Event[]) => void;
 }
 
-export const createEventsSlice = (set: any): EventsSlice => ({
-    month: "February",
-  
-    events: [
-        { name: "Event and place", date: "Fri, 02 Jul" },
-        { name: "Event and place", date: "Fri, 04 Jul" },
-        { name: "Event and place", date: "Fri, 08 Jul" },
-    ],
+export const createEventsSlice = (set: any, get: any): EventsSlice => ({
+    events: [],
 
-    setMonth: (month) => set({ month }),
-    
-    addEvent: () => set((state: any) => ({
-        events: [],
-    })),
-
-    removeEvent: (inx: number) => set((state: any) => ({
-        events: [],
-    })),
+    setEvents: (events: Event[]) => set({events}),
 });

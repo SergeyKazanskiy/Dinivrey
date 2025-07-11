@@ -31,7 +31,7 @@ function App() {
           <Text style={sidebarStyles.group} alignSelf='start' pl={4} pb={3} >Main</Text>
           <SideMenuCell img='Students.png' title='Students' to='/api/students'/>
           <SideMenuCell img='Coach.png' title='Coaches' to='/api/coaches'/>
-          <SideMenuCell img='Event.png' title='Schedule' to='/api/managers'/>
+          <SideMenuCell img='Event.png' title='Schedule' to='/api/schedule'/>
           <SideMenuCell img='Game.png' title='Events' to='/api/events'/>
           <SideMenuCell img='Statistics.png' title='Statistics' to='/api/statistics'/>
 
@@ -46,7 +46,7 @@ function App() {
           } />
           <Route path="/api/students" element={<StudentsPage />} />
           <Route path="/api/coaches" element={<CoachesPage />} />
-          <Route path="/api/managers" element={<SchedulePage />} />
+          <Route path="/api/schedule" element={<SchedulePage />} />
           <Route path="/api/events" element={<EventsPage />} />
           <Route path="/api/statistics" element={<StatisticsPage />} />
 

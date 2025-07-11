@@ -1,5 +1,5 @@
 export { AchievementsPage } from './achievements/page';
-export { CoachesPage } from './coaches/screen';
+export { CoachesPage } from './coaches/page';
 export { EventsPage } from './events/page';
 export { MetricsPage } from './metrics/page';
 export { SchedulePage } from './schedule/page';

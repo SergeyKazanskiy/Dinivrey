@@ -6,7 +6,7 @@ from crud import CRUD
 from roles.admin import schemas
 import models
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, outerjoin
 from datetime import datetime
 from sqlalchemy.orm import selectinload
 
@@ -108,9 +108,129 @@ async def get_student_names(group_id: int, session: AsyncSession = Depends(get_s
 async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Coach, session, filters={"camp_id": id}, order_by="first_name")
 
-@router.get("/camps/coache/{id}/groups", response_model=List[schemas.CoachGroupResponse], tags=["Admin_select"])#severel groups
-async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)):
-    return await CRUD.read(models.CoachGroup, id, session)
+# @router.get("/camps/coache/{id}/groups", response_model=List[schemas.CoachGroupResponse], tags=["Admin_select"])#severel groups
+# async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)):
+#     return await CRUD.read(models.CoachGroup, id, session)
+
+@router.get("/camps/{id}/coaches/groups", response_model=List[schemas.CoachGroup], tags=["Manager"])
+async def get_coache_groups( id: int, session: AsyncSession = Depends(get_session)):
+    group = models.Group
+    CG = models.CoachGroup
+    stmt = (
+        select(CG.id, CG.coache_id, CG.group_id, group.name, group.description)
+            .join(group, group.id == CG.group_id)
+            .where(group.camp_id == id)
+            .order_by(asc(group.name))
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [ schemas.CoachGroup(
+                id = row[0],
+                coache_id = row[1],
+                group_id = row[2],
+                name = row[3],
+                desc = row[4]) for row in rows]
+
+@router.get("/groups/free", response_model=List[schemas.FreeGroupResponse], tags=["Manager"])
+async def get_groups_without_coach( session: AsyncSession = Depends(get_session)):
+    Camp = models.Camp
+    Group = models.Group
+    CoachGroup = models.CoachGroup
+    stmt = (
+        select(Camp.name, Group.id, Group.name, Group.description)
+            .select_from(
+                outerjoin(Group, CoachGroup, Group.id == CoachGroup.group_id)
+                .join(Camp, Camp.id == Group.camp_id)
+            )
+            .where(CoachGroup.group_id == None)
+            .order_by(Camp.name, Group.name)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+    return [ schemas.FreeGroupResponse(
+                camp_name = row[0],
+                id = row[1],
+                name = row[2],
+                desc = row[3]) for row in rows]
+
+@router.get("/camps/{id}/coaches/schedule", response_model=List[schemas.CoachSchedule], tags=["Manager"])
+async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_session)):
+    Group = models.Group
+    Coach = models.Coach
+    GS = models.GroupSchedule
+
+    stmt = (
+        select( Coach.id, GS.weekday, GS.hour, GS.minute, Group.name)
+            .join(GS, GS.group_id == Group.id)
+            .join(Coach, Coach.id == GS.coach_id)
+            .where(Group.camp_id == id)
+            .order_by(GS.coach_id, GS.weekday, GS.hour, GS.minute)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    coach_id = 0
+    weekday = 0
+    groups =''
+
+    schedules = []
+
+    for row in rows:
+        groups = groups + row[3] + ':' + row[4] + ' ' + row[5] + ', '
+
+        if row[0] != coach_id:
+            coach_id = row[0]
+            weekday = 0
+            groups =''
+
+            if row[1] != weekday:
+                weekday = row[1]
+                groups =''
+
+                schedules.append(
+                    schemas.CoachSchedule(
+                        coach_id=row[0],
+                        weekday=WEEKDAYS[row[1]],
+                        groups=groups,
+                    )
+                )
+    return schedules
+
+@router.get("/camps/{camp_id}/competitions", response_model=List[schemas.CoachEvent], tags=["Admin_select"])
+async def get_events(year: int, month: int, camp_id: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+
+    Event = models.Event
+
+    stmt = (
+        select(Event.timestamp, Event.desc, Event.group1_id, Event.group2_id)
+        .where(Event.camp_id == camp_id,
+               Event.type == 'Game',
+               Event.timestamp.between(start_ts, end_ts))
+        .order_by(Event.timestamp)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    events = []
+
+    for row in rows:
+        group1 = await CRUD.read(models.Group, row[2], session)
+        group2 = await CRUD.read(models.Group, row[3], session)
+
+        events.append(
+            schemas.CoachEvent(
+                timestamp=row[0],
+                desc=row[1],
+                group1_id=row[2],
+                group2_id=row[3],
+                group1=group1,
+                group2=group2
+            )
+        )
+
+    return events
 
 # Achieves
 @router.get("/achieves/all", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])

@@ -1,22 +1,41 @@
-import {  Group } from '../model';
-//import { Store } from '../store';
+import { CoachGroup } from '../model';
+import { add_coach_group, remove_coach_group } from '../http';
 
 
 export interface GroupsSlice {
-    groups: Group[];
-    addGroup: () => void;
-    removeGroup: (inx: number) => void;
+    coachGroups: CoachGroup[];
+    coach_group_id: number;
+
+    setCoachGroups: (coachGroups: CoachGroup[]) => void;
+    selectCoachGroup: (coach_group_id: number) => void;
+
+    addCoachGroup: (coach_id: number, group_id: number) => void;
+    removeCoachGroup: (coach_group_id: number) => void;
 }
 
-export const createGroupsSlice = (set: any): GroupsSlice => ({
-    
-    groups: [],
+export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
+    coachGroups: [],
+    coach_group_id: 0,
 
-    addGroup: () => set((state: any) => ({
-        groups: [],
-    })),
+    setCoachGroups: (coachGroups: CoachGroup[]) => set({ coachGroups }),
+    selectCoachGroup: (coach_group_id: number) =>  set({ coach_group_id }),
 
-    removeGroup: (inx: number) => set((state: any) => ({
-        groups: [],
-    })),
+    addCoachGroup: (coach_id: number, group_id: number) => {
+        const data = { coache_id: coach_id, group_id };
+
+        add_coach_group(data, (coachGroups => {
+            set({ coachGroups });
+        }));
+    },
+
+    removeCoachGroup: (coach_group_id: number) => {
+        remove_coach_group(coach_group_id, (res) => {
+            if (res.isOk) {
+                set((state: GroupsSlice) => ({
+                    coach_group_id: 0,
+                    coachGroups: state.coachGroups.filter(el => el.id !== coach_group_id)
+                }));
+            }
+        });
+    },
 });

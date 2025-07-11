@@ -3,28 +3,42 @@ export interface Camp {
   name: string;
 }
 
-export interface Group {
+export interface Coach {
   id: number;
-  camp_id: number;
-  name: string;
+  photo: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  active: boolean;
 }
 
-export interface CoacheInfo {
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    active: boolean;
-  }
-
-export interface Group {
+export interface CoachGroup {
+  id: number;
+  coache_id: number;
+  group_id: number;
   name: string;
-  attendance: string;
-  tests: string;
-  games: string;
+  desc: string;
+}
+
+export interface FreeGroup {
+  camp_name: string;
+  id: number;
+  name: string;
+  desc: string;
 }
 
 export interface Event {
-  name: string;
-  date: string;
+  timestamp: number;
+  desc: string;
+  group1_id: number;
+  group2_id: number;
+  group1: string;
+  group2: string;
+}
+
+export interface Schedule {
+  coach_id: number;
+  weekday: string;
+  groups: string;
 }
