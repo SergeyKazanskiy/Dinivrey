@@ -36,6 +36,7 @@ class GroupScheduleBase(BaseModel):
     weekday: int
     hour: int
     minute: int
+    coach_id: int
 
 class GroupScheduleCreate(GroupScheduleBase):
     pass

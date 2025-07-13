@@ -14,6 +14,7 @@ export const GroupsView: React.FC<Props> = ({ coach_id }) => {
   const { coachGroups, coach_group_id, camp_id } = useStore();
   const { selectCoachGroup, addCoachGroup, removeCoachGroup } = useStore();
   //alert(objectToJson(coachGroups))
+
   const groups = coachGroups.filter(el => el.coache_id === coach_id);
 
   const columns = [
@@ -22,11 +23,12 @@ export const GroupsView: React.FC<Props> = ({ coach_id }) => {
     ];
    
     return (
-      <Container style={screenStyles.widget} h='172px' w='380px'>
+      <Container style={screenStyles.widget} h='174px' w='380px'>
         <TableView columns={columns} data={groups} selected={{id: coach_group_id, column: 'coach'}}
           onClick={selectCoachGroup} onDelete={removeCoachGroup}>
             
-          <GroupsPopover camp_id={camp_id} onSelect={(group_id)=>addCoachGroup(coach_id, group_id)}/>
+          <GroupsPopover camp_id={camp_id}
+            onSelect={(group_id, name, desc)=>addCoachGroup(coach_id, group_id, name, desc)}/>
         </TableView>
       </Container>
     )

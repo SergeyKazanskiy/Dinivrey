@@ -5,12 +5,14 @@ export interface Camp {
 
 export interface Coach {
   id: number;
+  camp_id: number;
   photo: string;
   first_name: string;
   last_name: string;
   phone: string;
   email: string;
   active: boolean;
+  signature: string;
 }
 
 export interface CoachGroup {
@@ -29,7 +31,8 @@ export interface FreeGroup {
 }
 
 export interface Event {
-  timestamp: number;
+  date: string;
+  time: string;
   desc: string;
   group1_id: number;
   group2_id: number;
@@ -40,5 +43,6 @@ export interface Event {
 export interface Schedule {
   coach_id: number;
   weekday: string;
-  groups: string;
+  time: string;
+  group: string;
 }

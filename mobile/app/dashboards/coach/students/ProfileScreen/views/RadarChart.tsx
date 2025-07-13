@@ -92,16 +92,6 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam }) => {
         </TouchableOpacity>
       ))}
 
-      {/* {values.map((v, i) => {
-        const { x, y } = getPoint(v, i);
-        return (
-          <Text key={i}
-            style={[styles.valueText, { left: x+2, top: y - 18 }]}
-          >
-            {v.toFixed(1)}
-          </Text>
-        );
-      })} */}
       <TouchableOpacity  style={styles.centerText}>
         <Text style={styles.average}>{average}</Text>
       </TouchableOpacity>

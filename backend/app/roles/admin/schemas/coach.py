@@ -15,8 +15,14 @@ class CoachBase(BaseModel):
 class CoachCreate(CoachBase):
     pass
 
-class CoachUpdate(CoachBase):
-    pass
+class CoachUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    active: Optional[bool] = None
+    signature: Optional[str] = None
+    camp_id: Optional[int] = None
 
 class CoachResponse(CoachBase):
     id: int
@@ -42,16 +48,19 @@ class CoachGroupResponse(CoachGroupBase):
 class CoachGroup(BaseModel):
     id: int
     coache_id: int
+    group_id: int
     name: str 
     desc: str
 
 class CoachSchedule(BaseModel):
-    coache_id: int
-    weekday: str 
-    groups: str
+    coach_id: int
+    weekday: str
+    time: str
+    group: str
 
 class CoachEvent(BaseModel):
-    timestamp: int
+    date: str
+    time: str
     desc: str
     group1_id: int
     group2_id: int

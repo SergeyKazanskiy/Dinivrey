@@ -20,13 +20,13 @@ export const DateFilter: React.FC = () => {
     }
 
     return (
-        <HStack spacing='2'>
+        <HStack spacing='1' m={0} h={0}>
             <DateStepper title={String(year)} w='60px'
                 onPrev={() => selectDate(year - 1, 12)}
                 onNext={() => selectDate(year + 1, 1)}
                 canNext={getCurrentMonth() === 12 ? true : year < getCurrentYear()}
             />
-            <DateStepper title={months[month-1]} w='90px'
+            <DateStepper title={months[month-1]} w='86px'
                 onPrev={prevMonth}
                 onNext={nextMonth}
                 canNext={getCurrentMonth() === 12 ? true : month <= getCurrentMonth()}

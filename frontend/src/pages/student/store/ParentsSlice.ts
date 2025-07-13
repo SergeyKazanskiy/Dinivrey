@@ -54,11 +54,11 @@ export const createParentsSlice = (set: any, get: any): ParentsSlice => ({
         const { parents, initialParents }: ParentsSlice = get();
         const isParentsChanged = 
             parents[0].name !== initialParents[0].name ||
-            parents[0].name !== initialParents[0].name ||
-            parents[0].name !== initialParents[0].name ||
+            parents[0].phone !== initialParents[0].phone ||
+            parents[0].email !== initialParents[0].email ||
             parents[1].name !== initialParents[1].name ||
-            parents[1].name !== initialParents[1].name ||
-            parents[1].name !== initialParents[1].name;
+            parents[1].phone !== initialParents[1].phone ||
+            parents[1].email !== initialParents[1].email;
         set({ isParentsChanged });    
     },
 

@@ -175,3 +175,15 @@ def get_month_range(year: int, month: int):
     range_end = range_end.replace(microsecond=0)  # Убираем микросекунды
 
     return range_start, range_end
+
+
+def format_date_time(timestamp: int) -> dict:
+    dt = datetime.fromtimestamp(timestamp / 1000)  # делим на 1000, т.к. timestamp в миллисекундах
+
+    date_str = dt.strftime("%a %d")     # "Wed 07"
+    time_str = dt.strftime("%H:%M")     # "14:30"
+
+    return {
+        "date": date_str,
+        "time": time_str
+    }

@@ -56,8 +56,6 @@ const styles = StyleSheet.create({
   },
   circle: {
     position: 'absolute',
-    //top: -1,
-    //left: 0,
     width: 36,
     height: 36,
     borderRadius: 18,
@@ -66,25 +64,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,
-   // elevation: 3,
   },
   circleText: {
     color: 'white',
-    //fontWeight: 'bold',
     fontSize: 14,
   },
   bar: {
     height: 36,
-    //borderRadius: 20,
     marginLeft: 18,
-    backgroundColor: '#000', // fallback
+    backgroundColor: '#000', 
   },
   label: {
-    //marginTop: 2,
     marginLeft: 8,
     backgroundColor: '#000',
     color: '#ddd',
-    //fontWeight: 'bold',
     fontSize: 14,
     paddingHorizontal: 8,
     paddingVertical: 2,

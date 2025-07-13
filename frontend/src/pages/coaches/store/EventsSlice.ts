@@ -5,7 +5,7 @@ import { CampsSlice } from './CampsSlice';
 
 export interface EventsSlice {
     events: Event[];
-    
+
     setEvents: (events: Event[]) => void;
 }
 

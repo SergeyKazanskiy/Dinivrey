@@ -33,7 +33,11 @@ async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession =
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Group, id, data, session)}
 
-@router.put("/camps/groups/schedule/{id}", tags=["Admin_update"])
+@router.put("/camps/groups/schedule/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
+async def update_group_shedule(id: int, data: schemas.GroupScheduleUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.GroupSchedule, id, data, session)}
+
+@router.put("/camps/groups/schedule/{id}/coach", tags=["Admin_update"])
 async def update_group_shedule(id: int, data: schemas.GroupScheduleUpdate, session: AsyncSession = Depends(get_session)):
     await CRUD.update(models.GroupSchedule, id, data, session)
     coach = await CRUD.read(models.Coach, data.coach_id, session)
