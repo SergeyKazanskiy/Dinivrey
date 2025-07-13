@@ -8,8 +8,7 @@ from database import get_session
 from crud import CRUD
 from roles.admin import schemas 
 import models
-# import read
-# import utils
+from .read import get_coache_groups
 
 router = APIRouter()
 
@@ -113,14 +112,18 @@ async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSes
 
 
 # Coaches
-@router.post("/coaches", response_model=schemas.ResponseId, tags=["Admin_create"])
+@router.post("/camps/coaches", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Coach, data, session)} 
 
-@router.post("/coaches/groups", response_model=schemas.ResponseId, tags=["Admin_create"])
+@router.post("/camps/coaches/groups", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def add_coach_group(data: schemas.CoachGroupCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.CoachGroup, data, session)} 
 
+# @router.post("/camps/coaches/groups", response_model=List[schemas.CoachGroupResponse], tags=["Manager"])
+# async def coach_group_add(data: schemas.CoachGroupCreate, session: AsyncSession = Depends(get_session)):
+#     id = await CRUD.add(models.CoachGroup, data, session)
+#     return await get_coache_groups(data.coache_id, session)
 
 # Drills
 @router.post("/drills", response_model=schemas.ResponseId, tags=["Admin_create"])

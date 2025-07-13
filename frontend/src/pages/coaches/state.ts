@@ -58,7 +58,9 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     },
 
     loadSchedules: (camp_id: number) => {
+       // alert('loadSchedules')
         get_schedules(camp_id, (schedules => {
+           // alert(objectToJson(schedules))
             const { setSchedules }: SchedulesSlice = get();
             setSchedules(schedules);
         }));
@@ -76,6 +78,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
     loadEvents: (camp_id: number, year: number, month: number) => {
         get_competitions(camp_id, year, month, (events => {
+            //alert(objectToJson(events))
             const { setEvents }: EventsSlice = get();
             setEvents(events);
         }));

@@ -1,7 +1,7 @@
 import { Container, HStack, VStack, Flex, Text, Button } from "@chakra-ui/react";
 import { useStore } from '../store';
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
-import { TableView } from '../components/TableView';
+import { SimpleTable } from '../components/SimpleTable';
 import { GroupsPopover } from '../components/GroupsPopover';
 
 
@@ -23,13 +23,14 @@ export const EventsView: React.FC<Props> = ({ coach_id }) => {
   const columns = [
     {name: 'date', title: 'Date', width: '20%'},
     {name: 'time', title: 'Time', width: '20%'},
-    {name: 'group1', title: 'Group 1', width: '20%'},
-    {name: 'group2', title: 'Group 2', width: '20%'},
-    {name: 'desc', title: 'Description', width: '70%'},
+    {name: 'group1', title: 'Group 1', width: '30%'},
+    {name: 'group2', title: 'Group 2', width: '30%'},
+    //{name: 'desc', title: 'Description', width: '20%'},
   ];
 
   return (
-    <TableView columns={columns} data={coachEvents} selected={{id: 0, column: 'coach'}} onClick={()=>{}}>
-    </TableView>
+    <Container style={screenStyles.widget} h='174px' w='360px'>
+      <SimpleTable columns={columns} data={coachEvents}/>
+    </Container>
   )
 };

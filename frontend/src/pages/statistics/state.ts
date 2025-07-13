@@ -1,5 +1,7 @@
-import { get_achieves, get_student_attendance, get_student_games} from './http';
+import { objectToJson } from '../../shared/utils';
+import { get_achieves, get_camps, get_student_games} from './http';
 import { Camp, Attendance, Test, Game, Achieve } from './model';
+import { CampsSlice } from './store/CampsSlice';
 
 
 export interface StateSlice {
@@ -8,7 +10,6 @@ export interface StateSlice {
     camp_inx: number;
 
     loadCamps: () => void;
-    selectCamp: (camp_id: number, camp_inx: number) => void;
 
     loadTests: (camp_id: number) => void;
     loadGames: (camp_id: number) => void;
@@ -23,9 +24,16 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     camp_inx: 0,
 
 
-    loadCamps: () => {},
-
-    selectCamp: (camp_id: number, camp_inx: number) => set(camp_id, camp_inx),
+    loadCamps: () => {
+        get_camps((camps => {
+            //alert(objectToJson(camps))
+            const { setCamps }: CampsSlice = get();
+            
+            if (camps.length > 0) {
+                setCamps(camps);
+            }
+        }));
+    },
 
 
     loadAttendance: (camp_id: number) => {},

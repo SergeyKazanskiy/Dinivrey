@@ -18,7 +18,7 @@ export function get_coaches(camp_id: number, callback: (coaches: CoachShort[]) =
 
 // Update
 export function change_group_schedule_coach(id: number, data: {coach_id: number}, callback: (res: {name: string}) => void) {
-  return httpWrapper(() => api.put(`camps/groups/schedule/${id}`, data), callback, 'Change group schedule coach');
+  return httpWrapper(() => api.put(`camps/groups/schedule/${id}/coach`, data), callback, 'Change group schedule coach');
 };
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PopoverTrigger, PopoverContent, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverHeader } from "@chakra-ui/react";
+import { PopoverTrigger, PopoverContent, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverHeader, Flex } from "@chakra-ui/react";
 import { Popover, Box, Text, useDisclosure, IconButton} from "@chakra-ui/react";
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { FreeGroup } from '../model';
@@ -8,7 +8,7 @@ import { get_free_groups } from '../http';
 
 interface Props {
   camp_id: number;
-  onSelect: (group_id: number) => void;
+  onSelect: (group_id: number, name: string, desc: string) => void;
 }
 
 export const GroupsPopover: React.FC<Props> = ({ camp_id, onSelect }) => {
@@ -32,15 +32,20 @@ export const GroupsPopover: React.FC<Props> = ({ camp_id, onSelect }) => {
         <PopoverCloseButton />
         <PopoverHeader color='blue.500' fontSize={17} fontWeight={400}>Select group</PopoverHeader>
 
-        <PopoverBody  w={260}>
+        <PopoverBody  w={340}>
           <Box mt={4} bg='gray.100' p={2}>
             {groups.map((item) => (
-              <Text key={item.id} color='gray.700' fontSize={15} cursor='pointer' my={2} 
-                  onClick={() => (onSelect(item.id), onClose())}>
-
-                  {item.name}  {item.desc}
-              </Text>
+              <Flex key={item.id} >
+                <Text color='red.700' fontSize={15} cursor='pointer' my={2} w='100px'
+                  onClick={() => (onSelect(item.id, item.name, item.desc), onClose())}>
+                  {item.name}
+                </Text>
+                <Text color='gray.700' fontSize={15} my={2}  w='240px'>
+                  {item.desc}
+                </Text>
+              </Flex>
             ))}
+            {groups.length === 0 && <Text align='center' color='gray.600' fontSize={15}>No free groups</Text>}
           </Box>
         </PopoverBody>
       </PopoverContent>

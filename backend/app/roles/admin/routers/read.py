@@ -9,6 +9,8 @@ from sqlalchemy.future import select
 from sqlalchemy import desc, asc, outerjoin
 from datetime import datetime
 from sqlalchemy.orm import selectinload
+import helpers
+
 
 router = APIRouter()
 WEEKDAYS = { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" }
@@ -112,7 +114,7 @@ async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)
 # async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)):
 #     return await CRUD.read(models.CoachGroup, id, session)
 
-@router.get("/camps/{id}/coaches/groups", response_model=List[schemas.CoachGroup], tags=["Manager"])
+@router.get("/camps/{id}/coaches/groups", response_model=List[schemas.CoachGroup], tags=["Admin_select"])
 async def get_coache_groups( id: int, session: AsyncSession = Depends(get_session)):
     group = models.Group
     CG = models.CoachGroup
@@ -131,7 +133,7 @@ async def get_coache_groups( id: int, session: AsyncSession = Depends(get_sessio
                 name = row[3],
                 desc = row[4]) for row in rows]
 
-@router.get("/groups/free", response_model=List[schemas.FreeGroupResponse], tags=["Manager"])
+@router.get("/groups/free", response_model=List[schemas.FreeGroupResponse], tags=["Admin_select"])
 async def get_groups_without_coach( session: AsyncSession = Depends(get_session)):
     Camp = models.Camp
     Group = models.Group
@@ -153,7 +155,7 @@ async def get_groups_without_coach( session: AsyncSession = Depends(get_session)
                 name = row[2],
                 desc = row[3]) for row in rows]
 
-@router.get("/camps/{id}/coaches/schedule", response_model=List[schemas.CoachSchedule], tags=["Manager"])
+@router.get("/camps/{id}/coaches/schedules", tags=["Admin_select"])
 async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_session)):
     Group = models.Group
     Coach = models.Coach
@@ -169,68 +171,57 @@ async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_sessio
     result = await session.execute(stmt)
     rows = result.all()
 
-    coach_id = 0
-    weekday = 0
-    groups =''
-
+    prev_coach_id = 0
+    prev_day = 0
     schedules = []
 
     for row in rows:
-        groups = groups + row[3] + ':' + row[4] + ' ' + row[5] + ', '
-
-        if row[0] != coach_id:
-            coach_id = row[0]
-            weekday = 0
-            groups =''
-
-            if row[1] != weekday:
-                weekday = row[1]
-                groups =''
-
-                schedules.append(
-                    schemas.CoachSchedule(
-                        coach_id=row[0],
-                        weekday=WEEKDAYS[row[1]],
-                        groups=groups,
-                    )
-                )
+        schedules.append(
+            schemas.CoachSchedule(
+                coach_id=row[0],
+                weekday=WEEKDAYS[row[1]], #if row[0] != prev_coach_id and row[1] != prev_day else '',
+                time=f"{row[2]}:{row[3]}",
+                group=row[4]
+            )
+        )
+        prev_coach_id = row[0]
+        prev_day = row[1]
     return schedules
 
-@router.get("/camps/{camp_id}/competitions", response_model=List[schemas.CoachEvent], tags=["Admin_select"])
+@router.get("/camps/{camp_id}/competitions", tags=["Admin_select"])
 async def get_events(year: int, month: int, camp_id: int, session: AsyncSession = Depends(get_session)):
     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
 
     Event = models.Event
-
+    
     stmt = (
         select(Event.timestamp, Event.desc, Event.group1_id, Event.group2_id)
-        .where(Event.camp_id == camp_id,
-               Event.type == 'Game',
-               Event.timestamp.between(start_ts, end_ts))
-        .order_by(Event.timestamp)
+        .where(Event.timestamp.between(start_ts, end_ts), Event.camp_id == camp_id, Event.type == 'Game')
+        .order_by(asc(models.Event.timestamp))
     )
     result = await session.execute(stmt)
     rows = result.all()
-
     events = []
 
     for row in rows:
         group1 = await CRUD.read(models.Group, row[2], session)
         group2 = await CRUD.read(models.Group, row[3], session)
+        dateTime = helpers.format_date_time(row[0])
 
         events.append(
             schemas.CoachEvent(
-                timestamp=row[0],
+                date=dateTime['date'],
+                time=dateTime['time'],
                 desc=row[1],
                 group1_id=row[2],
                 group2_id=row[3],
-                group1=group1,
-                group2=group2
+                group1=group1.name,
+                group2=group2.name
             )
         )
-
     return events
+
 
 # Achieves
 @router.get("/achieves/all", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])

@@ -56,3 +56,21 @@ export interface Achieve {
   name: string;
   category: string;
 }
+
+export interface Lider {
+    id: number;
+    photo: string;
+    first_name: string;
+    last_name: string;
+    gender: string;
+    age: number;
+    phone: string;
+
+    speed: number;
+    stamina: number;
+    climbing: number;
+    evasion: number;
+    hiding: number;
+
+    achieves: Achieve[];
+}

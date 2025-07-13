@@ -1,4 +1,4 @@
-import { HStack, Text, Flex, Button } from "@chakra-ui/react";
+import { HStack, Text, Flex, Button, Image } from "@chakra-ui/react";
 import { useStore } from '../store';
 import { DateFilter } from '../components/DateFilter';
 
@@ -20,15 +20,15 @@ export const CampsView: React.FC = () => {
                     </Flex>
                 ))}
             </HStack>
-            
-             <HStack justifyContent='flex-start'  spacing='8px' w='472px'>
-                <Button size='sm' colorScheme="blue" isDisabled={isSchedule}
-                    onClick={showSchedules}>Schedule</Button>
-                <Button size='sm' colorScheme="blue" isDisabled={!isSchedule}
-                    onClick={showEvents}>Games</Button>
+
+            <HStack justifyContent='flex-start'  spacing='8px' w='356px'>
+                <Image src={`/images/Event.png`} alt='icon' boxSize='24px' bg={isSchedule ? 'blue.100' : 'unset'}
+                    onClick={showSchedules}/>
+                <Image src={`/images/Game.png`} alt='icon' boxSize='24px' bg={!isSchedule ? 'blue.100' : 'unset'}
+                    onClick={showEvents}/>
 
                 {!isSchedule && <DateFilter/>}
-             </HStack>
+            </HStack>
         </HStack>
     )
 };

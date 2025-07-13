@@ -24,9 +24,9 @@ export function DeletePopover({title, isOpen, isDisabled, onOpen, onClose, onDel
   }
 
   return (
-    <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} placement='bottom-start'>
+    <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} placement='bottom-end'>
       <PopoverTrigger>
-        <Button colorScheme='blue' size='sm' variant='outline' isDisabled={isDisabled}>
+        <Button colorScheme='blue' size='sm' variant='outline' h='30px' isDisabled={isDisabled}>
           Delete
         </Button>
       </PopoverTrigger>

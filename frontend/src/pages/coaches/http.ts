@@ -33,7 +33,11 @@ export function get_competitions(camp_id: number, year: number, month: number, c
 };
 
 // Add
-export function add_coach_group(data: {coache_id: number, group_id: number}, callback: (coachGroups: CoachGroup[]) => void) {
+export function create_coach(data: Omit<Coach, 'id'>, callback: (res: {id: number}) => void) {
+    return httpWrapper(() => api.post(`camps/coaches`, data), callback);
+};
+
+export function add_coach_group(data: {coache_id: number, group_id: number}, callback: (cres: {id: number}) => void) {
     return httpWrapper(() => api.post(`camps/coaches/groups`, data), callback);
 };
 
@@ -43,6 +47,10 @@ export function update_coach(coach_id: number, data: Partial<Coach>, callback: (
 };
 
 // Delete
+export function delete_coach(id: number, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.delete(`camps/coaches/${id}`), callback);
+};
+
 export function remove_coach_group(id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.delete(`camps/coaches/groups/${id}`), callback);
 };

@@ -1,8 +1,7 @@
-import { Container, HStack, VStack, Flex, Text, Button } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { useStore } from '../store';
-import { screenStyles, widgetStyles } from '../../../shared/appStyles'
-import { TableView } from '../components/TableView';
-import { GroupsPopover } from '../components/GroupsPopover';
+import { screenStyles } from '../../../shared/appStyles'
+import { SimpleTable } from '../components/SimpleTable';
 
 
 interface Props {
@@ -15,12 +14,14 @@ export const ScheduleView: React.FC<Props> = ({ coach_id }) => {
   const coachSchedule = schedules.filter(el => el.coach_id === coach_id);
 
   const columns = [
-    {name: 'weekday', title: 'Date', width: '25%'},
-    {name: 'groups', title: 'Groups', width: '75%'},
+    {name: 'weekday', title: 'Date', width: '40%'},
+    {name: 'time', title: 'Time', width: '25%'},
+    {name: 'group', title: 'Group', width: '35%'},
   ];
 
   return (
-    <TableView columns={columns} data={coachSchedule} selected={{id: 0, column: 'weekday'}} onClick={()=>{}}>
-    </TableView>
+    <Container style={screenStyles.widget} h='174px' w='360px'>
+      <SimpleTable columns={columns} data={coachSchedule}/>
+    </Container>
   )
 };
