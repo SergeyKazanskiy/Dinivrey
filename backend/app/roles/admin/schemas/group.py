@@ -66,3 +66,21 @@ class FreeGroupResponse(BaseModel):
     id: int
     name: str
     desc: str    
+
+
+class CampTestResponse(BaseModel):
+    timestamp: int
+    group_id: int
+    group_name: str
+    speed: float
+    stamina: float
+    climbing: float
+    evasion: float
+    hiding: float    
+
+class CampTestAverages(BaseModel):
+    speed: float
+    stamina: float
+    climbing: float
+    evasion: float
+    hiding: float  

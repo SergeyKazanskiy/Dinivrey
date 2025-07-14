@@ -1,62 +1,35 @@
-import { Test } from '../model';
+import { Test, Group, GroupTest } from '../model';
 import { getChanges, formatDateTime, objectToJson } from '../../../shared/utils';
+import { StateSlice } from '../state';
+import { CampsSlice } from './CampsSlice';
 
 
 export interface TestsSlice {
-    tests: Test[];
+    groups: Group[];
+    tests: GroupTest[];
 
-    setTests:(tests: Test[]) => void; //student loaded
+    year: number;
+    month: number;
+
+    setGroups:(groups: Group[]) => void;
+    setTests:(tests: GroupTest[]) => void;
+    selectDate: (year: number, month: number ) => void;
 }
 
 export const createTestsSlice = (set: any, get: any): TestsSlice => ({
-    tests:[
-        {
-            id: 1,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 5,
-            stamina: 4,
-            climbing: 4,
-            evasion: 2,
-            hiding: 7
-        },
-        {
-            id: 2,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 5,
-            stamina: 6,
-            climbing: 4,
-            evasion: 2,
-            hiding: 2
-        },
-        {
-            id: 3,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 4,
-            stamina: 8,
-            climbing: 2,
-            evasion: 2,
-            hiding: 5
-        },
-        {
-            id: 4,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 5,
-            stamina: 8,
-            climbing: 2,
-            evasion: 2,
-            hiding: 5
-        }
-    ],
+    tests:[],
+    groups: [],
 
+    year: 2025,
+    month: 5,
 
-    setTests:(tests: Test[]) => set({ tests }),
+    setGroups:(groups: Group[]) => set({ groups }),
+    setTests:(tests: GroupTest[]) => set({ tests }),
 
+    selectDate: (year: number, month: number) => {
+        set({ year, month }); 
+
+        const { loadTests, campId}: StateSlice & CampsSlice = get();
+        loadTests(campId, year, month);
+    },
 });

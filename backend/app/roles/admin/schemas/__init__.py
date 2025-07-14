@@ -2,10 +2,12 @@ from .shared import ResponseOk, ResponseId
 from .camp import CampCreate, CampUpdate, CampResponse, CampScheduleResponse
 from .group import GroupCreate, GroupUpdate, GroupResponse, Group_Students, GroupCoachUpdate, FreeGroupResponse
 from .group import GroupReadWithSchedule, GroupScheduleRead, GroupScheduleCreate, GroupScheduleUpdate
+from .group import CampTestResponse, CampTestAverages
+
 
 from .student import StudentCreate, StudentUpdate, StudentResponse, StudentShort, StudentName
 from .student import ParentCreate, ParentUpdate, ParentResponse
-from .student import TestCreate, TestUpdate, TestResponse
+from .student import TestCreate, TestUpdate, TestResponse, StudentTestLider
 from .student import GameCreate, GameUpdate, GameResponse
 from .student import AchievementCreate, AchievementUpdate, AchievementResponse
 

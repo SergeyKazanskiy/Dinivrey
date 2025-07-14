@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text, Image, AbsoluteCenter, chakra, useToken } from '@chakra-ui/react';
-import { Test } from '../model';
+import { CampTest } from '../model';
 import { ImagesPath } from '../../../shared/constants';
 
 
@@ -13,14 +13,14 @@ const ChakraRadialGradient = chakra('radialGradient');
 const ChakraStop = chakra('stop');
 
 type RadarChartProps = {
-  test: Test;
+  test: CampTest;
   onExam: (exam: string) => void;
 };
 
 const labels = ['climbing', 'stamina', 'speed', 'evasion', 'hiding'];
 
 export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam }) => {
-  const size = 240;
+  const size = 200;
   const center = size / 2 - 4;
   const radius = size * 0.43;
 
@@ -87,15 +87,15 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam }) => {
         </ChakraSvg>
 
         {outerPoints.map((p, i) => (
-          <Box key={i} position="absolute" left={`${p.x - 25}px`} top={`${p.y + 50}px`} cursor="pointer"
+          <Box key={i} position="absolute" left={`${p.x - 25}px`} top={`${p.y - 24}px`} cursor="pointer"
             onClick={() => onExam(labels[i])}
           >
             <Image src={icons[i]} boxSize="50px" />
           </Box>
         ))}
 
-        <AbsoluteCenter pt="24px" pr="4px">
-          <Text fontSize="3xl" fontWeight="bold" color="white">
+        <AbsoluteCenter pb="16px" pr="4px">
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             {average}
           </Text>
         </AbsoluteCenter>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from database import get_session
@@ -6,7 +6,7 @@ from crud import CRUD
 from roles.admin import schemas
 import models
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc, outerjoin
+from sqlalchemy import desc, asc, outerjoin, func
 from datetime import datetime
 from sqlalchemy.orm import selectinload
 import helpers
@@ -352,7 +352,7 @@ async def get_base_drills(session: AsyncSession = Depends(get_session)):
 
 
 # Schedule
-@router.get("/camps/{id}/schedule", response_model=List[schemas.CampScheduleResponse], tags=["Manager"])
+@router.get("/camps/{id}/schedule", response_model=List[schemas.CampScheduleResponse], tags=["Admin_select"])
 async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_session)):
     Camp = models.Camp
     Group = models.Group
@@ -386,3 +386,237 @@ async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_sessio
             )
         )
     return schedule
+
+
+# Statistics
+# @router.get("/camps/groups/{id}/statistics", response_model=List[schemas.GroupTestResponse], tags=["Manager"])
+# async def get_group_statistics(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+#     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+#     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+
+#     Test = models.Test
+#     Student=models.Student
+
+#     stmt = (
+#         select(
+#             Test.timestamp,
+#             func.avg(Test.speed).label("avg_speed"),
+#             func.avg(Test.stamina).label("avg_stamina"),
+#             func.avg(Test.climbing).label("avg_climbing"),
+#             func.avg(Test.evasion).label("avg_evasion"),
+#             func.avg(Test.hiding).label("avg_hiding"),
+#         )
+#         .join(Student, Student.id == Test.student_id)
+#         .where(Student.group_id == id, Test.timestamp.between(start_ts, end_ts))
+#         .group_by(Test.timestamp)
+#         .order_by(Test.timestamp)
+#     )
+#     result = await session.execute(stmt)
+#     rows = result.all()
+
+#     return [{"timestamp": row[0],
+#             "speed": row[1],
+#             "stamina": row[2],
+#             "climbing": row[3],
+#             "evasion": row[4],
+#             "hiding": row[5]}
+#             for row in rows]
+
+@router.get("/camps/{id}/groups/tests", response_model=List[schemas.CampTestResponse], tags=["Admin_select"])
+async def get_camp_groups_statistics(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+
+    Test = models.Test
+    Student = models.Student
+    Group = models.Group
+
+    stmt = (
+        select(
+            Test.timestamp,
+            Group.id.label("group_id"),
+            Group.name.label("group_name"),
+
+            func.avg(Test.speed).label("avg_speed"),
+            func.avg(Test.stamina).label("avg_stamina"),
+            func.avg(Test.climbing).label("avg_climbing"),
+            func.avg(Test.evasion).label("avg_evasion"),
+            func.avg(Test.hiding).label("avg_hiding"),
+        )
+        .join(Student, Student.id == Test.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .where(Group.camp_id == id, Test.timestamp.between(start_ts, end_ts))
+        .group_by(Test.timestamp, Group.id)
+        .order_by(Test.timestamp, Group.id)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [{
+            "timestamp": row[0],
+            "group_id": row[1],
+            "group_name": row[2],
+
+            "speed": row[3],
+            "stamina": row[4],
+            "climbing": row[5],
+            "evasion": row[6],
+            "hiding": row[7]
+        } for row in rows]
+
+@router.get("/camps/{id}/statistics/last", response_model=schemas.CampTestAverages, tags=["Admin_select"])
+async def get_camp_last_statistics(id: int, session: AsyncSession = Depends(get_session)):
+    Test = models.Test
+    Student = models.Student
+    Group = models.Group
+
+    # Подзапрос: выбираем максимальный timestamp для каждого студента
+    subquery = (
+        select(
+            Test.student_id,
+            func.max(Test.timestamp).label("last_ts")
+        )
+        .join(Student, Student.id == Test.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .where(Group.camp_id == id)
+        .group_by(Test.student_id)
+        .subquery()
+    )
+
+    # Основной запрос: выбираем тесты с этими последними timestamp
+    stmt = (
+        select(
+            func.avg(Test.speed).label("avg_speed"),
+            func.avg(Test.stamina).label("avg_stamina"),
+            func.avg(Test.climbing).label("avg_climbing"),
+            func.avg(Test.evasion).label("avg_evasion"),
+            func.avg(Test.hiding).label("avg_hiding"),
+        )
+        .join(Student, Student.id == Test.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .join(subquery, (subquery.c.student_id == Test.student_id) & (subquery.c.last_ts == Test.timestamp))
+    )
+
+    result = await session.execute(stmt)
+    row = result.one_or_none()
+
+    if row:
+        return {
+            "speed": row.avg_speed,
+            "stamina": row.avg_stamina,
+            "climbing": row.avg_climbing,
+            "evasion": row.avg_evasion,
+            "hiding": row.avg_hiding
+        }
+    else:
+        return {
+            "speed": None,
+            "stamina": None,
+            "climbing": None,
+            "evasion": None,
+            "hiding": None
+        }
+
+
+@router.get("/camps/{id}/statistics/liders", response_model=List[schemas.StudentTestLider], tags=["Admin_select"])
+async def get_camp_liders(id: int, test_name: str, session: AsyncSession = Depends(get_session)):
+    valid_tests = {"speed", "stamina", "climbing", "evasion", "hiding"}
+    if test_name not in valid_tests:
+        raise HTTPException(status_code=400, detail=f"Invalid test_name: {test_name}")
+
+    Test = models.Test
+    Student = models.Student
+    Group = models.Group
+
+    # Подзапрос: последние тесты студентов
+    subquery = (
+        select(
+            Test.student_id,
+            func.max(Test.timestamp).label("last_ts")
+        )
+        .join(Student, Student.id == Test.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .where(Group.camp_id == id)
+        .group_by(Test.student_id)
+        .subquery()
+    )
+
+    # Основной запрос: студенты и их последние тесты
+    stmt = (
+        select(
+            Student.id,
+            Student.photo,
+            Student.first_name,
+            Student.last_name,
+            Test.speed,
+            Test.stamina,
+            Test.climbing,
+            Test.evasion,
+            Test.hiding,
+            Group.name
+        )
+        .join(Test, Test.student_id == Student.id)
+        .join(Group, Group.id == Student.group_id)
+        .join(subquery, (subquery.c.student_id == Test.student_id) & (subquery.c.last_ts == Test.timestamp))
+        .where(Group.camp_id == id)
+        .order_by(getattr(Test, test_name).desc().nullslast())
+        .limit(10)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [
+        {
+            "id": row.id,
+            "photo": row.photo,
+            "first_name": row.first_name,
+            "last_name": row.last_name,
+            "speed": row.speed,
+            "stamina": row.stamina,
+            "climbing": row.climbing,
+            "evasion": row.evasion,
+            "hiding": row.hiding,
+            "group_name": row.name
+        }
+        for row in rows
+    ]
+
+
+@router.get("/camps/{id}/statistics/achieves", tags=["Admin_select"])
+async def get_camp_achieves(id: int, session: AsyncSession = Depends(get_session)):
+    Achieve = models.Achieve
+    StudentAchieve = models.Achievement
+    Student = models.Student
+    Group = models.Group
+
+    stmt = (
+        select(
+            Achieve.id,
+            Achieve.image,
+            Achieve.name,
+            Achieve.category,
+            func.count(StudentAchieve.student_id).label("count")
+        )
+        .join(StudentAchieve, StudentAchieve.achieve_id == Achieve.id)
+        .join(Student, Student.id == StudentAchieve.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .where(Group.camp_id == id)
+        .group_by(Achieve.id, Achieve.image, Achieve.name, Achieve.category)
+        .order_by(Achieve.category, Achieve.name)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [
+        {
+            "id": row[0],
+            "image": row[1],
+            "name": row[2],
+            "category": row[3],
+            "count": row[4]
+        }
+        for row in rows
+    ]
