@@ -7,6 +7,25 @@ export interface Camp {
   city: string;
 }
 
+export interface CampTest {
+  speed: number;
+  stamina: number;
+  climbing: number;
+  evasion: number;
+  hiding: number;
+}
+
+export interface GroupTest {
+  timestamp: number;
+  group_id: number;
+  speed: number;
+  stamina: number;
+  climbing: number;
+  evasion: number;
+  hiding: number;
+}
+
+
 export interface Card {
   camp_id: number;
   name: string;
@@ -55,6 +74,7 @@ export interface Achieve {
   image: string;
   name: string;
   category: string;
+  count: number;
 }
 
 export interface Lider {
@@ -62,15 +82,25 @@ export interface Lider {
     photo: string;
     first_name: string;
     last_name: string;
-    gender: string;
-    age: number;
-    phone: string;
+    group_name: string;
 
     speed: number;
     stamina: number;
     climbing: number;
     evasion: number;
     hiding: number;
+}
 
-    achieves: Achieve[];
+export interface GroupAchieve {
+  group_id: number;
+  group_name: string;
+  achieves_count: number;
+}
+
+export interface Honored {
+  id: number;
+  photo: string;
+  first_name: string;
+  last_name: string;
+  images: string[];
 }

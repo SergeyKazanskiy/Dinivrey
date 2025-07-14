@@ -164,3 +164,17 @@ class AchievementResponse(BaseModel):
         
     class Config:
         from_attributes = True
+
+
+class StudentTestLider(BaseModel):
+    id: int
+    photo: Optional[str]
+    first_name: str
+    last_name: str
+    group_name: str
+
+    speed: float
+    stamina: float
+    climbing: float
+    evasion: float
+    hiding: float
