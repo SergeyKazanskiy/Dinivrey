@@ -11,8 +11,11 @@ export interface TestsSlice {
     year: number;
     month: number;
 
+    clearTests:() => void;
+
     setGroups:(groups: Group[]) => void;
     setTests:(tests: GroupTest[]) => void;
+
     selectDate: (year: number, month: number ) => void;
 }
 
@@ -21,7 +24,9 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
     groups: [],
 
     year: 2025,
-    month: 5,
+    month: 3,
+
+    clearTests:() => set({ groups: [], tests:[]}),
 
     setGroups:(groups: Group[]) => set({ groups }),
     setTests:(tests: GroupTest[]) => set({ tests }),

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Text, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { RadarChart } from './RadarChart';
-import { StatsIndicators } from './StatsIndicators';
 import { get_camp_last_statistics } from '../http';
 import { CampTest } from '../model';
+import { objectToJson } from '../../../shared/utils';
 
 
 interface Props {
@@ -20,11 +20,9 @@ export function StatisticCard({ camp_id, onExam }: Props) {
       }));
   }, []);
 
-
   return (
     <HStack pl={2}>
       <RadarChart test={campTest} onExam={onExam}/>
-      {/* <StatsIndicators stats={[campTest.climbing, campTest.stamina, campTest.speed, campTest.evasion, campTest.hiding]}/>   */}
     </HStack>
   );
 }

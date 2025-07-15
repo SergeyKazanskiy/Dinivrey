@@ -390,82 +390,6 @@ async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_sessio
 
 
 # Statistics
-# @router.get("/camps/groups/{id}/statistics", response_model=List[schemas.GroupTestResponse], tags=["Manager"])
-# async def get_group_statistics(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
-#     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
-#     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
-
-#     Test = models.Test
-#     Student=models.Student
-
-#     stmt = (
-#         select(
-#             Test.timestamp,
-#             func.avg(Test.speed).label("avg_speed"),
-#             func.avg(Test.stamina).label("avg_stamina"),
-#             func.avg(Test.climbing).label("avg_climbing"),
-#             func.avg(Test.evasion).label("avg_evasion"),
-#             func.avg(Test.hiding).label("avg_hiding"),
-#         )
-#         .join(Student, Student.id == Test.student_id)
-#         .where(Student.group_id == id, Test.timestamp.between(start_ts, end_ts))
-#         .group_by(Test.timestamp)
-#         .order_by(Test.timestamp)
-#     )
-#     result = await session.execute(stmt)
-#     rows = result.all()
-
-#     return [{"timestamp": row[0],
-#             "speed": row[1],
-#             "stamina": row[2],
-#             "climbing": row[3],
-#             "evasion": row[4],
-#             "hiding": row[5]}
-#             for row in rows]
-
-@router.get("/camps/{id}/groups/tests", response_model=List[schemas.CampTestResponse], tags=["Admin_select"])
-async def get_camp_groups_statistics(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
-    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
-    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
-
-    Test = models.Test
-    Student = models.Student
-    Group = models.Group
-
-    stmt = (
-        select(
-            Test.timestamp,
-            Group.id.label("group_id"),
-            Group.name.label("group_name"),
-
-            func.avg(Test.speed).label("avg_speed"),
-            func.avg(Test.stamina).label("avg_stamina"),
-            func.avg(Test.climbing).label("avg_climbing"),
-            func.avg(Test.evasion).label("avg_evasion"),
-            func.avg(Test.hiding).label("avg_hiding"),
-        )
-        .join(Student, Student.id == Test.student_id)
-        .join(Group, Group.id == Student.group_id)
-        .where(Group.camp_id == id, Test.timestamp.between(start_ts, end_ts))
-        .group_by(Test.timestamp, Group.id)
-        .order_by(Test.timestamp, Group.id)
-    )
-
-    result = await session.execute(stmt)
-    rows = result.all()
-
-    return [{
-            "timestamp": row[0],
-            "group_id": row[1],
-            "group_name": row[2],
-
-            "speed": row[3],
-            "stamina": row[4],
-            "climbing": row[5],
-            "evasion": row[6],
-            "hiding": row[7]
-        } for row in rows]
-
 @router.get("/camps/{id}/statistics/last", response_model=schemas.CampTestAverages, tags=["Admin_select"])
 async def get_camp_last_statistics(id: int, session: AsyncSession = Depends(get_session)):
     Test = models.Test
@@ -518,6 +442,75 @@ async def get_camp_last_statistics(id: int, session: AsyncSession = Depends(get_
             "evasion": None,
             "hiding": None
         }
+
+
+@router.get("/camps/{camp_id}/students/tests/last_date", tags=["Admin_select"])
+async def get_camp_last_test(camp_id: int, session: AsyncSession = Depends(get_session)):
+    Group = models.Group
+    Student = models.Student
+    Test = models.Test
+
+    stmt = (
+        select(Test)
+        .join(Student, Student.id == Test.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .where(Group.camp_id == camp_id)
+        .order_by(desc(Test.timestamp))
+        .limit(1)
+    )
+    
+    result = await session.execute(stmt)
+    test = result.scalar_one_or_none()
+
+    isTests = True if test else False
+    timestamp = test.timestamp if test else int(datetime.now().timestamp() * 1000)
+    date = datetime.fromtimestamp(timestamp / 1000)
+
+    return {"year": date.year, "month": date.month, "isTests": isTests}
+
+
+@router.get("/camps/{id}/groups/tests", response_model=List[schemas.CampTestResponse], tags=["Admin_select"])
+async def get_camp_groups_statistics(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+
+    Test = models.Test
+    Student = models.Student
+    Group = models.Group
+
+    stmt = (
+        select(
+            Test.timestamp,
+            Group.id.label("group_id"),
+            Group.name.label("group_name"),
+
+            func.avg(Test.speed).label("avg_speed"),
+            func.avg(Test.stamina).label("avg_stamina"),
+            func.avg(Test.climbing).label("avg_climbing"),
+            func.avg(Test.evasion).label("avg_evasion"),
+            func.avg(Test.hiding).label("avg_hiding"),
+        )
+        .join(Student, Student.id == Test.student_id)
+        .join(Group, Group.id == Student.group_id)
+        .where(Group.camp_id == id, Test.timestamp.between(start_ts, end_ts))
+        .group_by(Test.timestamp, Group.id)
+        .order_by(Test.timestamp, Group.id)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [{
+            "timestamp": row[0],
+            "group_id": row[1],
+            "group_name": row[2],
+
+            "speed": row[3],
+            "stamina": row[4],
+            "climbing": row[5],
+            "evasion": row[6],
+            "hiding": row[7]
+        } for row in rows]
 
 
 @router.get("/camps/{id}/statistics/liders", response_model=List[schemas.StudentTestLider], tags=["Admin_select"])

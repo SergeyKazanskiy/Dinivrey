@@ -13,10 +13,14 @@ import { GroupsFilter } from './components/GroupsFilter';
 import { HonoresView } from './views/HonoresView';
 
 export const StatisticsPage: React.FC = () => {
-    const { isStatictics } = useStore();
-    const { loadCamps } = useStore();
+    const { isStatictics, isTests } = useStore();
+    const { loadCamps, clearTests, clearLiders, clearGroupsAchieves } = useStore();
 
     useEffect(() => {
+        clearTests();
+        clearLiders();
+        clearGroupsAchieves();
+
         loadCamps();
     }, []);
 
@@ -44,9 +48,9 @@ export const StatisticsPage: React.FC = () => {
             <Container style={screenStyles.widget} w='360px'>
                 <HStack justifyContent='space-between' h='50px'>
                     <Text style={widgetStyles.title}>Charts</Text>
-                    <DateFilter/>
+                    {isTests && <DateFilter/>}
                 </HStack>
-                <GroupsView/>
+                {isTests && <GroupsView/>}
             </Container>
         </SimpleGrid>
         }
@@ -59,7 +63,6 @@ export const StatisticsPage: React.FC = () => {
                         <Text style={widgetStyles.title}>Students</Text>
                         <GroupsFilter/>
                     </HStack>
-
                     <HonoresView/>
                 </Box>
             </VStack>

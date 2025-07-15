@@ -16,7 +16,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, 
   const pngSrc = ImagesPath + `/achieves/images/${image}.png`;
 
   return (
-      <Box position="relative" display="inline-block" mx='8px'
+      <Box position="relative" display="inline-block" mx='8px' cursor='pointer'
         onClick={onClick}>
 
         <Image src={frameSrc} alt="Background" boxSize={level === 'Epic' ? "58px" : "58px"} objectFit='cover' />

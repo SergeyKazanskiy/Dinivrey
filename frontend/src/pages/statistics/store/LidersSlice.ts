@@ -6,8 +6,10 @@ import { CampsSlice } from './CampsSlice';
 
 export interface LidersSlice {
     liders: Lider[];
-    test: NumericFields<Lider>;
+    test: string;
     testNames: NumericFields<Lider>[];
+
+    clearLiders: () => void;
 
     setLiders: (liders: Lider[]) => void;
     selectTest: (test: NumericFields<Lider>) => void;
@@ -15,19 +17,26 @@ export interface LidersSlice {
 
 export const createLidersSlice = (set: any, get: any): LidersSlice => ({
     liders: [],
-    test: 'speed',       
+    test: '',       
     testNames: ['speed', 'stamina', 'climbing', 'evasion', 'hiding'],
 
-    setLiders: (liders: Lider[]) => set({
-        test: 'speed',
-        liders: liders.sort((a, b) => b.speed - a.speed)
-    }),
 
-    selectTest: (test: NumericFields<Lider>) => {
-        set({test});
+    clearLiders: () => set({ liders: [], test: '' }),
+    
+    setLiders: (liders: Lider[]) => set({ liders }),
 
-        const { loadLiders, campId }: StateSlice & CampsSlice= get();
-        loadLiders(campId, test);
+    selectTest: (selectedTest: NumericFields<Lider>) => {
+        const { test }: LidersSlice = get();
+
+        if (selectedTest === test) {
+            set({test: '', liders: []});
+        } else {
+            set({test: selectedTest});
+
+            const { loadLiders, campId }: StateSlice & CampsSlice = get();
+            loadLiders(campId, selectedTest);
+        }
+
     },
 });
 
