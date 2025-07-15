@@ -84,3 +84,9 @@ class CampTestAverages(BaseModel):
     climbing: float
     evasion: float
     hiding: float  
+
+
+class GroupAchieve(BaseModel):
+    group_id: int
+    group_name: str
+    achieves_count: int

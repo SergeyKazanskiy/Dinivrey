@@ -10,9 +10,10 @@ interface Props {
   camp_id: number;
   achieve_id: number;
   onAchieve: (achieve_id: number) => void;
+  canSelect: boolean;
 }
 
-export function AchievesCard({ camp_id, achieve_id, onAchieve }: Props) {
+export function AchievesCard({ camp_id, achieve_id, onAchieve, canSelect }: Props) {
   const [achieves, setAchieves] = useState<Achieve[]>([])
 
   useEffect(() => {
@@ -30,18 +31,21 @@ export function AchievesCard({ camp_id, achieve_id, onAchieve }: Props) {
           achieve_id={achieve_id}
           categoryAchieves={achieves.filter(el => el.category === 'Test')}
           selectAchieve={onAchieve}
+          canSelect={canSelect}
         />
         <AchievesPanel
           title="Game achievements"
           achieve_id={achieve_id}
           categoryAchieves={achieves.filter(el => el.category === 'Game')}
           selectAchieve={onAchieve}
+          canSelect={canSelect}
         />
         <AchievesPanel
           title="Participate achievements"
           achieve_id={achieve_id}
           categoryAchieves={achieves.filter(el => el.category === 'Participate')}
           selectAchieve={onAchieve}
+          canSelect={canSelect}
         />
       </VStack>
     </Box>
