@@ -1,6 +1,6 @@
 import { objectToJson } from '../../shared/utils';
 import { get_camps, get_groups, get_camp_groups_tests, get_camp_liders} from './http';
-import { get_groups_achieve_count, get_groups_honores} from './http';
+import { get_groups_achieve_count, get_groups_honores, get_camp_last_test} from './http';
 import { Camp, Group, GroupTest, Lider, GroupAchieve, Honored } from './model';
 import { CampsSlice } from './store/CampsSlice';
 import { LidersSlice } from './store/LidersSlice';
@@ -10,11 +10,13 @@ import { AchievesSlice } from './store/AchievesSlice';
 
 export interface StateSlice {
     isStatictics: boolean;
+    isTests: boolean;
 
     selectStatistics: () => void;
     selectAchievements: () => void;
 
     loadCamps: () => void;
+    loadLastDate: (camp_id: number) => void;
     loadGroups: (camp_id: number) => void;
 
     loadTests: (camp_id: number, year: number, month: number) => void;
@@ -22,23 +24,34 @@ export interface StateSlice {
 
     loadGroupsAchieveCount: (camp_id: number, achieve_id: number) => void;
     loadHonores: (group_id: number, achieve_id: number) => void;
-    // loadGames: (camp_id: number) => void;
-    // loadAchieves: (camp_id: number) => void;
-    // loadAttendance: (camp_id: number) => void;
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
     isStatictics: true,
+    isTests: false,
+
 
     selectStatistics: () => set({isStatictics: true}),
     selectAchievements: () => set({isStatictics: false}),
 
     loadCamps: () => {
-        get_camps((camps => {
+        get_camps((camps: Camp[]) => {
             //alert(objectToJson(camps))
             if (camps.length > 0) {
                 const { setCamps }: CampsSlice = get();
                 setCamps(camps);
+            }
+        });
+    },
+
+    loadLastDate: (camp_id: number) => {
+        get_camp_last_test(camp_id, (res => {
+            set({ isTests: res.isTests });
+  
+            if (res.isTests) {
+
+                const { selectDate }: TestsSlice = get();
+                selectDate(res.year, res.month);
             }
         }));
     },
@@ -49,7 +62,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 const { setGroups }: TestsSlice = get();
                 setGroups(groups);
             }
-        })
+        });
     },
 
     loadTests: (camp_id: number, year: number, month: number) => {
@@ -91,11 +104,4 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
             }
         });
     }
-    // loadAttendance: (camp_id: number) => {},
-
-    // loadGames: (camp_id: number) => {},
-
-    // loadAchieves: (camp_id: number) => {},
-
-    
 });

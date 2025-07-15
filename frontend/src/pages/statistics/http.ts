@@ -13,6 +13,11 @@ export function get_groups(camp_id: number, callback: (groups: Group[]) => void)
   return httpWrapper(() => api.get(`camps/${camp_id}/groups`), callback);
 };
 
+
+export function get_camp_last_test(camp_id: number, callback: (res: {year: number, month: number, isTests: boolean}) => void) {
+  return httpWrapper(() => api.get(`camps/${camp_id}/students/tests/last_date`), callback);
+};
+
 export function get_camp_last_statistics(camp_id: number, callback: (test: CampTest) => void) {
   return httpWrapper(() => api.get(`camps/${camp_id}/statistics/last`), callback);
 };

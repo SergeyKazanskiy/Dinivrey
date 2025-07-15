@@ -1,13 +1,15 @@
+import { useEffect } from 'react';
 import { Box, HStack, Text, } from "@chakra-ui/react";
 import { useStore } from "../store";
 import { AchievesCard } from '../components/AchievesCard';
 import { objectToJson } from "../../../shared/utils";
 
 
+
 export const AchievesView: React.FC = () => {
   const { camps, camp_id2, achieve_id } = useStore();
   const { selectAchieve } = useStore();
- 
+
   return (
     <HStack justifyContent='space-between' w='100%'>
       {camps.map((item) => (

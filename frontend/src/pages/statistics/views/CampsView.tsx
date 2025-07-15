@@ -12,21 +12,18 @@ export const CampsView: React.FC = () => {
   const { selectCamp, selectExam } = useStore();
 
 
-  //alert(objectToJson(camps))
   return (
     <HStack px={1} justifyContent='space-between'>
       {camps.map((item) => (
+
         <Box h='260px' w='224px' bg='gray.300' key={item.id} p={2} borderRadius={8}
           borderWidth={item.id === campId ? 2 : 0} borderColor='red.300'
           onClick={() => selectCamp(item.id)}>
 
-          <Text color='gray.700' fontSize={16}>{item.city}</Text>
-          <Text color='gray.700' fontSize={16}>{item.name}</Text>
+          <Text color='gray.700' fontSize={16} cursor='pointer'>{item.city}</Text>
+          <Text color='gray.700' fontSize={16} cursor='pointer'>{item.name}</Text>
          
-          <Box onClick={()=> selectCamp(item.id)}>
-            <StatisticCard camp_id={item.id} onExam={selectExam}/>
-          </Box>
-          
+          <StatisticCard camp_id={item.id} onExam={() => {}}/>
         </Box>
        ))}
     </HStack>

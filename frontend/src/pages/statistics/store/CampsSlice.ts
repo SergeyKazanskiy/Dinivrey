@@ -1,5 +1,7 @@
 import { Camp } from '../model';
 import { StateSlice } from '../state';
+import { LidersSlice } from './LidersSlice';
+import { TestsSlice } from './TestsSlice';
 
 
 export interface CampsSlice {
@@ -9,7 +11,7 @@ export interface CampsSlice {
     exam: string;
 
     setCamps: (camps: Camp[]) => void;
-    selectCamp: (campId: number) => void;
+    selectCamp: (camp_id: number) => void;
 
     selectExam: (exam: string) => void;
 }
@@ -22,11 +24,22 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
 
     setCamps: (camps: Camp[])  => set({ camps, campId: 0 }),
 
-    selectCamp: (campId: number) => {
-        set({ campId });
+    selectCamp: (camp_id: number) => {
+        const { campId }: CampsSlice = get();
 
-        const { loadGroups }: StateSlice = get();
-        loadGroups(campId);
+        if (camp_id === campId) {
+             set({ campId: 0 });
+
+             const { clearLiders, clearTests }: LidersSlice & TestsSlice = get();
+             clearLiders();
+             clearTests();
+        } else {
+            set({ campId: camp_id });
+
+            const { loadLastDate, loadGroups }: StateSlice = get();
+            loadLastDate(camp_id);
+            loadGroups(camp_id);
+        }
     },
 
     selectExam: (exam: string) => {
