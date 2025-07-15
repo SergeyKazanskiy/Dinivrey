@@ -31,11 +31,11 @@ export function get_camp_achieves(camp_id: number, callback: (achieves: Achieve[
 };
 
 export function get_groups_achieve_count(camp_id: number, achieve_id: number, callback: (groupAchieves: GroupAchieve[]) => void) {
-  return httpWrapper(() => api.get(`camps/${camp_id}/statistics/groups/achieves/count?achieve_id=${achieve_id}`), callback);
+  return httpWrapper(() => api.get(`camps/${camp_id}/groups/achieves/count?achieve_id=${achieve_id}`), callback);
 };
 
 export function get_groups_honores(group_id: number, achieve_id: number, callback: (honores: Honored[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/statistics/honores?achieve_id=${achieve_id}`), callback);
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/honores?achieve_id=${achieve_id}`), callback);
 };
 
 // export function get_groups(camp_id: number, callback: (groups: Group[]) => void) {

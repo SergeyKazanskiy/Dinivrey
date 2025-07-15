@@ -10,6 +10,7 @@ from sqlalchemy import desc, asc, outerjoin, func
 from datetime import datetime
 from sqlalchemy.orm import selectinload
 import helpers
+from collections import defaultdict
 
 
 router = APIRouter()
@@ -620,3 +621,97 @@ async def get_camp_achieves(id: int, session: AsyncSession = Depends(get_session
         }
         for row in rows
     ]
+
+
+@router.get("/camps/{camp_id}/groups/achieves/count", response_model=List[schemas.GroupAchieve], tags=["Admin_select"])
+async def get_groups_achieve_count(camp_id: int, achieve_id: int, session: AsyncSession = Depends(get_session)):
+    StudentAchieve = models.Achievement
+    Student = models.Student
+    Group = models.Group
+
+    # LEFT JOIN, чтобы включить группы без студентов с достижением
+    stmt = (
+        select(
+            Group.id,
+            Group.name,
+            func.count(StudentAchieve.student_id).label("count")
+        )
+        .join(Student, Student.group_id == Group.id)
+        .outerjoin(StudentAchieve, (StudentAchieve.student_id == Student.id) & (StudentAchieve.achieve_id == achieve_id))
+        .where(Group.camp_id == camp_id)
+        .group_by(Group.id, Group.name)
+        .order_by(Group.name)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [
+        schemas.GroupAchieve(
+            group_id=row[0],
+            group_name=row[1],
+            achieves_count=row[2]
+        )
+        for row in rows
+    ]
+
+
+@router.get("/camps/groups/{group_id}/honores", response_model=List[schemas.StudentAchieveLider], tags=["Admin_select"])
+async def get_group_honores(group_id: int, achieve_id: int, session: AsyncSession = Depends(get_session)):
+    Student = models.Student
+    StudentAchieve = models.Achievement
+    Achieve = models.Achieve
+
+    # 1. Получаем студентов, у которых есть достижение achieve_id
+    main_stmt = (
+        select(
+            Student.id,
+            Student.photo,
+            Student.first_name,
+            Student.last_name
+        )
+        .join(StudentAchieve, StudentAchieve.student_id == Student.id)
+        .where(Student.group_id == group_id, StudentAchieve.achieve_id == achieve_id)
+        .order_by(Student.first_name)
+    )
+
+    main_result = await session.execute(main_stmt)
+    student_rows = main_result.all()
+    student_ids = [row.id for row in student_rows]
+
+    if not student_ids:
+        return []
+
+    # 2. Получаем все достижения этих студентов (включая другие достижения)
+    images_stmt = (
+        select(
+            StudentAchieve.student_id,
+            Achieve.id,
+            Achieve.image,
+            Achieve.name,
+            StudentAchieve.level
+        )
+        .join(Achieve, Achieve.id == StudentAchieve.achieve_id)
+        .where(StudentAchieve.student_id.in_(student_ids))
+    )
+    images_result = await session.execute(images_stmt)
+    image_rows = images_result.all()
+
+    # 3. Собираем достижения по студентам
+    achieves = defaultdict(list)
+
+    for student_id, id, image, name, level in image_rows:
+        achieves[student_id].append({"id": id, "image": image, 'name': name, 'level': level})
+
+    # 4. Собираем финальный ответ
+    response = []
+    for row in student_rows:
+        response.append({
+            "id": row.id,
+            "photo": row.photo,
+            "first_name": row.first_name,
+            "last_name": row.last_name,
+            "achieves": achieves.get(row.id, [])
+        })
+
+    return response

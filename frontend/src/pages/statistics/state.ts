@@ -74,7 +74,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
     loadGroupsAchieveCount: (camp_id: number, achieve_id: number) => {
         get_groups_achieve_count(camp_id, achieve_id, (groupAchieves: GroupAchieve[]) => {
-            //alert(objectToJson(liders))
+            //alert(objectToJson(groupAchieves))
             if (groupAchieves.length > 0) {
                 const { setGroupAchieves }: AchievesSlice = get();
                 setGroupAchieves(groupAchieves);

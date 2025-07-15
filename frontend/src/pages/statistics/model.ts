@@ -97,10 +97,17 @@ export interface GroupAchieve {
   achieves_count: number;
 }
 
+export interface StudentAchieve {
+  id: number;
+  image: string;
+  name: string;
+  level: string;
+}
+
 export interface Honored {
   id: number;
   photo: string;
   first_name: string;
   last_name: string;
-  images: string[];
+  achieves: StudentAchieve[];
 }

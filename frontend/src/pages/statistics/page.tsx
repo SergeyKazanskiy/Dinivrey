@@ -8,9 +8,9 @@ import { DateFilter } from './components/DateFilter';
 import { LidersView } from './views/LidersView';
 import { ExamsFilter } from './components/ExamsFilter';
 import { HeaderView } from './views/HeaderView';
-import { CampsView2 } from './views/CampsView2';
+import { AchievesView } from './views/AchievesView';
 import { GroupsFilter } from './components/GroupsFilter';
-
+import { HonoresView } from './views/HonoresView';
 
 export const StatisticsPage: React.FC = () => {
     const { isStatictics } = useStore();
@@ -52,16 +52,15 @@ export const StatisticsPage: React.FC = () => {
         }
         {!isStatictics &&
             <VStack h='762px' w='1130px' spacing={4} mx={3} >
-                {/* <Box borderWidth={1} borderRadius='10px' borderColor='gray.300' */}
-                    {/* bg='gray.200' h='60%' w='100%' px={3}> */}
-                    <CampsView2/>
-                {/* </Box> */}
+                <AchievesView/>
 
                 <Box style={screenStyles.widget} h='40%' w='100%' px={3}>
                     <HStack justifyContent='space-between' >
                         <Text style={widgetStyles.title}>Students</Text>
                         <GroupsFilter/>
                     </HStack>
+
+                    <HonoresView/>
                 </Box>
             </VStack>
         }

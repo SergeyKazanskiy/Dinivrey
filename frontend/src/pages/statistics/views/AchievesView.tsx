@@ -4,10 +4,10 @@ import { AchievesCard } from '../components/AchievesCard';
 import { objectToJson } from "../../../shared/utils";
 
 
-export const CampsView2: React.FC = () => {
+export const AchievesView: React.FC = () => {
   const { camps, camp_id2, achieve_id } = useStore();
   const { selectAchieve } = useStore();
-
+ 
   return (
     <HStack justifyContent='space-between' w='100%'>
       {camps.map((item) => (
@@ -17,13 +17,12 @@ export const CampsView2: React.FC = () => {
             <Text color='#DB3939' fontSize={18} fontWeight={400}>{item.name}</Text>
           </HStack>  
          
-          <Box onClick={()=> selectAchieve(item.id, 0)}>
             <AchievesCard
               camp_id={item.id}
-              achieve_id={camp_id2 === item.id ? achieve_id : 0 }
+              achieve_id={achieve_id}
               onAchieve={(achieve_id) => selectAchieve(item.id, achieve_id)}
+              canSelect={item.id === camp_id2}
             />
-          </Box>
         </Box>
        ))}
     </HStack>

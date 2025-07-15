@@ -7,13 +7,16 @@ export const GroupsFilter: React.FC = () => {
   const { selectGroupAchieve } = useStore();
 
   return (
-    <HStack bg='white' mx={1}>
+    <HStack bg='white' mx={1} pt={1}>
 
       {groupsAchieves.map((item, inx) => {
-        const label =  item.group_name + ' (' + item.achieves_count + ')'
+        const label = item.achieves_count === 0 ?
+          item.group_name : item.group_name + ' (' + item.achieves_count + ')'
 
-        return (<Button key={inx} bg='unset' color='blue.500' fontWeight='middle' w='64px'
-                  sx={item.group_id === groupAchieve_id ? { textDecoration: "underline" } : {}} fontSize={16}
+        return (<Button key={inx} fontWeight={500} w='100px' fontSize={14} 
+                  colorScheme="blue" h='28px'
+                  variant={item.group_id === groupAchieve_id ? 'solid' : 'outline'}
+                  isDisabled={item.achieves_count === 0}
                   onClick={() => selectGroupAchieve(item.group_id)}>
 
                   {label}

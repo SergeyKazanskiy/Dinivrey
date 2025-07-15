@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
 
 # Student
@@ -178,3 +178,18 @@ class StudentTestLider(BaseModel):
     climbing: float
     evasion: float
     hiding: float
+
+
+class StudentAchieve(BaseModel):
+    id: int
+    image: str
+    name: str
+    level: str
+
+class StudentAchieveLider(BaseModel):
+    id: int
+    photo: str
+    first_name: str
+    last_name: str
+    achieves: List[StudentAchieve]
+
