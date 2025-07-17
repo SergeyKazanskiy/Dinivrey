@@ -3,6 +3,7 @@ from pathlib import Path
 import re
 from typing import Union
 from fastapi import UploadFile, HTTPException
+from roles.admin.schemas import ResponseOk
 
 
 def sanitize_name(name: str) -> str:
@@ -40,31 +41,34 @@ def rename_folder(base_path: Union[str, Path], old_name: str, new_name: str) -> 
     old_path.rename(new_path)
     return new_path
 
-# Files
-async def save_uploaded_photo(folder: str, filename: str, file: UploadFile) -> Path:
-    safe_folder = sanitize_name(folder)
-    safe_filename = sanitize_name(filename)
+# File
+def is_valid_name(name: str) -> bool:
+    return bool(re.match(r"^[\w\-]+$", name))
+
+
+async def save_uploaded_photo(folder: str, filename: str, file: UploadFile) -> ResponseOk:
+    if not is_valid_name(folder):
+        raise HTTPException(status_code=400, detail="Invalid folder name")
+
+    if not is_valid_name(filename):
+        raise HTTPException(status_code=400, detail="Invalid file name")
 
     file_extension = Path(file.filename).suffix.lower()
+    allowed_extensions = [".jpg", ".jpeg", ".png"]
 
-    if file_extension not in [".jpg", ".jpeg", ".png"]:
+    if file_extension not in allowed_extensions:
         raise HTTPException(status_code=400, detail="Unsupported file type")
 
-    folder_path = Path("images/photos") / safe_folder
-
-    if not folder_path.exists():
-        raise HTTPException(status_code=404, detail=f"Folder '{safe_folder}' not found")
-
-    save_path = folder_path / f"{safe_filename}{file_extension}"
+    path = Path(folder).joinpath(f"{filename}{file_extension}")
+    path.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        content = await file.read()
-        with open(save_path, "wb") as f:
-            f.write(content)
+        with open(path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
 
-    return save_path
+    return ResponseOk(isOk=True)
 
 
 def delete_file(folder: str, filename: str):
