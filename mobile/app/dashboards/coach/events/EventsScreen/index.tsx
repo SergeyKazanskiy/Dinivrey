@@ -23,7 +23,7 @@ export default function EventsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadGroups(1, () => {
+      loadGroups(2, () => {
         loadSchedules();
       });
     }, [])

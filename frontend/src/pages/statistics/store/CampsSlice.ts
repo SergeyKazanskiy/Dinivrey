@@ -33,8 +33,18 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
              const { clearLiders, clearTests }: LidersSlice & TestsSlice = get();
              clearLiders();
              clearTests();
+        } else if (campId === 0) {
+            set({ campId: camp_id });
+
+            const { loadLastDate, loadGroups }: StateSlice = get();
+            loadLastDate(camp_id);
+            loadGroups(camp_id);
         } else {
             set({ campId: camp_id });
+
+            const { clearLiders, clearTests }: LidersSlice & TestsSlice = get();
+            clearLiders();
+            clearTests();
 
             const { loadLastDate, loadGroups }: StateSlice = get();
             loadLastDate(camp_id);

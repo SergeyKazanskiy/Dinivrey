@@ -29,9 +29,19 @@ export interface GroupEvent {
 }
 
 export interface Student {
+  id: number; // !!!
   first_name: string;
   last_name: string;
+  age: number;
 }
+
+export type Player = {
+  id: number;
+  name: string;
+  age: number;
+  points: number;
+  isGreen: boolean;
+};
 
 export type Test = {
   id: number;
