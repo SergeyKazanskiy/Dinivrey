@@ -17,7 +17,7 @@ export default function GroupsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadGroups(1);
+      loadGroups(2);
     }, [])
   );
 

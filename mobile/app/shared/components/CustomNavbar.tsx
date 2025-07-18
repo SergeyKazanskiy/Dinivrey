@@ -11,14 +11,14 @@ export type Props = {
   
 export const CustomNavbar: React.FC<Props> = ({ title, onClick, children }) => {
   return (
-    <View style={styles.cell}>
-        <Ionicons name='chevron-back' size={20} color='#D1FF4D' style={{ marginLeft: 22, marginTop: 4 }}
+    <View style={styles.container}>
+        <Ionicons name='chevron-back' size={20} color='#D1FF4D' style={styles.backIcons}
           onPress={onClick}
         />
-        <View style={styles.center}>
+        <View style={styles.titleWrapper}>
           <Text style={styles.title}>{title}</Text>
         </View>
-        <View  style={{ width: 44, marginTop: 4 }}>
+        <View  style={styles.iconsWrapper}>
           {children}
         </View>
       </View>
@@ -26,10 +26,33 @@ export const CustomNavbar: React.FC<Props> = ({ title, onClick, children }) => {
 };
 
 const styles = StyleSheet.create({
-  cell: {
+  container: {
     flexDirection:'row',
     paddingVertical: 16,
-    backgroundColor: '#152B52'
+    backgroundColor: '#152B52',
+
+    justifyContent: 'center',
+    position: 'relative',
+    height: 56
+  },
+  backIcons: {
+    position: 'absolute',
+    left: 20,
+  },
+  titleWrapper: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none', // чтобы не блокировать нажатия на иконки
+  },
+  iconsWrapper: {
+    position: 'absolute',
+    right: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+   // gap: 26, // если используешь RN >= 0.71
   },
   center: {
     flex: 1,
