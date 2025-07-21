@@ -4,17 +4,15 @@ import { useStore } from '../../store';
 
 
 export function HeaderView() {
-  const { isHeader, isGreen } = useStore();
-  const { toggleHeader, toggleTeam, setCurrentTeam } = useStore();
-
-  const teamName = isGreen ? 'Green Team' : 'Red Team'
+  const { isHeader, blockRoleChosing } = useStore();
+  const { toggleHeader, swapRoles } = useStore();
 
   return (
     <View style={styles.row}>
       <Pressable style={{ marginRight: 20}} onPress={toggleHeader} >
         <Ionicons name={ isHeader ? 'chevron-up' : 'chevron-down'} size={20} color='#D1FF4D'/>
       </Pressable>
-      <Pressable style={{ marginRight: 8 }} onPress={toggleTeam} >
+      <Pressable style={{ marginRight: 8 }} onPress={swapRoles} disabled={blockRoleChosing} >
         <Ionicons name='repeat-outline' size={20} color="#D1FF4D" />
       </Pressable>
     </View>

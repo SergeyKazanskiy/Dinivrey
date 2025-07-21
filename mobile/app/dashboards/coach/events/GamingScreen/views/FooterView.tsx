@@ -7,18 +7,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export function FooterView() {
   const { isTimerRunning, currentRound, round_times, blockTimeSettings, timerSartTime} = useStore();
-  const { showTimeSetter, timerFinished } = useStore();
+  const { showTimeSetter, onTimerFinish } = useStore();
 
   return (
     <View style={styles.container}>
-      <Timer start_time={timerSartTime} isRunning={isTimerRunning} onEnd={timerFinished}/>
+      <Timer start_time={timerSartTime} isRunning={isTimerRunning} onEnd={onTimerFinish}/>
 
       <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapperRound} >
-        <Text style={styles.round}>{currentRound}</Text>    
+        <Text style={styles.round}>{currentRound.round}</Text>    
       </LinearGradient>
       
       <View style={styles.timeSetting}>
-        <Text style={styles.time}>{round_times[currentRound]}</Text>
+        <Text style={styles.time}>{round_times[currentRound.round - 1]}</Text>
         <Button
           title="SET" 
           buttonStyle={styles.setButton} 

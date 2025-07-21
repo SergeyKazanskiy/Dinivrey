@@ -10,14 +10,14 @@ import { AddingPopup } from './popups/AddingPopup';
 import { RemovingPopup } from './popups/RemovingPopup';
 import { EvadersDialog } from './dialogs/EvadersDialog';
 import { TimeSetter } from './dialogs/TimeSetter';
-import { Student } from '../model';
+import { Student, GameRound } from '../model';
 import { FooterView } from './views/FooterView';
 import { BackAlert } from './alerts/BackAlert';
 import { HeaderView } from './views/HeaderView';
 
 
 export default function GamingScreen() {
-  const { isHeader, isGreen, attendances } = useStore();
+  const { isHeader, currentRound, attendances } = useStore();
   const { setAvailableStudents, onNavbarBack, hideBackAlert } = useStore();
 
   const router = useRouter();
@@ -53,14 +53,14 @@ export default function GamingScreen() {
       {/* Main */}  
       <View style={styles.row}>
         <View style={styles.section}>
-          {isHeader && <TitleView isGreen={isGreen} role='Chasers' />}
+          {isHeader && <TitleView team={currentRound.teams[0].team} role='Chasers' />}
 
-          <PlayersView isGreen={isGreen}/>
+          <PlayersView team={currentRound.teams[0].team}/>
         </View>
         <View style={styles.section}>
-           {isHeader && <TitleView isGreen={!isGreen} role='Evaders'/>}
+           {isHeader && <TitleView team={currentRound.teams[1].team} role='Evaders'/>}
 
-          <PlayersView isGreen={!isGreen}/>
+          <PlayersView team={currentRound.teams[1].team}/>
         </View>
       </View>
 

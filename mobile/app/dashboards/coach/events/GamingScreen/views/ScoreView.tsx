@@ -1,17 +1,15 @@
-import { StyleSheet, FlatList, Text, View } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { StyleSheet, Text, View } from 'react-native';
 import { useStore } from '../../store';
-
+import { Team } from '../../model';
 
 interface Props {
-  isGreen: boolean;
+  team: Team;
 }
 
-export function ScoreView({ isGreen }: Props) {
+export function ScoreView({ team }: Props) {
   const { players, isHeader } = useStore();
-  const { removePoint, addPoint } = useStore();
 
-  const teamPlayers = players.filter(el => el.isGreen === isGreen);
+  const teamPlayers = players.filter(el => el.team === team);
   const totalScore = teamPlayers.reduce((sum, p) => sum + p.points, 0);
   
   return (
@@ -24,7 +22,7 @@ export function ScoreView({ isGreen }: Props) {
       }
 
       <View style={[styles.tableHeader, !isHeader &&
-        {backgroundColor: isGreen ? '#15803d' : '#A90F11'}]}>
+        {backgroundColor: team === Team.GREEN ? '#15803d' : '#A90F11'}]}>
           
         <Text style={styles.column}>Player</Text>
         <Text style={styles.column}>Points</Text>
@@ -43,7 +41,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingLeft: 4,
     paddingRight: 12
-   // marginBottom: 8,
   },
   column: {
     color: 'white',

@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { useStore } from '../../store';
 import { Player } from '../../model';
+import { BONUS_POINTS } from '../constants';
 
 
 const COLUMN_HEIGHT = 4;
@@ -10,7 +11,7 @@ const COLUMN_HEIGHT = 4;
 
 export function EvadersDialog() {
   const { players } = useStore();
-  const { onEvadersTagged, onEvadersConfirm } = useStore();
+  const { setServivied, setBonusPoints, onEvadersConfirm } = useStore();
 
   const columns: Player[][] = [];
   for (let i = 0; i < players.length; i += COLUMN_HEIGHT) {
@@ -24,6 +25,15 @@ export function EvadersDialog() {
       prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
     );
   };
+
+  function handleButtonsPress() {
+    onEvadersConfirm();
+    if (selectedIds.length > 0) {
+      setServivied(selectedIds);
+    } else {
+        setBonusPoints(BONUS_POINTS)
+    }
+  }
 
   return (
     <View style={styles.container} >
@@ -51,7 +61,7 @@ export function EvadersDialog() {
       
       {selectedIds.length === 0 && (
         <Pressable style={styles.tagged}
-          onPress={onEvadersTagged}
+          onPress={handleButtonsPress}
         >
           <Text style={{ color: '#FFD700', fontWeight: '600' }}>
             ⚠️ All Evaders tagged! Chasers will receive 3 bonus points.
@@ -60,7 +70,7 @@ export function EvadersDialog() {
       )}
       {selectedIds.length > 0 && (
         <Pressable style={styles.pressable}
-          onPress={() => onEvadersConfirm(selectedIds)}
+          onPress={handleButtonsPress}
         >
           <Text style={styles.text}>Confirm Untagged Players</Text>
         </Pressable>
