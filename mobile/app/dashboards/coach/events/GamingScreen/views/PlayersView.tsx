@@ -2,22 +2,22 @@ import { StyleSheet, FlatList, Text, View, ScrollView } from 'react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useStore } from '../../store';
 import { ScoreView } from './ScoreView';
-import { Player } from '../../model';
+import { Player, Team } from '../../model';
 
 
 interface Props {
-  isGreen: boolean;
+  team: Team;
 }
 
-export function PlayersView({ isGreen }: Props) {
-  const { players } = useStore();
+export function PlayersView({ team }: Props) {
+  const { players, blockPointsAdding } = useStore();
   const { removePoint, addPoint } = useStore();
 
-  const teamPlayers = players.filter(el => el.isGreen === isGreen);
+  const teamPlayers = players.filter(el => el.team === team);
 
   return (
     <View style={styles.container}>
-      <ScoreView isGreen={isGreen}/>
+      <ScoreView team={team}/>
 
       <FlatList
         data={teamPlayers}
@@ -31,11 +31,13 @@ export function PlayersView({ isGreen }: Props) {
               <Button
                 icon={<Icon name="remove" color="white" />}
                 buttonStyle={styles.removeBtn}
+                disabled={blockPointsAdding}
                 onPress={() => removePoint(item.id)}
               />
               <Button
                 icon={<Icon name="add" color="white" />}
                 buttonStyle={styles.addBtn}
+                disabled={blockPointsAdding}
                 onPress={() => addPoint(item.id)}
               />
             </View>

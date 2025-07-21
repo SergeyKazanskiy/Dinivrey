@@ -1,20 +1,28 @@
 import { View, Text } from 'react-native';
 import { useStore } from '../../store';
-import { PlayerCell } from '../cells/PlayerCell';
+import { PlayerCell } from '../components/PlayerCell';
+import { Player, Team, Role } from '../../model';
 
 
 type Props = {
-  team: 'Red' | 'Green';
+  team: Team;
   round: number;
-  role: 'Evader' | 'Chaser';
+  role: Role;
   title: string;
 };
 
 export function RoundView({ team, round, role, title }: Props) {
-  const { rounds } = useStore();
+  const { gamers } = useStore();
 
-  const teamRound = rounds.find(el => el.team === team && el.round === round && el.role === role )!;
-  const players = teamRound.players;
+  const teamGamers = gamers.filter(el => el.team === team )!;
+  const players: Player[] = teamGamers.map(el => ({
+      id: 0,
+      name: el.name || '',
+      age: 0,
+      points: role === Role.CHASER ? el.caught : el.freeded,
+      team: team,
+      is_survived: el.is_survived
+  }));
 
   return (
     <View style={{ marginVertical: 12 }}>
@@ -22,8 +30,8 @@ export function RoundView({ team, round, role, title }: Props) {
         {title}
       </Text>
 
-      {players.map((p, idx) => (
-        <PlayerCell key={idx} name={p.name} status={p.status} points={p.points} />
+      {players.map((el, idx) => (
+        <PlayerCell key={idx} name={el.name} isSurvived={el.is_survived} points={el.points} />
       ))}
     </View>
   );

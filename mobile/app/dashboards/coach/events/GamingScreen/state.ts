@@ -1,36 +1,45 @@
-import { Student, Player } from '../model';
+import { Student, Player, GameRound, Team, Role } from '../model';
 import { objectToJson } from '../../../../shared/utils';
 
 
 export interface GamingSlice {
-    isGreen: boolean;
-    currentTeam: boolean; //isGreen?
-
+    
+    // Data
     availableStudents: Student[];
-    selectedStudentIds: number[];
     players: Player[];
+
+    // Temp
+    currentTeam: Team; 
+    currentRole: Role;
+
+    selectedStudentIds: number[];
     playersToRemove: number[];
 
+    // Process
+    currentRound: GameRound;
     player_id: number;
 
+    // Visibility
     isHeader: boolean;
     isAddingPopup: boolean;
     isRemovingPopup: boolean;
     isRemoveAlert: boolean;
     isTimeSetter: boolean;
 
-
+    // Setup
+    setCurrentTeam: (currentTeam: Team) => void;
+    setCurrentRole: (currentRole: Role) => void;
+    
     setAvailableStudents: (availableStudents: Student[]) => void;
-    setCurrentTeam: (currentTeam: boolean) => void;
-
-    toggleTeam: () => void;
-    toggleHeader: () => void;
-
-    //Points
+    swapRoles: () => void;
+    
+    // Points
     addPoint: (id: number) => void;
     removePoint: (id: number) => void;
 
-    //Popups
+    // Visibility
+    toggleHeader: () => void;
+
     showAddingPopup: () => void;
     hideAddingPopup: () => void;
 
@@ -57,30 +66,52 @@ export interface GamingSlice {
 }
 
 export const createGamingSlice = (set: any, get: any): GamingSlice => ({
-    isGreen: true,
-    currentTeam: true,
-
-    players: [
-        { id: 1, name: 'Player 1', age: 8, points: 0, isGreen: true },
-    ],
-    player_id: 0,
-
+    // Data
     availableStudents: [],
+    players: [
+        { id: 1, name: 'Player 1', age: 8, points: 0, team: Team.GREEN },
+    ],
+    
+
+    // Temp
     selectedStudentIds: [],
     playersToRemove: [],
 
+    currentTeam: Team.GREEN, 
+    currentRole: Role.CHASER,
+
+    // Process
+    player_id: 0,
+    currentRound: {
+        round: 1,
+        teams: [
+            {team: Team.GREEN, role: Role.CHASER},
+            {team: Team.RED, role: Role.EVADER},
+        ]
+    },
+
+    // Visibility
     isHeader: true,
     isAddingPopup: false,
     isRemovingPopup: false,
     isRemoveAlert: false,
     isTimeSetter: false,
 
+    // Setup
     setAvailableStudents: (availableStudents: Student[]) => set({ availableStudents }),
-    setCurrentTeam: (currentTeam: boolean) => set({ currentTeam }),
 
-    toggleTeam:() => set((state: GamingSlice) => ({ isGreen: !state.isGreen })),
-    toggleHeader: () => set((state: GamingSlice) => ({ isHeader: !state.isHeader })),
+    swapRoles: () => set((state: GamingSlice) => {
+        const swappedTeams = state.currentRound.teams.map((t) => ({
+            ...t,
+            role: t.role === Role.CHASER ? Role.EVADER : Role.CHASER,
+        }));
+        return { currentRound: { ...state.currentRound, teams: swappedTeams}};
+    }),
 
+    setCurrentTeam: (currentTeam: Team) => set({ currentTeam }),
+    setCurrentRole: (currentRole: Role) => set({ currentRole }),
+
+    // Points
     addPoint: (id) => set((state: GamingSlice) => ({
         players: state.players.map((p) =>
             p.id === id ? { ...p, points: p.points + 1 } : p
@@ -93,6 +124,8 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
         ),
     })),
 
+    // Visibility
+    toggleHeader: () => set((state: GamingSlice) => ({ isHeader: !state.isHeader })),
 
     showAddingPopup: () => set({ isAddingPopup: true }),
     hideAddingPopup: () => set({ isAddingPopup: false, selectedStudentIds: [] }),
@@ -104,9 +137,9 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     hideRemoveAlert: () => set({ isRemoveAlert: false }),
 
     showTimeSetter: () => set({ isTimeSetter: true }),
-    hideTimeSetter: () => set({ isTimeSetter: false }),
+   hideTimeSetter: () => set({ isTimeSetter: false }),
 
-    //Players
+    // Players
     selectStudent: (id) => set((state: GamingSlice) => ({
 
       selectedStudentIds: state.selectedStudentIds.includes(id)
@@ -123,7 +156,7 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
             name: `${el.last_name} ${el.first_name[0]}`,
             points: 0,
             age: el.age,
-            isGreen: currentTeam
+            team: currentTeam
         }));
         set({ players: [...players, ...newPlayers], selectedStudentIds: [], });
     },

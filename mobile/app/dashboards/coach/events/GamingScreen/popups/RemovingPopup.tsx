@@ -14,7 +14,7 @@ export function RemovingPopup() {
   const { hideRemovingPopup, removePlayers, confirmRemovePlayer, showRemoveAlert, hideRemoveAlert } = useStore();
 
   const columns: Player[][] = [];
-  const teamPlayers = players.filter(el => el.isGreen === currentTeam)
+  const teamPlayers = players.filter(el => el.team === currentTeam)
 
   for (let i = 0; i < teamPlayers.length; i += COLUMN_HEIGHT) {
     columns.push(teamPlayers.slice(i, i + COLUMN_HEIGHT));

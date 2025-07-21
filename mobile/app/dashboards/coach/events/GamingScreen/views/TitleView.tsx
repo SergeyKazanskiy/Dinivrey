@@ -1,31 +1,36 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useStore } from '../../store';
+import { Team } from '../../model';
 
 
 interface Props {
-  isGreen: boolean;
+  team: Team;
   role: string;
 }
 
-export function TitleView({ isGreen, role }: Props) {
-  const {  } = useStore();
+export function TitleView({ team, role }: Props) {
+  const { blockPlayersAdding } = useStore();
   const { showAddingPopup, showRemovingPopup, setCurrentTeam } = useStore();
 
-  const teamName = isGreen ? 'Green Team' : 'Red Team'
+  const teamName = team + ' Team'
 
   return (
-    <View style={isGreen ? styles.firstTeam : styles.secondTeam}> 
+    <View style={team === Team.GREEN ? styles.firstTeam : styles.secondTeam}> 
       <View style={styles.container}>
         <Text style={styles.teamName}>{teamName}</Text>
         <View style={styles.wrapperAdd}>
           <Icon name="person-add" type="ionicon" color="#333" size={18}
-          onPress={() => (setCurrentTeam(isGreen), showAddingPopup())}/>
+            disabled={blockPlayersAdding}
+            onPress={() => (setCurrentTeam(team), showAddingPopup())}
+          />
         </View>
         
         <View style={styles.wrapperRemove}>
-          <Icon name="delete" type="material" color='#A90F11' size={21} 
-          onPress={() => (setCurrentTeam(isGreen), showRemovingPopup())}/>
+          <Icon name="delete" type="material" color='#A90F11' size={21}
+            disabled={blockPlayersAdding}
+            onPress={() => (setCurrentTeam(team), showRemovingPopup())}
+          />
         </View>
         <Text style={styles.role}>Role: {role}</Text>
       </View>

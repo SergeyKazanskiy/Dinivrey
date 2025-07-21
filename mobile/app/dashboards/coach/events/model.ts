@@ -42,7 +42,23 @@ export type Player = {
   name: string;
   age: number;
   points: number;
-  isGreen: boolean;
+  team: Team;
+  is_survived?: boolean;
+};
+
+export enum Team {
+    RED = "Red",
+    GREEN = "Green"
+};
+
+export enum Role {
+    EVADER = "Evader",
+    CHASER = "Chaser"
+};
+
+export type GameRound = {
+  round: number;
+  teams: {team: Team, role: Role}[];
 };
 
 export type Game = { 
@@ -62,24 +78,17 @@ export type Game = {
 }
 
 export type Gamer = {
-  id: number;
-  game_id: number;
+  id?: number;
+  game_id?: number;
   student_id: number;
-  timestamp: number;
   name?: string;
 
   team: 'Green' | 'Red';
-  caughted: number;
+  caught: number;
   freeded: number;
   is_survived: boolean;
 };
 
-// export type RoundData = {
-//   team: 'Red' | 'Green';
-//   role: 'Evader' | 'Chaser';
-//   round: number;
-//   players: PlayerResult[];
-// };
 
 //Testing
 export type Test = {
