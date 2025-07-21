@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
-import { Attendance, Test, Game, Event, Tester, Student, Schedule } from './model';
+import { Attendance, Test, Game, Event, Tester, Student, Schedule, Gamer } from './model';
 import { EventDrill, ShortDrill, Drill, TestUpdate, GroupEvent, AttendanceDataForReport } from './model';
 
 
@@ -93,14 +93,26 @@ export function update_student_test(id: number, data: TestUpdate, callback: (res
 };
 
 
-// Gaming
-export function add_game(data: Omit<Game, 'id'>, callback: (res: {id: number}) => void) {
+// Gaming 
+export function get_games(event_id: number, group_id: number, callback: (games: Game[]) => void) {
+    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/games`), callback, 'Getting event games');
+};
+
+export function get_game_players(game_id: number, callback: (gamers: Gamer[]) => void) {
+    return httpWrapper(() => api.get(`camps/events/games/${game_id}/gamers`), callback, 'Getting game players');
+};
+
+export function add_student_game(data: Omit<Game, 'id'>, callback: (res: {id: number}) => void) {
     return httpWrapper(() => api.post(`students/games`, data), callback);
 };
 
-export function update_student_game(id: number, data: Partial<Game>, callback: (res: {isOk: boolean}) => void) {
-    return httpWrapper(() => api.put(`students/games/${id}`, data), callback);
+export function add_student_game_gamers(data: Gamer[], callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.post(`students/games/gamers`, data), callback);
 };
+
+// export function update_student_game(id: number, data: Partial<Game>, callback: (res: {isOk: boolean}) => void) {
+//     return httpWrapper(() => api.put(`students/games/${id}`, data), callback);
+// };
   
 export function delete_student_game(id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.delete(`students/games/${id}`), callback);

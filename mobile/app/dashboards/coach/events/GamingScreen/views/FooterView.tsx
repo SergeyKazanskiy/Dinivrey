@@ -1,34 +1,32 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { Button } from '@rneui/themed';
 import { useStore } from '../../store';
+import { Timer } from '../components/Timer';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
-interface Props {
-  isGreen: boolean;
-  role: string;
-}
-
-export function HeaderView({ isGreen, role }: Props) {
-  const {  } = useStore();
-  const { showAddingPopup, showRemovingPopup, setCurrentTeam } = useStore();
-
-  const teamName = isGreen ? 'Green Team' : 'Red Team'
+export function FooterView() {
+  const { isTimerRunning, currentRound, round_times, blockTimeSettings, timerSartTime} = useStore();
+  const { showTimeSetter, timerFinished } = useStore();
 
   return (
-    <View style={isGreen ? styles.firstTeam : styles.secondTeam}> 
-      <View style={styles.container}>
-        <Text style={styles.teamName}>{teamName}</Text>
-        <View style={styles.wrapperAdd}>
-          <Icon name="person-add" type="ionicon" color="#333" size={18}
-          onPress={() => (setCurrentTeam(isGreen), showAddingPopup())}/>
-        </View>
-        
-        <View style={styles.wrapperRemove}>
-          <Icon name="delete" type="material" color='#A90F11' size={21} 
-          onPress={() => (setCurrentTeam(isGreen), showRemovingPopup())}/>
-        </View>
-        <Text style={styles.role}>Role: {role}</Text>
-      </View>
+    <View style={styles.container}>
+      <Timer start_time={timerSartTime} isRunning={isTimerRunning} onEnd={timerFinished}/>
+
+      <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapperRound} >
+        <Text style={styles.round}>{currentRound}</Text>    
+      </LinearGradient>
+      
+      <View style={styles.timeSetting}>
+        <Text style={styles.time}>{round_times[currentRound]}</Text>
+        <Button
+          title="SET" 
+          buttonStyle={styles.setButton} 
+          titleStyle={[styles.setText]}
+          disabled={blockTimeSettings}
+          onPress={showTimeSetter}
+        />
+      </View> 
     </View>
   );
 }
@@ -41,23 +39,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
-  firstTeam: {
-    backgroundColor: '#15803d',
-  },
-  secondTeam: {
-    backgroundColor: '#A90F11',
-  },
-  teamName: {
-    minWidth: 110,
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  role: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  wrapperAdd: {
+  wrapperRound: {
     backgroundColor: 'white',
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -66,12 +48,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#444'
   },
-  wrapperRemove: {
+  round: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  timeSetting: {
     backgroundColor: '#ddd',
     padding: 6,
 
     borderRadius: 18,
     borderWidth: 1,
     borderColor: '#444'
+  },
+  time: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  setButton: {
+    backgroundColor: '#bbb',
+    minWidth: 120,
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+  },
+  setText: {
+    color: '#222'
   },
 });

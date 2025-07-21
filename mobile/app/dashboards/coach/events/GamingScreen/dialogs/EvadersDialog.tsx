@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, FlatList } from 'react-native';
+import { useState } from 'react';
+import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { CheckBox } from '@rneui/themed';
+import { useStore } from '../../store';
+import { Player } from '../../model';
 
 
-type Player = {
-  id: number;
-  name: string;
-};
+const COLUMN_HEIGHT = 4;
 
-type Props = {
-  players: Player[];
-  onConfirm: (untaggedIds: number[]) => void;
-};
 
-export const UntaggedEvadersSelect: React.FC<Props> = ({ players, onConfirm }) => {
+export function EvadersDialog() {
+  const { players } = useStore();
+  const { onEvadersTagged, onEvadersConfirm } = useStore();
+
+  const columns: Player[][] = [];
+  for (let i = 0; i < players.length; i += COLUMN_HEIGHT) {
+    columns.push(players.slice(i, i + COLUMN_HEIGHT));
+  }
+
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const toggleSelection = (id: number) => {
@@ -22,63 +25,85 @@ export const UntaggedEvadersSelect: React.FC<Props> = ({ players, onConfirm }) =
     );
   };
 
-  const allTagged = selectedIds.length === 0;
-
   return (
-    <View
-      style={{
-        backgroundColor: '#0D0D1C',
-        padding: 16,
-        borderRadius: 12,
-      }}
-    >
-      <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>
-        Select Untagged Evaders
-      </Text>
+    <View style={styles.container} >
+      <Text style={styles.title}>Select Untagged Evaders</Text>
 
-      <FlatList
-        data={players}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <CheckBox
-            title={item.name}
-            checked={selectedIds.includes(item.id)}
-            onPress={() => toggleSelection(item.id)}
-            containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
-            textStyle={{ color: 'white' }}
-          />
-        )}
-      />
+      <ScrollView horizontal contentContainerStyle={styles.rowScroll}>
+        {columns.map((column, colIndex) => (
 
-      {allTagged && (
-        <View
-          style={{
-            backgroundColor: '#A85F1C',
-            borderRadius: 10,
-            padding: 12,
-            marginTop: 16,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
+          <View key={colIndex} style={styles.column}>
+            {column.map((item) => {
+              const isSelected = selectedIds.includes(item.id);
+              return (
+                <CheckBox
+                  title={item.name}
+                  checked={isSelected}
+                  onPress={() => toggleSelection(item.id)}
+                  containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
+                  textStyle={{ color: 'white' }}
+                />
+              )
+            })}
+          </View>
+        ))}
+      </ScrollView>
+      
+      {selectedIds.length === 0 && (
+        <Pressable style={styles.tagged}
+          onPress={onEvadersTagged}
         >
           <Text style={{ color: '#FFD700', fontWeight: '600' }}>
             ⚠️ All Evaders tagged! Chasers will receive 3 bonus points.
           </Text>
-        </View>
+        </Pressable>
       )}
-
-      <Pressable
-        onPress={() => onConfirm(selectedIds)}
-        style={{
-          backgroundColor: 'white',
-          paddingVertical: 12,
-          borderRadius: 10,
-          marginTop: 20,
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: '#0D0D1C', fontWeight: 'bold' }}>Confirm Untagged Players</Text>
-      </Pressable>
+      {selectedIds.length > 0 && (
+        <Pressable style={styles.pressable}
+          onPress={() => onEvadersConfirm(selectedIds)}
+        >
+          <Text style={styles.text}>Confirm Untagged Players</Text>
+        </Pressable>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#0D0D1C',
+    padding: 16,
+    borderRadius: 12,
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16
+  },
+  rowScroll: {
+    paddingBottom: 16,
+  },
+  column: {
+    marginHorizontal: 8,
+  },
+  tagged: {
+    backgroundColor: '#A85F1C',
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  pressable: {
+    backgroundColor: 'white',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  text: {
+    color: '#0D0D1C',
+    fontWeight: 'bold'
+  },
+});

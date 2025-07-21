@@ -9,7 +9,7 @@ import { DrillsSlice, createDrillsSlice } from "./DrillsScreen/state";
 import { DrillSlice, createDrillSlice } from "./DrillScreen/state";
 import { GamingSlice, createGamingSlice } from "./GamingScreen/state";
 import { GameMachine, createGameMachine } from "./GamingScreen/machine";
-import { ReportSlice, createReportSlice } from "./GamingScreen/report";
+import { ReportSlice, createReportSlice } from "./GamingScreen/data";
 
 
 export type Store = LoadingSlice & EventsSlice & AttendanceSlice & TestingSlice &
