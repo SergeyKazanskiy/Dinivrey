@@ -6,6 +6,7 @@ import { EventsView}  from './views/EventsView';
 import { screenStyles } from '../../../shared/styles/appStyles';
 import { CalendarView } from './views/CalendarView';
 import { useStore } from '../store';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function EventsScreen() {
@@ -24,16 +25,14 @@ export default function EventsScreen() {
   };
 
   return (
-    <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
-      style={styles.background} resizeMode='cover'
-    >
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <View style={styles.container}>
         <CalendarView/>
         
         <EventsView onClick={openEventScreen}/>
       </View>
       <Text style={[screenStyles.gold, styles.summary]}>In most cases you win !</Text>
-    </ImageBackground>
+    </LinearGradient>
   );
 }
 

@@ -8,6 +8,7 @@ import { AchievesView } from './views/AchievesView';
 import { EventsView } from './views/EventsView';
 import { useStore } from '../store';
 import { screenStyles } from '../../../shared/styles/appStyles';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 const ProfileScreen = () => {
@@ -88,9 +89,7 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
-      style={styles.background} resizeMode='cover'
-    >
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <ScrollView style={styles.container}>
         <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
       
@@ -100,10 +99,10 @@ const ProfileScreen = () => {
           onLiders={openLidersScreen}
         />
 
-        <Text style={[screenStyles.calendar, {marginTop: 40, marginBottom: 4}]}>Upcoming class</Text>
+        <Text style={[styles.upcomingClass]}>Upcoming class</Text>
         <EventsView onClick={openEventsScreen}/>
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 
@@ -113,11 +112,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    padding: 16,
+    paddingTop: 8,
   },
   container: {
     flex: 1,
   },
+  upcomingClass: {
+    marginTop: 40,
+    marginBottom: 4,
+    marginLeft: 16,
+
+    color: '#eee',
+    fontSize: 18,
+    fontWeight: 'medium'
+  }
 });
 
 export default ProfileScreen;

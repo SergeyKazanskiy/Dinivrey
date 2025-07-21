@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
+//import { RadarChart } from '../components/RadarChart';
+import { StatsIndicators } from '../../../../shared/components/StatsIndicators';
 import { RadarChart } from '../../../../shared/components/RadarChart';
 
 
@@ -16,9 +18,14 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
 
   return (
     <View style={styles.container}>
-      <RadarChart exam={last_test} onExam={onExam} onLiders={onLiders} />
+      <RadarChart test={last_test} onExam={onExam} onLiders={onLiders} />
 
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
+        <RadarChart test={last_test} onExam={onExam} onLiders={onLiders} />
+        <StatsIndicators stats={[last_test.climbing, last_test.stamina, last_test.speed, last_test.evasion, last_test.hiding]}/>  
+      </View> */}
+      
+      <View style={[styles.section, { paddingHorizontal: 16 }]}>
         <TouchableOpacity onPress={() => onGame('Caughted')}>
           <Text style={[screenStyles.gold]}>Caughted: {last_game.caughted}</Text>
         </TouchableOpacity>
@@ -33,14 +40,13 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 12
   },
   title: {
     
   },
   section: {
-    flex: 1,
     justifyContent: 'space-around',
     flexDirection: 'row',
   },
 });
-

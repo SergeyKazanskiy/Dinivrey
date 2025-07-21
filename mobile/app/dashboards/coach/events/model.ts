@@ -28,6 +28,8 @@ export interface GroupEvent {
   amound: number;
 }
 
+
+//Gaming
 export interface Student {
   id: number; // !!!
   first_name: string;
@@ -43,6 +45,41 @@ export type Player = {
   isGreen: boolean;
 };
 
+export type Game = { 
+  id: number;
+  timestamp: number;
+  first_team: 'Green' | 'Red';
+
+  time1: number;
+  time2: number;
+  
+  points: number;
+  tags: number;
+  rescues: number;
+  winner: 'Green' | 'Red';
+}
+
+export type StudentGame = {
+  id: number;
+  game_id: number;
+  student_id: number;
+  timestamp: number;
+  date: string;
+
+  team: 'Green' | 'Red';
+  caughted: number;
+  freeded: number;
+  is_survived: boolean;
+};
+
+// export type RoundData = {
+//   team: 'Red' | 'Green';
+//   role: 'Evader' | 'Chaser';
+//   round: number;
+//   players: PlayerResult[];
+// };
+
+//Testing
 export type Test = {
   id: number;
   student_id: number;
@@ -60,13 +97,7 @@ export type Test = {
   climbing_time: number;
 };
   
-export type Game = {
-  id: number;
-  timestamp: number;
-  caughted: number;
-  freeded: number;
-  //description?: string;
-};
+
 
 
 export interface Tester {

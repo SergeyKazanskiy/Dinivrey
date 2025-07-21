@@ -20,7 +20,7 @@ export const screenStyles = StyleSheet.create({
   levelButton: { color: '#F8E187', fontSize: 15, fontWeight: 'medium', borderWidth: 1, borderColor: '#A7CFF5' },
   selected: { backgroundColor: '#475339' },
   //background: { color: 'rgba(89, 198, 84, 0.8)' },
-  background: { backgroundColor: '#161D23'},
+  background: { backgroundColor: '#152B52'},// 161D23
   gold: { color: '#F8E187', fontSize: 18, fontWeight: 'medium' },
 });
 

@@ -73,6 +73,7 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
 //<View style={[ styles.section]}>
 const styles = StyleSheet.create({
     container: {
+        padding: 16,
     },
     section: {
         height: 100,

@@ -9,6 +9,7 @@ import { CalendarView } from './views/CalendarView';
 import { ChartView } from './views/ChartView';
 import { DatesView } from './views/DatesView';
 import { TableView } from './views/TableView';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function StatisticsScreen() {
@@ -34,9 +35,7 @@ export default function StatisticsScreen() {
   }, [navigation]);
 
   return (
-    <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
-      style={styles.background} resizeMode='cover'
-    >
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <CalendarView/>
       {timestamp > 0 &&
         <>
@@ -47,7 +46,7 @@ export default function StatisticsScreen() {
           <Text style={[screenStyles.gold, styles.comment]}>Comment</Text>
         </>
       }
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 
