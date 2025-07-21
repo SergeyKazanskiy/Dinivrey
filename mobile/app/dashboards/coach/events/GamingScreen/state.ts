@@ -51,6 +51,7 @@ export interface GamingSlice {
     confirmRemovePlayer: (id: number) => void;
     cancelRemovePlayer: (id: number) => void;
     
+    clearPoints: () => void;
 }
 
 export const createGamingSlice = (set: any, get: any): GamingSlice => ({
@@ -144,5 +145,9 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     cancelRemovePlayer: (id) => set((state: GamingSlice) => ({
         playersToRemove: state.playersToRemove.filter((pid) => pid !== id),
     })),
+
+    clearPoints: () => set((state: GamingSlice) => ({
+        players: state.players.map(el => ({...el, points: 0}))
+    }))
 });
 

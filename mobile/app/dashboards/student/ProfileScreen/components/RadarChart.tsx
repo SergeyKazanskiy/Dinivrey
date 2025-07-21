@@ -1,20 +1,13 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import Svg, { Polygon, Line, Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
-import { ImagesPath } from '../constants';
+import { ImagesPath } from '../../../../shared/constants';
+import { Test } from '../../model';
 
-
-type Exam = {
-  speed: number;
-  stamina: number;
-  climbing: number;
-  evasion: number;
-  hiding: number;
-};
 
 type RadarChartProps = {
-  test: Exam;
-  onExam: (metricName: string) => void;
+  test: Test;
+  onExam: (exam: string) => void;
   onLiders: () => void;
 };
 
@@ -22,9 +15,9 @@ const labels = ['climbing', 'stamina', 'speed', 'evasion', 'hiding'];
 
 export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }) => {
   const { width } = useWindowDimensions();
-  const size = Math.min(width * 0.8, 300);
-  const center = size / 2;
-  const radius = size * 0.35;
+  const size = Math.min(width * 0.8, 240);
+  const center = size / 2 - 4;
+  const radius = size * 0.43;
 
   const icons = [
     `${ImagesPath}/icons/tests/Climbing.png`,
@@ -69,6 +62,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }
 
   return (
     <View style={styles.container}>
+       <Text style={styles.label}>Statistics</Text>
       <Svg width={size} height={size}>
         <Defs>
           <RadialGradient id="grad" cx="50%" cy="50%" rx="50%" ry="50%">
@@ -91,7 +85,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }
 
       {outerPoints.map((p, i) => (
         <TouchableOpacity key={i}
-          style={[styles.iconWrapper, { left: p.x + 4, top: p.y - 22 }]}
+          style={[styles.iconWrapper, { left: p.x - 24, top: p.y + 50 }]}
           onPress={() => onExam(labels[i])} >
 
           <Image key={i} source={{ uri: icons[i] }}
@@ -100,20 +94,8 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }
         </TouchableOpacity>
       ))}
 
-      {values.map((v, i) => {
-        //const { x, y } = getPoint(v, i);
-        const x = outerPoints[i].x;
-        const y = outerPoints[i].y;
-        return (
-          <Text key={i}
-            style={[styles.valueText, { left: x*1.32-32, top: y*1.3 - 52 }]}
-          >
-            {v.toFixed(1)}
-          </Text>
-        );
-      })}
       <TouchableOpacity  style={styles.centerText}
-         onPress={onLiders}>
+        onPress={onLiders}>
         <Text style={styles.average}>{average}</Text>
       </TouchableOpacity>
     </View>
@@ -138,14 +120,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
     color: '#D1FF4D',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
   },
   centerText: {
     position: 'absolute',
+    paddingTop: 24,
+    paddingRight: 4
   },
   average: {
     color: 'white',
     fontSize: 32,
     fontWeight: 'bold',
+  },
+    label: {
+    marginRight: 3,
+    marginBottom: 24,
+    backgroundColor: '#000',
+    color: '#ddd',
+    //fontWeight: 'bold', 
+    fontSize: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
 });

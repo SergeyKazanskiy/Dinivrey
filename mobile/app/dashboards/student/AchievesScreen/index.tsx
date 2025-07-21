@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { widgetStyles, screenStyles } from '../../../shared/styles/appStyles';
 import { AchievesPanel } from './views/AchievesPanel';
 import { useStore } from '../store';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export const AchievesScreen = () => {
@@ -45,9 +46,7 @@ export const AchievesScreen = () => {
   }, [navigation, isAchievementAdding]);
 
   return (
-    <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
-      style={styles.background} resizeMode='cover'
-    >
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <ScrollView style={styles.container}>
         <Text style={[widgetStyles.title, styles.title]}>Test achievements</Text>
         <AchievesPanel achieves={achieves} category='Test' onClick={handleClickAchieve}/>
@@ -60,7 +59,7 @@ export const AchievesScreen = () => {
 
         <Text style={[screenStyles.gold, styles.summary]}>You still have a little time left !</Text>
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

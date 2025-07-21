@@ -47,8 +47,9 @@ export const StatsIndicators: React.FC<Props> = ({ stats }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    paddingVertical: 16,
     gap: 4,
+    width: 88
   },
   itemContainer: {
     alignItems: 'flex-start',

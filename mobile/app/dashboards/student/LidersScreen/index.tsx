@@ -1,11 +1,12 @@
 import { useCallback, useLayoutEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation, useRouter } from 'expo-router';
-import { ImageBackground, View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SportsView } from './views/SportsView';
 import { LidersView } from './views/LidersView';
 import { useStore } from '../store';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function LidersScreen() {
@@ -36,14 +37,12 @@ export default function LidersScreen() {
   };
 
   return (
-    <ImageBackground source={require('../../../../assets/images/BackDinivrey.jpg')}
-          style={styles.background} resizeMode='cover'
-        >
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <View style={styles.container}>
-      <SportsView/>
-      <LidersView/>
-    </View>
-    </ImageBackground>
+        <SportsView/>
+        <LidersView/>
+      </View>
+    </LinearGradient>
   );
 };
 

@@ -2,44 +2,33 @@ import React from 'react';
 import { Drawer } from 'expo-router/drawer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons';
-import { DrawerHeader } from './DrawerHeader';
+import { DrawerHeader } from './DrawerHeader2';
 import { menuStyles, screenStyles } from '../../shared/styles/appStyles';
-import { ImageBackground, StyleSheet } from 'react-native';
-import { Slot } from 'expo-router';
 
 
 export function DraverMenu() {
   return (
-    <GestureHandlerRootView style={{ flex: 1, width: 360, }}>
+    <GestureHandlerRootView style={{ flex: 1, width: 360, backgroundColor: 'red' }}>
       <Drawer drawerContent={DrawerHeader} initialRouteName="ProfileScreen/index"
         screenOptions={{
-          headerShown: true, // Показываем или скрываем верхний заголовок
-          headerStyle: {
-            backgroundColor: screenStyles.background.backgroundColor, // Задаем цвет фона заголовка
-          },
-          headerTintColor: '#D1FF4D', // Цвет текста и кнопок в заголовке
-          headerTitleStyle: {
-            fontWeight: 'bold', // Дополнительно, можно задать стили текста заголовка
-            fontSize: 22,
-          },
+          headerShown: true, 
+          headerStyle: { backgroundColor: screenStyles.background.backgroundColor },
+          headerTintColor: '#D1FF4D', 
+          headerTitleStyle: { fontWeight: 'bold', fontSize: 22 },
           headerTitleAlign: 'center',
           headerShadowVisible: false,
-          drawerStyle: { width: 300},
+
+          drawerStyle: { width: 320},
           drawerHideStatusBarOnOpen: true,
-          drawerActiveBackgroundColor: menuStyles.activeBackground.color,
-          drawerActiveTintColor: 'white',
+          drawerActiveBackgroundColor: 'rgba(118, 182, 234, 0.8)',//152B52
+          drawerActiveTintColor: 'yellow',
           drawerInactiveTintColor: menuStyles.title.color,
-          drawerInactiveBackgroundColor: menuStyles.background.color,
-          drawerItemStyle: {marginVertical: 6,},
-          drawerLabelStyle: {
-            fontSize: menuStyles.title.fontSize,
-            fontWeight: menuStyles.title.fontWeight
-          },
+          drawerInactiveBackgroundColor: 'rgba(118, 182, 234, 0.8)', //
+          drawerItemStyle: {marginVertical: 6, borderRadius: 4,},
+          drawerLabelStyle: {fontSize: menuStyles.title.fontSize,fontWeight: menuStyles.title.fontWeight},
       }}>
 
-        {/* Menu */}
-      <Drawer.Screen
-        name="ProfileScreen/index"
+      <Drawer.Screen name="ProfileScreen/index"
         options={{
           headerTitle: 'Welcome!',
           title: 'Main', 
@@ -48,8 +37,7 @@ export function DraverMenu() {
           )
         }}
       />
-      <Drawer.Screen
-        name="StatisticsScreen/index"
+      <Drawer.Screen name="StatisticsScreen/index"
         options={{
           headerTitle: 'Statistics',
           title: 'Statistics', 
@@ -58,8 +46,7 @@ export function DraverMenu() {
           )
         }}
       />
-      <Drawer.Screen
-        name="AchievesScreen/index"
+      <Drawer.Screen name="AchievesScreen/index"
         options={{
           headerTitle: 'Achievements',
           title: 'Achievements', 
@@ -68,8 +55,7 @@ export function DraverMenu() {
           )
         }}
       />
-      <Drawer.Screen
-        name="EventsScreen" 
+      <Drawer.Screen name="EventsScreen" 
         options={{
           headerShown: false, // Отключаем заголовок
           title: 'Schedule',
@@ -78,8 +64,7 @@ export function DraverMenu() {
           )
         }}
       />
-      <Drawer.Screen
-        name="LidersScreen"
+      <Drawer.Screen name="LidersScreen"
         options={{
           headerShown: false, // Отключаем заголовок
          // headerTitle: 'Liderboard',
@@ -89,16 +74,7 @@ export function DraverMenu() {
           )
         }}
       />
-    </Drawer>
+      </Drawer>
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-});
-/*
-diamond-outline
-*/
