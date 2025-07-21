@@ -47,6 +47,8 @@ export type Player = {
 
 export type Game = { 
   id: number;
+  event_id: number;
+  group_id: number;
   timestamp: number;
   first_team: 'Green' | 'Red';
 
@@ -59,12 +61,12 @@ export type Game = {
   winner: 'Green' | 'Red';
 }
 
-export type StudentGame = {
+export type Gamer = {
   id: number;
   game_id: number;
   student_id: number;
   timestamp: number;
-  date: string;
+  name?: string;
 
   team: 'Green' | 'Red';
   caughted: number;

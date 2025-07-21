@@ -1,64 +1,70 @@
-import { StyleSheet, ScrollView, Platform, View, Pressable } from 'react-native';
-import { useCallback, useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { StyleSheet, Platform, View } from 'react-native';
+import { useEffect } from 'react';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { useRouter, Stack } from 'expo-router';
 import { PlayersView } from './views/PlayersView';
-import { HeaderView } from './views/HeaderView';
+import { TitleView } from './views/TitleView';
 import { AddingPopup } from './popups/AddingPopup';
 import { RemovingPopup } from './popups/RemovingPopup';
-import { Ionicons } from '@expo/vector-icons';
+import { EvadersDialog } from './dialogs/EvadersDialog';
+import { TimeSetter } from './dialogs/TimeSetter';
 import { Student } from '../model';
+import { FooterView } from './views/FooterView';
+import { BackAlert } from './alerts/BackAlert';
+import { HeaderView } from './views/HeaderView';
 
 
 export default function GamingScreen() {
-    const { isHeader, isGreen, attendances } = useStore();
-    const { setAvailableStudents, toggleHeader, toggleTeam } = useStore();
+  const { isHeader, isGreen, attendances } = useStore();
+  const { setAvailableStudents, onNavbarBack, hideBackAlert } = useStore();
 
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-      const availables = attendances.filter(el => el.present === true);
-      const students: Student[] = availables.map(el => ({
-        id: el.id,
-        first_name: el.first_name,
-        last_name: el.last_name,
-        age: 8,
-      }));
-      setAvailableStudents(students);
-    }, [])
+  useEffect(() => {
+    const availables = attendances.filter(el => el.present === true);
+    const students: Student[] = availables.map(el => ({
+      id: el.id,
+      first_name: el.first_name,
+      last_name: el.last_name,
+      age: 8,
+    }));
+    setAvailableStudents(students);
+  }, [])
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <Stack.Screen options={{ headerShown: false }} />
-      <CustomNavbar title='Dinivrey - Game Mode' onClick={() => router.back()}>
-        <View style={styles.row}>
-          <Pressable style={{ marginRight: 20}} onPress={toggleHeader} >
-            <Ionicons name={ isHeader ? 'chevron-up' : 'chevron-down'} size={20} color='#D1FF4D'/>
-          </Pressable>
-          <Pressable style={{ marginRight: 8 }} onPress={toggleTeam} >
-            <Ionicons name='repeat-outline' size={20} color="#D1FF4D" />
-          </Pressable>
-        </View>
+      <CustomNavbar title='Dinivrey - Game Mode' onClick={onNavbarBack}>
+        <HeaderView/>
       </CustomNavbar>
 
+      {/* Modals */}
+      <AddingPopup/>
+      <RemovingPopup/>
+      <EvadersDialog/>
+      <TimeSetter/>
+      <BackAlert name='All entered data will be lost'
+        onCancel={hideBackAlert}
+        onRemove={() => (router.back())}
+      />
+
+      {/* Main */}  
       <View style={styles.row}>
         <View style={styles.section}>
-          {isHeader && <HeaderView isGreen={isGreen} role='Chasers' />}
+          {isHeader && <TitleView isGreen={isGreen} role='Chasers' />}
 
           <PlayersView isGreen={isGreen}/>
         </View>
         <View style={styles.section}>
-           {isHeader && <HeaderView isGreen={!isGreen} role='Evaders'/>}
+           {isHeader && <TitleView isGreen={!isGreen} role='Evaders'/>}
 
           <PlayersView isGreen={!isGreen}/>
         </View>
       </View>
 
-      <AddingPopup/>
-      <RemovingPopup/>
+      <FooterView/>
     </LinearGradient>
   );
 }
@@ -70,17 +76,14 @@ const styles = StyleSheet.create({
     maxWidth: Platform.OS === 'web' ? 760 : undefined,
     maxHeight: Platform.OS === 'web' ? 360 : undefined,
     width: '100%',
-   // height: '100%',
   },
   row: {
     flex: 1,
     flexDirection: 'row',
-   // height: '100%',
   },
   section: {
     flex: 1,
     width: '50%',
-   // height: '100%',
     paddingHorizontal: 4
   }
 });

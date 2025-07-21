@@ -5,7 +5,7 @@ import { RoundView } from '../views/RoundView';
 
 
 const ScoreScreen = () => {
-  const { gameDate } = useStore();
+  const { gamers, gameDate } = useStore();
   
   return (
     <View style={styles.container}>
@@ -29,11 +29,11 @@ const ScoreScreen = () => {
         />
 
         {/* Round 2 */}
-        <ReportView
+        <RoundView
           team='Red' role='Chaser' round={2}
           title="Red Team - Chaser (Round 2)"
         />
-        <ReportView
+        <RoundView
           team='Green' role='Evader' round={2}
           title="Green Team - Evader (Round 2)"
         />

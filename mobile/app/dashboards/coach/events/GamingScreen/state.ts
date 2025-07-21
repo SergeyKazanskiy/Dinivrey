@@ -8,17 +8,16 @@ export interface GamingSlice {
 
     availableStudents: Student[];
     selectedStudentIds: number[];
-
     players: Player[];
     playersToRemove: number[];
 
     player_id: number;
 
     isHeader: boolean;
-
     isAddingPopup: boolean;
     isRemovingPopup: boolean;
     isRemoveAlert: boolean;
+    isTimeSetter: boolean;
 
 
     setAvailableStudents: (availableStudents: Student[]) => void;
@@ -40,6 +39,9 @@ export interface GamingSlice {
 
     showRemoveAlert: () => void;
     hideRemoveAlert: () => void;
+
+    showTimeSetter: () => void;
+    hideTimeSetter: () => void;
 
     //Players
     selectStudent: (id: number) => void;
@@ -63,16 +65,15 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     ],
     player_id: 0,
 
-    isHeader: true,
-
-    isAddingPopup: false,
-    isRemovingPopup: false,
-    isRemoveAlert: false,
-
     availableStudents: [],
     selectedStudentIds: [],
     playersToRemove: [],
 
+    isHeader: true,
+    isAddingPopup: false,
+    isRemovingPopup: false,
+    isRemoveAlert: false,
+    isTimeSetter: false,
 
     setAvailableStudents: (availableStudents: Student[]) => set({ availableStudents }),
     setCurrentTeam: (currentTeam: boolean) => set({ currentTeam }),
@@ -102,7 +103,10 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     showRemoveAlert: () => set({ isRemoveAlert: true }),
     hideRemoveAlert: () => set({ isRemoveAlert: false }),
 
+    showTimeSetter: () => set({ isTimeSetter: true }),
+    hideTimeSetter: () => set({ isTimeSetter: false }),
 
+    //Players
     selectStudent: (id) => set((state: GamingSlice) => ({
 
       selectedStudentIds: state.selectedStudentIds.includes(id)

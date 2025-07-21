@@ -5,7 +5,7 @@ import { Text } from 'react-native';
 type Props = {
   start_time: number;  
   isRunning: boolean;
-  isReset: boolean;
+  isReset?: boolean;
   onEnd: () => void;
   style?: any;
 };
