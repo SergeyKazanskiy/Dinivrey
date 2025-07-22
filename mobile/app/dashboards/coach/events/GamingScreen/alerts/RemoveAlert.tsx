@@ -14,19 +14,35 @@ export function RemoveAlert({ name, onCancel, onRemove}: Props) {
   const { isRemoveAlert } = useStore();
 
   return (
-    <CustomAlert visible={isRemoveAlert} 
-      title={name}
+    <CustomAlert
+      visible={isRemoveAlert} 
+      buttonText='REMOVE'
       handleYes={onRemove}
-      onClose={onCancel}>
+      onClose={onCancel}
+    >
+        <Text style={styles.title}>Are you sure you want to delete?</Text>
+        <Text style={styles.text}>{name}</Text>
     </CustomAlert>
   )
 }
 
 const styles = StyleSheet.create({
+  // text: {
+  //   fontSize: 18,
+  //   color: '#ccc',
+  //   marginHorizontal: 4,
+  // },
+  title: {
+    color: '#ddd',
+    fontSize: 16,
+    fontWeight: '500',
+    marginVertical: 4,
+  },
   text: {
+    color: '#fff',
     fontSize: 18,
-    color: '#ccc',
-    marginHorizontal: 4,
+    fontWeight: '500',
+    marginBottom: 20,
   },
 });
 

@@ -10,7 +10,7 @@ export interface GameMachine {
     isNewGame: boolean;
     isBackAlert: boolean;
     isEvadersDialog: boolean;
-    isGameReport: boolean;
+    isGameOverAlert: boolean;
     isSuccessAlert: boolean;
 
     // Bloking
@@ -56,7 +56,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     isNewGame: true,
     isBackAlert: false,
     isEvadersDialog: false,
-    isGameReport: false,
+    isGameOverAlert: false, //isGameOverAlert
     isSuccessAlert: false,
 
     blockTimeSettings: false,
@@ -72,44 +72,58 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
 
     // Events
     onTimerStart: () => {
+        //alert('onTimerStart')
         const { gameStep }: GameMachine = get();
 
         if (gameStep === 'Settings')  {
-            get().switch_on_game();
-        }
-         get().switch_on_playing();
+            const { step_on_game, switch_on_playing }: GameMachine = get();
+            step_on_game();
+            switch_on_playing();
+        } 
+        if (gameStep === 'Game')  {
+            const { switch_on_playing }: GameMachine = get();
+            switch_on_playing();
+        } 
     },
 
     onTimerStop: () => {
-        get().switch_on_completion();
+        //alert('onTimerStop')
+        const { switch_on_completion }: GameMachine = get();
+        switch_on_completion();
     },
 
     onTimerFinish: () => {
-        get().switch_on_completion();
+        const { switch_on_completion }: GameMachine = get();
+        switch_on_completion();
     },
 
     onNavbarBack: () => {
         const { gameStep }: GameMachine = get();
 
-        if (gameStep === 'Game') set({ isBackAlert: true });
+        if (gameStep === 'Game') {
+            set({ isBackAlert: true });
+        } 
     },
 
     onEvadersConfirm: () => {
         const {  currentRound, swapRoles, clearPoints }: ReportSlice & GamingSlice & GameMachine = get();
         swapRoles();
         clearPoints();
-
         if (currentRound.round < ROUNDS_AMOUNT) {
-            get().switch_on_waiting();
+            const { switch_on_waiting, setNextRound }: ReportSlice & GamingSlice & GameMachine = get();
+            setNextRound();
+            switch_on_waiting();
         } else {
-            get().switch_on_report();
+            const { step_on_report }: GameMachine = get();
+            step_on_report();
         }
     },
 
     onErrorExit: () => {
-        const { clearGame, clearPoints }: ReportSlice & GamingSlice = get();
+        const { clearGame, clearPoints, step_on_settings }: ReportSlice & GamingSlice & GameMachine = get();
         clearGame();
         clearPoints();
+        step_on_settings()
     },
 
     // States
@@ -118,37 +132,48 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         setGameDate();
         setRoundTime(1, INITIAL_ROUND_TIME);
         setRoundTime(2, INITIAL_ROUND_TIME);
-        set({ isNewGame: true });
-    },
+        set({ gameStep: 'Settings', gameState: 'Waiting',
+            isNewGame: true, isBackAlert: false, isTimerRunning: false, isHeader: true,
+            isEvadersDialog: false, isGameOverAlert: false, isSuccessAlert: false,
+             blockTimeSettings: false, blockPlayersAdding: false, blockRoleChosing: false, blockPointsAdding: true
+            });
+        },
 
     step_on_game: () => set({
-        gameFlow: 'Game',
+        gameStep: 'Game',
         blockTimeSettings: true,
         blockPlayersAdding: true,
         blockRoleChosing: true,
     }),
 
-    switch_on_playing: () => set({
-        gameState: 'Playing',
-        isTimerRunning: true,
-        blockPointsAdding: false 
-    }),
+    switch_on_playing: () => {
+        //alert('switch_on_playing')
+        const { setStartTime, currentRound}: ReportSlice & GamingSlice= get();
+        setStartTime(currentRound.round);
+
+        set({
+            gameState: 'Playing',
+            isTimerRunning: true,
+            blockPointsAdding: false,
+        })
+    },
 
     switch_on_waiting: () => set({
         gameState: 'Waiting',
         blockTimeSettings: false,
+        isEvadersDialog: false,
     }),
 
     switch_on_completion: () => set({
         gameState: 'Completion',
         isTimerRunning: false,
-        isComplection: true
+        isEvadersDialog: true
     }),
 
     step_on_report: () => set({
-        gameFlow: 'Report',
+        gameStep: 'Report', gameState: 'Waiting',
         isEvadersDialog: false,
-        isGameReport: true,
+        isGameOverAlert: true,
     }),
 
     // Actions
@@ -161,12 +186,12 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
                 if (isOk)  set({ isSuccessAlert: true });
             });
         } else {
-            set({ isGameReport: false });
+            set({ isGameOverAlert: false });
         }
     },
 
     hideSuccessAlert: () => set({
-        isSuccessAlert: false, isGameReport: false, isNewGame: false
+        isSuccessAlert: false, isGameOverAlert: false, isNewGame: false
     })
 });
 

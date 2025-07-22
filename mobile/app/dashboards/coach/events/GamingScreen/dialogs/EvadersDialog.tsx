@@ -81,9 +81,10 @@ export function EvadersDialog() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#0D0D1C',
     padding: 16,
-    borderRadius: 12,
+    //borderRadius: 12,
   },
   title: {
     color: 'white',
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pressable: {
-    backgroundColor: 'white',
+    backgroundColor: '#ddd',
     paddingVertical: 12,
     borderRadius: 10,
     marginTop: 20,
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#0D0D1C',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 16
   },
 });

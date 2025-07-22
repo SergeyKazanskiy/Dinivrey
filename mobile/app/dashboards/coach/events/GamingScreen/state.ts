@@ -32,6 +32,7 @@ export interface GamingSlice {
     
     setAvailableStudents: (availableStudents: Student[]) => void;
     swapRoles: () => void;
+    setNextRound: () => void;
     
     // Points
     addPoint: (id: number) => void;
@@ -100,13 +101,21 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     // Setup
     setAvailableStudents: (availableStudents: Student[]) => set({ availableStudents }),
 
-    swapRoles: () => set((state: GamingSlice) => {
-        const swappedTeams = state.currentRound.teams.map((t) => ({
-            ...t,
-            role: t.role === Role.CHASER ? Role.EVADER : Role.CHASER,
-        }));
-        return { currentRound: { ...state.currentRound, teams: swappedTeams}};
-    }),
+    swapRoles: () => {
+        set((state: GamingSlice) => {
+            const swappedTeams = state.currentRound.teams.map((t) => ({
+                ...t,
+                role: t.role === Role.CHASER ? Role.EVADER : Role.CHASER,
+            }));
+            return { currentRound: { ...state.currentRound, teams: swappedTeams}};
+        })
+        const { currentRound }: GamingSlice = get();
+        //alert(objectToJson(currentRound))
+    },
+
+    setNextRound: ()  => {
+        set((state: GamingSlice) => ({ currentRound: { ...state.currentRound, round: 2 } }));
+    },
 
     setCurrentTeam: (currentTeam: Team) => set({ currentTeam }),
     setCurrentRole: (currentRole: Role) => set({ currentRole }),

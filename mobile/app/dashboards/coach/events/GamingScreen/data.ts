@@ -15,7 +15,7 @@ export interface ReportSlice {
     // Setup
     gameDate: number;
     first_chaser_team: Team;
-    timerSartTime: number; 
+    timer_start_time: number; 
 
     // Temp
     survived_ids: number[];
@@ -36,7 +36,9 @@ export interface ReportSlice {
     // Setters
     setGameDate: () => void;
     setFirstShaserTeam: (first_chaser_team: Team) => void;
+
     setRoundTime: (round: number, time: number) => void;
+    setStartTime: (round: number) => void;
 
     setServivied: (survived_ids: number[]) => void; // From EvadersDialog
     setBonusPoints: (bonus_points: number) => void; // From EvadersDialog
@@ -76,7 +78,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     // Setup
     gameDate: 0,
     first_chaser_team: Team.GREEN,
-    timerSartTime: 0, 
+    timer_start_time: 0, 
 
     // Temp
     survived_ids: [],
@@ -90,31 +92,6 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     round_times: [600, 600],
     winner: Team.GREEN,
    
-//       team: 'Green' | 'Red';
-//   caughted: number; points(role: )
-//   freeded: number; points()
-//   is_survived: boolean;
-    // rounds: [
-    //     {
-    //     team: 'Red',
-    //     role: 'Evader',
-    //     round: 1,
-    //     players: [
-    //         { name: 'Player 1', status: 'Survived', points: 13 },
-    //         { name: 'Player 1', status: 'Caught', points: 7 },
-    //         { name: 'Player 1', status: 'Caught', points: 4 },
-    //         { name: 'Player 1', status: 'Survived', points: 3 },
-    //         { name: 'Player 1', status: 'Survived', points: 2 },
-    //         { name: 'Player 1', status: 'Caught', points: 0 },
-    //     ],
-    // ],
-
-    // Loads
-    // loadGames: (event_id: number, group_id: number) => {
-    //     get_games(event_id, group_id, (games: Game[]) => {
-    //         set({games});
-    //     })
-    // },
 
     loadGamers: (game_id: number) => {
         get_game_players(game_id, (gamers: Gamer[]) => {
@@ -126,11 +103,22 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     setGameDate: () => set({ gameDate: getTodayTimestamp()}),
     setFirstShaserTeam: (first_chaser_team: Team) => set({ first_chaser_team }),
 
-    setRoundTime: (round: number, time: number) => set((state: ReportSlice) => {
-        const updated = [...state.round_times];
-        updated[round - 1] = time;
-        return { round_time: updated };
-    }),
+    setRoundTime: (round: number, time: number) => {
+        set((state: ReportSlice) => {
+            const updated = [...state.round_times];
+            updated[round - 1] = time;
+            return { round_times: updated };
+        })
+
+        const { setStartTime }: ReportSlice = get();
+        setStartTime(round);
+    },
+    
+    setStartTime: (round: number) => {
+        const { round_times }: ReportSlice = get();
+
+        set({ timer_start_time: round_times[round - 1] })
+    },
 
     setServivied: (survived_ids: number[]) => set({ survived_ids }),
     setBonusPoints: (bonus_points: number) => set({ bonus_points }),

@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   role: {
     color: 'white',
     fontWeight: '600',
+    fontSize: 16,
   },
   wrapperAdd: {
     backgroundColor: 'white',

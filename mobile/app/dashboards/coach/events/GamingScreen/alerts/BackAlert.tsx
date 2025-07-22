@@ -5,28 +5,36 @@ import { CustomAlert } from './CustomAlert';
 
 
 interface Props {
-  name: string;
   onCancel: () => void;
   onRemove: () => void;
 }
 
-export function BackAlert({ name, onCancel, onRemove}: Props) {
-  const { isRemoveAlert } = useStore();
+export function BackAlert({ onCancel, onRemove}: Props) {
+  const { isBackAlert } = useStore();
 
   return (
-    <CustomAlert visible={isRemoveAlert} 
-      title={name}
+    <CustomAlert visible={isBackAlert} 
+      buttonText='BACK'
       handleYes={onRemove}
       onClose={onCancel}>
+        <Text style={styles.title}>Are you sure you want to exit?</Text>
+        <Text style={styles.text}>All entered data will be lost.</Text>
     </CustomAlert>
   )
 }
 
 const styles = StyleSheet.create({
+  title: {
+    color: '#ddd',
+    fontSize: 16,
+    fontWeight: '500',
+    marginVertical: 4,
+  },
   text: {
     fontSize: 18,
     color: '#ccc',
     marginHorizontal: 4,
+    marginBottom: 12
   },
 });
 
