@@ -1,11 +1,11 @@
-import React from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useStore } from '../../store';
 import { RoundView } from '../views/RoundView';
+import { Team, Role } from '../../model';
 
 
-const ScoreScreen = () => {
-  const { gamers, gameDate } = useStore();
+export const GameReport = () => {
+  const { gameDate } = useStore();
   
   return (
     <View style={styles.container}>
@@ -20,21 +20,21 @@ const ScoreScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Round 1 */}
         <RoundView
-            team='Red' role='Evader' round={1}
+            team={Team.RED} role={Role.EVADER} round={1}
             title="Red Team - Evader (Round 1)"
         />
         <RoundView
-            team='Green' role='Chaser' round={1}
+            team={Team.GREEN} role={Role.CHASER} round={1}
             title="Green Team - Chaser (Round 1)"
         />
 
         {/* Round 2 */}
         <RoundView
-          team='Red' role='Chaser' round={2}
+          team={Team.RED} role={Role.CHASER} round={2}
           title="Red Team - Chaser (Round 2)"
         />
         <RoundView
-          team='Green' role='Evader' round={2}
+          team={Team.GREEN} role={Role.EVADER} round={2}
           title="Green Team - Evader (Round 2)"
         />
 
@@ -47,8 +47,6 @@ const ScoreScreen = () => {
     </View>
   );
 };
-
-export default ScoreScreen;
 
 const styles = StyleSheet.create({
   container: {

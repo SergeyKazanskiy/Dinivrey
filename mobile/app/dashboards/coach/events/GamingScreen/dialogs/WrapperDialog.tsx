@@ -6,17 +6,12 @@ import { Icon } from '@rneui/themed';
 
 interface Props {
   visible: boolean;
-  //title: string;
   children: React.ReactNode;
-  buttonText: string;
-  handleYes: () => void;
+  title: string;
   onClose: () => void;
-  buttonText2?: string;
 }
 
-export const CustomAlert: React.FC<Props> = ({ visible, children, buttonText,
-    handleYes, onClose, buttonText2 = "DON'T TOUCH" }) => {
-
+export const WrapperDialog: React.FC<Props> = ({ visible, children, title, onClose }) => {
   const slideAnim = useRef(new Animated.Value(-16)).current;
   const top = 5;
 
@@ -38,23 +33,13 @@ export const CustomAlert: React.FC<Props> = ({ visible, children, buttonText,
             <View style={{alignItems: 'center'}}>
               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                 <Text style={{width: 20}}>   </Text>
-                <Image source={require('../../../../../../assets/images/Warning.png')}
-                  style={styles.avatar} resizeMode='cover'
-                />
+                <Text style={styles.title}>{title}</Text>
                 <Icon size={20} color="#D1FF4D" name="close" onPress={onClose}/>
               </View>
 
               {children}
              </View>
             
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={[styles.button, {backgroundColor: '#ef4444'}]} onPress={handleYes}>
-                <Text style={styles.buttonText}>{buttonText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button,  {backgroundColor: '#bbb'}]} onPress={onClose}>
-                <Text style={[styles.buttonText, {color: '#222'}]}>{buttonText2}</Text>
-              </TouchableOpacity>
-            </View>
           </Animated.View>
           </TouchableWithoutFeedback>
         </View>

@@ -10,17 +10,20 @@ import { AddingPopup } from './popups/AddingPopup';
 import { RemovingPopup } from './popups/RemovingPopup';
 import { EvadersDialog } from './dialogs/EvadersDialog';
 import { TimeSetter } from './dialogs/TimeSetter';
-import { Student, GameRound } from '../model';
+import { Student, GameRound, Role, Team } from '../model';
 import { FooterView } from './views/FooterView';
 import { BackAlert } from './alerts/BackAlert';
+import { GameOverAlert } from './alerts/GameOverAlert';
 import { HeaderView } from './views/HeaderView';
+import { formatDateTime } from '../../../../shared/utils';
 
 
 export default function GamingScreen() {
-  const { isHeader, currentRound, attendances } = useStore();
-  const { setAvailableStudents, onNavbarBack, hideBackAlert } = useStore();
+  const { isHeader, currentRound, attendances, gameStep, gameState, gameDate, isEvadersDialog } = useStore();
+  const { setAvailableStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings} = useStore();
 
   const router = useRouter();
+  
 
   useEffect(() => {
     const availables = attendances.filter(el => el.present === true);
@@ -31,40 +34,63 @@ export default function GamingScreen() {
       age: 8,
     }));
     setAvailableStudents(students);
+    step_on_settings();
   }, [])
+
+  function handleBack() {
+    if (gameStep === 'Settings') {
+      setTimeout(() => router.back(), 500);
+    } else {
+      onNavbarBack();
+    }
+  }
+
+  const leftRole = currentRound.teams[0].role;
+  const index1 = leftRole === Role.CHASER ? 0 : 1;
+  const index2 = index1 === 0 ? 1 : 0;
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <Stack.Screen options={{ headerShown: false }} />
-      <CustomNavbar title='Dinivrey - Game Mode' onClick={onNavbarBack}>
+      <CustomNavbar title={formatDateTime(gameDate).date + ', Game Mode ('  + gameStep + ', '+ gameState + ')'} onClick={handleBack}>
         <HeaderView/>
       </CustomNavbar>
+
+      {/* Alert */}
+      <BackAlert
+        onCancel={hideBackAlert}
+        onRemove={() => (onErrorExit(), setTimeout(() => router.back(), 500))}
+      />
+      <GameOverAlert
+        team={Team.GREEN}
+        onNo={() => router.back()}
+        onYes={() => router.back()}
+      />
 
       {/* Modals */}
       <AddingPopup/>
       <RemovingPopup/>
-      <EvadersDialog/>
       <TimeSetter/>
-      <BackAlert name='All entered data will be lost'
-        onCancel={hideBackAlert}
-        onRemove={() => (router.back())}
-      />
+      
+      {/* Main */}
+      {isEvadersDialog && <EvadersDialog/>} 
 
-      {/* Main */}  
-      <View style={styles.row}>
+      {!isEvadersDialog && <View style={styles.row}>
         <View style={styles.section}>
-          {isHeader && <TitleView team={currentRound.teams[0].team} role='Chasers' />}
+          {isHeader && <TitleView team={currentRound.teams[index1].team}
+                                  role={currentRound.teams[index1].role} />}
 
-          <PlayersView team={currentRound.teams[0].team}/>
+          <PlayersView team={currentRound.teams[index1].team}/>
         </View>
         <View style={styles.section}>
-           {isHeader && <TitleView team={currentRound.teams[1].team} role='Evaders'/>}
+           {isHeader && <TitleView team={currentRound.teams[index2].team}
+                                    role={currentRound.teams[index2].role} />}
 
-          <PlayersView team={currentRound.teams[1].team}/>
+          <PlayersView team={currentRound.teams[index2].team}/>
         </View>
-      </View>
+      </View> }
 
-      <FooterView/>
+      {!isHeader && !isEvadersDialog && <FooterView/>}
     </LinearGradient>
   );
 }
