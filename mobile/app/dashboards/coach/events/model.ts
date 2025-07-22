@@ -43,6 +43,7 @@ export type Player = {
   age: number;
   points: number;
   team: Team;
+  role: Role;
   is_survived?: boolean;
 };
 
@@ -74,7 +75,7 @@ export type Game = {
   points: number;
   tags: number;
   rescues: number;
-  winner: 'Green' | 'Red';
+  winner: 'Green' | 'Red' | '';
 }
 
 export type Gamer = {
@@ -89,6 +90,12 @@ export type Gamer = {
   is_survived: boolean;
 };
 
+export type TeamTotals = {
+  caught: number;
+  freeded: number;
+  is_survived: number;
+  bonus?: number;
+}
 
 //Testing
 export type Test = {
@@ -201,3 +208,6 @@ export interface AttendanceDataForReport {
     group_number: number;
     coach_id: number;
 }
+
+
+

@@ -1,17 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useStore } from '../../store';
-import { Team } from '../../model';
+import { Team, Role } from '../../model';
 
 
 interface Props {
   team: Team;
-  role: string;
+  role: Role;
 }
 
 export function TitleView({ team, role }: Props) {
   const { blockPlayersAdding } = useStore();
-  const { showAddingPopup, showRemovingPopup, setCurrentTeam } = useStore();
+  const { showAddingPopup, showRemovingPopup, setCurrentTeam, setCurrentRole } = useStore();
 
   const teamName = team + ' Team'
 
@@ -22,14 +22,14 @@ export function TitleView({ team, role }: Props) {
         <View style={styles.wrapperAdd}>
           <Icon name="person-add" type="ionicon" color="#333" size={18}
             disabled={blockPlayersAdding}
-            onPress={() => (setCurrentTeam(team), showAddingPopup())}
+            onPress={() => (setCurrentTeam(team), setCurrentRole(role), showAddingPopup())}
           />
         </View>
         
         <View style={styles.wrapperRemove}>
           <Icon name="delete" type="material" color='#A90F11' size={21}
             disabled={blockPlayersAdding}
-            onPress={() => (setCurrentTeam(team), showRemovingPopup())}
+            onPress={() => (setCurrentTeam(team), setCurrentRole(role), showRemovingPopup())}
           />
         </View>
         <Text style={styles.role}>Role: {role}</Text>

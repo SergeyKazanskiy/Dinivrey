@@ -20,7 +20,7 @@ import { formatDateTime } from '../../../../shared/utils';
 
 export default function GamingScreen() {
   const { isHeader, currentRound, attendances, gameStep, gameState, gameDate, isEvadersDialog } = useStore();
-  const { setAvailableStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings} = useStore();
+  const { setAvailableStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings, clearPlayers} = useStore();
 
   const router = useRouter();
   
@@ -39,7 +39,8 @@ export default function GamingScreen() {
 
   function handleBack() {
     if (gameStep === 'Settings') {
-      setTimeout(() => router.back(), 500);
+      clearPlayers();
+      setTimeout(() => router.back(), 300);
     } else {
       onNavbarBack();
     }
@@ -59,12 +60,12 @@ export default function GamingScreen() {
       {/* Alert */}
       <BackAlert
         onCancel={hideBackAlert}
-        onRemove={() => (onErrorExit(), setTimeout(() => router.back(), 500))}
+        onRemove={() => (onErrorExit(), setTimeout(() => router.back(), 300))}
       />
       <GameOverAlert
         team={Team.GREEN}
-        onNo={() => router.back()}
-        onYes={() => router.back()}
+        onNo={() => (step_on_settings(), setTimeout(() => router.back(), 300))}
+        onYes={step_on_settings}
       />
 
       {/* Modals */}
@@ -80,13 +81,15 @@ export default function GamingScreen() {
           {isHeader && <TitleView team={currentRound.teams[index1].team}
                                   role={currentRound.teams[index1].role} />}
 
-          <PlayersView team={currentRound.teams[index1].team}/>
+          <PlayersView team={currentRound.teams[index1].team}
+                        role={currentRound.teams[index1].role} />
         </View>
         <View style={styles.section}>
            {isHeader && <TitleView team={currentRound.teams[index2].team}
                                     role={currentRound.teams[index2].role} />}
 
-          <PlayersView team={currentRound.teams[index2].team}/>
+          <PlayersView team={currentRound.teams[index2].team}
+                        role={currentRound.teams[index2].role} />
         </View>
       </View> }
 

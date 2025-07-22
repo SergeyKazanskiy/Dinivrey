@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useStore } from '../../store';
-import { Team } from '../../model';
+import { Team, Role } from '../../model';
 
 interface Props {
   team: Team;
+  role: Role;
 }
 
-export function ScoreView({ team }: Props) {
+export function ScoreView({ team, role }: Props) {
   const { players, isHeader } = useStore();
 
   const teamPlayers = players.filter(el => el.team === team);
@@ -26,7 +27,7 @@ export function ScoreView({ team }: Props) {
           
         <Text style={styles.column}>Player</Text>
         <Text style={styles.column}>Points</Text>
-        <Text style={styles.column}>Actions</Text>
+        <Text style={styles.column}>{isHeader ? 'Actions' : role}</Text>
       </View>
     </>
   );

@@ -58,9 +58,9 @@ async def update_student_parents(id: int, data: List[schemas.ParentUpdate], sess
 async def update_student_test(id: int, data: schemas.TestUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Test, id, data, session)}
 
-@router.put("/students/games/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
-async def update_student_game(id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Game, id, data, session)}
+# @router.put("/students/games/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+# async def update_student_game(id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
+#     return {"isOk": await CRUD.update(models.Game, id, data, session)}
 
 @router.put("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_achieve(id: int, data: schemas.AchievementUpdate, session: AsyncSession = Depends(get_session)):

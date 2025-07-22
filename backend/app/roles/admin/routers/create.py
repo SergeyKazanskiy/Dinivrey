@@ -120,10 +120,9 @@ async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depend
 async def add_coach_group(data: schemas.CoachGroupCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.CoachGroup, data, session)} 
 
-# @router.post("/camps/coaches/groups", response_model=List[schemas.CoachGroupResponse], tags=["Manager"])
-# async def coach_group_add(data: schemas.CoachGroupCreate, session: AsyncSession = Depends(get_session)):
-#     id = await CRUD.add(models.CoachGroup, data, session)
-#     return await get_coache_groups(data.coache_id, session)
+@router.post("/students/games", response_model=schemas.ResponseId, tags=["Manager"])
+async def coach_group_add(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Game, data, session)} 
 
 # Drills
 @router.post("/drills", response_model=schemas.ResponseId, tags=["Admin_create"])

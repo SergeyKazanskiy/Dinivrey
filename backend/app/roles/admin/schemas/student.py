@@ -116,27 +116,27 @@ class TestResponse(TestBase):
         from_attributes = True
 
 # Game
-class GameBase(BaseModel):
-    student_id: int
-    timestamp: int
-    date: str
-    caughted: float
-    freeded: float
-    description: str
+# class GameBase(BaseModel):
+#     student_id: int
+#     timestamp: int
+#     date: str
+#     caughted: float
+#     freeded: float
+#     description: str
 
-class GameCreate(GameBase):
-    pass
+# class GameCreate(GameBase):
+#     pass
 
-class GameUpdate(BaseModel):
-    caughted: Optional[float] = None
-    freeded: Optional[float] = None
-    description: Optional[str] = None
+# class GameUpdate(BaseModel):
+#     caughted: Optional[float] = None
+#     freeded: Optional[float] = None
+#     description: Optional[str] = None
 
-class GameResponse(GameBase):
-    id: int
+# class GameResponse(GameBase):
+#     id: int
 
-    class Config:
-        from_attributes = True
+#     class Config:
+#         from_attributes = True
 
 # Achievement
 class AchievementBase(BaseModel):
