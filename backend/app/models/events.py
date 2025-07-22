@@ -17,6 +17,7 @@ class Event(Base):
     group2_report = Column(Boolean, nullable=False, default=False)
     attendances = relationship("Attendance", back_populates="event", cascade="all, delete")
     event_drills = relationship("EventDrill", back_populates="event", cascade="all, delete")
+    games = relationship("Game", back_populates="event", cascade="all, delete")
 
 
 class Attendance(Base):

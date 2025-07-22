@@ -107,23 +107,28 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
 
     onEvadersConfirm: () => {
         const {  currentRound, swapRoles, clearPoints }: ReportSlice & GamingSlice & GameMachine = get();
-        swapRoles();
-        clearPoints();
+        
         if (currentRound.round < ROUNDS_AMOUNT) {
-            const { switch_on_waiting, setNextRound }: ReportSlice & GamingSlice & GameMachine = get();
+            const { switch_on_waiting, setNextRound, createGamers }: ReportSlice & GamingSlice & GameMachine = get();
+            createGamers();
             setNextRound();
             switch_on_waiting();
         } else {
-            const { step_on_report }: GameMachine = get();
+            const { step_on_report, updateGamers }: GameMachine & ReportSlice = get();
+            updateGamers();
             step_on_report();
         }
+
+        clearPoints();
+        swapRoles();
     },
 
     onErrorExit: () => {
-        const { clearGame, clearPoints, step_on_settings }: ReportSlice & GamingSlice & GameMachine = get();
+        const { clearGame, clearPoints, step_on_settings, clearPlayers }: ReportSlice & GamingSlice & GameMachine = get();
         clearGame();
         clearPoints();
-        step_on_settings()
+        clearPlayers();
+        step_on_settings();
     },
 
     // States
@@ -135,7 +140,8 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         set({ gameStep: 'Settings', gameState: 'Waiting',
             isNewGame: true, isBackAlert: false, isTimerRunning: false, isHeader: true,
             isEvadersDialog: false, isGameOverAlert: false, isSuccessAlert: false,
-             blockTimeSettings: false, blockPlayersAdding: false, blockRoleChosing: false, blockPointsAdding: true
+            blockTimeSettings: false, blockPlayersAdding: false, blockRoleChosing: false, blockPointsAdding: true,
+            currentRound: { round: 1, teams: [{team: Team.GREEN, role: Role.CHASER}, {team: Team.RED, role: Role.EVADER}]},
             });
         },
 
@@ -161,6 +167,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     switch_on_waiting: () => set({
         gameState: 'Waiting',
         blockTimeSettings: false,
+        blockPointsAdding: true,
         isEvadersDialog: false,
     }),
 

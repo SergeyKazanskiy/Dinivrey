@@ -25,7 +25,7 @@ class Student(Base):
     group = relationship("Group", back_populates="students")
     parents = relationship("Parent", back_populates="student", cascade="all, delete")
     tests = relationship("Test", back_populates="student", cascade="all, delete")
-    games = relationship("Game", back_populates="student", cascade="all, delete")
+    gamers = relationship("Gamer", back_populates="student", cascade="all, delete")
     achievements = relationship("Achievement", back_populates="student", cascade="all, delete")
     attendances = relationship("Attendance", back_populates="students")     
 
@@ -58,17 +58,17 @@ class Test(Base):
     student = relationship("Student", back_populates="tests")    
 
 
-class Game(Base):
-    __tablename__ = 'games'
+# class Game(Base):
+#     __tablename__ = 'games'
 
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(Integer, nullable=False)
-    date = Column(String, nullable=False)
-    caughted = Column(Float, nullable=False)
-    freeded = Column(Float, nullable=False)
-    description = Column(String, nullable=True)
-    student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
-    student = relationship("Student", back_populates="games")
+#     id = Column(Integer, primary_key=True, index=True)
+#     timestamp = Column(Integer, nullable=False)
+#     date = Column(String, nullable=False)
+#     caughted = Column(Float, nullable=False)
+#     freeded = Column(Float, nullable=False)
+#     description = Column(String, nullable=True)
+#     student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
+#     student = relationship("Student", back_populates="games")
 
 
 class Achievement(Base):

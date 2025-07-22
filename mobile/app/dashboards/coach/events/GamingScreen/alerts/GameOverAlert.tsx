@@ -18,8 +18,8 @@ export function GameOverAlert({ onNo, onYes, team}: Props) {
     <CustomAlert visible={isGameOverAlert} 
       buttonText='NO'
       buttonText2='YES'
-      handleYes={onYes}
-      onClose={onNo}>
+      handleYes={onNo}
+      onClose={onYes}>
         {/* <Text style={styles.title}>The game is over</Text> */}
         <Text style={styles.title}>{'The ' + team + ' team won!'}</Text>
         <Text style={styles.text}>Want to start the next game?</Text>

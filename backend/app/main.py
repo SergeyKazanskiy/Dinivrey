@@ -197,3 +197,23 @@ async def change_field_type(session: AsyncSession = Depends(get_session)):
     return {"status": "Success"}
 
 app.include_router(router5)
+
+# Delete table
+router6 = APIRouter()
+
+@router6.delete("/drop_table/{table_name}", tags=["Auth"])
+async def drop_table(table_name: str):
+    valid_tables = {"games", "gamers"}  # ✅ Белый список разрешённых к удалению таблиц
+
+    if table_name not in valid_tables:
+        return {"error": "Table not allowed to be dropped"}
+
+    async with engine.begin() as conn:
+        try:
+            # ✅ Обернули raw SQL в text()
+            await conn.execute(text(f'DROP TABLE IF EXISTS {table_name}'))
+            return {"status": f"Table '{table_name}' dropped successfully"}
+        except Exception as e:
+            return {"error": str(e)}
+        
+app.include_router(router6)        

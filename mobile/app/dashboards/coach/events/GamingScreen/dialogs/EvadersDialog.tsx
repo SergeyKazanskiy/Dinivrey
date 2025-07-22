@@ -2,20 +2,24 @@ import { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import { useStore } from '../../store';
-import { Player } from '../../model';
+import { Player, Role, Team } from '../../model';
 import { BONUS_POINTS } from '../constants';
+import { objectToJson } from '@/app/shared/utils';
 
 
-const COLUMN_HEIGHT = 4;
+const COLUMN_HEIGHT = 3;
 
 
 export function EvadersDialog() {
-  const { players } = useStore();
+  const { players, currentRound } = useStore();
   const { setServivied, setBonusPoints, onEvadersConfirm } = useStore();
 
+  const evaderTeam = currentRound.teams.find(el => el.role === Role.EVADER)?.team || Team.GREEN;
+  const evaders = players.filter(el => el.team === evaderTeam);
+
   const columns: Player[][] = [];
-  for (let i = 0; i < players.length; i += COLUMN_HEIGHT) {
-    columns.push(players.slice(i, i + COLUMN_HEIGHT));
+  for (let i = 0; i < evaders.length; i += COLUMN_HEIGHT) {
+    columns.push(evaders.slice(i, i + COLUMN_HEIGHT));
   }
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -27,12 +31,14 @@ export function EvadersDialog() {
   };
 
   function handleButtonsPress() {
-    onEvadersConfirm();
+
     if (selectedIds.length > 0) {
       setServivied(selectedIds);
     } else {
-        setBonusPoints(BONUS_POINTS)
+      setBonusPoints(BONUS_POINTS)
     }
+
+    onEvadersConfirm();
   }
 
   return (
@@ -51,7 +57,7 @@ export function EvadersDialog() {
                   checked={isSelected}
                   onPress={() => toggleSelection(item.id)}
                   containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
-                  textStyle={{ color: 'white' }}
+                  textStyle={{ color: '#ddd', fontSize: 15 }}
                 />
               )
             })}

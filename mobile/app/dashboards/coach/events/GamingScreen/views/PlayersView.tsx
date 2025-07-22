@@ -2,14 +2,15 @@ import { StyleSheet, FlatList, Text, View, ScrollView } from 'react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useStore } from '../../store';
 import { ScoreView } from './ScoreView';
-import { Player, Team } from '../../model';
+import { Player, Team, Role } from '../../model';
 
 
 interface Props {
   team: Team;
+  role: Role;
 }
 
-export function PlayersView({ team }: Props) {
+export function PlayersView({ team, role }: Props) {
   const { players, blockPointsAdding } = useStore();
   const { removePoint, addPoint } = useStore();
 
@@ -17,7 +18,7 @@ export function PlayersView({ team }: Props) {
 
   return (
     <View style={styles.container}>
-      <ScoreView team={team}/>
+      <ScoreView team={team} role={role}/>
 
       <FlatList
         data={teamPlayers}

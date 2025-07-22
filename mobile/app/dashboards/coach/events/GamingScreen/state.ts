@@ -64,13 +64,14 @@ export interface GamingSlice {
     cancelRemovePlayer: (id: number) => void;
     
     clearPoints: () => void;
+    clearPlayers: () => void;
 }
 
 export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     // Data
     availableStudents: [],
     players: [
-        { id: 1, name: 'Player 1', age: 8, points: 0, team: Team.GREEN },
+       // { id: 1, name: 'Player 1', age: 8, points: 0, team: Team.GREEN },
     ],
     
 
@@ -102,6 +103,10 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     setAvailableStudents: (availableStudents: Student[]) => set({ availableStudents }),
 
     swapRoles: () => {
+        set((state: GamingSlice) => ({
+            players: state.players.map(el => ({...el, role: el.role === Role.CHASER ? Role.EVADER : Role.CHASER}))
+        }));
+
         set((state: GamingSlice) => {
             const swappedTeams = state.currentRound.teams.map((t) => ({
                 ...t,
@@ -109,8 +114,6 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
             }));
             return { currentRound: { ...state.currentRound, teams: swappedTeams}};
         })
-        const { currentRound }: GamingSlice = get();
-        //alert(objectToJson(currentRound))
     },
 
     setNextRound: ()  => {
@@ -146,7 +149,7 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     hideRemoveAlert: () => set({ isRemoveAlert: false }),
 
     showTimeSetter: () => set({ isTimeSetter: true }),
-   hideTimeSetter: () => set({ isTimeSetter: false }),
+    hideTimeSetter: () => set({ isTimeSetter: false }),
 
     // Players
     selectStudent: (id) => set((state: GamingSlice) => ({
@@ -157,7 +160,7 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     })),
 
     addPlayers: () => {
-        const { availableStudents, selectedStudentIds, players, currentTeam }: GamingSlice = get();
+        const { availableStudents, selectedStudentIds, players, currentTeam, currentRole }: GamingSlice = get();
 
         const newPlayers: Player[] = availableStudents.filter(el => selectedStudentIds.includes(el.id))
         .map((el) => ({
@@ -165,7 +168,8 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
             name: `${el.last_name} ${el.first_name[0]}`,
             points: 0,
             age: el.age,
-            team: currentTeam
+            team: currentTeam,
+            role: currentRole
         }));
         set({ players: [...players, ...newPlayers], selectedStudentIds: [], });
     },
@@ -194,6 +198,8 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
 
     clearPoints: () => set((state: GamingSlice) => ({
         players: state.players.map(el => ({...el, points: 0}))
-    }))
+    })),
+
+    clearPlayers: () => set({players: []}),
 });
 
