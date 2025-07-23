@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text, } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
 
 
 type Props = {
@@ -10,23 +9,36 @@ type Props = {
 
 export const PlayerCell: React.FC<Props> = ({ name, isSurvived, points }) => {
   const bg = isSurvived === undefined
-  ? 'white' : isSurvived
+  ? '#ccc' : isSurvived
   ? 'green' : 'red';
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: bg,
-        marginVertical: 4,
-        padding: 8,
-        borderRadius: 6,
-      }}
-    >
-      <Text style={{ flex: 1 }}>{name}</Text>
-      {/* <Text style={{ color: isSurvived ? 'green' : 'red' }}>{status}</Text> */}
-      <Text style={{ marginLeft: 10 }}>{points}</Text>
+    <View style={[styles.container, {backgroundColor: bg}]}>
+      <Text style={{ flex: 1 }}>
+        {name}
+      </Text>
+
+      <Text style={styles.capsule}>{points}</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+    marginHorizontal: 4,
+    padding: 8,
+    borderRadius: 16,
+  },
+  capsule: {
+    borderRadius: 10,
+    backgroundColor: '#ddd',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    fontSize: 15,
+    color: '#222',
+    fontWeight: '600',
+  },
+})
