@@ -1,48 +1,41 @@
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useStore } from '../../store';
-import { RoundView } from '../views/RoundView';
+import { RoundReport } from '../views/RoundReport';
+import { FooterReport } from '../views/FooterReport';
 import { Team, Role } from '../../model';
+import { LinearGradient } from 'expo-linear-gradient';
+
+
+const formatSec = (s: number) =>
+  `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
 
 export const GameReport = () => {
-  const { gameDate } = useStore();
-  
+  const { gameDate, teams_totals, currentRole, round_times } = useStore();
+  const { hideGameReport } = useStore();
+
+  const role_2 = currentRole
+  const role_1 = role_2 === Role.CHASER ? Role.EVADER : Role.CHASER
+
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Dinivrey - {gameDate}</Text>
-        <Pressable onPress={() => { /* закрыть экран */ }}>
+        <Pressable onPress={hideGameReport}>
           <Text style={styles.close}>✕</Text>
         </Pressable>
       </View>
-
+     
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Round 1 */}
-        <RoundView
-            team={Team.RED} role={Role.EVADER} round={1}
-            title="Red Team - Evader (Round 1)"
+        <RoundReport round={1} time={formatSec(round_times[1])}
+          role_1={role_2} total_1={teams_totals[0].freeded + '+' + teams_totals[0].survived}
+          role_2={role_1} total_2={teams_totals[0].caught + '+' + teams_totals[0].bonus}
         />
-        <RoundView
-            team={Team.GREEN} role={Role.CHASER} round={1}
-            title="Green Team - Chaser (Round 1)"
+        <RoundReport round={2} time={formatSec(round_times[1])}
+          role_1={role_2} total_1={teams_totals[1].caught + '+' + teams_totals[1].bonus}
+          role_2={role_1} total_2={teams_totals[1].freeded + '+' + teams_totals[1].survived}
         />
-
-        {/* Round 2 */}
-        <RoundView
-          team={Team.RED} role={Role.CHASER} round={2}
-          title="Red Team - Chaser (Round 2)"
-        />
-        <RoundView
-          team={Team.GREEN} role={Role.EVADER} round={2}
-          title="Green Team - Evader (Round 2)"
-        />
-
-        {/* Total */}
-        <View style={styles.summary}>
-          <Text style={styles.winner}>🏆 Winner Red Team</Text>
-          <Text style={styles.score}>Total Points: 54 vs 48</Text>
-        </View>
+        <FooterReport/>
       </ScrollView>
     </View>
   );
@@ -61,6 +54,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     color: 'white',
+    fontWeight: 'bold',
+  },
+  text: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  capsule: {
+    fontSize: 16,
+    color: '#222',
     fontWeight: 'bold',
   },
   close: {
