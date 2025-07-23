@@ -85,7 +85,14 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     bonus_points: 0,
 
     // Result
-    teams_totals: [],
+    teams_totals: [
+        { team: Team.RED, amount: 5, caught: 1,  freeded: 2, survived: 3, bonus: 0, total: 0,
+            info: { points: '11', tags: '12', bonus: '13', rescues: '14'}
+        },
+        { team: Team.GREEN, amount: 4, caught: 1,  freeded: 2, survived: 3, bonus: 0, total: 0,
+            info: { points: '21', tags: '22', bonus: '23', rescues: '24'}
+        },
+    ],
     round_times: [600, 600],
 
     winner_number: null,
@@ -203,6 +210,8 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             teams_totals: [totals_1, totals_2],
             winner: winner_number === null ? 'Equally' : winner_number === 0 ? totals_1.team : totals_2.team
         });
+
+        alert(objectToJson([[totals_1, totals_2]]))
     },
 
     // Server

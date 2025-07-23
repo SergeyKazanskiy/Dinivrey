@@ -33,7 +33,6 @@ export function FooterView() {
         />
       </View>
 
-
       <LinearGradient colors={['#A90F11', '#15803d']}
         start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
         style={styles.wrapperRound}

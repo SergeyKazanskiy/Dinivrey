@@ -5,7 +5,7 @@ import { useStore } from '../../store';
 
 export function HeaderView() {
   const { isHeader, blockRoleChosing } = useStore();
-  const { toggleHeader, swapRoles } = useStore();
+  const { toggleHeader, swapRoles, showReport } = useStore();
 
   return (
     <View style={styles.row}>
@@ -14,6 +14,9 @@ export function HeaderView() {
       </Pressable>
       <Pressable style={{ marginRight: 8 }} onPress={swapRoles} disabled={blockRoleChosing} >
         <Ionicons name='repeat-outline' size={20} color="#D1FF4D" />
+      </Pressable>
+      <Pressable style={{ marginRight: 20, marginLeft: 12}} onPress={showReport} >
+        <Ionicons name='document-text-outline' size={20} color='#D1FF4D'/>
       </Pressable>
     </View>
   );

@@ -16,6 +16,7 @@ import { BackAlert } from './alerts/BackAlert';
 import { GameOverAlert } from './alerts/GameOverAlert';
 import { HeaderView } from './views/HeaderView';
 import { formatDateTime } from '../../../../shared/utils';
+import { GameReport } from './popups/GameReport';
 
 
 export default function GamingScreen() {
@@ -57,7 +58,7 @@ export default function GamingScreen() {
         <HeaderView/>
       </CustomNavbar>
 
-      {/* Alert */}
+      {/* Alerts */}
       <BackAlert
         onCancel={hideBackAlert}
         onRemove={() => (onErrorExit(), setTimeout(() => router.back(), 300))}
@@ -72,6 +73,7 @@ export default function GamingScreen() {
       <AddingPopup/>
       <RemovingPopup/>
       <TimeSetter/>
+      <GameReport/>
       
       {/* Main */}
       {isEvadersDialog && <EvadersDialog/>} 

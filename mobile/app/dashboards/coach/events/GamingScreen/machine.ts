@@ -12,6 +12,7 @@ export interface GameMachine {
     isEvadersDialog: boolean;
     isGameOverAlert: boolean;
     isSuccessAlert: boolean;
+    isGameReport: boolean;
 
     // Bloking
     blockTimeSettings: boolean;
@@ -50,6 +51,9 @@ export interface GameMachine {
     hideBackAlert: () => void; // Cancel ??? if agree?
     hideGameReport: () => void;
     hideSuccessAlert: () => void;
+
+    showReport: () => void; //Temp
+    hideReport: () => void;  //Temp
 }
 
 export const createGameMachine = (set: any, get: any): GameMachine => ({
@@ -58,6 +62,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     isEvadersDialog: false,
     isGameOverAlert: false, //isGameOverAlert
     isSuccessAlert: false,
+    isGameReport: false,
 
     blockTimeSettings: false,
     blockPlayersAdding: false,
@@ -199,6 +204,9 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
 
     hideSuccessAlert: () => set({
         isSuccessAlert: false, isGameOverAlert: false, isNewGame: false
-    })
+    }),
+
+    showReport: () => set({ isGameReport: true }),
+    hideReport: () => set({ isGameReport: false }),
 });
 
