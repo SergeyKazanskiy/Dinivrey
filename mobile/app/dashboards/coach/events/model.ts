@@ -75,7 +75,25 @@ export type Game = {
   points: number;
   tags: number;
   rescues: number;
-  winner: 'Green' | 'Red' | '';
+  winner: Team | 'Equally';
+}
+
+export type Total = {
+  caught: number;
+  freeded: number;
+  survived: number;
+}
+
+export type TeamTotals = {
+  team: Team;
+  amount: number;
+
+  caught: number;
+  freeded: number;
+  survived: number;
+  bonus: number;
+  total: number;
+  info: { points: string, tags: string, bonus: string, rescues: string }; // 36 + 12 + 33 = 81, ...
 }
 
 export type Gamer = {
@@ -89,13 +107,6 @@ export type Gamer = {
   freeded: number;
   is_survived: boolean;
 };
-
-export type TeamTotals = {
-  caught: number;
-  freeded: number;
-  is_survived: number;
-  bonus?: number;
-}
 
 //Testing
 export type Test = {

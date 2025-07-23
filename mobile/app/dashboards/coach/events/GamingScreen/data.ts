@@ -1,4 +1,4 @@
-import { Game, Gamer, Role, Team, TeamTotals } from '../model';
+import { Game, Gamer, Role, Team, Total, TeamTotals } from '../model';
 import { objectToJson } from '../../../../shared/utils';
 import { get_games, get_game_players, add_student_game, add_student_game_gamers, delete_student_game } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
@@ -25,6 +25,8 @@ export interface ReportSlice {
     // Result
     round_times: number[];
     teams_totals: TeamTotals[];
+
+    winner_number: number | null;
     winner: Team | null; 
 
     // Loads
@@ -85,6 +87,8 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     // Result
     teams_totals: [],
     round_times: [600, 600],
+
+    winner_number: null,
     winner: null,
    
 
@@ -158,55 +162,65 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         const firstTeamGamers = gamers.filter(el => el.team === first_chaser_team );
         const secondTeamGamers = gamers.filter(el => el.team !== first_chaser_team );
 
-        const totals_1: TeamTotals = firstTeamGamers.reduce(
+        const total_1: Total = firstTeamGamers.reduce(
             (acc, gamer) => {
                 acc.caught += gamer.caught;
                 acc.freeded += gamer.freeded;
-                acc.is_survived += gamer.is_survived ? 2 : 0;
+                acc.survived += gamer.is_survived ? 1 : 0;
                 return acc;
             },
-            { caught: 0, freeded: 0, is_survived: 0 }
+            { caught: 0, freeded: 0, survived: 0 }
         );
-        const totals_2: TeamTotals = secondTeamGamers.reduce(
+        const total_2: Total = secondTeamGamers.reduce(
             (acc, gamer) => {
                 acc.caught += gamer.caught;
                 acc.freeded += gamer.freeded;
-                acc.is_survived += gamer.is_survived ? 2 : 0;
+                acc.survived += gamer.is_survived ? 1 : 0;
                 return acc;
             },
-            { caught: 0, freeded: 0, is_survived: 0 }
+            { caught: 0, freeded: 0, survived: 0 }
         );
 
-        totals_1.bonus = totals_2.is_survived === 0 ? BONUS_POINTS : 0;
-        totals_2.bonus = totals_1.is_survived === 0 ? BONUS_POINTS : 0;
+        const totals_1: TeamTotals = getTeamTotals(
+            first_chaser_team === Team.GREEN ? Team.GREEN : Team.RED,
+            firstTeamGamers.length,
+            total_1, total_2.survived === 0 ? BONUS_POINTS : 0
+        )
 
-        const total_1 = totals_1.caught + totals_1.freeded + totals_1.bonus;
-        const total_2 = totals_2.caught + totals_2.freeded + totals_2.bonus;
+        const totals_2: TeamTotals = getTeamTotals(
+            totals_1.team === Team.GREEN ? Team.GREEN : Team.RED,
+            firstTeamGamers.length,
+            total_2, total_1.survived === 0 ? BONUS_POINTS : 0
+        )
 
-        const winner_number = total_1 > total_2 ? 0
-            : total_2 > total_1 ? 1
+        const winner_number = totals_1.total > totals_2.total ? 0
+            : totals_2.total > totals_1.total ? 1
             : round_times[0] < round_times[1] ? 0
-            : round_times[1]  < round_times[0] ? 1
+            : round_times[1] < round_times[0] ? 1
             : null;  
-        const winner = winner_number === 0 ? first_chaser_team
-            : first_chaser_team === Team.GREEN ? Team.GREEN : Team.RED;
 
-        set({ teams_totals: [totals_1, totals_2], winner });
+        set({
+            teams_totals: [totals_1, totals_2],
+            winner: winner_number === null ? 'Equally' : winner_number === 0 ? totals_1.team : totals_2.team
+        });
     },
 
     // Server
     saveGame: (callback) => {
         const { event_id, group_id }: EventsSlice = get();
         const { gameDate, first_chaser_team, round_times }: ReportSlice = get();
-        const { teams_totals, winner }: ReportSlice = get();
-
+        const { teams_totals, winner, winner_number }: ReportSlice = get();
+       const n = winner_number ? winner_number : 0
+        
         const data: Omit<Game, 'id'> = {
             event_id,  group_id, timestamp: gameDate, first_team: first_chaser_team,
             time1: round_times[0], time2: round_times[1],
-            points: total_points, tags: total_rescues, rescues: total_tags, winner: winner || ''
+            points: teams_totals[n].total,
+            tags: teams_totals[n].caught,
+            rescues: teams_totals[n].freeded, winner: winner || 'Equally'
         }
 
-        alert(objectToJson(data))
+        //alert(objectToJson(data))
 
         add_student_game(data, (res => {
             if (res.id > 0) {
@@ -240,3 +254,21 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     }),
 });
 
+function getTeamTotals(team: Team, amount: number, total: Total, bonus: number): TeamTotals {
+    const totals: TeamTotals = {
+        team,
+        amount,
+        caught: total.caught, // tags
+        freeded: total.freeded, // rescues
+        survived: total.survived * 2,
+        bonus,
+        total: 0, info: { points: '', tags: '', bonus: '', rescues: ''}
+    }
+    totals.total = totals.caught + totals.freeded + totals.survived + totals.bonus
+    totals.info = { points: totals.freeded + '+' + totals.caught + '+' + totals.survived, 
+        tags: totals.caught + '',
+        bonus: totals.bonus > 0 ? String(totals.bonus) : '',
+        rescues: totals.freeded + '+' + totals.survived}
+
+    return totals
+}
