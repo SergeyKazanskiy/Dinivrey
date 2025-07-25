@@ -27,7 +27,7 @@ export interface GameMachine {
 
     // States
     gameStep: 'Settings' | 'Game' | 'Report' 
-    gameState: 'Waiting' | 'Playing' | 'Completion'
+    gameState: 'Waiting' | 'Playing' | 'Completion' | 'Correction'
 
 
     // Events
@@ -39,6 +39,7 @@ export interface GameMachine {
     onTimerFinish: () => void;
 
     onEvadersConfirm: () => void;
+    onFixPoints: () => void;
 
     // States
     step_on_settings: () => void;
@@ -46,12 +47,14 @@ export interface GameMachine {
         switch_on_playing: () => void;
         switch_on_waiting: () => void;
         switch_on_completion: () => void;
+        switch_on_correction: (pointsDifference: number) => void;
     step_on_report: () => void;
 
     // Actions
     hideBackAlert: () => void; // Cancel ??? if agree?
     hideGameReport: () => void;
     hideSuccessAlert: () => void;
+    hideCheckingAlert: () => void;
 
     showReport: () => void; //Temp
     hideReport: () => void;  //Temp
@@ -78,9 +81,14 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     gameState: 'Waiting',
 
     // Events
-    onTimerStart: () => {
-        //alert('onTimerStart')
-        const { gameStep }: GameMachine = get();
+    onTimerStart: () => { 
+        const { isPointsFixing, gameStep, switch_on_completion }: GameMachine & GamingSlice = get();
+
+        if (isPointsFixing) {
+            set({isPointsFixing: false});
+            switch_on_completion();
+            return;
+        }
 
         if (gameStep === 'Settings')  {
             const { step_on_game, switch_on_playing }: GameMachine = get();
@@ -88,7 +96,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
             switch_on_playing();
         } 
         if (gameStep === 'Game')  {
-            const { switch_on_playing }: GameMachine = get();
+            const { switch_on_playing, isPointsFixing }: GameMachine & GamingSlice = get();
             switch_on_playing();
         } 
     },
@@ -113,10 +121,21 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     },
 
     onEvadersConfirm: () => {
-        const {  currentRound, swapRoles, clearPoints }: ReportSlice & GamingSlice & GameMachine = get();
-        
-        if (1 === 1) {
-            
+        const { currentRound, players, survived_ids }: ReportSlice & GamingSlice & GameMachine = get();
+        const { swapRoles, clearPoints, switch_on_correction }: ReportSlice & GamingSlice & GameMachine = get();
+
+        const chasers = players.filter(el => el.role === Role.CHASER);
+        const evaders = players.filter(el => el.role === Role.EVADER);
+
+        const chasersPoints = chasers.reduce((acc, player) => acc += player.points, 0);
+        const evadersPoints = evaders.reduce((acc, player) => acc += player.points, 0);
+        const taggedAmount = evaders.length - survived_ids.length;
+
+        alert(chasersPoints + '_' + evadersPoints + '_' + taggedAmount)
+        const pointsDifference = Math.abs(chasersPoints - evadersPoints - taggedAmount)
+
+        if (pointsDifference > 0) {
+            switch_on_correction(pointsDifference);
         } else {
             if (currentRound.round < ROUNDS_AMOUNT) {
                 const { switch_on_waiting, setNextRound, createGamers }: ReportSlice & GamingSlice & GameMachine = get();
@@ -140,6 +159,12 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         clearPlayers();
         step_on_settings();
     },
+
+    onFixPoints: () =>  set({
+        isEvadersDialog: false,
+        isCheckingAlert: false,
+        isPointsFixing: true,
+    }),
 
     // States
     step_on_settings: () => {
@@ -187,6 +212,13 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         isEvadersDialog: true
     }),
 
+    switch_on_correction: (pointsDifference: number) => set({
+        gameState: 'Correction',
+        pointsDifference,
+        isCheckingAlert: true,
+        //isEvadersDialog: false
+    }),
+
     step_on_report: () => set({
         gameStep: 'Report', gameState: 'Waiting',
         isEvadersDialog: false,
@@ -208,6 +240,10 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     hideSuccessAlert: () => set({
         isSuccessAlert: false, isGameOverAlert: false, isNewGame: false
     }),
+    hideCheckingAlert: () => {
+       // alert('hideCheckingAlert')
+        set({ isCheckingAlert: false });
+    },
 
     showReport: () => set({ isGameReport: true }),
     hideReport: () => set({ isGameReport: false }),

@@ -15,9 +15,12 @@ export interface GamingSlice {
     selectedStudentIds: number[];
     playersToRemove: number[];
 
+    isPointsFixing: boolean;
+
     // Process
     currentRound: GameRound;
     player_id: number;
+    pointsDifference: number;
 
     // Visibility
     isHeader: boolean;
@@ -87,6 +90,8 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     currentTeam: Team.GREEN, 
     currentRole: Role.CHASER,
 
+    isPointsFixing: false,
+
     // Process
     player_id: 0,
     currentRound: {
@@ -96,6 +101,7 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
             {team: Team.GREEN, role: Role.CHASER},
         ]
     },
+    pointsDifference: 0,
 
     // Visibility
     isHeader: true,

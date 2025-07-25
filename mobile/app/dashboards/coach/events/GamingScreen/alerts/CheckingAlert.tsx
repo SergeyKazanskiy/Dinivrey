@@ -6,13 +6,15 @@ import { Team } from '../../model';
 
 interface Props {
   team: Team;
-  points: string;
+  points: number;
   onFixPoints: () => void;
   onGoBack: () => void;
 }
 
 export function CheckingAlert({ team, points, onFixPoints, onGoBack}: Props) {
-  const { isCheckingAlert } = useStore();
+  const { isCheckingAlert, currentTeam } = useStore();
+
+  const teamColor = currentTeam === Team.RED ? 'red' : 'green'
 
   return (
     <CustomAlert
@@ -22,8 +24,9 @@ export function CheckingAlert({ team, points, onFixPoints, onGoBack}: Props) {
       buttonText2='GO BACK'
       onClose={onGoBack}
     >
-        <Text style={styles.title}>There is a difference between pointsfix the points</Text>
-        <Text style={styles.team}>{team} -</Text>
+        <Text style={styles.title}>There is a difference between points</Text>
+        <Text style={styles.title}>fix the points</Text>
+        <Text style={[styles.team, {color: teamColor}]}>{team} -</Text>
         <Text style={styles.text}>{points} points difference</Text>
     </CustomAlert>
   )
@@ -31,22 +34,22 @@ export function CheckingAlert({ team, points, onFixPoints, onGoBack}: Props) {
 
 const styles = StyleSheet.create({
   title: {
+    alignSelf: 'center',
     color: '#ddd',
     fontSize: 16,
     fontWeight: '400',
     marginVertical: 4,
   },
   team: {
-    color: '#fff',
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: '500',
-    marginBottom: 12,
+    marginBottom: 4,
   },
   text: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    marginBottom: 20,
+    marginBottom: 12,
   },
 });
 

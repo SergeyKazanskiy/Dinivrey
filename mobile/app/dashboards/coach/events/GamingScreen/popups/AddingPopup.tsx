@@ -9,7 +9,7 @@ const COLUMN_HEIGHT = 5;
 
 export function AddingPopup() {
   const { isAddingPopup, availableStudents, players, selectedStudentIds } = useStore();
-  const { hideAddingPopup, selectStudent, addPlayers } = useStore();
+  const { hideAddingPopup, selectStudent, addPlayers, showAddNewDialog } = useStore();
 
   const columns: Student[][] = [];
   const playersIds = players.map(el => (el.id))
@@ -49,10 +49,10 @@ export function AddingPopup() {
       </ScrollView>
 
       <View style={styles.buttonRow}>
-        <Button title="ADD PLAYERS" buttonStyle={styles.greenBtn}
-          onPress={() => (addPlayers(), hideAddingPopup())}
+        <Button title="ADD NEW PLAYER" buttonStyle={styles.greyBtn} titleStyle={{color:'#222'}}
+          onPress={() => (hideAddingPopup(), showAddNewDialog())}
         />
-        <Button title="ADD PLAYERS" buttonStyle={styles.greenBtn}
+        <Button title="ADD PLAYERS" buttonStyle={styles.greenBtn} titleStyle={{color:'#eee'}}
           onPress={() => (addPlayers(), hideAddingPopup())}
         />
       </View>
