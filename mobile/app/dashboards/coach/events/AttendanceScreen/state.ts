@@ -250,11 +250,11 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     },
 
     loadGames: () => {
-        alert('loadGames')
+        //alert('loadGames')
         const { event_id, group_id}: EventsSlice = get();
 
         get_event_games(event_id, group_id, (games: Game[]) => {
-            alert(objectToJson(games))
+            //alert(objectToJson(games))
             set({ games });
         })
     },

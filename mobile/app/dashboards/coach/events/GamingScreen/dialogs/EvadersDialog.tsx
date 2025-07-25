@@ -35,6 +35,7 @@ export function EvadersDialog() {
     if (selectedIds.length > 0) {
       setServivied(selectedIds);
     } else {
+      setServivied([])
       setBonusPoints(BONUS_POINTS)
     }
 

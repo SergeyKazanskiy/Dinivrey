@@ -7,13 +7,15 @@ import { useRouter, Stack } from 'expo-router';
 import { PlayersView } from './views/PlayersView';
 import { TitleView } from './views/TitleView';
 import { AddingPopup } from './popups/AddingPopup';
+import { AddNewDialog } from './dialogs/AddNewDialog';
 import { RemovingPopup } from './popups/RemovingPopup';
 import { EvadersDialog } from './dialogs/EvadersDialog';
 import { TimeSetter } from './dialogs/TimeSetter';
-import { Student, GameRound, Role, Team } from '../model';
+import { Student, Team } from '../model';
 import { FooterView } from './views/FooterView';
 import { BackAlert } from './alerts/BackAlert';
 import { GameOverAlert } from './alerts/GameOverAlert';
+import { CheckingAlert } from './alerts/CheckingAlert';
 import { HeaderView } from './views/HeaderView';
 import { formatDateTime } from '../../../../shared/utils';
 import { GameReport } from './popups/GameReport';
@@ -21,7 +23,9 @@ import { GameReport } from './popups/GameReport';
 
 export default function GamingScreen() {
   const { isHeader, currentRound, attendances, gameStep, gameState, gameDate, isEvadersDialog } = useStore();
+  const { currentTeam, pointsDifference } = useStore();
   const { setAvailableStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings, clearPlayers} = useStore();
+  const { onFixPoints, switch_on_completion, hideCheckingAlert } = useStore();
 
   const router = useRouter();
   
@@ -47,10 +51,6 @@ export default function GamingScreen() {
     }
   }
 
-  // const leftRole = currentRound.teams[0].role;
-  // const index1 = leftRole === Role.CHASER ? 0 : 1;
-  // const index2 = index1 === 0 ? 1 : 0;
-
   function handleFinishGame() {
     step_on_settings();
     setTimeout(() => router.back(), 300);
@@ -73,12 +73,19 @@ export default function GamingScreen() {
         onNo={handleFinishGame}
         onYes={step_on_settings}
       />
+      <CheckingAlert
+        team={currentTeam}
+        points={pointsDifference}
+        onFixPoints={onFixPoints}
+        onGoBack={()=>(hideCheckingAlert(), switch_on_completion())}
+      />
 
       {/* Modals */}
       <AddingPopup/>
       <RemovingPopup/>
       <TimeSetter/>
       <GameReport/>
+      <AddNewDialog/>
       
       {/* Main */}
       {isEvadersDialog && <EvadersDialog/>} 

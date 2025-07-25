@@ -11,16 +11,16 @@ const format = (m: number) => `${String(m).padStart(2, '0')}:00`;
 
 export function FooterView() {
   const { isTimerRunning, currentRound, round_times, blockTimeSettings, timer_start_time} = useStore();
-  const { isTimeSetter } = useStore();
+  const { isPointsFixing } = useStore();
   const { showTimeSetter, onTimerStart, onTimerStop, onTimerFinish, } = useStore();
 
   const time = round_times[currentRound.round - 1] / 60;
-  //alert(objectToJson(round_times))
+
   return (
     <View style={styles.container}>
       <View style={styles.timeSetting}>
         <Button
-          title={isTimerRunning ? 'STOP' : "START" }
+          title={isPointsFixing ? 'NEXT' : isTimerRunning ? 'STOP' : "START" }
           buttonStyle={styles.setButton} 
           titleStyle={[styles.setText]}
           onPress={() => isTimerRunning ? onTimerStop() : onTimerStart()}
