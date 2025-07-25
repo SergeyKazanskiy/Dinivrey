@@ -52,6 +52,9 @@ export function AddingPopup() {
         <Button title="ADD PLAYERS" buttonStyle={styles.greenBtn}
           onPress={() => (addPlayers(), hideAddingPopup())}
         />
+        <Button title="ADD PLAYERS" buttonStyle={styles.greenBtn}
+          onPress={() => (addPlayers(), hideAddingPopup())}
+        />
       </View>
     </PopupWrapper>
   );
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-around',
     paddingHorizontal: 4,
     margin: 12,
   },

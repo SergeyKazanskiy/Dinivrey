@@ -1,8 +1,8 @@
 import { Alert } from 'react-native';
-import { Student, Attendance, Test, AttendanceDataForReport } from '../model';
+import { Student, Attendance, Test, AttendanceDataForReport, Game } from '../model';
 import { get_attendances, get_students_names, add_student_test, delete_student_test } from '../http';
 import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
-import { add_all_present_students_new_tests, send_attendance_report, get_is_report } from '../http';
+import { add_all_present_students_new_tests, send_attendance_report, get_is_report, get_event_games } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
 import { TestingSlice } from '../TestingScreen/state';
 import { isPast, formatDateTime, objectToJson } from '../../../../shared/utils';
@@ -26,6 +26,9 @@ export interface AttendanceSlice {
     isReportSent: boolean;
     wasReportSent: boolean;
 
+    games: Game[];
+    game_id: number;
+
     loadAttendances:() => void;
     loadStudentsNames: (group_id: number) => void;
 
@@ -40,6 +43,9 @@ export interface AttendanceSlice {
     closeSuccessAlert: () => void;
 
     loadWasReportSent: () => void;
+
+    loadGames: () => void; // for reports
+    selectGameReport: (game_id: number) => void;
 }
 
 export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
@@ -64,6 +70,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     isSendingReport: false,
     isReportSent: false,
     wasReportSent: false,
+
+    games: [],
+    game_id: 0,
 
 
     loadAttendances: () => {
@@ -238,6 +247,18 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                 set({ wasReportSent: res.is_report});
             }
         });
-    }
+    },
+
+    loadGames: () => {
+        alert('loadGames')
+        const { event_id, group_id}: EventsSlice = get();
+
+        get_event_games(event_id, group_id, (games: Game[]) => {
+            alert(objectToJson(games))
+            set({ games });
+        })
+    },
+
+    selectGameReport: (game_id: number) => set({game_id})
 });
 

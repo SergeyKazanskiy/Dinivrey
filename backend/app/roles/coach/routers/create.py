@@ -17,9 +17,13 @@ router = APIRouter()
 
 
 # Game
-@router.post("/camps/groups/game", response_model=schemas.ResponseId, tags=["Coach"]) #camp_id ???
-async def create_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
+@router.post("/camps/events/games", response_model=schemas.ResponseId, tags=["Coach"])
+async def add_event_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Game, data, session)}
+
+@router.post("/camps/events/games/gamers", response_model=schemas.ResponseId, tags=["Coach"])
+async def add_event_game_gamers(data: schemas.GamerCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Gamer, data, session)}
 
 # Attendances
 @router.post("/camps/events/attendances", response_model=schemas.ResponseOk, tags=["Coach"])

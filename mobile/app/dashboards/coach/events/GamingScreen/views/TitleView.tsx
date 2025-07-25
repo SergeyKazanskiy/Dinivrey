@@ -19,6 +19,7 @@ export function TitleView({ team, role }: Props) {
     <View style={team === Team.GREEN ? styles.firstTeam : styles.secondTeam}> 
       <View style={styles.container}>
         <Text style={styles.teamName}>{teamName}</Text>
+        
         <View style={styles.wrapperAdd}>
           <Icon name="person-add" type="ionicon" color="#333" size={18}
             disabled={blockPlayersAdding}

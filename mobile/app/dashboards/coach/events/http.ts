@@ -94,28 +94,28 @@ export function update_student_test(id: number, data: TestUpdate, callback: (res
 
 
 // Gaming 
-export function get_games(event_id: number, group_id: number, callback: (games: Game[]) => void) {
+export function get_event_games(event_id: number, group_id: number, callback: (games: Game[]) => void) {
     return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/games`), callback, 'Getting event games');
+};
+
+export function get_event_game(game_id: number, callback: (game: Game) => void) {
+    return httpWrapper(() => api.get(`camps/events/games/${game_id}`), callback, 'Getting event games');
 };
 
 export function get_game_players(game_id: number, callback: (gamers: Gamer[]) => void) {
     return httpWrapper(() => api.get(`camps/events/games/${game_id}/gamers`), callback, 'Getting game players');
 };
 
-export function add_student_game(data: Omit<Game, 'id'>, callback: (res: {id: number}) => void) {
-    return httpWrapper(() => api.post(`students/games`, data), callback);
+export function add_event_game(data: Omit<Game, 'id'>, callback: (res: {id: number}) => void) {
+    return httpWrapper(() => api.post(`camps/events/games`, data), callback);
 };
 
-export function add_student_game_gamers(data: Gamer[], callback: (res: {isOk: boolean}) => void) {
-    return httpWrapper(() => api.post(`students/games/gamers`, data), callback);
+export function add_event_game_gamers(data: Gamer[], callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.post(`camps/events/games/gamers`, data), callback);
 };
 
-// export function update_student_game(id: number, data: Partial<Game>, callback: (res: {isOk: boolean}) => void) {
-//     return httpWrapper(() => api.put(`students/games/${id}`, data), callback);
-// };
-  
-export function delete_student_game(id: number, callback: (res: {isOk: boolean}) => void) {
-    return httpWrapper(() => api.delete(`students/games/${id}`), callback);
+export function delete_event_game(id: number, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.delete(`camps/events/games/${id}`), callback);
 };
 
 // Event drills

@@ -1,5 +1,24 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { Button } from '@rneui/themed';
+import { PopoverButton } from '../../../../../shared/components/PopoverButton';
+import { SelectWrapper } from '../../../../../shared/components/SelectWrapper';
+import { GamesMenu } from './GamesMenu';
+import { Game } from '../../model';
+
+
+type SelectButtonProps = {
+  label: string;
+  onPress: () => void;
+};
+
+export const SelectButton: React.FC<SelectButtonProps> = ({ label, onPress }) => (
+  <Button title={label}
+    type='outline' 
+    buttonStyle={styles.button}
+    titleStyle={styles.title}
+    onPress={onPress}
+  />
+);
 
 
 interface Props {
@@ -7,29 +26,36 @@ interface Props {
   onAdd: () => void;
   onExam: () => void;
   onGame: () => void;
+  games: Game[];
+  onGameReport: (id_game: number) => void;
 }
 
-export function ButtonsView({ event_type, onAdd, onExam, onGame }: Props) {
+export function ButtonsView({ event_type, onAdd, onExam, onGame, games, onGameReport }: Props) {
   return (
     <View style= {styles.container}>
-      <Button title='Add drills' type='outline' 
-        buttonStyle={styles.button} titleStyle={styles.title}
-        onPress={onAdd}
-      />
+      <SelectButton label='Add drills' onPress={onAdd}/>
 
       <View style= {styles.section}>
         <Text style={styles.text}>Go to </Text>
 
-        <Button title='Game' type='outline' 
-          buttonStyle={styles.button} titleStyle={styles.title}
-          onPress={onGame}
-        />
-        {event_type === 'Exam' &&
-          <Button title='Exam' type='outline' 
-            buttonStyle={styles.button} titleStyle={styles.title}
-            onPress={onExam}
-          />
+        { games.length === 0 && <SelectButton label='Game' onPress={onGame}/> }
+
+        { games.length > 0 &&
+          <SelectWrapper
+            label={'Game(' + games.length +')'}
+            buttonStyle={styles.button} labelStyle={styles.title}
+          >
+             {(close, position) => (
+              <>
+                {position && 
+                  <GamesMenu games={games}
+                    onNew={onGame} onSelect={(id)=>onGameReport(id)} close={close}/>
+                }
+              </>
+            )}
+          </SelectWrapper>
         }
+        {event_type === 'Exam' && <SelectButton label='Exam' onPress={onExam}/>}
       </View>
     </View>
   );
@@ -37,6 +63,7 @@ export function ButtonsView({ event_type, onAdd, onExam, onGame }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    //flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 24,
@@ -63,3 +90,18 @@ const styles = StyleSheet.create({
     color: 'gold'
   },
 });
+
+
+
+// <PopoverButton title={'Game(' + games.length +')'} h={120} w={330}
+//     buttonStyle={[styles.button, {backgroundColor: '#152B52'}]}
+//     textStyle={styles.title}
+//     onClick={() => {}}>
+
+//     <Button title='New game' type='outline' 
+//       buttonStyle={[styles.button, {backgroundColor: '#152B52'}]}
+//       titleStyle={styles.title}
+//       onPress={onGame}
+//     />  
+//     <GamesMenu games={games} onClick={(id) => onGameReport(id)}/>
+// </PopoverButton>

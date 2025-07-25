@@ -13,6 +13,7 @@ export interface GameMachine {
     isGameOverAlert: boolean;
     isSuccessAlert: boolean;
     isGameReport: boolean;
+    isCheckingAlert: boolean;
 
     // Bloking
     blockTimeSettings: boolean;
@@ -63,6 +64,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     isGameOverAlert: false, //isGameOverAlert
     isSuccessAlert: false,
     isGameReport: false,
+    isCheckingAlert: false,
 
     blockTimeSettings: false,
     blockPlayersAdding: false,
@@ -113,19 +115,22 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     onEvadersConfirm: () => {
         const {  currentRound, swapRoles, clearPoints }: ReportSlice & GamingSlice & GameMachine = get();
         
-        if (currentRound.round < ROUNDS_AMOUNT) {
-            const { switch_on_waiting, setNextRound, createGamers }: ReportSlice & GamingSlice & GameMachine = get();
-            createGamers();
-            setNextRound();
-            switch_on_waiting();
+        if (1 === 1) {
+            
         } else {
-            const { step_on_report, updateGamers }: GameMachine & ReportSlice = get();
-            updateGamers();
-            step_on_report();
+            if (currentRound.round < ROUNDS_AMOUNT) {
+                const { switch_on_waiting, setNextRound, createGamers }: ReportSlice & GamingSlice & GameMachine = get();
+                createGamers();
+                setNextRound();
+                switch_on_waiting();
+            } else {
+                const { step_on_report, updateGamers }: GameMachine & ReportSlice = get();
+                updateGamers();
+                step_on_report();
+            }
+            clearPoints();
+            swapRoles();
         }
-
-        clearPoints();
-        swapRoles();
     },
 
     onErrorExit: () => {
@@ -185,21 +190,19 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     step_on_report: () => set({
         gameStep: 'Report', gameState: 'Waiting',
         isEvadersDialog: false,
-        isGameOverAlert: true,
+        isGameReport: true,
     }),
 
     // Actions
     hideBackAlert: () => set({ isBackAlert: false }),
 
     hideGameReport: () => {
-        const { isNewGame, saveGame }: GameMachine & ReportSlice = get();
-        if (isNewGame) {
+        set({ isGameReport: false })
+
+        const { saveGame }: GameMachine & ReportSlice = get();
             saveGame((isOk: boolean)=>{
-                if (isOk)  set({ isSuccessAlert: true });
+                if (isOk) set({ isGameOverAlert: true });
             });
-        } else {
-            set({ isGameOverAlert: false });
-        }
     },
 
     hideSuccessAlert: () => set({
