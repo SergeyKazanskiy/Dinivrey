@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 14,
     color: '#222',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   wrapperRound: {
     width: 90,

@@ -11,9 +11,9 @@ from sqlalchemy.future import select
 router = APIRouter()
 
 
-@router.delete("/student/achievements/{id}", response_model=schemas.ResponseOk, tags=["Coach"])#???
-async def remove_achievement(id: int, session: Session = Depends(get_session)):
-    return {"isOk": await CRUD.delete(models.Achievement, id, session)}
+# @router.delete("/student/achievements/{id}", response_model=schemas.ResponseOk, tags=["Coach"])#???
+# async def remove_achievement(id: int, session: Session = Depends(get_session)):
+#     return {"isOk": await CRUD.delete(models.Achievement, id, session)}
 
 
 # Attendance
@@ -65,3 +65,8 @@ async def remove_student_achievement(id: int, session: Session = Depends(get_ses
 @router.delete("/camps/events/drills/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
 async def detach_event_drill(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.EventDrill, id, session)}
+
+# Game
+@router.delete("/camps/events/games/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+async def delete_event_game(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.Game, id, session)}

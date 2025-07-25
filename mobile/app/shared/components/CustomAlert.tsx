@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     ...(Platform.OS === 'web' ? { width: 360, alignSelf: 'flex-start' } : {}),
   },
   alertBox: {
-    marginHorizontal: 16,
+    marginHorizontal: 8,
     marginTop: 50,
     padding: 20,
     backgroundColor: '#152B52',

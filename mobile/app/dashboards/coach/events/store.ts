@@ -10,9 +10,10 @@ import { DrillSlice, createDrillSlice } from "./DrillScreen/state";
 import { GamingSlice, createGamingSlice } from "./GamingScreen/state";
 import { GameMachine, createGameMachine } from "./GamingScreen/machine";
 import { ReportSlice, createReportSlice } from "./GamingScreen/data";
+import { GameReportSlice, createGameReportSlice } from "./GameReport/state";
 
 
-export type Store = LoadingSlice & EventsSlice & AttendanceSlice & TestingSlice &
+export type Store = LoadingSlice & EventsSlice & AttendanceSlice & TestingSlice & GameReportSlice &
   CompetitionsSlice & HistorySlice & DrillsSlice & DrillSlice & GamingSlice & GameMachine & ReportSlice;
 
 export const useStore = create<Store>((set, get) => ({
@@ -27,6 +28,7 @@ export const useStore = create<Store>((set, get) => ({
   ...createGamingSlice(set, get),
   ...createGameMachine(set, get),
   ...createReportSlice(set, get),
+  ...createGameReportSlice(set, get),
 }));
 
 export const configureStore = () => {

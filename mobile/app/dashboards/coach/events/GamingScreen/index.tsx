@@ -47,9 +47,14 @@ export default function GamingScreen() {
     }
   }
 
-  const leftRole = currentRound.teams[0].role;
-  const index1 = leftRole === Role.CHASER ? 0 : 1;
-  const index2 = index1 === 0 ? 1 : 0;
+  // const leftRole = currentRound.teams[0].role;
+  // const index1 = leftRole === Role.CHASER ? 0 : 1;
+  // const index2 = index1 === 0 ? 1 : 0;
+
+  function handleFinishGame() {
+    step_on_settings();
+    setTimeout(() => router.back(), 300);
+  }
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
@@ -65,7 +70,7 @@ export default function GamingScreen() {
       />
       <GameOverAlert
         team={Team.GREEN}
-        onNo={() => (step_on_settings(), setTimeout(() => router.back(), 300))}
+        onNo={handleFinishGame}
         onYes={step_on_settings}
       />
 
@@ -80,18 +85,18 @@ export default function GamingScreen() {
 
       {!isEvadersDialog && <View style={styles.row}>
         <View style={styles.section}>
-          {isHeader && <TitleView team={currentRound.teams[index1].team}
-                                  role={currentRound.teams[index1].role} />}
+          {isHeader && <TitleView team={currentRound.teams[0].team}
+                                  role={currentRound.teams[0].role} />}
 
-          <PlayersView team={currentRound.teams[index1].team}
-                        role={currentRound.teams[index1].role} />
+          <PlayersView team={currentRound.teams[0].team}
+                        role={currentRound.teams[0].role} />
         </View>
         <View style={styles.section}>
-           {isHeader && <TitleView team={currentRound.teams[index2].team}
-                                    role={currentRound.teams[index2].role} />}
+           {isHeader && <TitleView team={currentRound.teams[1].team}
+                                    role={currentRound.teams[1].role} />}
 
-          <PlayersView team={currentRound.teams[index2].team}
-                        role={currentRound.teams[index2].role} />
+          <PlayersView team={currentRound.teams[1].team}
+                        role={currentRound.teams[1].role} />
         </View>
       </View> }
 

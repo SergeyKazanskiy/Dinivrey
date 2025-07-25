@@ -25,6 +25,7 @@ export interface GamingSlice {
     isRemovingPopup: boolean;
     isRemoveAlert: boolean;
     isTimeSetter: boolean;
+    isAddNewDialog: boolean;
 
     // Setup
     setCurrentTeam: (currentTeam: Team) => void;
@@ -53,9 +54,13 @@ export interface GamingSlice {
     showTimeSetter: () => void;
     hideTimeSetter: () => void;
 
+    showAddNewDialog: () => void;
+    hideAddNewDialog: () => void;
+
     //Players
     selectStudent: (id: number) => void;
     addPlayers: () => void;
+    addNewPlayer: (name: string) => void;
 
     selectPlayer: (player_id: number) => void;
     removePlayers: () => void;
@@ -87,8 +92,8 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     currentRound: {
         round: 1,
         teams: [
-            {team: Team.GREEN, role: Role.CHASER},
             {team: Team.RED, role: Role.EVADER},
+            {team: Team.GREEN, role: Role.CHASER},
         ]
     },
 
@@ -98,6 +103,7 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     isRemovingPopup: false,
     isRemoveAlert: false,
     isTimeSetter: false,
+    isAddNewDialog: false,
 
     // Setup
     setAvailableStudents: (availableStudents: Student[]) => set({ availableStudents }),
@@ -151,6 +157,9 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     showTimeSetter: () => set({ isTimeSetter: true }),
     hideTimeSetter: () => set({ isTimeSetter: false }),
 
+    showAddNewDialog: () => set({ isAddNewDialog: true }),
+    hideAddNewDialog: () => set({ isAddNewDialog: false }),
+
     // Players
     selectStudent: (id) => set((state: GamingSlice) => ({
 
@@ -172,6 +181,20 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
             role: currentRole
         }));
         set({ players: [...players, ...newPlayers], selectedStudentIds: [], });
+    },
+
+    addNewPlayer: (name: string) => {
+        const { players, currentTeam, currentRole }: GamingSlice = get();
+
+        const newPlayer: Player = {
+            id: getRandomFraction(), 
+            name: name,
+            points: 0,
+            age: 8,
+            team: currentTeam,
+            role: currentRole
+        };
+        set({ players: [...players, newPlayer], });
     },
 
     selectPlayer: (player_id: number) => set({player_id}),
@@ -203,3 +226,7 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     clearPlayers: () => set({players: []}),
 });
 
+function getRandomFraction(): number {
+  const randomInt = Math.floor(Math.random() * 1000) + 1;
+  return randomInt / 1000;
+}

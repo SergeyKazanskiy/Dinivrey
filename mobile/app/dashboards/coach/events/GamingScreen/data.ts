@@ -1,6 +1,6 @@
 import { Game, Gamer, Role, Team, Total, TeamTotals } from '../model';
 import { objectToJson } from '../../../../shared/utils';
-import { get_games, get_game_players, add_student_game, add_student_game_gamers, delete_student_game } from '../http';
+import { add_event_game, add_event_game_gamers, delete_event_game } from '../http';
 import { EventsSlice } from '../EventsScreen/state';
 import { getTodayTimestamp } from '../../../../shared/utils';
 import { GamingSlice } from './state';
@@ -9,7 +9,6 @@ import { BONUS_POINTS } from './constants';
 
 export interface ReportSlice {
     // Data
-    //games: Game[];
     game: Game;
     gamers: Gamer[];
 
@@ -29,10 +28,6 @@ export interface ReportSlice {
     winner_number: number | null;
     winner: Team | null; 
 
-    // Loads
-    //loadGames: (event_id: number, group_id: number) => void; // not there!!! 
-    loadGamers: (game_id: number) => void;
-
     // Setters
     setGameDate: () => void;
     setFirstShaserTeam: (first_chaser_team: Team) => void;
@@ -51,13 +46,11 @@ export interface ReportSlice {
 
     // Server with
     saveGame: (callback: (isOk: boolean) => void) => void ; // after closing the report (Report step)
-    deleteGame: (game_id: number) => void;
     clearGame: () => void;
 }
 
 export const createReportSlice = (set: any, get: any): ReportSlice => ({
     // Data
-    //games: [],
     game: {
         id: 0,
         event_id: 0,
@@ -97,13 +90,6 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
 
     winner_number: null,
     winner: null,
-   
-
-    loadGamers: (game_id: number) => {
-        get_game_players(game_id, (gamers: Gamer[]) => {
-            set({gamers});
-        })
-    },
 
     // Setters
     setGameDate: () => set({ gameDate: getTodayTimestamp()}),
@@ -211,7 +197,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             winner: winner_number === null ? 'Equally' : winner_number === 0 ? totals_1.team : totals_2.team
         });
 
-        alert(objectToJson([[totals_1, totals_2]]))
+        //alert(objectToJson([[totals_1, totals_2]]))
     },
 
     // Server
@@ -219,7 +205,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         const { event_id, group_id }: EventsSlice = get();
         const { gameDate, first_chaser_team, round_times }: ReportSlice = get();
         const { teams_totals, winner, winner_number }: ReportSlice = get();
-       const n = winner_number ? winner_number : 0
+        const n = winner_number ? winner_number : 0
         
         const data: Omit<Game, 'id'> = {
             event_id,  group_id, timestamp: gameDate, first_team: first_chaser_team,
@@ -228,37 +214,29 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             tags: teams_totals[n].caught,
             rescues: teams_totals[n].freeded, winner: winner || 'Equally'
         }
+        //alert(objectToJson(data)) //!!!
 
-        //alert(objectToJson(data))
-
-        add_student_game(data, (res => {
+        add_event_game(data, (res => {
             if (res.id > 0) {
                 const { gamers }: ReportSlice = get();
-                const complitedGamers: Gamer[] = gamers.map(el => ({...el, id: res.id}))
+                const complitedGamers: Gamer[] = gamers.map(el => ({...el, game_id: res.id, student_id: el.student_id | 0}))
 
-                add_student_game_gamers(complitedGamers, (res => {
+                //alert(objectToJson(complitedGamers)) //!!!
+                add_event_game_gamers(complitedGamers, (res => {
                     callback(res.isOk);
                 }));
             }
         }));
     },
 
-    deleteGame: (game_id: number) => {
-        delete_student_game(game_id, (res) => {
-            if (res.isOk) {
-                const {clearGame}: ReportSlice = get();
-                clearGame();
-            }
-        })
-    },
-
     clearGame: () => set({
         gamers: [],
         first_team: "Green",
-        round_time: [600, 600],
-        total_points: 0,
-        total_tags: 0,
-        total_rescues: 0,
+        survived_ids: [],
+        bonus_points: [],
+        round_times: [600, 600],
+        teams_totals: [],
+        winner_number: null,
         winner: "Green",
     }),
 });

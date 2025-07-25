@@ -1,32 +1,22 @@
-import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useStore } from '../../store';
-import { RoundReport } from '../views/RoundReport';
-import { FooterReport } from '../views/FooterReport';
+import { RoundReport } from '../../GamingScreen/views/RoundReport';
+import { FooterReport } from '../../GamingScreen/views/FooterReport';
 import { Team, Role } from '../../model';
-import { PopupWrapper } from '../../../../../shared/components/PopupWrapper';
+
 
 
 const formatSec = (s: number) =>
   `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
-const formatDate = (timestamp: number): string => {
-  const date = new Date(timestamp);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы с 0
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
-
-export const GameReport = () => {
-  const { gameDate, teams_totals, currentRole, round_times, isGameReport } = useStore();
+export const GameView = () => {
+  const { teams_totals, currentRole, round_times } = useStore();
   const { hideGameReport, hideReport } = useStore();
 
-  const titleHeader = 'Dinivrey - ' + formatDate(gameDate)
   const role_2 = currentRole
   const role_1 = role_2 === Role.CHASER ? Role.EVADER : Role.CHASER
 
   return (
-    <PopupWrapper visible={isGameReport} title={titleHeader} onClose={hideGameReport}>
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
 
@@ -46,7 +36,6 @@ export const GameReport = () => {
           <FooterReport/>
         </ScrollView>
       </View>
-    </PopupWrapper>
   );
 };
 
@@ -54,8 +43,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
    // backgroundColor: '#1E2A38',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+   // paddingHorizontal: 4,
+    paddingBottom: 8,
   },
   section: {
     flexDirection: 'row',

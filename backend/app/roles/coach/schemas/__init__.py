@@ -3,7 +3,6 @@ from .group import GroupResponse, StudentShort, GroupScheduleResponse
 
 from .student import StudentResponse, ParentResponse, StudentName, CommentResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate, TestUpdate2
-from .student import GameResponse, GameCreate
 from .student import AchievementResponse, AchieveUpdate, AchieveResponse, AchievementCreate
 from .student import SummaryTests, SummaryAchievements, SummaryGames
 
@@ -14,3 +13,6 @@ from .drill import EventDrillCreate, EventDrillUpdate, ShortDrillResponse, Drill
 
 from .settings import MetricBase, MetricCreate, MetricResponse, MetricUpdate
 from .coach import CoachResponse
+
+from .game import GameCreate, GameResponse
+from .game import GamerCreate, GamerResponse

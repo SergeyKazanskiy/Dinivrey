@@ -99,22 +99,7 @@ class TestUpdate2(BaseModel):
     exam: str
     value: float
     camp_id: int
-
-# Game
-class GameBase(BaseModel):
-    timestamp: int
-    caughted: float
-    freeded: float
-    #description: str
-
-class GameCreate(GameBase):
-    pass
-
-class GameResponse(GameBase):
-    id: int
-
-    class Config:
-        from_attributes = True
+    
 
 # Achievement
 class AchievementBase(BaseModel):

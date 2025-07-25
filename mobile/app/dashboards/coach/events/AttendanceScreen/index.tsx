@@ -19,9 +19,10 @@ import DrillsScreen from '../DrillsScreen';
 
 export default function AttendanceScreen() {
   const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type } = useStore();
-  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent, wasReportSent} = useStore();
+  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent, wasReportSent, games} = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, loadWasReportSent } = useStore();
-  const { openDrillsModal, loadEventDrills, sendAttedanceReport, closeSuccessAlert } = useStore();
+  const { openDrillsModal, loadEventDrills, sendAttedanceReport, closeSuccessAlert, selectGameReport } = useStore();
+  const { loadGames } = useStore();
 
   const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
   const [isDeleteAlert, setIsDeleteAlert] = useState<boolean>(false);
@@ -35,6 +36,7 @@ export default function AttendanceScreen() {
       loadEventDrills();
       loadAttendances();
       loadWasReportSent();
+      loadGames();
     }, [])
   );
 
@@ -104,7 +106,11 @@ export default function AttendanceScreen() {
       <ButtonsView event_type={event_type}
         onAdd={openDrillsModal}
         onExam={()=>router.push(`/dashboards/coach/events/TestingScreen`)}
-        onGame={()=>router.push(`/dashboards/coach/events/GamingScreen`)}/>
+        onGame={()=>router.push(`/dashboards/coach/events/GamingScreen`)}
+
+        games={games}
+        onGameReport={(id)=>(selectGameReport(id), router.push(`/dashboards/coach/events/GameReport`))}
+      />
 
       <ScrollView>
         <DrillsView/>

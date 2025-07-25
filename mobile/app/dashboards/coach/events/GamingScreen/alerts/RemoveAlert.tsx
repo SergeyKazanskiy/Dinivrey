@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { StyleSheet, TextInput, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { useStore } from '../../store';
 import { CustomAlert } from './CustomAlert';
 
@@ -27,11 +26,6 @@ export function RemoveAlert({ name, onCancel, onRemove}: Props) {
 }
 
 const styles = StyleSheet.create({
-  // text: {
-  //   fontSize: 18,
-  //   color: '#ccc',
-  //   marginHorizontal: 4,
-  // },
   title: {
     color: '#ddd',
     fontSize: 16,
