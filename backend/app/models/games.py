@@ -30,6 +30,7 @@ class Gamer(Base):
     id = Column(Integer, primary_key=True, index=True)
     game_id = Column(Integer, ForeignKey('games.id', ondelete='CASCADE'))
     student_id = Column(Integer, ForeignKey('students.id', ondelete='CASCADE'))
+    name = Column(String, nullable=False)
 
     team = Column(String, nullable=False)
     caught = Column(Integer, nullable=False)

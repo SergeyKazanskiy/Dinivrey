@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import asc, func
+from sqlalchemy import asc, func, insert
 from database import get_session
 from crud import CRUD
 from roles.coach import schemas 
@@ -21,9 +21,14 @@ router = APIRouter()
 async def add_event_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Game, data, session)}
 
-@router.post("/camps/events/games/gamers", response_model=schemas.ResponseId, tags=["Coach"])
-async def add_event_game_gamers(data: schemas.GamerCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Gamer, data, session)}
+@router.post("/camps/events/games/gamers", response_model=schemas.ResponseOk, tags=["Coach"])
+async def add_event_game_gamers(data: List[schemas.GamerCreate], session: AsyncSession = Depends(get_session)):
+
+    stmt = insert(models.Gamer).values([item.model_dump() for item in data])
+    await session.execute(stmt)
+    await session.commit()
+
+    return {"isOk": True}
 
 # Attendances
 @router.post("/camps/events/attendances", response_model=schemas.ResponseOk, tags=["Coach"])

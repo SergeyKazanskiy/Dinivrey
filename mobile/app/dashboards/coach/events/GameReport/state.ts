@@ -1,6 +1,7 @@
 import { Game, Gamer  } from "../model";
 import { get_event_game, get_game_players, delete_event_game } from '../http';
-
+import { objectToJson } from "@/app/shared/utils";
+import { ReportSlice } from '../GamingScreen/data';
 
 export interface GameReportSlice {
     isGameDeleteAlert: boolean;
@@ -23,11 +24,13 @@ export const createGameReportSlice = (set: any, get: any): GameReportSlice => ({
 
     loadGame: (game_id: number) => {
         get_event_game(game_id, (game: Game) => {
-            //alert(objectToJson(games))
+
             set({ game });
 
             get_game_players(game_id, (gamers => {
                 set({ gamers });
+                const { calculateWinner }: ReportSlice = get();
+                calculateWinner();
             }))
         })
     },

@@ -1,14 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useStore } from '../../store';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Team } from '../../model';
 
 
-function formatWinnerTitle(team: string, winner: string | null): string {
+function formatWinnerTitle(team: Team, winner: string | null): string {
   if (winner) {
     const prefix = team === winner ? 'Winner ' : '';
     const corona = team === winner ? '🏆' : '';
 
-    return prefix + team + 'Team ' + corona
+    return prefix + team + ' Team '// + corona
   } else {
     return team + 'Team 🤝'
   }
@@ -24,17 +25,17 @@ export function FooterReport() {
       style={styles.container}
     >
       <View style={styles.summary}>
-        <Text style={styles.winner}>{formatWinnerTitle(teams_totals[0].team, winner)}</Text>
-        <Text style={styles.score}>Points: {teams_totals[0].info.points}</Text>
-        <Text style={styles.score}>Tags: {teams_totals[0].info.tags}</Text>
-        <Text style={styles.score}>Rescues: {teams_totals[0].info.rescues}</Text>
-      </View>
-
-      <View style={styles.summary}>
         <Text style={styles.winner}>{formatWinnerTitle(teams_totals[1].team, winner)}</Text>
         <Text style={styles.score}>Points: {teams_totals[1].info.points}</Text>
         <Text style={styles.score}>Tags: {teams_totals[1].info.tags}</Text>
         <Text style={styles.score}>Rescues: {teams_totals[1].info.rescues}</Text>
+      </View>
+
+      <View style={styles.summary}>
+        <Text style={styles.winner}>{formatWinnerTitle(teams_totals[0].team, winner)}</Text>
+        <Text style={styles.score}>Points: {teams_totals[0].info.points}</Text>
+        <Text style={styles.score}>Tags: {teams_totals[0].info.tags}</Text>
+        <Text style={styles.score}>Rescues: {teams_totals[0].info.rescues}</Text>
       </View>
     </LinearGradient>
   );
@@ -45,12 +46,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    borderRadius: 20,
-    marginTop: 20
+    borderRadius: 16,
+    marginTop: 16
   },
   summary: {
     width: '50%',
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 8,
   },
   winner: {
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
     marginBottom: 4
   },
   score: {
-    color: '#ddd',
-    fontSize: 15,
+    color: '#eee',
+    fontSize: 14,
     marginVertical: 2,
   },
 });

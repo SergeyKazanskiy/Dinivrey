@@ -27,6 +27,7 @@ class GameResponse(GameBase):
 class GamerBase(BaseModel):
     game_id: int
     student_id: int
+    name: str
     team: str
     caught: int
     freeded: int

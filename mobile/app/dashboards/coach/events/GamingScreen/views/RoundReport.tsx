@@ -44,10 +44,16 @@ export function RoundReport({ round, time, role_1, total_1, role_2, total_2 }: P
           />
         </View>
         
-        <View style={[styles.section, {paddingBottom: 4}]}>
-          <Text style={styles.capsule}>Total points: {total_1}</Text>
-          <Text style={styles.capsule}>{time}</Text>
-          <Text style={styles.capsule}>Total points: {total_2}</Text>
+        <View style={[styles.section, {padding: 4, marginBottom: 4}]}>
+          <View style={[styles.section, styles.capsule]}> 
+            <Text style={styles.capsule_label}>Total: </Text>
+            <Text style={styles.capsule_text}>{total_1}</Text>
+          </View>
+          
+          <View style={[styles.section, styles.capsule]}> 
+            <Text style={styles.capsule_label}>Total: </Text>
+            <Text style={styles.capsule_text}>{total_2}</Text>
+          </View>
         </View>
     </View>
   );
@@ -71,15 +77,24 @@ const styles = StyleSheet.create({
   capsule: {
     borderRadius: 16,
     backgroundColor: '#ddd',
-    padding: 8,
-    fontSize: 14,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+  },
+  capsule_label: {
+    fontSize: 12,
+    color: '#222',
+    fontWeight: '400',
+    paddingTop: 3
+  },
+  capsule_text: {
+    fontSize: 16,
     color: '#222',
     fontWeight: '500',
   },
   wrapperRound: {
     width: 90,
     alignSelf: 'center',
-    top: -12,
+    top: -8,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 4,

@@ -14,7 +14,7 @@ export type Props = {
 export const GamesMenu: React.FC<Props> = ({ games, onNew, onSelect, close}) => {
   return (
     <View style={styles.container}>
-      <Button title='Add new'
+      <Button title='New game'
         type='outline' 
         buttonStyle={styles.button}
         titleStyle={styles.label}

@@ -17,7 +17,7 @@ import { BackAlert } from './alerts/BackAlert';
 import { GameOverAlert } from './alerts/GameOverAlert';
 import { CheckingAlert } from './alerts/CheckingAlert';
 import { HeaderView } from './views/HeaderView';
-import { formatDateTime } from '../../../../shared/utils';
+import { formatDateTime, objectToJson } from '../../../../shared/utils';
 import { GameReport } from './popups/GameReport';
 
 
@@ -28,7 +28,8 @@ export default function GamingScreen() {
   const { onFixPoints, switch_on_completion, hideCheckingAlert } = useStore();
 
   const router = useRouter();
-  
+
+  //alert(objectToJson(currentRound))
 
   useEffect(() => {
     const availables = attendances.filter(el => el.present === true);

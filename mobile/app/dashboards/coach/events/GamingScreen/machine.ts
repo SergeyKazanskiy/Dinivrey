@@ -176,7 +176,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
             isNewGame: true, isBackAlert: false, isTimerRunning: false, isHeader: true,
             isEvadersDialog: false, isGameOverAlert: false, isSuccessAlert: false,
             blockTimeSettings: false, blockPlayersAdding: false, blockRoleChosing: false, blockPointsAdding: true,
-            currentRound: { round: 1, teams: [{team: Team.GREEN, role: Role.CHASER}, {team: Team.RED, role: Role.EVADER}]},
+            currentRound: { round: 1, teams: [ {team: Team.RED, role: Role.EVADER}, {team: Team.GREEN, role: Role.CHASER}]},
             });
         },
 
