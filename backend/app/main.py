@@ -92,7 +92,7 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
 
     try:
         await session.execute(text("""
-            ALTER TABLE group_schedule ADD COLUMN coach_id INTEGER NOT NULL DEFAULT 0;
+            ALTER TABLE gamers ADD COLUMN name TEXT NOT NULL DEFAULT '';
         """))
     except Exception as e:
         print("!!!!! error:", e)    

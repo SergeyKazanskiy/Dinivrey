@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useStore } from '../../store';
 import { PlayerCell } from '../components/PlayerCell';
-import { Player, Team, Role } from '../../model';
+import { Gamer, Player, Team, Role } from '../../model';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -15,7 +15,7 @@ type Props = {
 export function RoundView({ team, round, role, title }: Props) {
   const { gamers } = useStore();
 
-  const teamGamers = gamers.filter(el => el.team === team )!;
+  const teamGamers: Gamer[] = gamers.filter(el => el.team === team )!;
   const players: Player[] = teamGamers.map(el => ({
       id: 0,
       name: el.name || '',
@@ -44,14 +44,12 @@ export function RoundView({ team, round, role, title }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //marginVertical: 12
   },
   title: {
     alignSelf: 'flex-end',
-    fontSize: 18,
-    color: '#ddd',
+    fontSize: 17,
+    color: '#eee',
     fontWeight: '500',
-    marginBottom: 4,
     paddingRight: 14
   },
 });

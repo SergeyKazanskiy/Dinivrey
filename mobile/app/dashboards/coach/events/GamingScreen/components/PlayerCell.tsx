@@ -9,12 +9,12 @@ type Props = {
 
 export const PlayerCell: React.FC<Props> = ({ name, isSurvived, points }) => {
   const bg = isSurvived === undefined
-  ? '#ccc' : isSurvived
+  ? '#ddd' : isSurvived
   ? 'green' : 'red';
 
   return (
     <View style={[styles.container, {backgroundColor: bg}]}>
-      <Text style={{ flex: 1 }}>
+      <Text style={styles.text}>
         {name}
       </Text>
 
@@ -27,14 +27,20 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 4,
     marginHorizontal: 4,
-    padding: 8,
+    paddingHorizontal: 8,
+    marginVertical: 2,
+    paddingVertical: 2,
     borderRadius: 16,
+  },
+  text: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '500'
   },
   capsule: {
     borderRadius: 10,
-    backgroundColor: '#ddd',
+    backgroundColor: '#eee',
     paddingHorizontal: 5,
     paddingVertical: 1,
     fontSize: 15,

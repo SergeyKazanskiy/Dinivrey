@@ -152,10 +152,10 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
 
     calculateWinner: () => {
         const { gamers, first_chaser_team, round_times }: GamingSlice & ReportSlice = get();
-        const firstTeamGamers = gamers.filter(el => el.team === first_chaser_team );
-        const secondTeamGamers = gamers.filter(el => el.team !== first_chaser_team );
+        const firstTeamGamers = gamers.filter(el => el.team === first_chaser_team ); //right team green
+        const secondTeamGamers = gamers.filter(el => el.team !== first_chaser_team ); //left team red
 
-        const total_1: Total = firstTeamGamers.reduce(
+        const total_1: Total = firstTeamGamers.reduce( // green
             (acc, gamer) => {
                 acc.caught += gamer.caught;
                 acc.freeded += gamer.freeded;
@@ -164,7 +164,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             },
             { caught: 0, freeded: 0, survived: 0 }
         );
-        const total_2: Total = secondTeamGamers.reduce(
+        const total_2: Total = secondTeamGamers.reduce( // red
             (acc, gamer) => {
                 acc.caught += gamer.caught;
                 acc.freeded += gamer.freeded;
@@ -174,23 +174,27 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             { caught: 0, freeded: 0, survived: 0 }
         );
 
-        const totals_1: TeamTotals = getTeamTotals(
+        const totals_1: TeamTotals = getTeamTotals( // green
             first_chaser_team === Team.GREEN ? Team.GREEN : Team.RED,
             firstTeamGamers.length,
             total_1, total_2.survived === 0 ? BONUS_POINTS : 0
         )
 
         const totals_2: TeamTotals = getTeamTotals(
-            totals_1.team === Team.GREEN ? Team.GREEN : Team.RED,
-            firstTeamGamers.length,
+            totals_1.team === Team.GREEN ? Team.RED : Team.GREEN,
+            secondTeamGamers.length,
             total_2, total_1.survived === 0 ? BONUS_POINTS : 0
         )
 
-        const winner_number = totals_1.total > totals_2.total ? 0
-            : totals_2.total > totals_1.total ? 1
-            : round_times[0] < round_times[1] ? 0
-            : round_times[1] < round_times[0] ? 1
-            : null;  
+        const totalsEqually = totals_1.total === totals_2.total;
+        const timesEqually = round_times[0] === round_times[0];
+
+        let winner_number = null;
+        if (!totalsEqually) {
+            winner_number = totals_1.total > totals_2.total ? 0 : 1;
+        } else if (totalsEqually && !timesEqually) {
+            winner_number = round_times[0] < round_times[1] ? 0 : 1;
+        }  
 
         set({
             teams_totals: [totals_1, totals_2],
@@ -214,14 +218,12 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             tags: teams_totals[n].caught,
             rescues: teams_totals[n].freeded, winner: winner || 'Equally'
         }
-        //alert(objectToJson(data)) //!!!
 
         add_event_game(data, (res => {
             if (res.id > 0) {
                 const { gamers }: ReportSlice = get();
                 const complitedGamers: Gamer[] = gamers.map(el => ({...el, game_id: res.id, student_id: el.student_id | 0}))
 
-                //alert(objectToJson(complitedGamers)) //!!!
                 add_event_game_gamers(complitedGamers, (res => {
                     callback(res.isOk);
                 }));
@@ -242,6 +244,8 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
 });
 
 function getTeamTotals(team: Team, amount: number, total: Total, bonus: number): TeamTotals {
+    const points =  total.caught + total.freeded + total.survived * 2;
+
     const totals: TeamTotals = {
         team,
         amount,
@@ -250,9 +254,11 @@ function getTeamTotals(team: Team, amount: number, total: Total, bonus: number):
         survived: total.survived * 2,
         bonus,
         total: 0, info: { points: '', tags: '', bonus: '', rescues: ''}
-    }
+    };
+    
     totals.total = totals.caught + totals.freeded + totals.survived + totals.bonus
-    totals.info = { points: totals.freeded + '+' + totals.caught + '+' + totals.survived, 
+    totals.info = {
+        points: totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points, 
         tags: totals.caught + '',
         bonus: totals.bonus > 0 ? String(totals.bonus) : '',
         rescues: totals.freeded + '+' + totals.survived}

@@ -474,6 +474,14 @@ async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.read(models.Drill, id, session)
 
 # Games
-@router.get("/camps/events/{event_id}/groups/{group_id}/games", response_model=List[schemas.GameResponse], tags=["Coach"]) #
-async def get_student_names(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
+@router.get("/camps/events/{event_id}/groups/{group_id}/games", response_model=List[schemas.GameResponse], tags=["Coach"])
+async def get_event_games(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Game, session, filters={"event_id": event_id, "group_id": group_id})
+
+@router.get("/camps/events/games/{id}", response_model=schemas.GameResponse, tags=["Coach"])
+async def get_event_game(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Game, id, session)
+
+@router.get("/camps/events/games/{game_id}/gamers", response_model=List[schemas.GamerResponse], tags=["Coach"])
+async def get_game_players(game_id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Gamer, session, filters={"game_id": game_id})
