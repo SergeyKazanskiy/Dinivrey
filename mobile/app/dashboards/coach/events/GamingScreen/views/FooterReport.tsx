@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   winner: {
     color: 'gold',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '500',
     marginBottom: 4
   },

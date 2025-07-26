@@ -92,7 +92,7 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
 
     try:
         await session.execute(text("""
-            ALTER TABLE gamers ADD COLUMN name TEXT NOT NULL DEFAULT '';
+            ALTER TABLE games ADD COLUMN points2 INTEGER NOT NULL DEFAULT 0;
         """))
     except Exception as e:
         print("!!!!! error:", e)    
@@ -129,7 +129,7 @@ router4 = APIRouter()
 async def rename_fields(session: AsyncSession = Depends(get_session)):
     try:
         await session.execute(text("""
-            ALTER TABLE tests RENAME COLUMN climbing_score TO climbing_time;
+            ALTER TABLE games RENAME COLUMN points TO points1;
         """))
         # await session.execute(text("""
         #     ALTER TABLE tests ALTER COLUMN stamina_time TYPE REAL;

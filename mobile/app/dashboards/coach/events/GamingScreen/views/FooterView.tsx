@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from '@rneui/themed';
 import { useStore } from '../../store';
-import { Timer } from '../components/Timer';
+import { TimerView } from './TimerView';
 import { LinearGradient } from 'expo-linear-gradient';
 import { objectToJson } from '@/app/shared/utils';
 
@@ -10,28 +10,14 @@ const format = (m: number) => `${String(m).padStart(2, '0')}:00`;
 
 
 export function FooterView() {
-  const { isTimerRunning, currentRound, round_times, blockTimeSettings, timer_start_time} = useStore();
-  const { isPointsFixing } = useStore();
-  const { showTimeSetter, onTimerStart, onTimerStop, onTimerFinish, } = useStore();
+  const { currentRound, round_times, blockTimeSettings} = useStore();
+  const { showTimeSetter } = useStore();
 
   const time = round_times[currentRound.round - 1] / 60;
 
   return (
     <View style={styles.container}>
-      <View style={styles.timeSetting}>
-        <Button
-          title={isPointsFixing ? 'NEXT' : isTimerRunning ? 'STOP' : "START" }
-          buttonStyle={styles.setButton} 
-          titleStyle={[styles.setText]}
-          onPress={() => isTimerRunning ? onTimerStop() : onTimerStart()}
-        />
-        <Timer
-          start_time={timer_start_time}
-          isRunning={isTimerRunning}
-          style={styles.time}
-          onEnd={onTimerFinish}
-        />
-      </View>
+      <TimerView/>
 
       <LinearGradient colors={['#A90F11', '#15803d']}
         start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
@@ -40,16 +26,16 @@ export function FooterView() {
        <Text style={styles.round}>Round {currentRound.round}</Text> 
       </LinearGradient>
       
-        <View style={styles.timeSetting}>
-          <Text style={styles.time}>{format(time)}</Text>
-          <Button
-            title="SET" 
-            buttonStyle={styles.setButton} 
-            titleStyle={[styles.setText]}
-            disabled={blockTimeSettings}
-            onPress={showTimeSetter}
-          />
-        </View> 
+      <View style={styles.timeSetting}>
+        <Text style={styles.time}>{format(time)}</Text>
+        <Button
+          title="SET" 
+          buttonStyle={styles.button} 
+          titleStyle={[styles.label]}
+          disabled={blockTimeSettings}
+          onPress={showTimeSetter}
+        />
+      </View> 
     </View>
   );
 }
@@ -90,7 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  setButton: {
+  button: {
     backgroundColor: '#bbb',
     //minWidth: 120,
     alignItems: 'center',
@@ -98,7 +84,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 8,
   },
-  setText: {
+  label: {
     color: '#222'
   },
 });

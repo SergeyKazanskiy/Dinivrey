@@ -13,7 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const ProfileScreen = () => {
   const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
-  const { student_id, last_test, last_game, loadTest, loadGame, loadEvent } = useStore();
+  const { student_id, last_test, last_game, loadTest, loadGame, loadEvent, setBackDrawer } = useStore();
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
 
@@ -72,20 +72,24 @@ const ProfileScreen = () => {
     const metricName = metric.charAt(0).toUpperCase() + metric.slice(1);
     loadTest(last_test.timestamp, metricName);
     router.push("/dashboards/student/StatisticsScreen");
+    setBackDrawer(false);
   }
   
   const openGameStatistic = (metric: string) => {
     loadGame(last_game.timestamp, metric);
     router.push("/dashboards/student/StatisticsScreen");
+    setBackDrawer(false);
   }
 
   const openEventsScreen = (event_id: number, timestamp: number) => {
     loadEvent(event_id, timestamp);
     router.push("/dashboards/student/EventsScreen");
+    setBackDrawer(false);
   }
 
   const openLidersScreen = () => {
     router.push("/dashboards/student/LidersScreen");
+    setBackDrawer(false);
   }
 
   return (

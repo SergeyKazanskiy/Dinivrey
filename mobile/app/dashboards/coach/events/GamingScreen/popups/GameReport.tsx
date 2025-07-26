@@ -12,14 +12,14 @@ const formatSec = (s: number) =>
 const formatDate = (timestamp: number): string => {
   const date = new Date(timestamp);
   const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы с 0
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 };
 
 export const GameReport = () => {
-  const { gameDate, teams_totals, currentRole, round_times, isGameReport, first_chaser_team } = useStore();
-  const { hideGameReport, hideReport } = useStore();
+  const { gameDate, teams_totals, times_total, isGameReport, first_chaser_team } = useStore();
+  const { hideGameReport } = useStore();
 
   const titleHeader = 'Dinivrey - ' + formatDate(gameDate)
    
@@ -36,11 +36,11 @@ export const GameReport = () => {
             <Text style={styles.text}>Players - {teams_totals[1].amount} </Text>
           </View>
                 
-          <RoundReport round={1} time={formatSec(round_times[1])}
+          <RoundReport round={1} time={formatSec(times_total[0])}
             role_1={role_1} total_1={teams_totals[1].freeded + '+' + teams_totals[1].survived}
             role_2={role_2} total_2={teams_totals[0].caught + '+' + teams_totals[0].bonus}
           />
-          <RoundReport round={2} time={formatSec(round_times[1])}
+          <RoundReport round={2} time={formatSec(times_total[1])}
             role_1={role_2} total_1={teams_totals[1].caught + '+' + teams_totals[1].bonus}
             role_2={role_1} total_2={teams_totals[0].freeded + '+' + teams_totals[0].survived}
           />
@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
   section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 4
+    paddingHorizontal: 12,
+    bottom: 8
   },
   header: {
     flexDirection: 'row',

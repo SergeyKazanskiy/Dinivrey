@@ -6,16 +6,16 @@ import { CustomAlert } from './CustomAlert';
 
 interface Props {
   onCancel: () => void;
-  onRemove: () => void;
+  onBack: () => void;
 }
 
-export function BackAlert({ onCancel, onRemove}: Props) {
+export function BackAlert({ onCancel, onBack}: Props) {
   const { isBackAlert } = useStore();
 
   return (
     <CustomAlert visible={isBackAlert} 
       buttonText='BACK'
-      handleYes={onRemove}
+      handleYes={onBack}
       onClose={onCancel}>
         <Text style={styles.title}>Are you sure you want to exit?</Text>
         <Text style={styles.text}>All entered data will be lost.</Text>

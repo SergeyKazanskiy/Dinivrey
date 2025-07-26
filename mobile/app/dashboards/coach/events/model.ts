@@ -72,10 +72,13 @@ export type Game = {
   time1: number;
   time2: number;
   
-  points: number;
+  points1: number;
+  points2: number;
+
   tags: number;
   rescues: number;
   winner: Team | 'Equally';
+  presence: string;
 }
 
 export type Total = {

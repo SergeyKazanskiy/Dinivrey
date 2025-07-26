@@ -9,10 +9,12 @@ class GameBase(BaseModel):
     first_team: str
     time1: int
     time2: int
-    points: int
+    points1: int
+    points2: int
     tags: int
     rescues: int
     winner: str
+    presence: str
 
 class GameCreate(GameBase):
     pass

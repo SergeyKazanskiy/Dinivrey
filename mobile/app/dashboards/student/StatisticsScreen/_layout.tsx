@@ -18,7 +18,7 @@ export default function StackLayout() {
     <Stack>
       <Stack.Screen name="index"
         options={{
-          headerTitle: "Schedule",
+          headerTitle: "Statistics",
           headerStyle: {
             backgroundColor: screenStyles.background.backgroundColor, // Фон заголовка
           },
@@ -43,10 +43,10 @@ export default function StackLayout() {
           },
         }}
       />
-      <Stack.Screen name="GameScreen"
+      {/* <Stack.Screen name="GroupsScreen"
         options={{
           animation: 'slide_from_right',
-          headerTitle: "Game",
+          headerTitle: "Groups",
           headerStyle: {
             backgroundColor: screenStyles.background.backgroundColor, // Фон заголовка
           },
@@ -58,25 +58,9 @@ export default function StackLayout() {
           headerTitleAlign: 'center',
           headerShadowVisible: false,
         }}
-      />
+      /> */}
     </Stack>
   );
 }
 
-/*
-<Stack
-      screenOptions={({ route }) => ({
-        //headerShown: true,
-        //headerBackTitleVisible: false,
-        //animation: 'slide_from_right', //fade
-        headerTitle: "Profile",
-        headerLeft: route.name === 'index' ? ({ tintColor }) => (
-          <Pressable
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-          >
-            <MaterialIcons name="menu" size={24} color={tintColor || 'black'} />
-          </Pressable>
-        ) : undefined,
-      })}
-    />
-    */
+

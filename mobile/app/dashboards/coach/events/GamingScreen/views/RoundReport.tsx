@@ -36,11 +36,11 @@ export function RoundReport({ round, time, role_1, total_1, role_2, total_2 }: P
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
           <RoundView
             team={Team.RED} role={role_1} round={round}
-            title={role_1 === Role.CHASER ? 'Rescues' : 'Tags'}
+            title={role_1 === Role.CHASER ? 'Tags' : 'Rescues'}
         />
           <RoundView
               team={Team.GREEN} role={role_2} round={round}
-              title={role_2 === Role.CHASER ? 'Rescues' : 'Tags'}
+              title={role_2 === Role.CHASER ? 'Tags' : 'Rescues'}
           />
         </View>
         
@@ -48,6 +48,10 @@ export function RoundReport({ round, time, role_1, total_1, role_2, total_2 }: P
           <View style={[styles.section, styles.capsule]}> 
             <Text style={styles.capsule_label}>Total: </Text>
             <Text style={styles.capsule_text}>{total_1}</Text>
+          </View>
+
+          <View style={[styles.capsule]}> 
+            <Text style={styles.capsule_text}>{time}</Text>
           </View>
           
           <View style={[styles.section, styles.capsule]}> 
