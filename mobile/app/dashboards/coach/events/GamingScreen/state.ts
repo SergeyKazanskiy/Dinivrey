@@ -78,10 +78,7 @@ export interface GamingSlice {
 export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     // Data
     availableStudents: [],
-    players: [
-       // { id: 1, name: 'Player 1', age: 8, points: 0, team: Team.GREEN },
-    ],
-    
+    players: [],
 
     // Temp
     selectedStudentIds: [],
@@ -205,7 +202,6 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
 
     selectPlayer: (player_id: number) => set({player_id}),
     removePlayers: () => set((state: GamingSlice) => ({
-       // players: [],
         players: state.players.filter((p) => !state.playersToRemove.includes(p.id)),
         playersToRemove: [],
     })),
@@ -232,7 +228,8 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     clearPlayers: () => set({players: []}),
 });
 
+
 function getRandomFraction(): number {
-  const randomInt = Math.floor(Math.random() * 1000) + 1;
-  return randomInt / 1000;
+    const randomInt = Math.floor(Math.random() * 1000) + 1;
+    return randomInt / 1000;
 }

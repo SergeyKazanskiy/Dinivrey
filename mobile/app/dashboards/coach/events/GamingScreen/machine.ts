@@ -1,4 +1,4 @@
-import { Student, Player, GameRound, Team, Role } from '../model';
+import { Team, Role } from '../model';
 import { objectToJson } from '../../../../shared/utils';
 import { GamingSlice } from './state';
 import { ReportSlice } from './data';
@@ -35,7 +35,7 @@ export interface GameMachine {
     onErrorExit: () => void;
 
     onTimerStart: () => void;
-    onTimerStop: () => void;
+    onTimerStop: (time: number) => void;
     onTimerFinish: () => void;
 
     onEvadersConfirm: () => void;
@@ -64,7 +64,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     isNewGame: true,
     isBackAlert: false,
     isEvadersDialog: false,
-    isGameOverAlert: false, //isGameOverAlert
+    isGameOverAlert: false,
     isSuccessAlert: false,
     isGameReport: false,
     isCheckingAlert: false,
@@ -101,14 +101,16 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         } 
     },
 
-    onTimerStop: () => {
-        //alert('onTimerStop')
-        const { switch_on_completion }: GameMachine = get();
+    onTimerStop: (time: number) => {
+        const { switch_on_completion, setTimeTotal, currentRound }: GameMachine & ReportSlice & GamingSlice = get();
+        setTimeTotal(currentRound.round, time);
         switch_on_completion();
     },
 
     onTimerFinish: () => {
-        const { switch_on_completion }: GameMachine = get();
+        const { switch_on_completion, setTimeTotal, currentRound, round_times }: GameMachine & ReportSlice & GamingSlice = get();
+        const round = currentRound.round
+        setTimeTotal(round, round_times[round - 1]);
         switch_on_completion();
     },
 
@@ -131,7 +133,6 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         const evadersPoints = evaders.reduce((acc, player) => acc += player.points, 0);
         const taggedAmount = evaders.length - survived_ids.length;
 
-        alert(chasersPoints + '_' + evadersPoints + '_' + taggedAmount)
         const pointsDifference = Math.abs(chasersPoints - evadersPoints - taggedAmount)
 
         if (pointsDifference > 0) {
@@ -166,13 +167,13 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         isPointsFixing: true,
     }),
 
-    // States
+    // Staps and States
     step_on_settings: () => {
         const { setGameDate, setRoundTime }: ReportSlice = get();
         setGameDate();
         setRoundTime(1, INITIAL_ROUND_TIME);
         setRoundTime(2, INITIAL_ROUND_TIME);
-        set({ gameStep: 'Settings', gameState: 'Waiting',
+        set({ gameStep: 'Settings', gameState: 'Waiting', isPointsFixing: false,
             isNewGame: true, isBackAlert: false, isTimerRunning: false, isHeader: true,
             isEvadersDialog: false, isGameOverAlert: false, isSuccessAlert: false,
             blockTimeSettings: false, blockPlayersAdding: false, blockRoleChosing: false, blockPointsAdding: true,
@@ -188,7 +189,6 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     }),
 
     switch_on_playing: () => {
-        //alert('switch_on_playing')
         const { setStartTime, currentRound}: ReportSlice & GamingSlice= get();
         setStartTime(currentRound.round);
 
@@ -216,7 +216,6 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         gameState: 'Correction',
         pointsDifference,
         isCheckingAlert: true,
-        //isEvadersDialog: false
     }),
 
     step_on_report: () => set({
@@ -240,10 +239,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     hideSuccessAlert: () => set({
         isSuccessAlert: false, isGameOverAlert: false, isNewGame: false
     }),
-    hideCheckingAlert: () => {
-       // alert('hideCheckingAlert')
-        set({ isCheckingAlert: false });
-    },
+    hideCheckingAlert: () => set({ isCheckingAlert: false }),
 
     showReport: () => set({ isGameReport: true }),
     hideReport: () => set({ isGameReport: false }),

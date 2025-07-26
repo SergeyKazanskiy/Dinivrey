@@ -37,8 +37,9 @@ export function DraverMenu() {
           )
         }}
       />
-      <Drawer.Screen name="StatisticsScreen/index"
+      <Drawer.Screen name="StatisticsScreen"
         options={{
+          headerShown: false, 
           headerTitle: 'Statistics',
           title: 'Statistics', 
           drawerIcon: ({ size, color}) => (

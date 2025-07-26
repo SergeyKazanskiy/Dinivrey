@@ -16,7 +16,6 @@ export const Timer: React.FC<Props> = ({ start_time, isRunning, isReset, onEnd, 
 
   // Reset
   useEffect(() => {
-    // alert("start_time " + start_time)
     setTimeLeft(start_time);
     clearInterval(intervalRef.current!);
     intervalRef.current = null;
@@ -25,7 +24,6 @@ export const Timer: React.FC<Props> = ({ start_time, isRunning, isReset, onEnd, 
   // Start/Stop
   useEffect(() => {
     if (isRunning && timeLeft > 0 && !intervalRef.current) {
-     // alert("is Timer running !!!")
       intervalRef.current = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -39,7 +37,6 @@ export const Timer: React.FC<Props> = ({ start_time, isRunning, isReset, onEnd, 
       }, 1000);
     }
     if (!isRunning && intervalRef.current) {
-      alert("not Running")
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }

@@ -15,10 +15,13 @@ class Game(Base):
     time1 = Column(Integer, nullable=False)
     time2 = Column(Integer, nullable=False)
 
-    points = Column(Integer, nullable=False)
+    points1 = Column(Integer, nullable=False)
+    points2 = Column(Integer, nullable=False)
+
     tags = Column(Integer, nullable=False)
     rescues = Column(Integer, nullable=False)
     winner = Column(String, nullable=False)
+    presence = Column(String, nullable=False)
 
     event = relationship("Event", back_populates="games")
     gamers = relationship("Gamer", back_populates="game", cascade="all, delete")

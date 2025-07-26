@@ -66,8 +66,8 @@ export default function GamingScreen() {
 
       {/* Alerts */}
       <BackAlert
+        onBack={() => (router.back(), onErrorExit())}
         onCancel={hideBackAlert}
-        onRemove={() => (onErrorExit(), setTimeout(() => router.back(), 300))}
       />
       <GameOverAlert
         team={Team.GREEN}

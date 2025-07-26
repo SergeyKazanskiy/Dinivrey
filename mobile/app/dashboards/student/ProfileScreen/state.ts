@@ -17,6 +17,7 @@ export interface ProfileSlice {
   last_game: Game;
   upcoming_events: Event[];
   
+  isBackDrawer: boolean;
 
   loadStudent: (studentId: number) => void;
   loadAchievements: (studentId: number) => void;
@@ -26,6 +27,8 @@ export interface ProfileSlice {
 
   clickPlus: () => void;
   finishAdding: () => void;
+
+  setBackDrawer: (isBackDrawer: boolean) => void;
 }
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
@@ -41,6 +44,8 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   last_game: { id: 0, timestamp: 0, caughted: 0, freeded: 0 },
 
   upcoming_events: [{ id: 0, type: eventTypes[0], desc: "We going to running", timestamp: getTodayTimestamp() }],
+
+  isBackDrawer: true,
 
 
   loadStudent:(student_id: number,) => {
@@ -112,5 +117,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
   finishAdding: () => {
     set({ isAchievementAdding: false });
-  }
+  },
+
+   setBackDrawer: (isBackDrawer: boolean) => set({isBackDrawer})
 });

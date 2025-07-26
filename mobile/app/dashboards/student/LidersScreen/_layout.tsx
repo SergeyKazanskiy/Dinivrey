@@ -5,11 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
 import { menuStyles, screenStyles } from '../../../shared/styles/appStyles';
+import { useStore } from '../store';
 
 
 export default function StackLayout() {
   const navigation = useNavigation();
   const router = useRouter();
+
+  const { isBackDrawer, setBackDrawer } = useStore();
 
   return (
     <Stack>
@@ -29,12 +32,12 @@ export default function StackLayout() {
           headerLeft: () => {
             return (
               <>
-                <Ionicons name="menu" size={24} color='#D1FF4D' style={{ marginLeft: 16 }}
+                {isBackDrawer && <Ionicons name="menu" size={24} color='#D1FF4D' style={{ marginLeft: 16 }}
                   onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
-                />
-                <Ionicons name='chevron-back' size={20} color='#D1FF4D' style={{ marginLeft: 22 }}
-                  onPress={() => router.back()}
-                />
+                />}
+                {!isBackDrawer && <Ionicons name='chevron-back' size={20} color='#D1FF4D' style={{ marginLeft: 22 }}
+                  onPress={() => (router.back(), setBackDrawer(true))}
+                />}
               </>
             );
           },
