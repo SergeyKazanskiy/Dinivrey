@@ -144,7 +144,7 @@ async def get_student_tests(id: int, year: int, month: int, session: AsyncSessio
     )
     return result.scalars().all()
 
-@router.get("/students/{id}/games", response_model=List[schemas.GameResponse], tags=["Student"])
+@router.get("/students/{id}/games", response_model=List[schemas.GameResponse], tags=["Student"]) #???
 async def get_student_games(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
@@ -153,6 +153,41 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
     )
     return result.scalars().all()
 
+# Game-reports
+@router.get("/students/{id}/game-reports", response_model=List[schemas.GameResponse], tags=["Student"])
+async def get_student_game_reports(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
+    start_ts = int(datetime(year, month, 1).timestamp() * 1000)
+    end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
+
+    Student = models.Student
+    Group = models.Group
+    Game = models.Game
+    Event = models.Event
+
+    stmt = (
+        select(Game)
+        .join(Event, Game.event_id == Event.id)
+        .join(Group, or_(
+            Event.group1_id == Group.id,
+            Event.group2_id == Group.id
+        ))
+        .join(Student, Student.group_id == Group.id)
+        .where(
+            Student.id == id,
+            Game.timestamp.between(start_ts, end_ts)
+        )
+        .order_by(models.Game.timestamp)
+    )
+    result = await session.execute(stmt)
+    return result.scalars().all()
+
+@router.get("/camps/events/games/{id}", response_model=schemas.GameResponse, tags=["Student"])
+async def get_event_game(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Game, id, session)
+
+@router.get("/camps/events/games/{game_id}/gamers", response_model=List[schemas.GamerResponse], tags=["Student"])
+async def get_game_players(game_id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Gamer, session, filters={"game_id": game_id})
 
 # Events
 @router.get("/camps/groups/{group_id}/events/latest", tags=["Student"])

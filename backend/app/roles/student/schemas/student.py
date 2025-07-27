@@ -37,17 +37,17 @@ class TestResponse(TestBase):
         from_attributes = True
 
 # Game
-class GameBase(BaseModel):
-    timestamp: int
-    caughted: float
-    freeded: float
-    #description: str
+# class GameBase(BaseModel):
+#     timestamp: int
+#     caughted: float
+#     freeded: float
+#     #description: str
 
-class GameResponse(GameBase):
-    id: int
+# class GameResponse(GameBase):
+#     id: int
 
-    class Config:
-        from_attributes = True
+#     class Config:
+#         from_attributes = True
 
 # Achievement   
 class AchievementResponse(BaseModel):
