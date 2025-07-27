@@ -1,19 +1,19 @@
 import { StyleSheet, Text, Platform, View, ScrollView, Pressable } from 'react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useStore } from '../../store';
-import { PopupWrapper } from '../../../../../shared/components/PopupWrapper';
+import { PopupWrapper } from '../../../../shared/components/PopupWrapper';
 import { Student, Player } from '../../model';
 
 const COLUMN_HEIGHT = 5;
 
 
 export function AddingPopup() {
-  const { isAddingPopup, availableStudents, players, selectedStudentIds } = useStore();
+  const { isAddingPopup, students, players, selectedStudentIds } = useStore();
   const { hideAddingPopup, selectStudent, addPlayers, showAddNewDialog } = useStore();
 
   const columns: Student[][] = [];
   const playersIds = players.map(el => (el.id))
-  const students = availableStudents.filter(el => !playersIds.includes(el.id))
+  //const students = availableStudents.filter(el => !playersIds.includes(el.id))
 
   for (let i = 0; i < students.length; i += COLUMN_HEIGHT) {
     columns.push(students.slice(i, i + COLUMN_HEIGHT));

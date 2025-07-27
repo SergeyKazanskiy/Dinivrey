@@ -476,7 +476,7 @@ async def get_base_drill(id: int, session: AsyncSession = Depends(get_session)):
 # Games
 @router.get("/camps/events/{event_id}/groups/{group_id}/games", response_model=List[schemas.GameResponse], tags=["Coach"])
 async def get_event_games(event_id: int, group_id: int, session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Game, session, filters={"event_id": event_id, "group_id": group_id})
+    return await CRUD.get(models.Game, session, filters={"event_id": event_id, "group_id": group_id}, order_by="timestamp")
 
 @router.get("/camps/events/games/{id}", response_model=schemas.GameResponse, tags=["Coach"])
 async def get_event_game(id: int, session: AsyncSession = Depends(get_session)):
