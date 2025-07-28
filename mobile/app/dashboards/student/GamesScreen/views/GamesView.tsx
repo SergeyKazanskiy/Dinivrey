@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
+import { Icon, Button } from '@rneui/themed';
 import { Team } from '../../model';
 import { useStore } from '../../store';
 
@@ -20,38 +21,46 @@ export function GamesView({ onSelect }: Props) {
   return (
     <FlatList contentContainerStyle={styles.container}
       data={game_reports}
-      keyExtractor={item => item.id.toString()}
+      keyExtractor={item => item.game.id.toString()}
       renderItem={({item}) => {
-        const bg = item.winner === 'Equally' ? 'blue' : item.winner === Team.GREEN ? 'green' : 'red';
-        const [amount, presence, red, green] = item.presence.split(',').map(Number);
+      const bgTeam = item.team === Team.GREEN ? '#0FA919' : '#A90F11';
+      const bgWon = item.team === Team.GREEN ? '#00FF11' : '#FF0004';
         
-        const date = new Date(item.timestamp);
+        const date = new Date(item.game.timestamp);
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0'); 
         const year = date.getFullYear();
 
         return (
           <TouchableOpacity style={[styles.section, styles.cell]}
-            onPress={()=>handleSelect(item.id)}>
+            onPress={()=>handleSelect(item.game.id)}>
 
             <View style={[styles.col, {borderRightWidth: 1, borderRightColor: '#777', paddingRight: 4}]}>
-              <View style={[styles.capsule, {backgroundColor: bg}]}>
-                <Text style={styles.title}>{item.winner} Team won</Text>
+              <View style={[styles.capsule, {backgroundColor: bgTeam, width: 112}]}>
+                <Text style={styles.title}>{item.team} Team</Text>
               </View>
-              <Text style={styles.small_text}>Presence: {amount}/{presence}</Text>
-              <Text style={styles.small_text}>RED: {red} GREEN: {green}</Text>
+              <View style={[styles.section]}>
+                <Text style={[styles.small_text, {width: 60}]}>Evader survived</Text>
+              
+                <View style={{paddingTop: 2}}>
+                  {item.is_survived && <Icon name="checkbox-multiple-marked-outline" type="material-community" color='green'/>}
+                  {!item.is_survived && <Icon name="close-box-outline" type="material-community" color='red' />}
+                </View>
+              </View>
             </View>
 
             <View style={[styles.col]}>
-              <Text style={styles.text}>Tags: {item.tags}</Text>
-              <Text style={styles.text}>Rescues: {item.rescues}</Text>
-              <Text style={styles.text}>Red: {item.points1} Green: {item.points2}</Text>
+              <Text style={styles.text}>Tags: {item.game.tags}</Text>
+              <Text style={styles.text}>Rescues: {item.game.rescues}</Text>
+              <Text style={styles.text}>Red: {item.game.points1} Green: {item.game.points2}</Text>
             </View> 
 
             <View style={[styles.col, {borderLeftWidth: 1, borderLeftColor: '#777', paddingLeft: 4}]}>
-              <Text style={styles.title}>{day}/{month}</Text>
-              <Text style={styles.title}>{year}</Text>
-              <Text style={styles.text}> </Text>
+              <View style={[styles.capsule, {backgroundColor: bgWon, width: 72}]}>
+                <Text style={styles.title}>{item.game.winner === item.team ? 'Winner' : 'Lost'}</Text>
+              </View>
+              <Text style={[styles.small_text, {marginTop: 10}]}>{day}/{month}/{year}</Text>
+              
             </View> 
           </TouchableOpacity>  
         )}
@@ -62,7 +71,8 @@ export function GamesView({ onSelect }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //padding: 16,
+    width: '100%',
+    marginTop: 8,
   },
   section: {
     flexDirection: 'row',
@@ -70,7 +80,7 @@ const styles = StyleSheet.create({
   },
   cell: {
     padding: 10,
-    backgroundColor: '#222', 
+    backgroundColor: '#152B52', 
     borderWidth: 1,
     borderColor: 'rgb(110, 151, 6)',
     marginVertical: 4,
@@ -89,7 +99,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    color: 'gold',
+    color: 'white',
+    alignSelf: 'center',
   },
   text: {
     color: '#ddd',
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
   },
   small_text: {
     color: '#ddd',
-    fontSize: 13,
+    fontSize: 12,
   },
   button: {
     height: 28,

@@ -1,5 +1,6 @@
+import { useCallback } from 'react';
 import { StyleSheet, Platform, View } from 'react-native';
-import { useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CustomNavbar } from '../../../shared/components/CustomNavbar';
@@ -34,14 +35,15 @@ export default function GamingScreen() {
   const router = useRouter();
   const navigation = useNavigation();
 
-  useEffect(() => {
-    loadStudents();
-    step_on_settings();
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      loadStudents();
+      step_on_settings();
+    }, [])
+  );
 
   function handleBack() {
     if (gameStep === 'Settings') {
-      setGamingScreen(false);
       clearPlayers();
       returnBack();
     } else {
@@ -51,15 +53,12 @@ export default function GamingScreen() {
 
   function handleFinishGame() {
     step_on_settings();
-    setTimeout(() => router.back(), 300);
+    returnBack();
   }
 
   const returnBack = () => {
-    // if (navigation.canGoBack()) {
-    //   router.back();
-    // } else {
-      router.push('/dashboards/student/GamesScreen'); // или любой "безопасный" экран
-   // }
+    setGamingScreen(false);
+    router.push('/dashboards/student/GamesScreen');
   };
 
   return (

@@ -16,14 +16,7 @@ export default function StackLayout() {
   const { isBackDrawer, setBackDrawer } = useStore();
 
   return (
-    <Stack
-      screenOptions={{
-        contentStyle: {
-          flex: 1,
-          alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
-          maxWidth: Platform.OS === 'web' ? 360 : undefined,
-        },
-      }}>
+    <Stack>
       <Stack.Screen name="index"
         options={{
           headerTitle: "Games",

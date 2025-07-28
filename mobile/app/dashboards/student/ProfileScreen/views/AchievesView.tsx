@@ -21,7 +21,7 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
             ]}
             horizontal
             keyExtractor={(item, index) => item.id.toString() + index}
-            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}
+            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', flexGrow: 1, paddingBottom: 4 }}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => {
                 const totalItems = profile_achievements.length < 3

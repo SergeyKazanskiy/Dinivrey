@@ -228,7 +228,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     hideBackAlert: () => set({ isBackAlert: false }),
 
     hideGameReport: () => {
-        set({ isGameReport: false })
+        set({ isGameReport: false, isGameOverAlert: true })
 
         // const { saveGame }: GameMachine & ReportSlice = get();
         //     saveGame((isOk: boolean)=>{

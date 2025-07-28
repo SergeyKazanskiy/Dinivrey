@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { View, Text, ScrollView, StyleSheet, Platform } from 'react-native';
 import { useStore } from '../store';
 import { RoundReport } from '../GamingScreen/views/RoundReport';
@@ -8,6 +9,7 @@ import { Stack } from 'expo-router';
 import { CustomNavbar } from '../../../shared/components/CustomNavbar';
 import { useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const formatDate = (timestamp: number): string => {
@@ -18,12 +20,19 @@ const formatDate = (timestamp: number): string => {
   return `${day}/${month}/${year}`;
 };
 
-
 const formatSec = (s: number) =>
   `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
+
 const GameReport = () => {
-  const { teams_totals, currentRole, round_times, gameDate } = useStore();
+  const { teams_totals, currentRole, round_times, gameDate, game_report_id } = useStore();
+  const { loadGameReport } = useStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      loadGameReport(game_report_id);
+    }, [])
+  );
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -33,15 +42,13 @@ const GameReport = () => {
 
   const titleHeader = 'Dinivrey - ' + formatDate(gameDate)
 
-
-
-const handleBack = () => {
-  if (navigation.canGoBack()) {
-    router.back();
-  } else {
-    router.push('/dashboards/student/GamesScreen'); // или любой "безопасный" экран
-  }
-};
+  const handleBack = () => {
+    if (navigation.canGoBack()) {
+      router.back();
+    } else {
+      router.push('/dashboards/student/GamesScreen'); 
+    }
+  };
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>

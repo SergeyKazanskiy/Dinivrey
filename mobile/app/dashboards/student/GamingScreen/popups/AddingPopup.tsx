@@ -13,10 +13,10 @@ export function AddingPopup() {
 
   const columns: Student[][] = [];
   const playersIds = players.map(el => (el.id))
-  //const students = availableStudents.filter(el => !playersIds.includes(el.id))
+  const availables = students.filter(el => !playersIds.includes(el.id))
 
-  for (let i = 0; i < students.length; i += COLUMN_HEIGHT) {
-    columns.push(students.slice(i, i + COLUMN_HEIGHT));
+  for (let i = 0; i < availables.length; i += COLUMN_HEIGHT) {
+    columns.push(availables.slice(i, i + COLUMN_HEIGHT));
   }
 
   return (

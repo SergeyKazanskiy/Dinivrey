@@ -120,9 +120,9 @@ export const createGamingSlice = (set: any, get: any): GamingSlice => ({
     // Setup
     loadStudents: () => {
         const { student }: ProfileSlice = get();
-
+       
         get_students(student.group_id, (students: Student[]) => {
-            //alert(objectToJson(liders))
+           // alert(objectToJson(students))
             set({ students });
         })
     },
