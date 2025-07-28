@@ -13,7 +13,7 @@ export default function StackLayout() {
   const navigation = useNavigation();
   const router = useRouter();
 
-  const { isBackDrawer, setBackDrawer } = useStore();
+  const { isBackDrawer, setBackDrawer, setGamingScreen } = useStore();
 
   return (
     <Stack
@@ -21,12 +21,12 @@ export default function StackLayout() {
         contentStyle: {
           flex: 1,
           alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
-          maxWidth: Platform.OS === 'web' ? 360 : undefined,
+          maxWidth: Platform.OS === 'web' ? 760 : undefined,
         },
       }}>
       <Stack.Screen name="index"
         options={{
-          headerTitle: "Games",
+          headerTitle: "Liders",
           headerStyle: {
             backgroundColor: screenStyles.background.backgroundColor, // Фон заголовка
           },
@@ -41,7 +41,7 @@ export default function StackLayout() {
             return (
               <>
                 {isBackDrawer && <Ionicons name="menu" size={24} color='#D1FF4D' style={{ marginLeft: 16 }}
-                  onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
+                  onPress={() => {navigation.dispatch(DrawerActions.openDrawer())} }
                 />}
                 {!isBackDrawer && <Ionicons name='chevron-back' size={20} color='#D1FF4D' style={{ marginLeft: 22 }}
                   onPress={() => (router.back(), setBackDrawer(true))}
@@ -49,22 +49,6 @@ export default function StackLayout() {
               </>
             );
           },
-        }}
-      />
-      <Stack.Screen name="GameReport"
-        options={{
-          animation: 'slide_from_right',
-          headerTitle: "Game Report",
-          headerStyle: {
-            backgroundColor: screenStyles.background.backgroundColor, // Фон заголовка
-          },
-          headerTintColor: '#D1FF4D', // Цвет текста заголовка
-          headerTitleStyle: {
-            fontSize: 22,
-            fontWeight: 'bold', // Стиль текста
-          },
-          headerTitleAlign: 'center',
-          headerShadowVisible: false,
         }}
       />
     </Stack>

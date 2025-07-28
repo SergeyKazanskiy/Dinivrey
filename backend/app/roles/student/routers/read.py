@@ -122,14 +122,26 @@ async def get_last_test_date(id: int, session: AsyncSession = Depends(get_sessio
 
 @router.get("/students/{id}/games/last/date", tags=["Student"])
 async def get_last_game_date(id: int, session: AsyncSession = Depends(get_session)):
+    Student = models.Student
+    Group = models.Group
+    Game = models.Game
+    Event = models.Event
+
     stmt = (
-        select(models.Game)
-        .where(models.Game.student_id == id)
-        .order_by(desc(models.Game.timestamp))
+        select(Game)
+        .join(Event, Game.event_id == Event.id)
+        .join(Group, or_(
+            Event.group1_id == Group.id,
+            Event.group2_id == Group.id
+        ))
+        .join(Student, Student.group_id == Group.id)
+        .where(Student.id == id)
+        .order_by(desc(Game.timestamp))
         .limit(1)
     )
     result = await session.execute(stmt)
     event = result.scalar_one_or_none()
+    
     isEvents = True if event else False
     timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
     date = datetime.fromtimestamp(timestamp / 1000)

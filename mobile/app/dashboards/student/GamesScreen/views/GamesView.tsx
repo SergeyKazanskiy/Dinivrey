@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
-import { Button } from '@rneui/themed';
-import { Game, Team } from '../../model';
+import { Team } from '../../model';
 import { useStore } from '../../store';
 
 
@@ -49,7 +48,7 @@ export function GamesView({ onSelect }: Props) {
               <Text style={styles.text}>Red: {item.points1} Green: {item.points2}</Text>
             </View> 
 
-              <View style={[styles.col, {borderLeftWidth: 1, borderLeftColor: '#777', paddingLeft: 4}]}>
+            <View style={[styles.col, {borderLeftWidth: 1, borderLeftColor: '#777', paddingLeft: 4}]}>
               <Text style={styles.title}>{day}/{month}</Text>
               <Text style={styles.title}>{year}</Text>
               <Text style={styles.text}> </Text>
@@ -63,7 +62,7 @@ export function GamesView({ onSelect }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    //padding: 16,
   },
   section: {
     flexDirection: 'row',
