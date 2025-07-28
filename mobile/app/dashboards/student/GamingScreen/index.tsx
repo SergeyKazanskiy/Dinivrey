@@ -19,17 +19,20 @@ import { CheckingAlert } from './alerts/CheckingAlert';
 import { HeaderView } from './views/HeaderView';
 import { formatDateTime, objectToJson } from '../../../shared/utils';
 import { GameReport } from './popups/GameReport';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function GamingScreen() {
   const { isHeader, currentRound, gameStep, gameState, gameDate, isEvadersDialog } = useStore();
   const { currentTeam, pointsDifference } = useStore();
   const { loadStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings, clearPlayers} = useStore();
-  const { onFixPoints, switch_on_completion, hideCheckingAlert } = useStore();
+  const { onFixPoints, switch_on_completion, hideCheckingAlert, setGamingScreen } = useStore();
+
+  const { isGamingScreen } = useStore();
+  const w = isGamingScreen ? 760 : 360
 
   const router = useRouter();
-
-  //alert(objectToJson(currentRound))
+  const navigation = useNavigation();
 
   useEffect(() => {
     loadStudents();
@@ -38,8 +41,9 @@ export default function GamingScreen() {
 
   function handleBack() {
     if (gameStep === 'Settings') {
+      setGamingScreen(false);
       clearPlayers();
-      setTimeout(() => router.back(), 300);
+      returnBack();
     } else {
       onNavbarBack();
     }
@@ -50,8 +54,16 @@ export default function GamingScreen() {
     setTimeout(() => router.back(), 300);
   }
 
+  const returnBack = () => {
+    // if (navigation.canGoBack()) {
+    //   router.back();
+    // } else {
+      router.push('/dashboards/student/GamesScreen'); // или любой "безопасный" экран
+   // }
+  };
+
   return (
-    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
+    <LinearGradient colors={['#2E4A7C', '#152B52']} style={[styles.wrapper, {width: w}]} >
       <Stack.Screen options={{ headerShown: false }} />
       <CustomNavbar title={formatDateTime(gameDate).date + ', Game Mode ('  + gameStep + ', '+ gameState + ')'} onClick={handleBack}>
         <HeaderView/>
@@ -59,7 +71,7 @@ export default function GamingScreen() {
 
       {/* Alerts */}
       <BackAlert
-        onBack={() => (router.back(), onErrorExit())}
+        onBack={() => (setGamingScreen(false), returnBack(), onErrorExit())}
         onCancel={hideBackAlert}
       />
       <GameOverAlert
@@ -108,11 +120,11 @@ export default function GamingScreen() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
-    maxWidth: Platform.OS === 'web' ? 760 : undefined,
-    maxHeight: Platform.OS === 'web' ? 360 : undefined,
-    width: '100%',
+      flex: 1,
+      alignSelf: Platform.OS === 'web' ? 'flex-start' : 'stretch',
+      maxWidth: Platform.OS === 'web' ? 760 : undefined,
+      maxHeight: Platform.OS === 'web' ? 360 : undefined,
+     // width: 760,
   },
   row: {
     flex: 1,

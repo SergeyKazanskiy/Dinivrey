@@ -38,7 +38,7 @@ export const CustomAlert: React.FC<Props> = ({ visible, children, buttonText,
             <View style={{alignItems: 'center'}}>
               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                 <Text style={{width: 20}}>   </Text>
-                <Image source={require('../../../../../../assets/images/Warning.png')}
+                <Image source={require('../../../../../assets/images/Warning.png')}
                   style={styles.avatar} resizeMode='cover'
                 />
                 <Icon size={20} color="#D1FF4D" name="close" onPress={onClose}/>

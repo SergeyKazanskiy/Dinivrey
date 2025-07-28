@@ -23,16 +23,19 @@ export function ButtonsView({ onNewGame }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+   // flex: 1,
+   // padding: 16,
   },
   section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingHorizontal: 3,
+    paddingBottom: 8,
   },
   title: {
-    fontSize: 16,
-    color: 'gold',
+    paddingTop: 4,
+    fontSize: 18,
+    color: '#ddd',
   },
   button: {
     height: 28,

@@ -4,11 +4,15 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerHeader } from './DrawerHeader2';
 import { menuStyles, screenStyles } from '../../shared/styles/appStyles';
+import { useStore } from './store';
 
 
 export function DraverMenu() {
+  const { isGamingScreen } = useStore();
+  const w = isGamingScreen ? 760 : 360;
+  
   return (
-    <GestureHandlerRootView style={{ flex: 1, width: 360, backgroundColor: 'red' }}>
+    <GestureHandlerRootView style={{ flex: 1, width: w, backgroundColor: 'red' }}>
       <Drawer drawerContent={DrawerHeader} initialRouteName="ProfileScreen/index"
         screenOptions={{
           headerShown: true, 
@@ -58,7 +62,7 @@ export function DraverMenu() {
       />
       <Drawer.Screen name="EventsScreen" 
         options={{
-          headerShown: false, // Отключаем заголовок
+          headerShown: false,
           title: 'Schedule',
           drawerIcon: ({ size, color}) => (
             <Ionicons name='shield-checkmark-outline' size={size} color={color} />
@@ -67,12 +71,30 @@ export function DraverMenu() {
       />
       <Drawer.Screen name="LidersScreen"
         options={{
-          headerShown: false, // Отключаем заголовок
-         // headerTitle: 'Liderboard',
+          headerShown: false,
           title: 'Liderboard', 
           drawerIcon: ({ size, color}) => (
             <Ionicons name='medal-outline' size={size} color={color} />
           )
+        }}
+      />
+      <Drawer.Screen name="GamesScreen"
+        options={{
+          headerShown: false, 
+          title: 'Games', 
+          drawerIcon: ({ size, color}) => (
+            <Ionicons name='medal-outline' size={size} color={color} />
+          )
+        }}
+      />
+      <Drawer.Screen name="GamingScreen"
+        options={{
+          headerShown: false, 
+          title: 'Gaming', 
+          drawerIcon: ({ size, color}) => (
+            <Ionicons name='medal-outline' size={size} color={color} />
+          ),
+          drawerItemStyle: { display: 'none' }
         }}
       />
       </Drawer>

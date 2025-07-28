@@ -5,6 +5,9 @@ import { ProfileSlice } from '../ProfileScreen/state';
 
 
 export interface GamingSlice {
+    isGamingScreen: boolean;
+    setGamingScreen: (isGamingScreen: boolean) => void;
+
     students: Student[];
     players: Player[];
 
@@ -76,6 +79,12 @@ export interface GamingSlice {
 }
 
 export const createGamingSlice = (set: any, get: any): GamingSlice => ({
+    isGamingScreen: false,
+    setGamingScreen: (isGamingScreen: boolean) => {
+        set({isGamingScreen});
+       // alert(isGamingScreen)
+    },
+
     // Data
     students: [],
     players: [],
