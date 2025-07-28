@@ -6,30 +6,30 @@ import { months } from '../../../../shared/constants';
 
 
 export function CalendarView() {
-    const { event_year, event_month } = useStore();
+    const { game_year, game_month } = useStore();
     const { selectGameDate } = useStore();
 
     function nextMonth() {
-        if (event_month === 12) { selectGameDate(event_year + 1, 1)}
-        else { selectGameDate(event_year, event_month + 1)}
+        if (game_month === 12) { selectGameDate(game_year + 1, 1)}
+        else { selectGameDate(game_year, game_month + 1)}
     }
 
     function prevMonth() {
-        if (event_month === 1) { selectGameDate(event_year - 1, 12)}
-        else { selectGameDate(event_year, event_month - 1)}
+        if (game_month === 1) { selectGameDate(game_year - 1, 12)}
+        else { selectGameDate(game_year, game_month - 1)}
     }
 
     return (
         <View style={styles.container}>
-            <DateStepper title={String(event_year)}
-                onPrev={() => selectGameDate(event_year - 1, 12)}
-                onNext={() => selectGameDate(event_year + 1, 1)}
-                canNext={getCurrentMonth() === 12 ? true : event_year < getCurrentYear()}
+            <DateStepper title={String(game_year)}
+                onPrev={() => selectGameDate(game_year - 1, 12)}
+                onNext={() => selectGameDate(game_year + 1, 1)}
+                canNext={getCurrentMonth() === 12 ? true : game_year < getCurrentYear()}
             />
-            <DateStepper title={months[event_month-1]} 
+            <DateStepper title={months[game_month-1]} 
                 onPrev={prevMonth}
                 onNext={nextMonth}
-                canNext={getCurrentMonth() === 12 ? true : event_month <= getCurrentMonth()}
+                canNext={getCurrentMonth() === 12 ? true : game_month <= getCurrentMonth()}
             />
         </View>
     );

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Drawer } from 'expo-router/drawer';
-import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DrawerHeader } from './DrawerHeader2';
 import { menuStyles, screenStyles } from '../../shared/styles/appStyles';
 import { useStore } from './store';
@@ -24,12 +25,12 @@ export function DraverMenu() {
 
           drawerStyle: { width: 320},
           drawerHideStatusBarOnOpen: true,
-          drawerActiveBackgroundColor: 'rgba(118, 182, 234, 0.8)',//152B52
-          drawerActiveTintColor: 'yellow',
-          drawerInactiveTintColor: menuStyles.title.color,
-          drawerInactiveBackgroundColor: 'rgba(118, 182, 234, 0.8)', //
-          drawerItemStyle: {marginVertical: 6, borderRadius: 4,},
-          drawerLabelStyle: {fontSize: menuStyles.title.fontSize,fontWeight: menuStyles.title.fontWeight},
+          drawerActiveBackgroundColor: '#D1FF4D',//152B52
+          drawerActiveTintColor: '#222',
+          drawerInactiveTintColor: '#fff',
+          drawerInactiveBackgroundColor: '#2E4A7C', //
+          drawerItemStyle: {marginVertical: 4, borderRadius: 4,},
+          drawerLabelStyle: {fontSize: menuStyles.title.fontSize, fontWeight: menuStyles.title.fontWeight},
       }}>
 
       <Drawer.Screen name="ProfileScreen/index"
@@ -65,7 +66,8 @@ export function DraverMenu() {
           headerShown: false,
           title: 'Schedule',
           drawerIcon: ({ size, color}) => (
-            <Ionicons name='shield-checkmark-outline' size={size} color={color} />
+            <Ionicons name="calendar-outline" size={size} color={color}/>
+            // <Ionicons name='shield-checkmark-outline' size={size} color={color} />
           )
         }}
       />
@@ -83,7 +85,7 @@ export function DraverMenu() {
           headerShown: false, 
           title: 'Games', 
           drawerIcon: ({ size, color}) => (
-            <Ionicons name='medal-outline' size={size} color={color} />
+            <MaterialCommunityIcons name="crown-outline" size={size} color={color} />
           )
         }}
       />
@@ -92,7 +94,7 @@ export function DraverMenu() {
           headerShown: false, 
           title: 'Gaming', 
           drawerIcon: ({ size, color}) => (
-            <Ionicons name='medal-outline' size={size} color={color} />
+            <MaterialCommunityIcons name="trophy-outline" size={size} color={color} />
           ),
           drawerItemStyle: { display: 'none' }
         }}

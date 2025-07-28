@@ -34,6 +34,7 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
 
 const styles = StyleSheet.create({
   container: {
+    minHeight: 120
   },
   summary: {    
     paddingTop: 20,

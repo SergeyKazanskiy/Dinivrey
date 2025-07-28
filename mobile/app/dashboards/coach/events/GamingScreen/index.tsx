@@ -34,7 +34,7 @@ export default function GamingScreen() {
   useEffect(() => {
     const availables = attendances.filter(el => el.present === true);
     const students: Student[] = availables.map(el => ({
-      id: el.id,
+      id: el.student_id,
       first_name: el.first_name,
       last_name: el.last_name,
       age: 8,

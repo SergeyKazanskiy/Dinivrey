@@ -25,8 +25,8 @@ export default function GamesScreen() {
   useLayoutEffect(() => {
   navigation.setOptions({
     headerRight: () => 
-      <Pressable style={{ marginRight: 15 }} onPress={onNewGame} >
-        <Ionicons name='add-circle' size={21} color="#D1FF4D" />
+      <Pressable style={{ marginRight: 24 }} onPress={onNewGame} >
+        <Ionicons name='add-circle-outline' size={24} color="#D1FF4D" />
       </Pressable>
     });
   }, [navigation]);
@@ -46,7 +46,7 @@ export default function GamesScreen() {
       <View style={styles.container}>
         <CalendarView/>
 
-        {/* <ButtonsView onNewGame={onNewGame}/> */}
+         {/* <ButtonsView onNewGame={onNewGame}/> */}
         <GamesView onSelect={onGameReport}/>
       </View>
     </LinearGradient>
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    padding: 16,
-    marginRight: 10 //???
+    padding: 12,
+   // marginRight: 16 //???
   },
   container: {
     flex: 1,

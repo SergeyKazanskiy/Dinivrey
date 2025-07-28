@@ -96,15 +96,19 @@ const ProfileScreen = () => {
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <ScrollView style={styles.container}>
         <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
-      
-        <StatisticView
-          onExam={openTestStatistic}
-          onGame={openGameStatistic}
-          onLiders={openLidersScreen}
-        />
 
+        <LinearGradient colors={['#2E4A7C', '#152B52']} >
+          <StatisticView
+            onExam={openTestStatistic}
+            onGame={openGameStatistic}
+            onLiders={openLidersScreen}
+          />
+        </LinearGradient>
         <Text style={[styles.upcomingClass]}>Upcoming class</Text>
-        <EventsView onClick={openEventsScreen}/>
+        <LinearGradient colors={['#152B52', '#152B52']} >
+          
+          <EventsView onClick={openEventsScreen}/>
+        </LinearGradient>
       </ScrollView>
     </LinearGradient>
   );
@@ -122,8 +126,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   upcomingClass: {
-    marginTop: 40,
-    marginBottom: 4,
+    marginTop: 20,
+    marginBottom: 12,
     marginLeft: 16,
 
     color: '#eee',

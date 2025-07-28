@@ -27,23 +27,30 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
       
       <View style={[styles.section, { paddingHorizontal: 16 }]}>
         <TouchableOpacity onPress={() => onGame('Caughted')}>
-          <Text style={[screenStyles.gold]}>Caughted: {last_game.caughted}</Text>
+          <Text style={[screenStyles.gold]}>Caught: {last_game.caughted}</Text>
         </TouchableOpacity>
         
         <TouchableOpacity onPress={() => onGame('Freeded')}>
           <Text style={[screenStyles.gold]}>Freeded: {last_game.freeded}</Text>
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity onPress={() => onGame('Caughted') } style={styles.col}>
+        <Text style={[screenStyles.gold]}>Survived: {last_game.caughted}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 12
+    marginTop: 12,
+    paddingBottom: 12,
   },
-  title: {
-    
+  col: {
+    paddingTop: 16,
+    flexDirection: 'column',
+    alignItems:'center'
   },
   section: {
     justifyContent: 'space-around',
