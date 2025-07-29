@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useStore } from '../../store';
 import { WrapperDialog } from './WrapperDialog';
+import { objectToJson } from '@/app/shared/utils';
 
 
 const format = (s: number) => {
@@ -15,10 +16,15 @@ const format = (s: number) => {
 export function TimeSetter() {
   const { round_times, currentRound, isTimeSetter } = useStore();
   const { setRoundTime, hideTimeSetter } = useStore();
+ 
+  const [seconds, setSeconds] = useState(0);
 
-  const initialTime: number = round_times[currentRound.round]; // в секундах
-  const [seconds, setSeconds] = useState(initialTime);
+  useEffect(() => {
+    const initialTime: number = round_times[currentRound.round - 1];
+    setSeconds(initialTime)
+  },[isTimeSetter])
 
+  
   const increment = () => setSeconds((prev) => Math.min(prev + 30, 99 * 60));
   const decrement = () => setSeconds((prev) => Math.max(prev - 30, 0));
 

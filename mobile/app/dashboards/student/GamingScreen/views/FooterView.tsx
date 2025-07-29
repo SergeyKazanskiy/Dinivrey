@@ -6,14 +6,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { objectToJson } from '@/app/shared/utils';
 
 
-const format = (m: number) => `${String(m).padStart(2, '0')}:00`;
+const formatTime = (s: number) =>
+  `${Math.floor(s / 60)}`.padStart(2, '0') + ':' + `${s % 60}`.padStart(2, '0');
 
 
 export function FooterView() {
   const { currentRound, round_times, blockTimeSettings} = useStore();
   const { showTimeSetter } = useStore();
 
-  const time = round_times[currentRound.round - 1] / 60;
+ // alert(currentRound.round + '_' + round_times[0]+ '_' + round_times[1]) //!!!
+  const time = round_times[currentRound.round - 1];
 
   return (
     <View style={styles.container}>
@@ -27,7 +29,7 @@ export function FooterView() {
       </LinearGradient>
       
       <View style={styles.timeSetting}>
-        <Text style={styles.time}>{format(time)}</Text>
+        <Text style={styles.time}>{formatTime(time)}</Text>
         <Button
           title="SET" 
           buttonStyle={styles.button} 
