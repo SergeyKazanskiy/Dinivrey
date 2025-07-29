@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { formatDateTime } from '../../../../shared/utils';
 import { useStore } from '../../store';
-import { EventCell } from '../../../../shared/components/EventCell';
+import { CompetitionCell } from '../components/CompetitionCell';
 
 
 export type Props = {
@@ -20,12 +20,13 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
           style={item.id === event_id ? styles.itemSelected :  styles.item}
           onPress={() => onClick(item.id)}>
 
-          <EventCell
-            type={item.type}
-            date={ formatDateTime(item.timestamp).date}
+          <CompetitionCell
+            date={formatDateTime(item.timestamp).date}  
             time={formatDateTime(item.timestamp).time}
             desc={item.desc}
-          /> 
+            group1={item.group1}
+            group2={item.group2}
+          />
         </TouchableOpacity>        
         } style={styles.list}
       />

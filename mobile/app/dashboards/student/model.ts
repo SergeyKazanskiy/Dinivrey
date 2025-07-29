@@ -15,8 +15,18 @@ export interface Student {
 export interface Event {
   id: number;
   timestamp: number;
-  type: string;
   desc: string;
+  group1: string;
+  group2: string;
+}
+
+export interface Schedule {
+    id: number;
+    group_id: number;
+    weekday: number;
+    hour: number;
+    minute: number;
+    coach_id: number;
 }
 
 export interface Achievement {
@@ -55,12 +65,16 @@ export type Test = {
 
 // Game
 export type Game = { 
-  id: number;
+  game_id: number;
   timestamp: number;
-  caughted: number;
+  team: Team;
+
+  caught: number;
   freeded: number;
+  is_survived: boolean;
 }
 
+//GameReport
 export type Player = {
   id: number;
   name: string;

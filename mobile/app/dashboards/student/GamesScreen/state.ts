@@ -13,7 +13,7 @@ export interface GameReportsSlice {
     game_reports: {game: GameReport, team: Team, is_survived: boolean}[];
     game_report_id: number;
 
-    loadLastGameReport: () => void;
+    loadLastGameData: () => void;
     loadGameReports: () => void;
 
     selectGameDate: (year: number, month: number) => void;
@@ -29,7 +29,7 @@ export const createGameReportsSlice = (set: any, get: () => Store): GameReportsS
     game_reports: [],
     game_report_id: 0,
 
-    loadLastGameReport: () =>  {
+    loadLastGameData: () =>  {
         const { student_id }: ProfileSlice = get();
 
         get_last_game_date(student_id, (res => {
@@ -57,16 +57,17 @@ export const createGameReportsSlice = (set: any, get: () => Store): GameReportsS
         const { loadGameReports }: GameReportsSlice = get();
         loadGameReports();
     },
+
     selectGameReport: (game_report_id: number) => set({ game_report_id }),
 
     loadGameReport: (game_id: number) => {
         get_student_game_report(game_id, (game: GameReport) => {
-
-            set({ game });
+            const { setGameFromServer, calculateWinner }: ReportSlice = get();
+            setGameFromServer(game);
 
             get_game_players(game_id, (gamers => {
                 set({ gamers });
-                const { calculateWinner }: ReportSlice = get();
+                
                 calculateWinner();
             }))
         })

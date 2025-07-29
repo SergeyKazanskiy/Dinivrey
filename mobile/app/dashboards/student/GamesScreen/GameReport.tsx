@@ -64,13 +64,13 @@ const GameReport = () => {
             <Text style={styles.text}>Players - {teams_totals[1].amount} </Text>
           </View>
                 
-          <RoundReport round={1} time={formatSec(round_times[1])}
-            role_1={role_1} total_1={teams_totals[0].freeded + '+' + teams_totals[0].survived}
-            role_2={role_2} total_2={teams_totals[0].caught + '+' + teams_totals[0].bonus}
+          <RoundReport round={1} time={formatSec(round_times[0])}
+            role_1={role_1} total_1={teams_totals[1].freeded + '+' + teams_totals[1].survived} //red
+            role_2={role_2} total_2={teams_totals[0].caught + '+' + teams_totals[0].bonus} //green
           />
           <RoundReport round={2} time={formatSec(round_times[1])}
-            role_1={role_2} total_1={teams_totals[1].caught + '+' + teams_totals[1].bonus}
-            role_2={role_1} total_2={teams_totals[1].freeded + '+' + teams_totals[1].survived}
+            role_1={role_2} total_1={teams_totals[1].caught + '+' + teams_totals[1].bonus} //red
+            role_2={role_1} total_2={teams_totals[0].freeded + '+' + teams_totals[0].survived} //green
           />
           <FooterReport/>
         </ScrollView>

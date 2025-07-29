@@ -24,7 +24,7 @@ export function GamesView({ onSelect }: Props) {
       keyExtractor={item => item.game.id.toString()}
       renderItem={({item}) => {
       const bgTeam = item.team === Team.GREEN ? '#0FA919' : '#A90F11';
-      const bgWon = item.team === Team.GREEN ? '#00FF11' : '#FF0004';
+      const bgWon = item.team === Team.GREEN ? '#00ff11db' : '#FF0004';
         
         const date = new Date(item.game.timestamp);
         const day = String(date.getDate()).padStart(2, '0');
@@ -43,7 +43,7 @@ export function GamesView({ onSelect }: Props) {
                 <Text style={[styles.small_text, {width: 60}]}>Evader survived</Text>
               
                 <View style={{paddingTop: 2}}>
-                  {item.is_survived && <Icon name="checkbox-multiple-marked-outline" type="material-community" color='green'/>}
+                  {item.is_survived && <Icon name="checkbox-marked-outline" type="material-community" color='green'/>}
                   {!item.is_survived && <Icon name="close-box-outline" type="material-community" color='red' />}
                 </View>
               </View>
@@ -57,7 +57,7 @@ export function GamesView({ onSelect }: Props) {
 
             <View style={[styles.col, {borderLeftWidth: 1, borderLeftColor: '#777', paddingLeft: 4}]}>
               <View style={[styles.capsule, {backgroundColor: bgWon, width: 72}]}>
-                <Text style={styles.title}>{item.game.winner === item.team ? 'Winner' : 'Lost'}</Text>
+                <Text style={styles.winner}>{item.game.winner === item.team ? 'Winner' : 'Lost'}</Text>
               </View>
               <Text style={[styles.small_text, {marginTop: 10}]}>{day}/{month}/{year}</Text>
               
@@ -98,6 +98,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
+    fontSize: 16,
+    color: 'white',
+    alignSelf: 'center',
+  },
+  winner: {
     fontSize: 16,
     color: 'white',
     alignSelf: 'center',

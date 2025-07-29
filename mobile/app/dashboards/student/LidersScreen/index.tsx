@@ -21,20 +21,20 @@ export default function LidersScreen() {
     }, [])
   );
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Pressable style={{ marginRight: 15 }}
-          onPress={openGroupsScreen} >
-          <Ionicons name='folder-open' size={24} color="#D1FF4D" />
-        </Pressable>
-      ),
-    });
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <Pressable style={{ marginRight: 15 }}
+  //         onPress={openGroupsScreen} >
+  //         <Ionicons name='folder-open' size={24} color="#D1FF4D" />
+  //       </Pressable>
+  //     ),
+  //   });
+  // }, [navigation]);
   
-  const openGroupsScreen = () => {
-    router.push("/dashboards/student/LidersScreen/GroupsScreen");
-  };
+  // const openGroupsScreen = () => {
+  //   router.push("/dashboards/student/LidersScreen/GroupsScreen");
+  // };
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >

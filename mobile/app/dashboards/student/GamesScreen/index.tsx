@@ -11,14 +11,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 export default function GamesScreen() {
-  const { loadLastGameReport, selectGameReport, setGamingScreen } = useStore();
+  const { loadLastGameData, selectGameReport, setGamingScreen } = useStore();
 
   const router = useRouter();
   const navigation = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
-      loadLastGameReport();
+      loadLastGameData();
     }, [])
   );
 

@@ -1,6 +1,7 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from "../../api/student_api";
-import { Student, Achievement, Achieve, Test, Game, Event, Lider, Group, GameReport, Gamer, Team } from './model';
+import { Student, Achievement, Achieve, Test, Game, Event,
+    Schedule, Lider, Group, GameReport, Gamer, Team } from './model';
 
 
 // Profile
@@ -63,6 +64,9 @@ export function get_group_events(group_id: number, year: number, month: number, 
     return httpWrapper(() => api.get(`camps/groups/${group_id}/events?year=${year}&month=${month}`), callback);
 };
 
+export function get_group_schedule(group_id: number, callback: (schedules: Schedule[]) => void) {
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/schedule`), callback, 'Getting schedule');
+};
 
 // Liders
 export function get_groups(camp_id: number, callback: (camps: Group[]) => void) {

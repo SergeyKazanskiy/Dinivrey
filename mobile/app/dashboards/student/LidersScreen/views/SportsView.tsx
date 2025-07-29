@@ -12,6 +12,11 @@ export const SportsView = () => {
     return (
         <View style={styles.container}>
             <FlatList 
+                contentContainerStyle={{
+                    flexGrow: 1,             // растягивает контейнер до доступной ширины
+                    justifyContent: 'center', // центрирует по горизонтали
+                    alignItems: 'center',     // выравнивает по вертикали (если нужно)
+                }}
                 data={lider_tests} 
                 horizontal
                 keyExtractor={(item) => item}
@@ -35,7 +40,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        padding: 4,
+        paddingVertical: 4,
         marginBottom: 16
     },
     icon: {

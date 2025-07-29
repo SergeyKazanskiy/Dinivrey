@@ -3,7 +3,7 @@ import { Student, Achievement, Test, Game, Event } from "../model";
 import { get_student, get_profile_achievements, get_last_test } from '../http';
 import { get_last_game, get_upcoming_events, update_student_achieve} from '../http';
 import { effectNames, RuleLevels, eventTypes } from '../../../shared/constants';
-import { getTodayTimestamp } from '../../../shared/utils';
+import { getTodayTimestamp, objectToJson } from '../../../shared/utils';
 
 
 export interface ProfileSlice {
@@ -13,8 +13,8 @@ export interface ProfileSlice {
   isAchievementAdding: boolean;
 
   profile_achievements: Achievement[];
-  last_test: Test;
-  last_game: Game;
+  last_test: Partial<Test>;
+  last_game: Partial<Game>;
   upcoming_events: Event[];
   
   isBackDrawer: boolean;
@@ -41,7 +41,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   isAchievementAdding: false,
 
   last_test: { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },
-  last_game: { id: 0, timestamp: 0, caughted: 0, freeded: 0 },
+  last_game: { game_id: 0, timestamp: 0, caught: 0, freeded: 0, is_survived: true },
 
   upcoming_events: [{ id: 0, type: eventTypes[0], desc: "We going to running", timestamp: getTodayTimestamp() }],
 
@@ -60,7 +60,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
           if (tests.length > 0) {
             set({ last_test: tests[0]});
           } else {
-            const emptyTest: Test = { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 };
+            const emptyTest:  Partial<Test> = { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 };
             set({ last_test: emptyTest});
           }
         });
@@ -69,7 +69,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
           if (games.length > 0) {
             set({ last_game: games[0]});
           } else {
-            const emptyGame: Game = { id: 0, timestamp: 0, caughted: 0, freeded: 0 };
+            const emptyGame:  Partial<Game> = { game_id: 0, timestamp: 0, caught: 0, freeded: 0, is_survived: true };
             set({ last_game: emptyGame});
           }
         });
