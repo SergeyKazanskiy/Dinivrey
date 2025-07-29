@@ -1,5 +1,5 @@
-import { Event } from "../model";
-import { get_group_last_event, get_group_events } from '../http';
+import { Event, Schedule } from "../model";
+import { get_group_last_event, get_group_events, get_group_schedule } from '../http';
 import { ProfileSlice } from '../ProfileScreen/state';
 import { objectToJson, getYearAndMonth } from "@/app/shared/utils";
 
@@ -12,7 +12,11 @@ export interface EventsSlice {
     event_month: number;
 
     isMainEvent: boolean;
+    isEventsView: boolean;
 
+    schedules: Schedule[];
+
+    togleEvents: () => void;
     loadLastEvent:() => void;
     selectEventDate: (event_year: number, event_month: number) => void;
 
@@ -20,6 +24,7 @@ export interface EventsSlice {
     loadEvent: (event_id: number, timestamp: number) => void;
 
     selectEvent: (event_id: number) => void;
+    loadSchedule: (group_id: number) => void;
 }
 
 export const createEventsSlice = (set: any, get: any): EventsSlice => ({     
@@ -30,7 +35,13 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     event_month: 3,
 
     isMainEvent: false,
+    isEventsView: true,
 
+    schedules: [],
+
+    togleEvents: () => set((state: EventsSlice) => ({
+        isEventsView: !state.isEventsView
+    })),
 
     loadLastEvent:() => {
         const { isMainEvent, student }: EventsSlice & ProfileSlice = get();
@@ -58,6 +69,17 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     loadEvents: (group_id: number, event_year: number, event_month: number) => {
         get_group_events(group_id, event_year, event_month, (events: Event[]) => {
+            alert(objectToJson(events))
+    // "camp_id": 1,
+    // "timestamp": 1751374800000,
+    // "type": "Game",
+    // "desc": "reqwrqwerqw",
+    // "group1_id": 3,
+    // "group2_id": 5,
+    // "id": 51
+
+
+
             const { event_id }: EventsSlice = get();
             var eventId: Number;
 
@@ -89,5 +111,11 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     selectEvent: (event_id: number) => {
         set({ event_id });
+    },
+
+    loadSchedule: (group_id: number) => {
+        get_group_schedule(group_id, (schedules: Schedule[]) => {
+            set({schedules});
+        })
     },
 });

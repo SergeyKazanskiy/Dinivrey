@@ -33,7 +33,6 @@ export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
         const { student }: ProfileSlice = get();
 
         get_liders(student.group_id, (liders: Lider[]) => {
-            //alert(objectToJson(liders))
             set({
                 lider_test: 'speed',
                 liders: liders.sort((a, b) => b.speed - a.speed)
@@ -51,6 +50,7 @@ export const createLidersSlice = (set: any, get: () => Store): LidersSlice => ({
                 return avgB - avgA;
             });
         } else {
+            //alert(test)
             sorted = liders.sort((a, b) => b[test] - a[test]);
         }
         set((state: LidersSlice) => ({

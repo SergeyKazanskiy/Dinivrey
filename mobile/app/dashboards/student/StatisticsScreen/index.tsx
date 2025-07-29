@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { ImageBackground, Pressable, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { screenStyles } from '../../../shared/styles/appStyles';

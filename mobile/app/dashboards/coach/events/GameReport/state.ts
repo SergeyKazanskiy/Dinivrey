@@ -24,8 +24,8 @@ export const createGameReportSlice = (set: any, get: any): GameReportSlice => ({
 
     loadGame: (game_id: number) => {
         get_event_game(game_id, (game: Game) => {
-
-            set({ game });
+            const { setGameFromServer }: ReportSlice = get();
+            setGameFromServer(game);
 
             get_game_players(game_id, (gamers => {
                 set({ gamers });

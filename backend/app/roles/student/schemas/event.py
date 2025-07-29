@@ -27,6 +27,15 @@ class EventResponse(EventBase):
         from_attributes = True
 
 
+class CompetitionResponse(BaseModel):
+    id: int
+    timestamp: int
+    desc: Optional[str] = None
+    group1: str
+    group2: Optional[str] = None
+
+
+
 class AttendanceBase(BaseModel):
     event_id: int
     group_id: int

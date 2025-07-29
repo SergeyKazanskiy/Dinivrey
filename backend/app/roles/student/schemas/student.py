@@ -23,12 +23,19 @@ class StudentResponse(StudentBase):
 
 # Test
 class TestBase(BaseModel):
+    student_id: int
     timestamp: int
+    date: str
+
     speed: float
     stamina: float
     climbing: float
     evasion: float
     hiding: float
+
+    speed_time: int
+    stamina_time: float
+    climbing_time: int
 
 class TestResponse(TestBase):
     id: int

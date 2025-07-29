@@ -46,6 +46,7 @@ export interface ReportSlice {
     createGamers: () => void; // First round finished (Waiting state)
     updateGamers: () => void; // Second round finished (Report step)
 
+    setGameFromServer: (game: Game) => void;
     calculateWinner: () => void; // before opening the report (Report step)
 
     // Server with
@@ -169,6 +170,13 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         calculateWinner();
     },
 
+    setGameFromServer: (game: Game) => set({
+        round_times: [game.time1, game.time2],
+        first_chaser_team: game.first_team,
+        gameDate: game.timestamp,
+        game
+    }),
+
     calculateWinner: () => {
         const { gamers, first_chaser_team, times_total }: GamingSlice & ReportSlice = get();
         const firstTeamGamers = gamers.filter(el => el.team === first_chaser_team ); //right team green
@@ -237,7 +245,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             time1: times_total[0],
             time2: times_total[1],
             points1: teams_totals[0].total,
-            points2: teams_totals[0].total,
+            points2: teams_totals[1].total,
             tags: teams_totals[0].caught + teams_totals[1].caught,
             rescues: teams_totals[0].freeded + teams_totals[1].freeded,
             winner: winner || 'Equally',

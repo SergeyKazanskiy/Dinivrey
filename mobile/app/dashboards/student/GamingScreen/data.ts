@@ -1,11 +1,8 @@
 import { GameReport, Gamer, Role, Team, Total, TeamTotals } from '../model';
 import { objectToJson } from '../../../shared/utils';
-//import { add_event_game, add_event_game_gamers } from '../http';
-//import { EventsSlice } from '../EventsScreen/state';
 import { getTodayTimestamp } from '../../../shared/utils';
 import { GamingSlice } from './state';
 import { BONUS_POINTS } from './constants';
-//import { AttendanceSlice } from '../AttendanceScreen/state';
 
 
 export interface ReportSlice {
@@ -46,10 +43,8 @@ export interface ReportSlice {
     createGamers: () => void; // First round finished (Waiting state)
     updateGamers: () => void; // Second round finished (Report step)
 
+    setGameFromServer: (game: GameReport) => void; //for calculation an show history report
     calculateWinner: () => void; // before opening the report (Report step)
-
-    // Server with
-    // saveGame: (callback: (isOk: boolean) => void) => void ; // after closing the report (Report step)
     clearGame: () => void;
 }
 
@@ -169,6 +164,13 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         calculateWinner();
     },
 
+    setGameFromServer: (game: GameReport) => set({
+        round_times: [game.time1, game.time2],
+        first_chaser_team: game.first_team,
+        gameDate: game.timestamp,
+        game
+    }),
+    
     calculateWinner: () => {
         const { gamers, first_chaser_team, times_total }: GamingSlice & ReportSlice = get();
         const firstTeamGamers = gamers.filter(el => el.team === first_chaser_team ); //right team green
@@ -196,12 +198,14 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         const totals_1: TeamTotals = getTeamTotals( // green
             first_chaser_team === Team.GREEN ? Team.GREEN : Team.RED,
             firstTeamGamers.length,
-            total_1, total_2.survived === 0 ? BONUS_POINTS : 0
+            total_1,
+            total_2.survived === 0 ? BONUS_POINTS : 0 //3
         )
-        const totals_2: TeamTotals = getTeamTotals(
+        const totals_2: TeamTotals = getTeamTotals(  // red
             totals_1.team === Team.GREEN ? Team.RED : Team.GREEN,
             secondTeamGamers.length,
-            total_2, total_1.survived === 0 ? BONUS_POINTS : 0
+            total_2,
+            total_1.survived === 0 ? BONUS_POINTS : 0 //3
         )
 
         const totalsEqually = totals_1.total === totals_2.total;
@@ -215,7 +219,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         }  
 
         set({
-            teams_totals: [totals_1, totals_2],
+            teams_totals: [totals_1, totals_2], //[green, red]
             winner: winner_number === null ? 'Equally' : winner_number === 0 ? totals_1.team : totals_2.team
         });
     },
@@ -281,8 +285,17 @@ function getTeamTotals(team: Team, amount: number, total: Total, bonus: number):
     };
     
     totals.total = totals.caught + totals.freeded + totals.survived + totals.bonus
+
+    // let points_string: string;
+    // if (team === Team.RED) {
+    //     points_string = totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points,
+    // } else {
+
+    // }
+
     totals.info = {
-        points: totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points, 
+        //points: totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points, 
+        points: totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points,
         tags: totals.caught + '',
         bonus: totals.bonus > 0 ? String(totals.bonus) : '',
         rescues: totals.freeded + '+' + totals.survived}

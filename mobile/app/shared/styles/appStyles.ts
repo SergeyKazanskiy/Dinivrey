@@ -29,7 +29,7 @@ export const widgetStyles = StyleSheet.create({
   label: { color: 'white', fontSize: 15, fontWeight: 'medium' },
   input: { color: '#A7CFF5', fontSize: 15, fontWeight: 'medium' },
   sport: { color: '#EFEFEF', fontSize: 14, fontWeight: 'medium', alignSelf: 'center' },
-  sportSelected: { color: 'red', fontSize: 14, fontWeight: 'medium', alignSelf: 'center' },
+  sportSelected: { color: 'yellow', fontSize: 14, fontWeight: 'medium', alignSelf: 'center' },
   background: { backgroundColor: '#475339' },
 });
 

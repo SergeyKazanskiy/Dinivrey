@@ -9,6 +9,7 @@ import { EventsView } from './views/EventsView';
 import { useStore } from '../store';
 import { screenStyles } from '../../../shared/styles/appStyles';
 import { LinearGradient } from 'expo-linear-gradient';
+import { objectToJson } from '@/app/shared/utils';
 
 
 const ProfileScreen = () => {
@@ -70,13 +71,13 @@ const ProfileScreen = () => {
 
   const openTestStatistic = (metric: string) => {
     const metricName = metric.charAt(0).toUpperCase() + metric.slice(1);
-    loadTest(last_test.timestamp, metricName);
+    loadTest(last_test.timestamp || 0, metricName);
     router.push("/dashboards/student/StatisticsScreen");
     setBackDrawer(false);
   }
   
   const openGameStatistic = (metric: string) => {
-    loadGame(last_game.timestamp, metric);
+    loadGame(last_game.timestamp || 0, metric);
     router.push("/dashboards/student/StatisticsScreen");
     setBackDrawer(false);
   }
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
 
     color: '#eee',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'medium'
   }
 });

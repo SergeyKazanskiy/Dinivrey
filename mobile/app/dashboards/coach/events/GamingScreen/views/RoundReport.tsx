@@ -51,7 +51,7 @@ export function RoundReport({ round, time, role_1, total_1, role_2, total_2 }: P
           </View>
 
           <View style={[styles.capsule]}> 
-            <Text style={styles.capsule_text}>{time}</Text>
+            <Text style={styles.time}>{time}</Text>
           </View>
           
           <View style={[styles.section, styles.capsule]}> 
@@ -93,6 +93,12 @@ const styles = StyleSheet.create({
   capsule_text: {
     fontSize: 16,
     color: '#222',
+    fontWeight: '500',
+  },
+  time: {
+    fontSize: 14,
+    color: '#222',
+    paddingTop: 1,
     fontWeight: '500',
   },
   wrapperRound: {

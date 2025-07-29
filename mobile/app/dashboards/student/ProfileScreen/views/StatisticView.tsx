@@ -26,17 +26,23 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
       </View> */}
       
       <View style={[styles.section, { paddingHorizontal: 16 }]}>
-        <TouchableOpacity onPress={() => onGame('Caughted')}>
-          <Text style={[screenStyles.gold]}>Caught: {last_game.caughted}</Text>
+        <TouchableOpacity onPress={() => onGame('Caught')}>
+          <Text style={styles.label}>Caught: 
+            <Text style={styles.text}>{last_game.caught}</Text>
+          </Text>
         </TouchableOpacity>
         
         <TouchableOpacity onPress={() => onGame('Freeded')}>
-          <Text style={[screenStyles.gold]}>Freeded: {last_game.freeded}</Text>
+          <Text style={styles.label}>Freeded: 
+            <Text style={styles.text}>{last_game.freeded}</Text>
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={() => onGame('Caughted') } style={styles.col}>
-        <Text style={[screenStyles.gold]}>Survived: {last_game.caughted}</Text>
+      <TouchableOpacity onPress={() => onGame('Survived') } style={styles.col}>
+        <Text style={styles.label}>Survived: 
+          <Text style={styles.text}>{last_game.is_survived ? '2' : '0'}</Text>
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,5 +61,16 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: 'space-around',
     flexDirection: 'row',
+  },
+  label: {
+    color: '#F8E187',
+    fontSize: 15,
+    fontWeight: 500
+  },
+  text: {
+    paddingLeft: 6,
+    color: '#D1FF4D',
+    fontSize: 18,
+    fontWeight: 500
   },
 });

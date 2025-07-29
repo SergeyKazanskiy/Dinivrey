@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import Svg, { Polygon, Line, Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 import { ImagesPath } from '../constants';
+import { Test } from '@/app/dashboards/student/model';
 
 
 type Exam = {
@@ -13,7 +14,7 @@ type Exam = {
 };
 
 type RadarChartProps = {
-  test: Exam;
+  test: Partial<Test>;
   onExam: (metricName: string) => void;
   onLiders: () => void;
 };
@@ -35,11 +36,11 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }
   ];
 
   const values = [
-    test.climbing,
-    test.stamina,
-    test.speed,
-    test.evasion,
-    test.hiding,
+    test.climbing || 0,
+    test.stamina || 0,
+    test.speed || 0,
+    test.evasion || 0,
+    test.hiding || 0,
   ];
 
   const average = (
