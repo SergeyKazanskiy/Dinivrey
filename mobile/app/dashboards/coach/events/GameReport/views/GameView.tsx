@@ -5,9 +5,12 @@ import { FooterReport } from '../../GamingScreen/views/FooterReport';
 import { Team, Role } from '../../model';
 
 
-
-const formatSec = (s: number) =>
-  `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+function formatSec(s: number) {
+  if (s) return `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+  return ` - : - `; // for second if only first round finished
+}
+// const formatSec = (s: number) =>
+//   `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
 export const GameView = () => {
   const { teams_totals, currentRole, round_times } = useStore();

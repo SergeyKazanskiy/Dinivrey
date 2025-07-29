@@ -5,18 +5,22 @@ import { useStore } from '../../store';
 import { WrapperDialog } from './WrapperDialog';
 
 
-const format = (m: number) => `${String(m).padStart(2, '0')}:00`;
+const format = (s: number) => {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+};
 
 
 export function TimeSetter() {
   const { round_times, currentRound, isTimeSetter } = useStore();
   const { setRoundTime, hideTimeSetter } = useStore();
 
-  const initialTime: number = round_times[currentRound.round] // sec
-  const [minutes, setMinutes] = useState(initialTime / 60);
+  const initialTime: number = round_times[currentRound.round]; // в секундах
+  const [seconds, setSeconds] = useState(initialTime);
 
-  const increment = () => setMinutes((prev) => Math.min(prev + 1, 99));
-  const decrement = () => setMinutes((prev) => Math.max(prev - 1, 0));
+  const increment = () => setSeconds((prev) => Math.min(prev + 30, 99 * 60));
+  const decrement = () => setSeconds((prev) => Math.max(prev - 30, 0));
 
   return (
     <WrapperDialog
@@ -29,7 +33,7 @@ export function TimeSetter() {
           <Ionicons name="chevron-up" size={32} color="#ddd" />
         </TouchableOpacity>
 
-        <Text style={styles.timeText}>{format(minutes)}</Text>
+        <Text style={styles.timeText}>{format(seconds)}</Text>
 
         <TouchableOpacity onPress={decrement} style={styles.iconButton}>
           <Ionicons name="chevron-down" size={32} color="#ddd" />
@@ -37,7 +41,7 @@ export function TimeSetter() {
       </View>
 
       <TouchableOpacity style={styles.saveButton}
-        onPress={() => (setRoundTime(currentRound.round, minutes * 60), hideTimeSetter())}>
+        onPress={() => (setRoundTime(currentRound.round, seconds), hideTimeSetter())}>
         <Text style={styles.saveButtonText}>Save round time</Text>
       </TouchableOpacity>
     </WrapperDialog>

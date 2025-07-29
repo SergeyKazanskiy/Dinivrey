@@ -23,13 +23,12 @@ import { GameReport } from './popups/GameReport';
 
 export default function GamingScreen() {
   const { isHeader, currentRound, attendances, gameStep, gameState, gameDate, isEvadersDialog } = useStore();
-  const { currentTeam, pointsDifference } = useStore();
+  const { currentTeam, pointsDifference, winner } = useStore();
   const { setAvailableStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings, clearPlayers} = useStore();
   const { onFixPoints, switch_on_completion, hideCheckingAlert } = useStore();
 
   const router = useRouter();
 
-  //alert(objectToJson(currentRound))
 
   useEffect(() => {
     const availables = attendances.filter(el => el.present === true);
@@ -70,7 +69,7 @@ export default function GamingScreen() {
         onCancel={hideBackAlert}
       />
       <GameOverAlert
-        team={Team.GREEN}
+        team={winner}
         onNo={handleFinishGame}
         onYes={step_on_settings}
       />

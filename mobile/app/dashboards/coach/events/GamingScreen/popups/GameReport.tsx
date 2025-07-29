@@ -6,8 +6,10 @@ import { Team, Role } from '../../model';
 import { PopupWrapper } from '../../../../../shared/components/PopupWrapper';
 
 
-const formatSec = (s: number) =>
-  `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+function formatSec(s: number) {
+    if (s) return `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+    return `  -  :  -  `; // for second if only first round finished
+}
 
 const formatDate = (timestamp: number): string => {
   const date = new Date(timestamp);

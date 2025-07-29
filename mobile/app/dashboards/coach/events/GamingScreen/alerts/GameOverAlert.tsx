@@ -6,7 +6,7 @@ import { Team } from '../../model';
 
 
 interface Props {
-  team: Team;
+  team: Team | null;
   onNo: () => void;
   onYes: () => void;
 }
@@ -20,8 +20,10 @@ export function GameOverAlert({ onNo, onYes, team}: Props) {
       buttonText2='YES'
       handleYes={onNo}
       onClose={onYes}>
-        {/* <Text style={styles.title}>The game is over</Text> */}
-        <Text style={styles.title}>{'The ' + team + ' team won!'}</Text>
+        
+        {team && <Text style={styles.title}>{'The ' + team + ' team won!'}</Text>}
+        {!team && <Text style={styles.title}>{'Draw, friendship wins!'}</Text>}
+
         <Text style={styles.text}>Want to start the next game?</Text>
     </CustomAlert>
   )
