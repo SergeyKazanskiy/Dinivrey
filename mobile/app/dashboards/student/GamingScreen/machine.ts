@@ -139,9 +139,10 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
             switch_on_correction(pointsDifference);
         } else {
             if (currentRound.round < ROUNDS_AMOUNT) {
-                const { switch_on_waiting, setNextRound, createGamers }: ReportSlice & GamingSlice & GameMachine = get();
+                const { switch_on_waiting, setNextRound, createGamers, setRoundTime, round_times }: ReportSlice & GamingSlice & GameMachine = get();
                 createGamers();
                 setNextRound();
+                setRoundTime(2, round_times[0])
                 switch_on_waiting();
             } else {
                 const { step_on_report, updateGamers }: GameMachine & ReportSlice = get();
