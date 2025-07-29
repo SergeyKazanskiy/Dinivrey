@@ -133,7 +133,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         const evadersPoints = evaders.reduce((acc, player) => acc += player.points, 0);
         const taggedAmount = evaders.length - survived_ids.length;
 
-        const pointsDifference = Math.abs(chasersPoints - evadersPoints - taggedAmount)
+        const pointsDifference = Math.abs(chasersPoints - (evadersPoints + taggedAmount))
 
         if (pointsDifference > 0) {
             switch_on_correction(pointsDifference);
@@ -173,11 +173,12 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
         setGameDate();
         setRoundTime(1, INITIAL_ROUND_TIME);
         setRoundTime(2, INITIAL_ROUND_TIME);
-        set({ gameStep: 'Settings', gameState: 'Waiting', isPointsFixing: false,
+        set({ gameStep: 'Settings', gameState: 'Waiting', isPointsFixing: false, times_total:[],
             isNewGame: true, isBackAlert: false, isTimerRunning: false, isHeader: true,
             isEvadersDialog: false, isGameOverAlert: false, isSuccessAlert: false,
             blockTimeSettings: false, blockPlayersAdding: false, blockRoleChosing: false, blockPointsAdding: true,
             currentRound: { round: 1, teams: [ {team: Team.RED, role: Role.EVADER}, {team: Team.GREEN, role: Role.CHASER}]},
+            isReportButton: false,
             });
         },
 
@@ -196,6 +197,7 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
             gameState: 'Playing',
             isTimerRunning: true,
             blockPointsAdding: false,
+            isReportButton: false,
         })
     },
 
@@ -228,8 +230,12 @@ export const createGameMachine = (set: any, get: any): GameMachine => ({
     hideBackAlert: () => set({ isBackAlert: false }),
 
     hideGameReport: () => {
-        set({ isGameReport: false, isGameOverAlert: true })
-
+        const { gameStep }: GameMachine= get();
+        set({ isGameReport: false })
+        
+        if (gameStep === 'Report') {
+            set({ isGameOverAlert: true })
+        }
         // const { saveGame }: GameMachine & ReportSlice = get();
         //     saveGame((isOk: boolean)=>{
         //         if (isOk) set({ isGameOverAlert: true });

@@ -29,7 +29,8 @@ export interface ReportSlice {
     teams_totals: TeamTotals[];
 
     winner_number: number | null;
-    winner: Team | null; 
+    winner: Team | null;
+    isReportButton: boolean;
 
     // Setters
     setGameDate: () => void;
@@ -88,17 +89,16 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
 
     // Result
     times_total:[],
-    teams_totals: [
-        { team: Team.RED, amount: 5, caught: 1,  freeded: 2, survived: 3, bonus: 0, total: 0,
-            info: { points: '11', tags: '12', bonus: '13', rescues: '14'}
-        },
-        { team: Team.GREEN, amount: 4, caught: 1,  freeded: 2, survived: 3, bonus: 0, total: 0,
-            info: { points: '21', tags: '22', bonus: '23', rescues: '24'}
-        },
-    ],
+    teams_totals:[{ team: Team.RED, amount: 0, caught: 0,  freeded: 0, survived: 0, bonus: 0, total: 0,
+        info: { points: '0', tags: '0', bonus: '0', rescues: '0'}
+    },
+    { team: Team.GREEN, amount: 0, caught: 0,  freeded: 0, survived: 0, bonus: 0, total: 0,
+        info: { points: '0', tags: '0', bonus: '0', rescues: '0'}
+    },],
 
     winner_number: null,
     winner: null,
+    isReportButton: false,
 
     // Setters
     setGameDate: () => set({ gameDate: getTodayTimestamp()}),
@@ -137,7 +137,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
 
     // Prepare
     createGamers: () => { // 1 round
-        const { players, survived_ids, first_chaser_team }: GamingSlice & ReportSlice = get();
+        const { players, survived_ids, first_chaser_team, calculateWinner }: GamingSlice & ReportSlice = get();
 
         const gamers: Gamer[] = players.map(el => ({
             student_id: el.id,
@@ -149,6 +149,8 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         }));
         //alert(objectToJson(gamers))
         set({ gamers });
+        calculateWinner(); //Warning ???
+        set({ isReportButton: true });
     },
 
     updateGamers: () => { // 2 round
@@ -168,6 +170,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         //alert(objectToJson(updated))
         set({ gamers: updated });
         calculateWinner();
+        set({ isReportButton: false });
     },
 
     setGameFromServer: (game: Game) => set({
@@ -204,12 +207,12 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         const totals_1: TeamTotals = getTeamTotals( // green
             first_chaser_team === Team.GREEN ? Team.GREEN : Team.RED,
             firstTeamGamers.length,
-            total_1, total_2.survived === 0 ? BONUS_POINTS : 0
+            total_1, total_2.survived === 0 && total_1.caught > 0 ? BONUS_POINTS : 0
         )
         const totals_2: TeamTotals = getTeamTotals(
             totals_1.team === Team.GREEN ? Team.RED : Team.GREEN,
             secondTeamGamers.length,
-            total_2, total_1.survived === 0 ? BONUS_POINTS : 0
+            total_2, total_1.survived === 0 && total_2.caught > 0 ? BONUS_POINTS : 0
         )
 
         const totalsEqually = totals_1.total === totals_2.total;
@@ -272,6 +275,12 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
         round_times: [600, 600],
         winner_number: null,
         winner: "Green",
+        teams_totals:[{ team: Team.RED, amount: 0, caught: 0,  freeded: 0, survived: 0, bonus: 0, total: 0,
+            info: { points: '0', tags: '0', bonus: '0', rescues: '0'}
+        },
+        { team: Team.GREEN, amount: 0, caught: 0,  freeded: 0, survived: 0, bonus: 0, total: 0,
+            info: { points: '0', tags: '0', bonus: '0', rescues: '0'}
+        },],
     }),
 });
 

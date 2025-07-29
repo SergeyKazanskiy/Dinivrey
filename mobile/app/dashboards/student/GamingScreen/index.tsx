@@ -25,7 +25,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function GamingScreen() {
   const { isHeader, currentRound, gameStep, gameState, gameDate, isEvadersDialog } = useStore();
-  const { currentTeam, pointsDifference } = useStore();
+  const { currentTeam, pointsDifference, winner } = useStore();
   const { loadStudents, onNavbarBack, hideBackAlert, onErrorExit, step_on_settings, clearPlayers} = useStore();
   const { onFixPoints, switch_on_completion, hideCheckingAlert, setGamingScreen } = useStore();
 
@@ -74,7 +74,7 @@ export default function GamingScreen() {
         onCancel={hideBackAlert}
       />
       <GameOverAlert
-        team={Team.GREEN}
+        team={winner}
         onNo={handleFinishGame}
         onYes={step_on_settings}
       />
