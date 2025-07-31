@@ -3,14 +3,17 @@ import { create_camp, delete_camp, update_camp } from '../http';
 import { GroupsSlice } from './GroupsSlice';
 import { StateSlice } from '../state';
 import { getChanges } from '../../../shared/utils';
+import { sanitizeName } from '../../../shared/utils';
 
 
 export interface CampsSlice {
     camps: Camp[];
     camp_id: number;
+    camp_inx: number;
+    camp_name: string;
 
     setCamps: (camps: Camp[]) => void;
-    selectCamp: (id: number) => void;
+    selectCamp: (id: number, camp_inx: number) => void;
 
     createCamp: () => void;
     updateCamp: (name: string, city: string) => void;
@@ -24,13 +27,28 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
         { id: 3, name: 'Camp 3', city: 'City 3' }
     ],
     camp_id: 0,
+    camp_inx: 0,
+    camp_name: '',
    
-    setCamps: (camps: Camp[])  => set({ camps, camp_id: 0 }),
 
-    selectCamp: (id: number) => {
-        const { camp_id }: CampsSlice = get();
+    setCamps: (camps: Camp[])  => {
+        set({ camps, camp_id: 0, camp_inx: -1 });
+
+        if (camps.length > 0) {
+            const { selectCamp }: CampsSlice = get();
+            
+            selectCamp(camps[0].id, 0);
+        }
+    },
+
+    selectCamp: (id: number, camp_inx: number) => {
+        const { camp_id, camps }: CampsSlice = get();
         if (id !== camp_id) {
-            set({ camp_id: id });
+            set({
+                camp_id: id,
+                camp_inx,
+                camp_name: sanitizeName(camps[camp_inx].name),
+            });
             const { loadGroups }: StateSlice = get();
             loadGroups(id);
         } 
@@ -40,6 +58,7 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
         const { camps }: CampsSlice = get();
         const name: string = 'Camp ' + (camps.length + 1)
         const newCamp: Omit<Camp, 'id'> = { name, "city": 'enter' };
+
         create_camp({"name": name, "city": 'enter'}, (res)=> {
             if (res.id) {
                 const id = res.id;
@@ -47,7 +66,7 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
                     camps: [...state.camps, {...newCamp, id}]
                 }));
                 const { selectCamp }: CampsSlice = get();
-                selectCamp(id)
+                selectCamp(id, camps.length - 1)
             };
         });
     },

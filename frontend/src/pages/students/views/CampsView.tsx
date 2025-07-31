@@ -12,7 +12,7 @@ export const CampsView: React.FC = () => {
                 <Flex>
                     <Text as={item.id === camp_id ? 'u' : 'abbr'} key={item.id} color='gray.600' fontSize={15} cursor='pointer'
                         mr={item.id === camp_id ? '0px' : '19px'}
-                        onClick={() => selectCamp(item.id)}>
+                        onClick={() => selectCamp(item.id, inx)}>
 
                         {item.name}
                     </Text>

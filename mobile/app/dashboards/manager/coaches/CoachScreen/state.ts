@@ -16,8 +16,11 @@ export interface CoachSlice {
     coachGroups: CoachGroup[];
 
     coach_group_id: number;
-    isGroupDeleteAlert: boolean;
     isFreeGroups: boolean;
+
+    isGroupDeleteAlert: boolean;
+    isMakePhotoAlert: boolean;
+
 
     loadCoach: (coach_id: number) => void;
     loadCoachGroups: (coach_id: number) => void;
@@ -31,10 +34,13 @@ export interface CoachSlice {
 
     selectGroup: (coach_group_id: number) => void;
     addGroup: (group_id: number) => void;
+    removeGroup: () => void;
 
     showGroupDeleteAlert:() => void;
     hideGroupDeleteAlert:() => void;
-    removeGroup: () => void;
+    
+    showMakePhotoAlert:() => void;
+    hideMakePhotoAlert:() => void;
 }
 
 export const createCoachSlice = (set: any, get: any): CoachSlice => ({
@@ -56,8 +62,11 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
     freeGroups: [],
 
     coach_group_id: 0,
-    isGroupDeleteAlert: false,
     isFreeGroups: false,
+
+    isGroupDeleteAlert: false,
+    isMakePhotoAlert: false,
+
 
     loadCoach: (coach_id: number) => {
         get_coach(coach_id, (coach => {
@@ -121,9 +130,6 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
         }));
     },
 
-    showGroupDeleteAlert:() => set({isGroupDeleteAlert: true}),
-    hideGroupDeleteAlert:() => set({isGroupDeleteAlert: false}),
-
     removeGroup: () => {
         set({ isGroupDeleteAlert: false });
         const {coach_group_id}: CoachSlice = get();
@@ -137,4 +143,10 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
             }
         });
     },
+
+    showGroupDeleteAlert:() => set({isGroupDeleteAlert: true}),
+    hideGroupDeleteAlert:() => set({isGroupDeleteAlert: false}),
+
+    showMakePhotoAlert:() => set({isMakePhotoAlert: true}),
+    hideMakePhotoAlert:() => set({isMakePhotoAlert: false}),
 });

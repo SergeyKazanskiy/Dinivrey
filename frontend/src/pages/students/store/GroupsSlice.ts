@@ -4,12 +4,14 @@ import { StudentsSlice } from './StudentsSlice';
 import { CampsSlice } from './CampsSlice';
 import { StateSlice } from '../state';
 import { getChanges } from '../../../shared/utils';
+import { sanitizeName } from '../../../shared/utils';
 
 
 export interface GroupsSlice {
     groups: Group[];
     group_id: number;
     groupInx: number;
+    group_name: string;
 
     setGroups: (groups: Group[]) => void;
     selectGroup: (id: number, inx: number) => void;
@@ -28,13 +30,23 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
     ],
     group_id: 1,
     groupInx: -1,
+    group_name: '',
 
-    setGroups: (groups: Group[]) => set({ groups, group_id: 0, groupInx: -1 }),
+
+    setGroups: (groups: Group[]) => {
+        set({ groups, group_id: 0, groupInx: -1 });
+
+    },
 
     selectGroup: (id: number, inx: number) => {
-        const { group_id }: GroupsSlice = get();
+        const { group_id, groups }: GroupsSlice = get();
+
         if (id !== group_id) {
-            set({ group_id: id, groupInx: inx });
+            set({
+                group_id: id,
+                groupInx: inx,
+                group_name: sanitizeName(groups[inx].name)}
+            );
 
             const { loadStudents }: StateSlice = get();
             loadStudents(id);

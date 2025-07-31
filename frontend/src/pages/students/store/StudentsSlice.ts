@@ -7,6 +7,7 @@ import { CampsSlice } from './CampsSlice';
 import { Parent } from '../../student/model';
 import { ParentsSlice } from '../../student/store/ParentsSlice';
 
+
 export interface StudentsSlice {
     students: Student[];
     studentId: number;

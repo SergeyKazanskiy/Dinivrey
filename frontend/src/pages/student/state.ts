@@ -18,12 +18,12 @@ import { AttendanceSlice } from './store/AttendanceSlice';
 
 
 export interface StateSlice {
-    photo: string;
+   // photo: string;
     student: Student | null;
     initialStudent: Normalize<Student>;
     student_id: number;
 
-    setPhoto:(photo: string) => void;
+   // setPhoto:(photo: string) => void;
     loadStudent:(studentId: number, camp_id: number) => void;
     updateStudent:(completed: (student: StudentShort) => void) => void;
 
@@ -35,13 +35,13 @@ export interface StateSlice {
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
-    photo: '',
+   // photo: '',
     student: null,
     initialStudent: {id:0, photo: '', first_name: '', last_name: '', phone: '', age: 0, gender: '',
         active: false, city: '', street: '', home: '', group_id: 0, group_extra_id: 0 },
     student_id: 0,
 
-    setPhoto:(photo: string) => set({ photo }),
+   // setPhoto:(photo: string) => set({ photo }),
 
     loadStudent:(studentId: number, camp_id: number) => {
         const { setPhoto, setFirstName, setLastName, setGender, setAge, setIsActive, setPhone }: ProfileSlice = get();

@@ -119,3 +119,43 @@ export function formatSeconds(seconds: number): string {
   const s = seconds % 60;
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
+
+export const resizeImage = (file: File, size: number): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img');
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') return;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject(new Error('Canvas context not available'));
+
+        ctx.drawImage(img, 0, 0, size, size);
+
+        canvas.toBlob((blob) => {
+          if (!blob) return reject(new Error('Failed to create blob'));
+
+          const ext = file.name.split('.').pop() || 'jpg';
+          const resizedFile = new File([blob], `resized.${ext}`, { type: blob.type });
+          resolve(resizedFile);
+        }, file.type || 'image/jpeg');
+      };
+
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
+export function sanitizeName(name: string): string {
+  return name.trim().replace(/[^\w-]/g, '_');
+}

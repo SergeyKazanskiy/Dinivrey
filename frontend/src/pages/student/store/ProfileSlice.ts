@@ -1,6 +1,7 @@
 import { AspectRatio } from '@chakra-ui/react';
 import { StudentProfile } from '../model';
 import { StateSlice } from '../state';
+import { add_student_photo } from '../http';
 
 
 export interface ProfileSlice {
@@ -24,6 +25,8 @@ export interface ProfileSlice {
 
     checkProfile:() => void;
     getProfile:() => StudentProfile ;
+
+    uploadPhoto: (student_id: number, file: File, file_name: string) => void;
 }
 
 export const createProfileSlice = (set: any, get: any): ProfileSlice => ({
@@ -62,6 +65,21 @@ export const createProfileSlice = (set: any, get: any): ProfileSlice => ({
     getProfile:() => {
         const { photo, first_name, last_name, phone, age, gender, active }: ProfileSlice = get();
         return { photo, first_name, last_name, phone, age, gender, active }
-    }
+    },
+
+    uploadPhoto: (student_id: number, file: File, file_name: string) => {
+        //alert(file_name)
+        const formData = new FormData();
+        formData.append('file', file);
+
+        add_student_photo(student_id, formData, (res => {
+            if (res.isOk) {
+
+                set((state: ProfileSlice) => ({
+                    photo: file_name,
+                }))
+            }
+        }));
+    },
 })
 

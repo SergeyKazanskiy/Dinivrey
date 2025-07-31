@@ -28,9 +28,10 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         get_camps((camps: Camp[]) => {
             const { setCamps, selectCamp, setGroups, setStudents }: CampsSlice & GroupsSlice & StudentsSlice = get();
             setCamps(camps);
+
             if (camps.length > 0) {
                 const camp_id: number = camps[0].id;
-                selectCamp(camp_id);
+                selectCamp(camp_id, 0);
             } else {
                 setGroups([]);
                 setStudents([]);

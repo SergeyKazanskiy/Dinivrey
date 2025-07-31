@@ -11,18 +11,23 @@ import { AchievesView } from './views/AchievesView'
 import { useStore as useStudentsStore } from '../students/store';
 import { useStore  } from './store';
 import { BackAlert } from '../../components/BackAlert';
+import { PhotoUploader } from '../../components/PhotoUploader';
 
 
 export const StudentPage: React.FC = () => {
-    const { studentId, camps, camp_id, group_id, groups } = useStudentsStore();
+    const { studentId, camps, camp_id, group_id, groups, camp_name, group_name } = useStudentsStore();
     const { closeStudent, updateStudents } = useStudentsStore();
     const { photo, first_name, last_name } = useStore();
     const { isProfileChanged, isParentsChanged, isAddressChanged, isGroupsChanged } = useStore();
-    const { loadStudent, updateStudent, setPhoto } = useStore();
+    const { loadStudent, updateStudent, setPhoto, uploadPhoto } = useStore();
 
     const camp = camps.find(el => el.id === camp_id)!;
     const group = groups.find(el => el.id === group_id)!;
     const breadcrumb: string = camp.name + ' / ' + group.name;
+    const fileName = first_name + '_' + last_name + '_' + studentId
+    const photoPath = photo === 'Student_boy.png' || photo === 'Student_girl.png' ?
+        '/photos/' + photo :
+        '/photos/' + camp_name + '/students/' + group_name + '/' + photo
 
     useEffect(() => {
         loadStudent(studentId, camp_id);
@@ -57,9 +62,14 @@ export const StudentPage: React.FC = () => {
             <SimpleGrid pl={3}  display='flex' flexWrap='wrap' justifyContent='flex-start' gap={4}>
                 <VStack minW='452px' spacing={4} >
                     <HStack align='top' justifyContent='space-between'>
-                        <VStack spacing={0}>
-                            <Image src={`/images/${photo}`} alt='Photo' boxSize='92px' m={3}
-                             onClick={() => setPhoto('Student_girl.png')}/>
+                        <VStack spacing={1}>
+
+                            <PhotoUploader
+                                photoSrc={`${photoPath}?t=${Date.now()}`}
+                                onUpload={(file: File, ext) => uploadPhoto(studentId, file, fileName + '.' + ext)}
+                                size={108}
+                            />
+
                             <CampView/>
                         </VStack>
                         <ProfileView/>

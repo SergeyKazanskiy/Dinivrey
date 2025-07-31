@@ -1,6 +1,6 @@
 import { Store } from "../store";
 import { Student, Parent, Attendance, Test } from "../model";
-import { get_student, get_student_parents, get_last_test, add_student_photo } from '../http';
+import { get_student, get_student_parents, get_last_test } from '../http';
 import { objectToJson } from '../../../../shared/utils';
 
 
@@ -16,8 +16,6 @@ export interface ProfileSlice {
 
   loadStudent: (student_id: number) => void;
   showComments: (isCommentsScreen: boolean) => void;
-
-  uploadPhoto: (student_id: number, imageUri: string) => void;
 }
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
@@ -68,18 +66,4 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
   showComments: (isCommentsScreen: boolean) => set({isCommentsScreen}),
   
-  uploadPhoto: (student_id: number, imageUri: string) => {
-    const fileType = imageUri.substring(imageUri.lastIndexOf('.') + 1);
-    const formData = new FormData();
-    const fileName = student_id + '_'
-
-    formData.append('folder', '_');
-    formData.append('filename', fileName);
-    formData.append('file', { uri: imageUri, name: fileName, type: `image/${fileType}`} as any);
-
-    add_student_photo(student_id, formData, (res => {
-
-    }));
-  },
-
 });
