@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import cast, Tuple
 import re
 from models import Student, Group, Camp, Coach
-from roles.admin.schemas import ResponseOk
+from roles.admin.schemas import ResponseOk, CoachUpdate, StudentUpdate
 import shutil
 from crud import CRUD
 
@@ -29,7 +29,6 @@ class PhotoStorageService:
     
         # 1.Checking the file extension 
         file_ext = Path(file.filename).suffix.lower()
-
         if file_ext not in [".jpg", ".jpeg", ".png"]:
             return ResponseOk(isOk=False, error_code=400, error_message="Unsupported file type")
         
@@ -66,7 +65,7 @@ class PhotoStorageService:
                 try:
                     old_photo_path.unlink()
                 except Exception as e:
-                    return ResponseOk(isOk=False, error_code=500, error_message="Failed to remove old student photo: {e}")
+                    return ResponseOk(isOk=False, error_code=500, error_message=f"Failed to remove old student photo: {e}")
 
         # 6.Create the necessary folders (if they do not exist yet)
         folder.mkdir(parents=True, exist_ok=True)
@@ -81,7 +80,7 @@ class PhotoStorageService:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
         
-        return {"isOk": await CRUD.update(Student, student.id, {"photo": file_name}, session)}
+        return {"isOk": await CRUD.update(Student, student.id, StudentUpdate(photo=file_name), session)}
 
     # RENAME PHOTO
     @staticmethod
@@ -137,7 +136,7 @@ class PhotoStorageService:
         except Exception as e:
             return ResponseOk(isOk=False, error_code=500, error_message=f"Failed to rename photo: {e}")
 
-        return ResponseOk(isOk= await CRUD.update(Student, student.id, {"photo": new_photo_name}, session))
+        return ResponseOk(isOk= await CRUD.update(Student, student.id, StudentUpdate(photo=new_photo_name), session))
 
     # DELETE PHOTO
     @staticmethod
@@ -228,7 +227,7 @@ class PhotoStorageService:
                 try:
                     old_photo_path.unlink()
                 except Exception as e:
-                    return ResponseOk(isOk=False, error_code=500, error_message="Failed to remove old coach photo: {e}")
+                    return ResponseOk(isOk=False, error_code=500, error_message=f"Failed to remove old coach photo: {e}")
 
         # 6.Create the necessary folders (if they do not exist yet)
         folder.mkdir(parents=True, exist_ok=True)
@@ -241,9 +240,10 @@ class PhotoStorageService:
             with open(path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
-        
-        return {"isOk": await CRUD.update(Coach, coach.id, {"photo": file_name}, session)}     
+            return ResponseOk(isOk=False, error_code=500, error_message=f"Failed to save file: {e}")
+        print('!!!!!')
+        print(file_name)
+        return {"isOk": await CRUD.update(Coach, coach.id, CoachUpdate(photo=file_name), session)}     
 
     # RENAME PHOTO
     @staticmethod
@@ -296,7 +296,7 @@ class PhotoStorageService:
         except Exception as e:
             return ResponseOk(isOk=False, error_code=500, error_message=f"Failed to rename photo: {e}")
 
-        return ResponseOk(isOk= await CRUD.update(Coach, coach.id, {"photo": new_photo_name}, session))
+        return ResponseOk(isOk= await CRUD.update(Coach, coach.id, CoachUpdate(photo=new_photo_name), session))
 
     # DELETE PHOTO
     @staticmethod
@@ -486,3 +486,4 @@ class PhotoStorageService:
         return ResponseOk(isOk=True)
 
    
+    # file_ext = Path(file.filename).suffix.lower()

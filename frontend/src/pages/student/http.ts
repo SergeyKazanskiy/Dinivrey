@@ -81,6 +81,11 @@ export function attach_achieve(data: AchieveAttach, callback: (achievement: Achi
   return httpWrapper(() => api.post(`students/achievements`, data), callback);
 };
 
+// Photo
+export function add_student_photo(student_id: number, formData: FormData, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.post(`students/${student_id}/photo`, formData,
+      { headers: {'Content-Type': 'multipart/form-data'}}), callback);
+};
 
 // Delete
 export function delete_student(id: number, callback: (res: {isOk: boolean}) => void) {

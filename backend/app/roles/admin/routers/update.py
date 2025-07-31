@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_session
@@ -7,8 +7,8 @@ from roles.admin import schemas
 import models
 from sqlalchemy.future import select
 from sqlalchemy import delete
-# import utils
-# import read
+from services.photo_storage import PhotoStorageService
+
 
 router = APIRouter()
 
@@ -16,21 +16,21 @@ router = APIRouter()
 # Groups
 @router.put("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession = Depends(get_session)):
-    # camp: schemas.CampResponse = await read.get_camp(id, session)
-
-    # city = data.city or camp.city
-    # name = data.name or camp.name
-
-    # try:
-    #     utils.rename_folder("images/photos", f"{camp.city}_{camp.name}", f"{city}_{name}")
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=f"Failed to rename folder: {e}")
+    
+    result = await PhotoStorageService.rename_camp_folder(id, data.name, session)
+    if not result.isOk:
+        raise HTTPException(status_code=result.error_code, detail=result.error_message)
 
     return {"isOk": await CRUD.update(models.Camp, id, data, session)}
 
 
 @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
+
+    result = await PhotoStorageService.rename_group_folder(id, data.name, session)
+    if not result.isOk:
+        raise HTTPException(status_code=result.error_code, detail=result.error_message)
+
     return {"isOk": await CRUD.update(models.Group, id, data, session)}
 
 @router.put("/camps/groups/schedule/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
@@ -57,6 +57,10 @@ async def update_student_parents(id: int, data: List[schemas.ParentUpdate], sess
 @router.put("/students/tests/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_student_test(id: int, data: schemas.TestUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Test, id, data, session)}
+
+@router.post("/students/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_coach_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    return await PhotoStorageService.upload_student_photo(id, file, session)
 
 # @router.put("/students/games/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 # async def update_student_game(id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
@@ -101,6 +105,10 @@ async def update_achieve_rules(id: int, data: List[schemas.RuleCreate], session:
 @router.put("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_coach(id: int, data: schemas.CoachUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Coach, id, data, session)}
+
+@router.post("/camps/coaches/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_coach_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    return await PhotoStorageService.upload_coach_photo(id, file, session)
 
 
 # Drills

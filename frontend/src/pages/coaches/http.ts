@@ -37,8 +37,16 @@ export function create_coach(data: Omit<Coach, 'id'>, callback: (res: {id: numbe
     return httpWrapper(() => api.post(`camps/coaches`, data), callback);
 };
 
-export function add_coach_group(data: {coache_id: number, group_id: number}, callback: (cres: {id: number}) => void) {
+export function add_coach_group(data: {coache_id: number, group_id: number}, callback: (res: {id: number}) => void) {
     return httpWrapper(() => api.post(`camps/coaches/groups`, data), callback);
+};
+
+// Photo
+export function add_coach_photo(coach_id: number, formData: FormData,
+  callback: (res: {isOk: boolean, error_code: number, error_message: string}) => void) {
+
+  return httpWrapper(() => api.post(`camps/coaches/${coach_id}/photo`, formData,
+      { headers: {'Content-Type': 'multipart/form-data'}}), callback);
 };
 
 // Update

@@ -5,6 +5,7 @@ import { ProfileCell } from "../components/ProfileCell";
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 import { DeletePopover } from '../../../components/DeletePopover';
 import { objectToJson } from "../../../shared/utils";
+import { PhotoUploader } from '../../../components/PhotoUploader';
 
 
 interface Props {
@@ -12,12 +13,14 @@ interface Props {
 }
 
 export const ProfileView: React.FC<Props> = ({coach_id}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { coaches, coachId, camp_name } = useStore();
+  const { updateCoach, deleteCoach, selectCoach, uploadPhoto } = useStore();
 
-  const { coaches, coachId } = useStore();
-  const { updateCoach, deleteCoach, selectCoach } = useStore();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const coach = coaches.find(el => el.id === coach_id)!;
+  const fileName = coach.first_name + '_' + coach.last_name + '_' + coach.id;
+  const photoPath = '/photos/' + camp_name + '/coaches/' + coach.photo 
 
   return (
     <Container style={screenStyles.widget} h='174px' w='360px' onClick={()=>selectCoach(coach_id)}>
@@ -30,8 +33,12 @@ export const ProfileView: React.FC<Props> = ({coach_id}) => {
       </HStack>               
       
       <HStack align='start' mb='2px'>
-        <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' boxSize='90px' mr={1} mt={1} borderRadius='25px'/>
-        
+        <PhotoUploader
+          photoSrc={`${photoPath}?t=${Date.now()}`}
+          onUpload={(file: File, ext) => uploadPhoto(coach.id, file, fileName + '.' + ext)}
+          size={86}
+        />
+
         <Flex direction="column" gap="0.5">
           <ProfileCell label="First name" value={coach.first_name} maxLength={20} w1='84px' w2='140px'
             onChange={(value) => updateCoach(coach_id, { first_name: String(value) })}

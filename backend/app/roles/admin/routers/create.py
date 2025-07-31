@@ -16,18 +16,6 @@ router = APIRouter()
 # Students
 @router.post("/camps", description='Create new camp in city', response_model=schemas.ResponseId, tags=["Admin_create"])
 async def create_camp(data: schemas.CampCreate, session: AsyncSession = Depends(get_session)):
-    # camps: List[schemas.CampResponse] = await read.get_camps(session)
-    # for camp in camps:
-    #     if camp.city == data.city and camp.name == data.name:
-    #          raise HTTPException(status_code=500, detail="There is already a camp with such name in this city")
-        
-    # try:
-    #     camp_path = utils.create_folder("images/photos", f"{data.city}_{data.name}")
-    #     utils.create_folder(camp_path, "groups")
-    #     utils.create_folder(camp_path, "coaches")
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=f"Failed to create folders: {e}")
-
     return {"id": await CRUD.add(models.Camp, data, session)}
 
 @router.post("/camps/groups", response_model=schemas.ResponseId, tags=["Admin_create"]) #camp_id ???
@@ -36,6 +24,10 @@ async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depend
 
 @router.post("/camps/groups/students", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def create_student(data: schemas.StudentCreate, session: AsyncSession = Depends(get_session)):
+
+
+    PhotoStorageService.upload_student_photo(id, file, session)
+
     return {"id": await CRUD.add(models.Student, data, session)}
 
 @router.post("/camps/groups/schedule", response_model=schemas.ResponseId, tags=["Admin_create"])

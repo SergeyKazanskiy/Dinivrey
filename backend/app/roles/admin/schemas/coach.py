@@ -4,6 +4,7 @@ from datetime import date
 
 
 class CoachBase(BaseModel):
+    photo: str
     first_name: str
     last_name: str
     phone: str
@@ -16,6 +17,7 @@ class CoachCreate(CoachBase):
     pass
 
 class CoachUpdate(BaseModel):
+    photo: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone: Optional[str] = None

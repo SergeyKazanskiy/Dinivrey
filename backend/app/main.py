@@ -90,19 +90,19 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
     # except Exception as e:
     #     print("!!!!! error:", e)
 
-    try:
-        await session.execute(text("""
-            ALTER TABLE games ADD COLUMN points2 INTEGER NOT NULL DEFAULT 0;
-        """))
-    except Exception as e:
-        print("!!!!! error:", e)    
-
     # try:
     #     await session.execute(text("""
-    #         ALTER TABLE students ADD COLUMN summary_games TEXT NOT NULL DEFAULT '';
+    #         ALTER TABLE games ADD COLUMN points2 INTEGER NOT NULL DEFAULT 0;
     #     """))
     # except Exception as e:
-    #     print("summary_games:", e)
+    #     print("!!!!! error:", e)    
+
+    try:
+        await session.execute(text("""
+            ALTER TABLE coaches ADD COLUMN photo TEXT NOT NULL DEFAULT '';
+        """))
+    except Exception as e:
+        print("summary_games:", e)
 
     await session.commit()
     return {"status": "Success"}

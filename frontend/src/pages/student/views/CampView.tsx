@@ -6,7 +6,7 @@ import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 
 export const CampView: React.FC = () => {
   const { camps } = useStudentsStore();
-  const { selectCamp } = useStudentsStore();
+  const { selectCamp } = useStudentsStore(); //???
 
   const { camp_id } = useStore();
   const { setCamp, setGroup, setGroupExtra, checkGroups } = useStore();
@@ -16,7 +16,7 @@ export const CampView: React.FC = () => {
       setCamp(value);
       setGroup(0);
       setGroupExtra(0);
-      selectCamp(value);
+      //selectCamp(value);
       checkGroups();
     } 
   }
