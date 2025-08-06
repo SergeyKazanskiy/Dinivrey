@@ -10,6 +10,7 @@ import GroupsScreen from './students/GroupsScreen';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { useAuthState } from '../../shared/http/state';
 
 
 type TabRoutes = {
@@ -36,10 +37,13 @@ function getIconsData(routeName: string) {
 
 function TabNavigatorWrapper() {
   const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
+  const { logoutUser } = useAuthState();
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
-      <DinivreyHeader title='Coach name' onExit={()=>router.replace('/')}/>
+      <DinivreyHeader title='Coach'
+        onExit={()=>(router.replace('/'), logoutUser('manager'))}
+      />
       <Image style={[styles.image]}
         source={require('../../../assets/images/DinivreyCompany.png')} /> 
 

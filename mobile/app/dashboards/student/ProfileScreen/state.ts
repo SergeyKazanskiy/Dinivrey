@@ -49,6 +49,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
 
   loadStudent:(student_id: number,) => {
+    
     get_student(student_id, (student: Student) => {
       if (student) {
         set({ student, student_id });

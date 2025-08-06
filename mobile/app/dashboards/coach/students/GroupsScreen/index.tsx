@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, ScrollView, Platform } from 'react-native';
-import { Badge, ListItem } from '@rneui/themed';
-import { useRouter } from 'expo-router';
+import { ListItem } from '@rneui/themed';
+import { useAuthState } from '../../../../shared/http/state';
 import { useStore } from '../store';
 import { StudentList } from './views/StudentList';
 import { Icon } from '@rneui/themed';
@@ -13,11 +13,11 @@ export default function GroupsScreen() {
   const { groups, students, group_id } = useStore();
   const { loadGroups, selectGroup } = useStore();
 
-  const router = useRouter();
+  const { userId } = useAuthState();
 
   useFocusEffect(
     useCallback(() => {
-      loadGroups(2);
+      loadGroups(userId);
     }, [])
   );
 

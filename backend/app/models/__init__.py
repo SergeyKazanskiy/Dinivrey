@@ -7,3 +7,4 @@ from .achieves import Achieve, Rule
 from .drills import Drill, EventDrill
 from .settings import Metric
 from .games import Game, Gamer
+from .managers import Manager

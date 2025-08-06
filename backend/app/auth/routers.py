@@ -28,12 +28,12 @@ async def get_decoded_token(authorization: str = Header(...)) -> dict:
         raise HTTPException(status_code=401, detail="Missing Bearer token")
     
     id_token = authorization.split(" ")[1]
-   # print('!!!!_' + id_token)
+    #print('!!!!_' + id_token)
     try:
         decoded_token = auth.verify_id_token(id_token)
-        print("DECODED:", decoded_token)
+        #print("DECODED:", decoded_token)
     except Exception as e:
-        print("VERIFY ERROR:", repr(e))
+        #print("VERIFY ERROR:", repr(e))
         raise HTTPException(status_code=401, detail="Invalid token")
 
     return decoded_token
@@ -73,8 +73,6 @@ async def user_login(
     phone = decoded_token.get("phone_number")
     if not phone:
         raise HTTPException(400, detail="Phone number missing in token")
-
-    print('!!!!!!_' + phone)
 
     if data.role == 'manager': model = models.Coach
     elif data.role == 'coach': model = models.Coach

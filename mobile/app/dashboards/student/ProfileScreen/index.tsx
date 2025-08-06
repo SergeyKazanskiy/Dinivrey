@@ -10,20 +10,22 @@ import { useStore } from '../store';
 import { screenStyles } from '../../../shared/styles/appStyles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { objectToJson } from '@/app/shared/utils';
+import { useAuthState } from '../../../shared/http/state';
 
 
 const ProfileScreen = () => {
   const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
-  const { student_id, last_test, last_game, loadTest, loadGame, loadEvent, setBackDrawer } = useStore();
+  const { student, last_test, last_game, loadTest, loadGame, loadEvent, setBackDrawer } = useStore();
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
+  const { userId } = useAuthState();
 
   const navigation = useNavigation();
   const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
-      loadStudent(2);
+      loadStudent(userId);
     }, [])
   );
 

@@ -37,7 +37,8 @@ export const GamesMenu: React.FC<Props> = ({ games, onNew, onSelect, close}) => 
 
               <View style={[styles.col, {borderRightWidth: 1, borderRightColor: '#777', paddingRight: 4}]}>
                 <View style={[styles.capsule, {backgroundColor: bg}]}>
-                  <Text style={styles.title}>{item.winner} Team won</Text>
+                  { item.winner === "Equally" && <Text style={styles.title}>Tie</Text> }
+                  { item.winner !== "Equally" && <Text style={styles.title}>{item.winner} Team won</Text>}
                 </View>
                 <Text style={styles.small_text}>Presence: {amount}/{presence}</Text>
                 <Text style={styles.small_text}>RED: {red} GREEN: {green}</Text>

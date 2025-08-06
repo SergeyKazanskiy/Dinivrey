@@ -175,7 +175,7 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
     }),
     
     calculateWinner: () => {
-        const { gamers, first_chaser_team, times_total }: GamingSlice & ReportSlice = get();
+        const { gamers, first_chaser_team, times_total, currentRound }: GamingSlice & ReportSlice = get();
         const firstTeamGamers = gamers.filter(el => el.team === first_chaser_team ); //right team green
         const secondTeamGamers = gamers.filter(el => el.team !== first_chaser_team ); //left team red
 
@@ -198,31 +198,43 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
             { caught: 0, freeded: 0, survived: 0 }
         );
 
+       const isSecondRound = currentRound.round === 2;
+        const timeWinner = times_total[0] < times_total[1] ? 0 : 1;
+
         const totals_1: TeamTotals = getTeamTotals( // green
             first_chaser_team === Team.GREEN ? Team.GREEN : Team.RED,
             firstTeamGamers.length,
             total_1,
-            total_2.survived === 0 && total_1.caught > 0 ? BONUS_POINTS : 0 //3
+            total_2.survived === 0 && total_1.caught > 0 && timeWinner === 0 ? BONUS_POINTS : 0
         )
-        const totals_2: TeamTotals = getTeamTotals(  // red
+        const totals_2: TeamTotals = getTeamTotals(
             totals_1.team === Team.GREEN ? Team.RED : Team.GREEN,
             secondTeamGamers.length,
-            total_2,
-            total_1.survived === 0 && total_2.caught > 0 ? BONUS_POINTS : 0 //3
+            total_2, 
+            total_1.survived === 0 && total_2.caught > 0 && timeWinner === 1 ? BONUS_POINTS : 0
         )
 
-        const totalsEqually = totals_1.total === totals_2.total;
-        const timesEqually = times_total[0] === times_total[1];
+        const timeMatters = total_1.survived === 0 && total_2.survived === 0;
+        // const totalsEqually = totals_1.total === totals_2.total;
+        // const timesEqually = times_total[0] === times_total[1];
 
         let winner_number = null;
-        if (!totalsEqually) {
+        if (timeMatters) {
+            winner_number = timeWinner;
+        } else if (totals_1.total === totals_2.total) {
+            winner_number = null;
+        } else {
             winner_number = totals_1.total > totals_2.total ? 0 : 1;
-        } else if (totalsEqually && !timesEqually) {
-            winner_number = times_total[0] < times_total[1] ? 0 : 1;
-        }  
+        }
+
+        // if (!totalsEqually) {
+        //     winner_number = totals_1.total > totals_2.total ? 0 : 1;
+        // } else if (totalsEqually && !timesEqually) {
+        //     winner_number = times_total[0] < times_total[1] ? 0 : 1;
+        // }  
 
         set({
-            teams_totals: [totals_1, totals_2], //[green, red]
+            teams_totals: [totals_1, totals_2],
             winner: winner_number === null ? 'Equally' : winner_number === 0 ? totals_1.team : totals_2.team
         });
     },
@@ -294,18 +306,10 @@ function getTeamTotals(team: Team, amount: number, total: Total, bonus: number):
         total: 0, info: { points: '', tags: '', bonus: '', rescues: ''}
     };
     
+    const pointsWithBonus = totals.bonus + points;
     totals.total = totals.caught + totals.freeded + totals.survived + totals.bonus
-
-    // let points_string: string;
-    // if (team === Team.RED) {
-    //     points_string = totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points,
-    // } else {
-
-    // }
-
     totals.info = {
-        //points: totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points, 
-        points: totals.freeded + '+' + totals.caught + '+' + totals.survived + '=' + points,
+        points: totals.freeded + '+' + totals.survived + '+' + totals.caught + '+' + totals.bonus + '=' + pointsWithBonus, 
         tags: totals.caught + '',
         bonus: totals.bonus > 0 ? String(totals.bonus) : '',
         rescues: totals.freeded + '+' + totals.survived}
@@ -313,20 +317,20 @@ function getTeamTotals(team: Team, amount: number, total: Total, bonus: number):
     return totals
 }
 
-function getGamePresenceStats(gamers: Gamer[]): { total: number, red: number, green: number } {
-    const stats = gamers.reduce(
-        (acc, gamer) => {
-            acc.total += 1;
+// function getGamePresenceStats(gamers: Gamer[]): { total: number, red: number, green: number } {
+//     const stats = gamers.reduce(
+//         (acc, gamer) => {
+//             acc.total += 1;
 
-            if (gamer.team === Team.RED) {
-                acc.red += 1;
-            } else if (gamer.team === Team.GREEN) {
-                acc.green += 1;
-            }
+//             if (gamer.team === Team.RED) {
+//                 acc.red += 1;
+//             } else if (gamer.team === Team.GREEN) {
+//                 acc.green += 1;
+//             }
 
-            return acc;
-        },
-        { total: 0, red: 0, green: 0 }
-    );
-    return stats
-}
+//             return acc;
+//         },
+//         { total: 0, red: 0, green: 0 }
+//     );
+//     return stats
+// }
