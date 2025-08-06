@@ -8,6 +8,7 @@ from models import Student, Group, Camp, Coach
 from roles.admin.schemas import ResponseOk, CoachUpdate, StudentUpdate
 import shutil
 from crud import CRUD
+from PIL import Image
 
 
 UPLOAD_FOLDER = "images/photos"
@@ -485,5 +486,41 @@ class PhotoStorageService:
 
         return ResponseOk(isOk=True)
 
-   
-    # file_ext = Path(file.filename).suffix.lower()
+
+   # ADD GIF
+    @staticmethod
+    async def upload_gif(file: UploadFile = File(...)):
+        if not file.filename.lower().endswith(".gif"):
+            raise HTTPException(status_code=400, detail="Only GIF files are allowed")
+
+        # Папка, куда сохраняем файлы
+        target_folder = Path("uploaded_gifs")
+        target_folder.mkdir(parents=True, exist_ok=True)
+
+        # Полный путь к gif-файлу
+        gif_path = target_folder / file.filename
+
+        # Сохраняем сам gif
+        with open(gif_path, "wb") as out_file:
+            shutil.copyfileobj(file.file, out_file)
+
+        # Читаем файл заново (нужно, т.к. file.file уже был прочитан)
+        file.file.seek(0)
+        gif_bytes = file.file.read()
+
+        # Открываем gif и извлекаем первый кадр
+        try:
+            image = Image.open(io.BytesIO(gif_bytes))
+            first_frame = image.convert("RGBA")  # или "RGB", если не нужен прозрачный фон
+
+            # Путь к сохранённому первому кадру
+            first_frame_path = gif_path.with_suffix(".png")
+            first_frame.save(first_frame_path)
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error processing GIF: {e}")
+
+        return {
+            "gif_saved": str(gif_path),
+            "first_frame_saved": str(first_frame_path)
+        }

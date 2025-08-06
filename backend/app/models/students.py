@@ -22,6 +22,7 @@ class Student(Base):
     summary_tests = Column(String, default="", nullable=False)
     summary_achievements = Column(String, default="", nullable=False)
     summary_games = Column(String, default="", nullable=False)
+    firebase_uid = Column(String, unique=True, nullable=True)
     group = relationship("Group", back_populates="students")
     parents = relationship("Parent", back_populates="student", cascade="all, delete")
     tests = relationship("Test", back_populates="student", cascade="all, delete")

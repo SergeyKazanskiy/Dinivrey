@@ -13,7 +13,7 @@ export function DraverMenu() {
   const w = isGamingScreen ? 760 : 360;
   
   return (
-    <GestureHandlerRootView style={{ flex: 1, width: w, backgroundColor: 'red' }}>
+    <GestureHandlerRootView style={{ flex: 1, width: w, backgroundColor: '#2E4A7C' }}>
       <Drawer drawerContent={DrawerHeader} initialRouteName="ProfileScreen/index"
         screenOptions={{
           headerShown: true, 

@@ -32,7 +32,7 @@ export const ProfileView: React.FC = () => {
           onChange={(value) => setFirstName(String(value))}/>
         <ProfileCell label="Last name" value={last_name} maxLength={20} w1='92px' w2='200px' isRequired
           onChange={(value) => setLastName(String(value))}/>
-        <ProfileCell label="Phone" value={phone} maxLength={10} w1='92px' w2='200px'
+        <ProfileCell label="Phone" value={phone} maxLength={16} w1='92px' w2='200px'
           onChange={(value) => setPhone(String(value))}/>
 
         <Box display='flex' alignItems='baseline'>

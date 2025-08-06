@@ -1,4 +1,4 @@
-// src/components/UserCard.tsx
+import { useState } from 'react';
 import { Flex, Text, Image, useDisclosure, HStack, Container, VStack } from "@chakra-ui/react";
 import { useStore } from "../store";
 import { ProfileCell } from "../components/ProfileCell";
@@ -6,6 +6,7 @@ import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 import { DeletePopover } from '../../../components/DeletePopover';
 import { objectToJson } from "../../../shared/utils";
 import { PhotoUploader } from '../../../components/PhotoUploader';
+import { ImagesPath } from '../../../shared/constants';
 
 
 interface Props {
@@ -17,10 +18,13 @@ export const ProfileView: React.FC<Props> = ({coach_id}) => {
   const { updateCoach, deleteCoach, selectCoach, uploadPhoto } = useStore();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [photoVersion, setPhotoVersion] = useState(Date.now());
+
 
   const coach = coaches.find(el => el.id === coach_id)!;
   const fileName = coach.first_name + '_' + coach.last_name + '_' + coach.id;
-  const photoPath = '/photos/' + camp_name + '/coaches/' + coach.photo 
+  const photoPath = ImagesPath + '/photos/' + camp_name + '/coaches/' + coach.photo;
+  const photoSrc = `${photoPath}?v=${photoVersion}`;
 
   return (
     <Container style={screenStyles.widget} h='174px' w='360px' onClick={()=>selectCoach(coach_id)}>
@@ -34,8 +38,11 @@ export const ProfileView: React.FC<Props> = ({coach_id}) => {
       
       <HStack align='start' mb='2px'>
         <PhotoUploader
-          photoSrc={`${photoPath}?t=${Date.now()}`}
-          onUpload={(file: File, ext) => uploadPhoto(coach.id, file, fileName + '.' + ext)}
+          photoSrc={photoSrc}
+          onUpload={(file: File, ext) => {
+            uploadPhoto(coach.id, file, fileName + '.' + ext);
+            setPhotoVersion(Date.now());
+          }}
           size={86}
         />
 

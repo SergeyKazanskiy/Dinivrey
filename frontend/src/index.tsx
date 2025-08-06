@@ -5,6 +5,7 @@ import App from './App';
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { HttpStatus } from './shared/http/HttpStatus';
+import AuthGate from "./authorization/AuthGate";
 
 
 localStorage.removeItem("chakra-ui-color-mode");
@@ -25,7 +26,9 @@ root.render(
     <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
       <ChakraProvider>
         <HttpStatus/>
-        <App />
+        <AuthGate>
+          <App />
+        </AuthGate>
       </ChakraProvider>
     </React.StrictMode>
 );
