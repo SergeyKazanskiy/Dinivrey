@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from './api/api';
+import { signOut } from "firebase/auth";
+import { auth } from "./authorization/firebaseConfig";
 
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { HStack, VStack, Text, Image } from '@chakra-ui/react';
+import { HStack, VStack, Text, Image, Button } from '@chakra-ui/react';
 import { SideMenuCell } from './components/SideMenuCell';
 import { sidebarStyles } from './shared/appStyles';
 import { StudentsPage, CoachesPage, SchedulePage, EventsPage } from './pages/index';
@@ -19,6 +19,15 @@ function App() {
  //     .then((res) => setConfig(res.data.base_url))
  //     .catch((err) => console.error(err));
  // }, []);
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User signed out successfully");
+    } catch (error) {
+      console.error("Error during sign out:", error);
+    }
+  };
 
   return (
     <Router>
@@ -39,6 +48,9 @@ function App() {
           <SideMenuCell img='climbing.png' title='Drills' to='/api/drills'/>
           <SideMenuCell img='Test.png' title='Metrics' to='/api/metrics'/>
           <SideMenuCell img='Achievement.png' title='Achievements' to='/api/achievements'/>
+
+          <Button size='sm' variant='outline' colorScheme='blue' my='100px'
+            onClick={logout}>Logout</Button>
         </VStack>
         <Routes>
           <Route path="/" element={
