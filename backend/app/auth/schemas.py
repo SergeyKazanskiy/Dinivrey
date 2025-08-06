@@ -1,5 +1,11 @@
 from pydantic import BaseModel
 
+class ResponseOk(BaseModel):
+    isOk: bool
+
+class ResponseId(BaseModel):
+    id: int
+
 class StudentBase(BaseModel):
     name: str
 
@@ -14,3 +20,6 @@ class StudentInDB(StudentBase):
 
     class Config:
         from_attributes = True
+
+class RoleBase(BaseModel):
+    role: str

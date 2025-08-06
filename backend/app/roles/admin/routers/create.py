@@ -24,10 +24,6 @@ async def create_group(data: schemas.GroupCreate, session: AsyncSession = Depend
 
 @router.post("/camps/groups/students", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def create_student(data: schemas.StudentCreate, session: AsyncSession = Depends(get_session)):
-
-
-    PhotoStorageService.upload_student_photo(id, file, session)
-
     return {"id": await CRUD.add(models.Student, data, session)}
 
 @router.post("/camps/groups/schedule", response_model=schemas.ResponseId, tags=["Admin_create"])

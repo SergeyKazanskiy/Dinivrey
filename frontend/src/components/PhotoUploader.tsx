@@ -30,10 +30,10 @@ export const PhotoUploader: React.FC<Props> = ({ photoSrc, onUpload, size}) => {
     const ext = resizedFile.name.split('.').pop() || 'jpg';
     onUpload(resizedFile, ext);
   };
-  //alert(ImagesPath + photoSrc)
+
   return (
     <>
-      <Image src={ImagesPath + photoSrc} alt="" boxSize={size + "px"} mr={1} mt={1} borderRadius='25px'
+      <Image src={photoSrc} alt="" boxSize={size + "px"} mr={1} mt={1} borderRadius='25px'
         objectFit="cover" cursor="pointer"
         onClick={handleImageClick}
       />

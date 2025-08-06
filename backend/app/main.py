@@ -4,10 +4,12 @@ from fastapi.openapi.docs import get_redoc_html
 from models.base import Base
 from database import engine
 
+from auth.routers import router as auth_router
 from roles.admin.routers import admin_select, admin_create, admin_update, admin_delete
 from roles.student.routers import student_select, student_update
 from roles.coach.routers import coach_select, coach_create, coach_update, coach_delete
 from roles.manager.routers import manager_select, manager_create, manager_update, manager_delete
+
 from fastapi.staticfiles import StaticFiles
 
 
@@ -33,6 +35,8 @@ async def setup_database():
     return {"status": "Success"}
 
 app.include_router(router)
+app.include_router(auth_router)
+
 app.include_router(admin_select, prefix="/admin_api")
 app.include_router(admin_create, prefix="/admin_api")
 app.include_router(admin_update, prefix="/admin_api")
@@ -99,10 +103,17 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
 
     try:
         await session.execute(text("""
-            ALTER TABLE coaches ADD COLUMN photo TEXT NOT NULL DEFAULT '';
+            ALTER TABLE coaches ADD COLUMN firebase_uid TEXT;
         """))
     except Exception as e:
-        print("summary_games:", e)
+        print("!!!!! error:", e)  
+
+    # try:
+    #     await session.execute(text("""
+    #         ALTER TABLE students ADD COLUMN firebase_uid TEXT NOT NULL DEFAULT '';
+    #     """))
+    # except Exception as e:
+    #     print("summary_games:", e)
 
     await session.commit()
     return {"status": "Success"}

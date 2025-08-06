@@ -3,19 +3,20 @@ import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navi
 import { router } from 'expo-router';
 import { View, ScrollView, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { screenStyles } from '../../shared/styles/appStyles';
+import { useAuthState } from '../../shared/http/state';
 import { useStore } from './store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
 
 
 export function DrawerHeader(props: any) {  
-  const { top, bottom } = useSafeAreaInsets();
+  const { logoutUser } = useAuthState();
   const { student } = useStore();
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
-      <DinivreyHeader title={student.first_name + ' ' + student.last_name} onExit={()=>router.replace('/')}/>
+      <DinivreyHeader title={student.first_name + ' ' + student.last_name}
+        onExit={()=>(router.replace('/'), logoutUser('student'))}/>
       
       <Image style={[styles.image, {padding: 16}]}
           source={require('../../../assets/images/DinivreyCompany.png')} />

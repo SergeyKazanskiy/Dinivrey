@@ -1,54 +1,28 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { DraverMenu } from './DraverMenu';
-import { Stack } from 'expo-router';
-import { useStore } from './store';
+import { useAuthState } from '../../shared/http/state';
+import LoginScreen from '../../shared/http/LoginScreen';
+import { ActivityIndicator, View } from 'react-native';
 
 
-export default function StudentLayout() {
-  const { isGamingScreen } = useStore();
+export default function RootLayout() {
+  const { isLogin, restoreAuth } = useAuthState();
 
-  return <DraverMenu />;
-  // return (
-  //   <Stack screenOptions={{ headerShown: false }}>
-  //     {isGamingScreen ? (
-  //       <Stack.Screen
-  //         name="gaming"
-  //         options={{ headerShown: false }}
-  //       />
-  //     ) : (
-  //       <Stack.Screen
-  //         name="(drawer)"
-  //         options={{ headerShown: false }}
-  //       >
-  //         {() => <DraverMenu />}
-  //       </Stack.Screen>
-  //     )}
-  //   </Stack>
-  // );
-  // if (isGamingScreen) {
-  //   // Показываем экран gaming как отдельный экран в Stack — он должен быть в app/dashboards/student/gaming.tsx
-  //   return <Stack screenOptions={{ headerShown: false }}>
-  //     <Stack.Screen name="gaming" />
-  //   </Stack>;
-  // }
+  useEffect(() => {
+    restoreAuth();
+  }, []);
 
-  // // По умолчанию показываем Drawer (он тоже должен быть layout в app/dashboards/student/(drawer)/_layout.tsx)
-  // return <Stack screenOptions={{ headerShown: false }}>
-  //   <Stack.Screen name="(drawer)" />
-  // </Stack>;
+  if (isLogin === false) {
+    return <LoginScreen role='student' />;
+  }
+
+  if (isLogin === true) {
+    return <DraverMenu />;
+  }
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#007bff" />
+    </View>
+  );
 }
-
- // const { isGamingScreen } = useStore();
-
-  // return (
-  //   <>
-  //     {isGamingScreen && <Stack/>}
-  //     {!isGamingScreen  && <DraverMenu />}
-  //   </>
-  // );
-
-  //   return (
-  //   <Stack screenOptions={{ headerShown: false }}>
-  //     <Stack.Screen name="index" />
-  //   </Stack>
-  // );

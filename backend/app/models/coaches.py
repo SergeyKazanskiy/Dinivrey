@@ -15,6 +15,7 @@ class Coach(Base):
     active = Column(Boolean, default=True)
     signature = Column(Text, nullable=True)
     camp_id = Column(Integer, ForeignKey('camps.id', ondelete='CASCADE'))
+    firebase_uid = Column(String, unique=True, nullable=True)
     groupCoaches = relationship("CoachGroup", back_populates="coach", cascade="all, delete")
 
 class CoachGroup(Base):

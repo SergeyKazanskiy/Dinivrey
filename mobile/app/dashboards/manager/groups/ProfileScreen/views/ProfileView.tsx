@@ -6,13 +6,11 @@ import { ImagesPath } from '../../../../../shared/constants';
 
 export const ProfileView = () => {
   const { student } = useStore();
-  const { uploadPhoto } = useStore();
 
   return (
     <View style={styles.container}>
       <Image source={{ uri: `${ImagesPath}/photos/${student.photo}` }} style={styles.avatar} />
-      
-
+    
       <View style={styles.group}>
         <Text style={styles.name}>{student.first_name}</Text>
         <Text style={styles.name}>{student.last_name}</Text>
