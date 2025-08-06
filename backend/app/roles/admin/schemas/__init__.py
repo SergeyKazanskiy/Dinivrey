@@ -24,3 +24,5 @@ from .rule import RuleCreate, RuleUpdate, RuleResponse
 from .drill import DrillCreate, DrillResponse, DrillUpdate
 
 from .settings import MetricBase, MetricCreate, MetricResponse, MetricUpdate
+
+from .manager import ManagerCreate, ManagerUpdate, ManagerResponse

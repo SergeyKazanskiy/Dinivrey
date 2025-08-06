@@ -1,6 +1,7 @@
 import { HStack, Text, Flex, Button, Image } from "@chakra-ui/react";
 import { useStore } from '../store';
 import { DateFilter } from '../components/DateFilter';
+import { ManagersView } from './ManagersView';
 
 
 export const CampsView: React.FC = () => {
@@ -21,6 +22,8 @@ export const CampsView: React.FC = () => {
                 ))}
             </HStack>
 
+            <ManagersView/>
+            
             <HStack justifyContent='flex-start'  spacing='8px' w='356px'>
                 <Image src={`/images/Event.png`} alt='icon' boxSize='24px' bg={isSchedule ? 'blue.100' : 'unset'}
                     onClick={showSchedules}/>

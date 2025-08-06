@@ -9,9 +9,11 @@ import { useStore } from './store';
 
 
 export function DraverMenu() {
-  const { isGamingScreen } = useStore();
+  const { isGamingScreen, student } = useStore();
   const w = isGamingScreen ? 760 : 360;
-  
+
+  const title = student.first_name + ' ' + student.last_name
+
   return (
     <GestureHandlerRootView style={{ flex: 1, width: w, backgroundColor: '#2E4A7C' }}>
       <Drawer drawerContent={DrawerHeader} initialRouteName="ProfileScreen/index"
@@ -35,7 +37,7 @@ export function DraverMenu() {
 
       <Drawer.Screen name="ProfileScreen/index"
         options={{
-          headerTitle: 'Welcome!',
+          headerTitle: title,
           title: 'Main', 
           drawerIcon: ({ size, color}) => (
             <Ionicons name='home-outline' size={size} color={color} />

@@ -1,16 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
 import CampsScreen from './events/CampsScreen';
 import GroupsScreen from './groups/GroupsScreen';
 import CoachesScreen from './coaches/CoachesScreen';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { useRoute } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { useAuthState } from '../../shared/http/state';
 
 
 type TabRoutes = {
@@ -40,14 +38,17 @@ function getIconsData(routeName: string) {
 }
 
 function TabNavigatorWrapper() {
-  const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
+  const { logoutUser } = useAuthState();
+  //const navigation = useNavigation<BottomTabNavigationProp<TabRoutes>>();
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
-      <DinivreyHeader title='Manager name' onExit={()=>router.replace('/')}/>
+      <DinivreyHeader title='Manager'
+        onExit={()=>(router.replace('/'), logoutUser('manager'))}
+      />
       <Image style={[styles.image]}
-        source={require('../../../assets/images/DinivreyCompany.png')} /> 
-      
+        source={require('../../../assets/images/DinivreyCompany.png')}
+      /> 
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false, tabBarShowLabel: false, tabBarStyle: styles.tabbar,

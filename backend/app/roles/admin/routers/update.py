@@ -102,6 +102,10 @@ async def update_achieve_rules(id: int, data: List[schemas.RuleCreate], session:
     return {"isOk": True}
 
 # Coaches
+@router.put("/camps/managers/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_manager(id: int, data: schemas.ManagerUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Manager, id, data, session)}
+
 @router.put("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_coach(id: int, data: schemas.CoachUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Coach, id, data, session)}

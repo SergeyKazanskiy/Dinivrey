@@ -90,6 +90,10 @@ async def delete_attendance(event_id: int, group_id: int, session: Session = Dep
     return {"isOk": True}
 
 # Coaches
+@router.delete("/camps/managers/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
+async def delete_manager(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await CRUD.delete(models.Manager, id, session)}
+
 @router.delete("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_coach(id: int, session: Session = Depends(get_session)):
 

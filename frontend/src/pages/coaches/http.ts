@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from '../../api/api';
-import { Camp, Coach, FreeGroup, CoachGroup, Schedule, Event } from './model';
+import { Camp, Coach, FreeGroup, CoachGroup, Schedule, Event, Manager } from './model';
 
 
 // Get
@@ -33,6 +33,10 @@ export function get_competitions(camp_id: number, year: number, month: number, c
 };
 
 // Add
+export function create_manager(data: Omit<Manager, 'id'>, callback: (res: {id: number}) => void) {
+    return httpWrapper(() => api.post(`camps/managers`, data), callback);
+};
+
 export function create_coach(data: Omit<Coach, 'id'>, callback: (res: {id: number}) => void) {
     return httpWrapper(() => api.post(`camps/coaches`, data), callback);
 };
@@ -54,7 +58,15 @@ export function update_coach(coach_id: number, data: Partial<Coach>, callback: (
   return httpWrapper(() => api.put(`camps/coaches/${coach_id}`, data), callback);
 };
 
+export function update_manager(manager_id: number, data: Partial<Manager>, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`camps/managers/${manager_id}`, data), callback);
+};
+
 // Delete
+export function delete_manager(id: number, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.delete(`camps/managers/${id}`), callback);
+};
+
 export function delete_coach(id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.delete(`camps/coaches/${id}`), callback);
 };

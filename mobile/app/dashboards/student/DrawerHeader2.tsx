@@ -15,7 +15,7 @@ export function DrawerHeader(props: any) {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
-      <DinivreyHeader title={student.first_name + ' ' + student.last_name}
+      <DinivreyHeader title='Welcome!'
         onExit={()=>(router.replace('/'), logoutUser('student'))}/>
       
       <Image style={[styles.image, {padding: 16}]}

@@ -10,3 +10,4 @@ class Camp(Base):
     name = Column(String, nullable=False)
     city = Column(String, nullable=False)
     groups = relationship("Group", back_populates="camp", cascade="all, delete")
+    managers = relationship("Manager", back_populates="camp", cascade="all, delete")

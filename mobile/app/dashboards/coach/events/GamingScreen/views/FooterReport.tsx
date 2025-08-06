@@ -5,13 +5,12 @@ import { Team } from '../../model';
 
 
 function formatWinnerTitle(team: Team, winner: string | null): string {
-  if (winner) {
-    const prefix = team === winner ? 'Winner ' : '';
-    const corona = team === winner ? '🏆' : '';
+  if (winner !== 'Equally') {
+    const trophy = team === winner ? '🏆' : '';
 
-    return prefix + team + ' Team '// + corona
+    return trophy + ' ' + team + ' Team ' + trophy
   } else {
-    return team + 'Team 🤝'
+    return team + ' Team 🤝'
   }
 }
 

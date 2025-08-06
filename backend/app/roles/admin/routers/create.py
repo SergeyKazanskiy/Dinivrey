@@ -100,6 +100,10 @@ async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSes
 
 
 # Coaches
+@router.post("/camps/managers", response_model=schemas.ResponseId, tags=["Admin_create"])
+async def create_manager(data: schemas.ManagerCreate, session: AsyncSession = Depends(get_session)):
+    return {"id": await CRUD.add(models.Manager, data, session)} 
+
 @router.post("/camps/coaches", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def create_coach(data: schemas.CoachCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Coach, data, session)} 

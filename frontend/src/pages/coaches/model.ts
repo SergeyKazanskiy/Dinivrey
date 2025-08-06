@@ -3,6 +3,14 @@ export interface Camp {
   name: string;
 }
 
+export interface Manager {
+  id: number;
+  camp_id: number;
+  first_name: string;
+  last_name: string;
+  phone: string;
+}
+
 export interface Coach {
   id: number;
   camp_id: number;
