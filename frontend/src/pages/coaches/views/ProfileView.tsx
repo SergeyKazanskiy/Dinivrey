@@ -53,7 +53,7 @@ export const ProfileView: React.FC<Props> = ({coach_id}) => {
           <ProfileCell label="Last name" value={coach.last_name} maxLength={20} w1='84px' w2='140px'
             onChange={(value) => updateCoach(coach_id, { last_name: String(value) })}
           />
-          <ProfileCell label="Phone" value={coach.phone} maxLength={12} w1='84px' w2='140px'
+          <ProfileCell label="Phone" value={coach.phone} maxLength={16} w1='84px' w2='140px'
             onChange={(value) => updateCoach(coach_id, { phone: String(value) })}
           />
         </Flex>

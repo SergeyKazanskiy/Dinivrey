@@ -10,7 +10,6 @@ export const api = axios.create({ baseURL: API_BASE_URL + `/`});
 export type UserRole = 'manager' | 'coach' | 'student';
 
 export function setAuthToken(token: string, role: UserRole) {
- // alert({role} +' !!! '+ {token})
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   if (role === 'manager') setManagerToken(token);

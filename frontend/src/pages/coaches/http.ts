@@ -8,6 +8,10 @@ export function get_camps(callback: (camps: Camp[]) => void) {
   return httpWrapper(() => api.get(`camps`), callback);
 };
 
+export function get_camp_managers(camp_id: number, callback: (coaches: Coach[]) => void) {
+  return httpWrapper(() => api.get(`camps/${camp_id}/managers`), callback);
+};
+
 export function get_camp_coaches(camp_id: number, callback: (coaches: Coach[]) => void) {
   return httpWrapper(() => api.get(`camps/${camp_id}/coaches`), callback);
 };

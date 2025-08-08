@@ -10,6 +10,8 @@ import { objectToJson } from "../utils";
 import { LinearGradient } from 'expo-linear-gradient';
 import { DinivreyHeader } from '../components/DinivreyHeader';
 import { router } from 'expo-router';
+import { HttpStatus } from './HttpStatus';
+import { useSharedHttpClient } from './httpClient';
 
 
 interface Props {
@@ -18,6 +20,9 @@ interface Props {
 
 export default function LoginScreen({ role }: Props) { 
   const { loginUser } = useAuthState();
+  const { catchError, errorMessage: e } = useSharedHttpClient();
+  const { setLoading, clearMessages } = useSharedHttpClient();
+
   const recaptchaVerifier = useRef(null);
 
   const [phone, setPhone] = useState("+1 650-555-1234");
@@ -40,9 +45,10 @@ export default function LoginScreen({ role }: Props) {
   }, []);
 
 
-  const sendCode = async () => {
+  const sendPhone = async () => {
     try {
       let id;
+      setLoading(true);
 
       if (Platform.OS === 'web') {
         const verifier = recaptchaVerifierRef.current!;
@@ -53,6 +59,7 @@ export default function LoginScreen({ role }: Props) {
         id = await provider.verifyPhoneNumber(phone, recaptchaVerifier.current!);
       }
 
+      setLoading(false);
       setVerificationId(id);
       setIsCode(true);
     } catch (err: any) {
@@ -67,16 +74,19 @@ export default function LoginScreen({ role }: Props) {
       await signInWithCredential(auth, credential);
       const token = await auth.currentUser?.getIdToken(true)!;
 
-      loginUser(role, token, (() => {
-        setIsError(true);
-        setErrorMessage('Access denied')
-        signOut(auth);
-      }))
+      loginUser(role, token);
     } catch (err: any) {
       setIsError(true);
       setErrorMessage(err.message)
     }
   };
+
+  const closeErrorAlert = async () => {
+    clearMessages();
+    signOut(auth);
+    setVerificationId('');
+    await auth.currentUser?.delete();
+  }
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
@@ -85,15 +95,18 @@ export default function LoginScreen({ role }: Props) {
         source={require('../../../assets/images/DinivreyCompany.png')} /> 
 
       <CustomAlert visible={isCode} title="Success!"
-        buttonText='Send'
         onClose={() => setIsCode(false)}>
         <Text style={styles.alertText}>Verification code received</Text> 
       </CustomAlert>
 
-      <CustomAlert visible={isError} title="Error!"
-        buttonText='Send'
+      <CustomAlert visible={isError} title="Phone error!"
         onClose={() => (setIsError(false), setErrorMessage(''))}>
         <Text style={styles.alertText}>{errorMessage}</Text> 
+      </CustomAlert>
+
+      <CustomAlert visible={catchError} title="Server error!"
+        onClose={closeErrorAlert}>
+        <Text style={styles.alertText}>{e}</Text> 
       </CustomAlert>
 
       {Platform.OS !== 'web' && (
@@ -103,16 +116,16 @@ export default function LoginScreen({ role }: Props) {
         />
       )}
 
-      {!verificationId ? (
+      {verificationId === '' ? (
         <>
-          <Text style={styles.label}>Enter your phone</Text>
+          <Text style={styles.label}>Enter your phone, {role}</Text>
           <TextInput style={styles.value} keyboardType="phone-pad"
             placeholder="Enter phone"
             value={phone}
             onChangeText={setPhone}
           />
           <View style={styles.button}>
-            <Button title="Send phone" onPress={sendCode} />
+            <Button title="Send phone" onPress={sendPhone} />
           </View>
         </>
       ) : (
@@ -129,8 +142,9 @@ export default function LoginScreen({ role }: Props) {
         </>
       )}
       <View id="recaptcha-container" />
-
       {Platform.OS === 'web' && <div id="recaptcha-container" />}
+
+      <HttpStatus/>
     </LinearGradient>
   );
 }

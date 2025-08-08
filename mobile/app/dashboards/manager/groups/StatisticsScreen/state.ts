@@ -3,8 +3,9 @@ import { get_last_test_date, get_last_game_date, get_student_tests, get_student_
 import { update_student_tests_summary, update_student_games_summary } from '../http';
 import { GroupsSlice } from '../GroupsScreen/state';
 import { MeasureUnits } from '../../../../shared/constants';
-import { objectToJson, getYearAndMonth, formatSeconds } from '../../../../shared/utils';
+import { objectToJson, getYearAndMonth, formatSeconds, formatSecondsWithMilli } from '../../../../shared/utils';
 import { ProfileSlice } from "../ProfileScreen/state";
+import { StudentsSlice } from "../StudentsScreen/state";
 
 
 export interface StatisticsSlice {
@@ -52,7 +53,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     summary:'',
 
     loadStatistics: () => {
-        const { student_id, isMainMetric }: GroupsSlice & StatisticsSlice = get();
+        const { student_id, isMainMetric }: StudentsSlice & StatisticsSlice = get();
 
         if (isMainMetric) {
             const { isTests, year, month, metricName }: StatisticsSlice = get();
@@ -76,7 +77,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     selectDate: (year: number, month: number) => {
         set({ year, month });
 
-        const { isTests, student_id }: StatisticsSlice & GroupsSlice = get();
+        const { isTests, student_id }: StatisticsSlice & StudentsSlice = get();
         if (isTests) {
             get().loadTests( student_id, year, month);
         } else {
@@ -85,7 +86,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     },
 
     togleStatistic: () => {
-        const { student_id, isTests }: StatisticsSlice & GroupsSlice = get();
+        const { student_id, isTests }: StatisticsSlice & StudentsSlice = get();
        // alert(isTests)
         if (isTests) {
             get_last_game_date(student_id, (res => {
@@ -164,7 +165,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     },
 
     setSummary:(summary: string) => {
-        const { student_id, isTests }: GroupsSlice & StatisticsSlice = get();
+        const { student_id, isTests }: StudentsSlice & StatisticsSlice = get();
 
         if (isTests) {
             update_student_tests_summary(student_id, {summary_tests: summary},(res => {
@@ -190,7 +191,7 @@ function convertTestsToMetrics(tests: Test[]): Metric[] {
         const { timestamp, speed, stamina, climbing, evasion, hiding, speed_time, stamina_time, climbing_time } = test;
         
         metrics.push({ timestamp, name: 'Speed', score: speed, unit:'sec', time: formatSeconds(speed_time)});
-        metrics.push({ timestamp, name: 'Stamina', score: stamina, unit:'min', time: formatSeconds(stamina_time)});
+        metrics.push({ timestamp, name: 'Stamina', score: stamina, unit:'min', time: formatSecondsWithMilli(stamina_time)});
         metrics.push({ timestamp, name: 'Climbing', score: climbing, unit:'sec', time: formatSeconds(climbing_time)});
         metrics.push({ timestamp, name: 'Evasion', score: evasion, unit:'point', time:''});
         metrics.push({ timestamp, name: 'Hiding', score: hiding, unit:'point', time:''});
@@ -198,20 +199,15 @@ function convertTestsToMetrics(tests: Test[]): Metric[] {
     return metrics;
 }
   
-function convertGamesToMetrics(tests: Game[]): Metric[] {
+function convertGamesToMetrics(games: Game[]): Metric[] {
     const metrics: Metric[] = [];
 
-    for (const test of tests) {
-        const { id, timestamp, ...fields } = test;
+    for (const game of games) {
+        const { timestamp, caught, freeded, is_survived } = game;
 
-        for (const key of Object.keys(fields) as (keyof typeof fields)[]) {
-            const name = key.charAt(0).toUpperCase() + key.slice(1);
-            const score = test[key];
-            const unit = MeasureUnits[name];
-
-            metrics.push({ timestamp, name, score, unit, time:''});
-        }
+        metrics.push({ timestamp, name: 'Caught', score: caught, unit:'point', time: ''});
+        metrics.push({ timestamp, name: 'Freeded', score: freeded, unit:'point', time: ''});
+        metrics.push({ timestamp, name: 'Survived', score: is_survived ? 2 : 0, unit:'point', time: ''});
     }
-
     return metrics;
 }

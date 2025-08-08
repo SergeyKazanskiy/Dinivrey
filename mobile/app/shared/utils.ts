@@ -208,3 +208,7 @@ export function formatSecondsWithMilli(seconds: number): string {
   const s = pureSeconds % 60;
   return `${m}:${s.toString().padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
 }
+
+export function sanitizeName(name: string): string {
+  return name.trim().replace(/[^\w-]/g, '_');
+}

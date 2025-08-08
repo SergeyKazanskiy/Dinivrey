@@ -15,4 +15,4 @@ from .settings import MetricBase, MetricCreate, MetricResponse, MetricUpdate
 from .coach import CoachResponse
 
 from .game import GameCreate, GameResponse
-from .game import GamerCreate, GamerResponse
+from .game import GamerCreate, GamerResponse, StudentGame

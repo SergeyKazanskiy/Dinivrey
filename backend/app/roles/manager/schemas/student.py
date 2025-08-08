@@ -143,6 +143,15 @@ class GameResponse(GameBase):
     class Config:
         from_attributes = True
 
+# StudentGame
+class StudentGame(BaseModel):
+    game_id: int
+    timestamp: int
+    team: str
+    caught: int
+    freeded: int
+    is_survived: bool        
+
 # Achievement
 class AchievementBase(BaseModel):
     student_id: int

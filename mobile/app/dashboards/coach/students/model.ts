@@ -97,12 +97,19 @@ export interface StudentProfile {
     climbing_time: number;
   };
 
+  export enum Team {
+    RED = "Red",
+    GREEN = "Green"
+  };
+
   export type Game = {
-    id: number;
+    game_id: number;
     timestamp: number;
-    caughted: number;
+    team: Team;
+
+    caught: number;
     freeded: number;
-    //description?: string;
+    is_survived: boolean;
   };
   
   export interface Achievement {
