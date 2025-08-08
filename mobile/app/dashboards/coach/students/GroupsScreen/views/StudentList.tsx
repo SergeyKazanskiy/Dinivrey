@@ -6,7 +6,7 @@ import { ImagesPath } from '../../../../../shared/constants';
 
 
 export function StudentList() {
-  const { students, student_id } = useStore();
+  const { students, camp_name, group_name } = useStore();
   const { selectStudent } = useStore();
 
   const router = useRouter();
@@ -20,6 +20,9 @@ export function StudentList() {
     <>
         {students.map(student => {
             const itemStyle = styles.item;
+            const photoPath = student.photo === 'Student_boy.png' || student.photo === 'Student_girl.png' ?
+            ImagesPath + '/photos/' + student.photo :
+            ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + student.photo
 
             return (
                 <ListItem key={student.id}
@@ -27,7 +30,7 @@ export function StudentList() {
                     onPress={() => handlePress(student.id)}
                     containerStyle={itemStyle}
                 >
-                    <Avatar size={44} source={{ uri: `${ImagesPath}/photos/${student.photo}` }} rounded />
+                    <Avatar size={44} source={{ uri: `${photoPath}` }} rounded />
 
                     <ListItem.Content>
                         <ListItem.Title style={styles.title}>

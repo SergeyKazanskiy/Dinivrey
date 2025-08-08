@@ -11,22 +11,19 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.title}>Choose App</Text>
 
-      <TouchableOpacity
-        style={styles.button}
+      <TouchableOpacity style={styles.button}
         onPress={() => router.push('/dashboards/student')}
       >
         <Text style={styles.buttonText}>Student</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
+      <TouchableOpacity style={styles.button}
         onPress={() => router.push('/dashboards/coach')}
       >
         <Text style={styles.buttonText}>Trainer</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
+      <TouchableOpacity style={styles.button}
         onPress={() => router.push('/dashboards/manager')}
       >
         <Text style={styles.buttonText}>Manager</Text>

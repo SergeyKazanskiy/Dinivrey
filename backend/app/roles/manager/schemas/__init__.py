@@ -15,7 +15,7 @@ from .group import GroupTestResponse
 from .student import StudentCreate, ParentCreate
 from .student import StudentShort, StudentResponse, ParentResponse, StudentName, CommentResponse
 from .student import TestResponse, Tester, TestUpdate, TestCreate, TestUpdate2
-from .student import GameResponse, GameCreate
+from .student import GameResponse, GameCreate, StudentGame
 from .student import AchievementResponse, AchieveUpdate, AchieveResponse, AchievementCreate
 from .student import SummaryTests, SummaryAchievements, SummaryGames
 

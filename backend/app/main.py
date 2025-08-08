@@ -11,6 +11,7 @@ from roles.coach.routers import coach_select, coach_create, coach_update, coach_
 from roles.manager.routers import manager_select, manager_create, manager_update, manager_delete
 
 from fastapi.staticfiles import StaticFiles
+from auth.auth_utils import get_decoded_token
 
 
 app = FastAPI()
@@ -42,18 +43,18 @@ app.include_router(admin_create, prefix="/admin_api")
 app.include_router(admin_update, prefix="/admin_api")
 app.include_router(admin_delete, prefix="/admin_api")
 
-app.include_router(student_select, prefix="/student_api")
-app.include_router(student_update, prefix="/student_api")
+app.include_router(student_select, prefix="/student_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(student_update, prefix="/student_api", dependencies=[Depends(get_decoded_token)])
 
-app.include_router(coach_select, prefix="/coach_api")
-app.include_router(coach_create, prefix="/coach_api")
-app.include_router(coach_update, prefix="/coach_api")
-app.include_router(coach_delete, prefix="/coach_api")
+app.include_router(coach_select, prefix="/coach_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(coach_create, prefix="/coach_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(coach_update, prefix="/coach_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(coach_delete, prefix="/coach_api", dependencies=[Depends(get_decoded_token)])
 
-app.include_router(manager_select, prefix="/manager_api")
-app.include_router(manager_create, prefix="/manager_api")
-app.include_router(manager_update, prefix="/manager_api")
-app.include_router(manager_delete, prefix="/manager_api")
+app.include_router(manager_select, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(manager_create, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(manager_update, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
+app.include_router(manager_delete, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
 
 @app.get("/redoc", include_in_schema=False)
 async def custom_redoc_html():

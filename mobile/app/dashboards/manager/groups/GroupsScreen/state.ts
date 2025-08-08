@@ -1,6 +1,6 @@
 import { Camp, Group, Student } from '../model';
 import { get_camps, get_groups, get_students, create_group, delete_group } from '../http';
-import { objectToJson } from '@/app/shared/utils';
+import { objectToJson, sanitizeName } from '@/app/shared/utils';
 
 
 export interface GroupsSlice {
@@ -8,16 +8,20 @@ export interface GroupsSlice {
   groups: Group[];
 
   camp_id: number;
+  camp_inx: number;
+  camp_name: string;
+
   group_id: number;
-  groupInx: number;
+  group_inx: number;
+  group_name: string;
 
   isAddGroupAlert: boolean;
 
   loadCamps: () => void;
   loadGroups: (camp_id: number) => void;
 
-  selectCamp: (campId: number) => void;
-  selectGroup: (group_id: number, groupInx: number) => void;
+  selectCamp: (campId: number, camp_inx: number) => void;
+  selectGroup: (group_id: number, group_inx: number) => void;
 
   createGroup: (camp_id: number, name: string)=> void;
 
@@ -30,8 +34,12 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
   groups: [],
 
   camp_id: 0,
+  camp_inx: -1,
+  camp_name: '',
+
   group_id: 0,
-  groupInx: -1,
+  group_inx: -1,
+  group_name: '',
 
   isAddGroupAlert: false,
 
@@ -55,15 +63,25 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
     })
   },
 
-  selectCamp: (campId: number) => {
-    const { camp_id, loadGroups }: GroupsSlice = get();
+  selectCamp: (campId: number, camp_inx: number) => {
+    const { camps, camp_id, loadGroups }: GroupsSlice = get();
     if (campId !== camp_id) {
-      set({ camp_id: campId })
+      set({
+        camp_id: campId,
+        camp_name: sanitizeName(camps[camp_inx].name),
+      })
       loadGroups(campId);
     } 
   },
 
-  selectGroup: (group_id: number, groupInx: number) => set({ group_id, groupInx }),
+  selectGroup: (group_id: number, group_inx: number) => {
+    const { groups }: GroupsSlice = get();
+    
+    set({
+      group_id, group_inx,
+      group_name: sanitizeName(groups[group_inx].name),
+    })
+  },
 
   createGroup: (camp_id: number, name: string) => {
     set({isAddGroupAlert: false});

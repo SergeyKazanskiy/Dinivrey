@@ -40,11 +40,12 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
              });
 
             const { isSchedule }: StateSlice = get();
-            const { loadCoaches, loadGroups, loadSchedules, loadLastEvent }: StateSlice = get();
+            const { loadCoaches, loadGroups, loadSchedules, loadLastEvent, loadManagers }: StateSlice = get();
             const { setEvents }: EventsSlice = get();
 
             loadCoaches(id);
             loadGroups(id);
+            loadManagers(id);
             
             if (isSchedule) {
                 loadSchedules(id);

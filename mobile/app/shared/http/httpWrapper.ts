@@ -2,7 +2,7 @@ import { useSharedHttpClient } from './httpClient';
 import {AxiosError} from 'axios';
 import { auth } from './firebaseConfig';
 import { useAuthState } from './state';
-import axios from 'axios';
+import { objectToJson } from '../utils';
 
 
 const isDevelopMode = false; 
@@ -21,7 +21,7 @@ export const httpWrapper = async (
 
       const response = await apiCall();
       callback(response.data);
-      setSuccess(title ?? 'The request was completed successfully!');
+      //setSuccess(title ?? 'The request was completed successfully!'); where?
       return true;
     } catch (error: any) {
       const message = error instanceof AxiosError ? error.message : 'Server error!';
@@ -31,7 +31,6 @@ export const httpWrapper = async (
         const refreshed = await retryWithFreshToken(apiCall, callback, setError);
         return refreshed;
       }
-
       setError(message);
       return false;
     } finally {
@@ -54,6 +53,7 @@ async function retryWithFreshToken(
 
     const retryResponse = await apiCall();
     callback(retryResponse.data);
+
     return true;
   } catch (err) {
     setError('Auth retry failed');
@@ -61,25 +61,3 @@ async function retryWithFreshToken(
     return false;
   }
 }
-
-
-
-// export const httpWrapper = async (
-//   apiCall: () => Promise<any>,
-//   callback: (data: any) => void,
-//   title?: string,
-// ) => {
-//   const { setLoading, setSuccess, setError } = useSharedHttpClient.getState();
-  
-//   try {
-//     setLoading(true);
-//     const data = await apiCall();
-//     callback(data.data);
-//     setSuccess(title ? title :'The request was completed successfully!');
-//   } catch (error) {
-//     const message = error instanceof AxiosError ? error.message : 'Server error!';
-//     setError(message);
-//   } finally {
-//     setLoading(false);
-//   }
-// };

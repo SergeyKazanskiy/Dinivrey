@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function GroupsScreen() {
-  const { groups, students, group_id } = useStore();
+  const { groups, group_id } = useStore();
   const { loadGroups, selectGroup } = useStore();
 
   const { userId } = useAuthState();
@@ -28,7 +28,7 @@ export default function GroupsScreen() {
             <ListItem.Accordion key={index}
               containerStyle={styles.group}
               isExpanded={group.id === group_id}
-              onPress={() => selectGroup(group.id)}
+              onPress={() => selectGroup(group.id, index)}
               icon={{}}
               content={
                 <>

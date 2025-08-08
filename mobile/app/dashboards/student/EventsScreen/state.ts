@@ -69,17 +69,6 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     loadEvents: (group_id: number, event_year: number, event_month: number) => {
         get_group_events(group_id, event_year, event_month, (events: Event[]) => {
-            alert(objectToJson(events))
-    // "camp_id": 1,
-    // "timestamp": 1751374800000,
-    // "type": "Game",
-    // "desc": "reqwrqwerqw",
-    // "group1_id": 3,
-    // "group2_id": 5,
-    // "id": 51
-
-
-
             const { event_id }: EventsSlice = get();
             var eventId: Number;
 

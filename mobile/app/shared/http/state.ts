@@ -12,7 +12,7 @@ export interface AuthState {
   role: UserRole | null;
   isLogin: boolean;
 
-  loginUser: (role: UserRole, token: string, error:() => void) => void;
+  loginUser: (role: UserRole, token: string) => void;
   logoutUser: (role: UserRole) => void;
 
   restoreAuth: () => Promise<void>;
@@ -26,19 +26,16 @@ export const useAuthState = create<AuthState>((set, get) => ({
   isLogin: false,
 
 
-  loginUser: (role: UserRole, token: string, error) => {
+  loginUser: (role: UserRole, token: string) => {
     setAuthToken(token, role);
-    
+
     user_login({role}, (res => {
-      //alert('user_login ' + res.id)
       if (res.id > 0) {
         set({ token, userId: res.id, role, isLogin: true });
         
         AsyncStorage.setItem('token', token);
         AsyncStorage.setItem('userId', res.id.toString());
         AsyncStorage.setItem('role', role);
-      } else {
-        error();
       }
     }))
   },

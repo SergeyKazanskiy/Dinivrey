@@ -26,7 +26,7 @@ export const createManagersSlice = (set: any, get: any): ManagersSlice => ({
 
     createManager: () => {
         const { camp_id }: ManagersSlice & CampsSlice = get();
-        const data: Omit<Manager, 'id'> = { camp_id, first_name: '', last_name: '', phone: ''}
+        const data: Omit<Manager, 'id'> = { camp_id, first_name: 'New', last_name: 'Manager', phone: ''}
 
         create_manager(data, (res => {
             if (res) {

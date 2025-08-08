@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { auth, provider } from "./firebaseConfig";
-import {
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure
-} from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@chakra-ui/react";
 
 
 type Props = {
@@ -20,16 +18,15 @@ const AuthGate: React.FC<Props> = ({ children }) => {
       if (user) {
         const token = await user.getIdToken();
         
-        const res = await fetch("/auth/verify", { // `${API_BASE_URL}/auth/verify`
+        const res = await fetch("/auth/verify", {
           headers: { Authorization: `Bearer ${token}`, },
         });
-
         if (res.ok) {
           setVerified(true);
           onClose(); 
         } else {
           const detail = await res.json();
-          console.warn("Access denied:", detail);
+          alert("Access denied: " + detail);
           await signOut(auth);
           onOpen(); 
         }
@@ -47,7 +44,7 @@ const AuthGate: React.FC<Props> = ({ children }) => {
     try {
       await signInWithPopup(auth, provider);
     } catch (err) {
-      console.error("Google login failed", err);
+      alert("Google login failed " + err);
     }
   };
 
@@ -78,3 +75,25 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 };
 
 export default AuthGate;
+
+
+  // const verifyUserAsAdmin = async (token: string) => {
+  //   try {
+  //     const res = await axios.get(`${API_BASE_URL}/auth/admin/verify`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     alert("✅ Success! Access allowed");
+  //     setAuthToken(token);
+  //     setVerified(true);
+  //     onClose();
+  //   } catch (error) {
+  //     const err = error as AxiosError;
+  //     alert("🚫 Access denied: " + (err.response?.data || err.message));
+
+  //     setAuthToken("");
+  //     await signOut(auth);
+  //     await auth.currentUser?.delete();
+  //     onOpen();
+  //   }
+  // };

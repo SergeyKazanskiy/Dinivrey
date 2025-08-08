@@ -15,14 +15,14 @@ export function CampsView() {
       <FlatList data={camps} horizontal
         
         keyExtractor={(item) => '№' + item}
-        renderItem={({ item }) => 
+        renderItem={({ item, index }) => 
           <Button key={item.id.toString()}
               size='sm'
               title={item.name}
               type={item.id === camp_id ? 'solid' : 'outline'}
               buttonStyle={[styles.item, item.id === camp_id && {backgroundColor: '#152B52'}]}
               titleStyle={styles.text}
-              onPress={() => selectCamp(item.id)}
+              onPress={() => selectCamp(item.id, index)}
           />
         }/>
       </View>

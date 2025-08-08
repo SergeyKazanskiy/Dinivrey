@@ -3,8 +3,10 @@ import { CoachesSlice } from './store/CoachesSlice';
 import { GroupsSlice } from './store/GroupsSlice';
 import { SchedulesSlice } from './store/SchedulesSlice';
 import { EventsSlice } from './store/EventsSlice';
-import { get_camps, get_camp_coaches, get_coaches_groups, get_schedules, get_last_event, get_competitions } from './http';
+import { get_camps, get_camp_coaches, get_coaches_groups, get_schedules } from './http';
+import { get_last_event, get_competitions, get_camp_managers } from './http';
 import { objectToJson, getCurrentYear } from '../../shared/utils';
+import { ManagersSlice } from './store/ManagersSlice';
 
 
 export interface StateSlice {
@@ -13,6 +15,7 @@ export interface StateSlice {
     month: number;
 
     loadCamps: () => void;
+    loadManagers: (camp_id: number) => void;
     loadCoaches: (camp_id: number) => void;
     loadGroups: (camp_id: number) => void;
 
@@ -38,6 +41,14 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 setCamps(camps);
                 selectCamp(camps[0].id, 0);
             }
+        }));
+    },
+
+    loadManagers: (camp_id: number) => { 
+        get_camp_managers(camp_id, (managers => {
+            //alert(objectToJson(coaches))
+            const { setManagers }: ManagersSlice = get();
+            setManagers(managers);
         }));
     },
 
@@ -94,3 +105,4 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         loadEvents(camp_id, year, month);
     },
 });
+
