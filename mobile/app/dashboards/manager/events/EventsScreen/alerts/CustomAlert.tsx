@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Modal, View, Text, TouchableWithoutFeedback, Animated, StyleSheet, TouchableOpacity, Platform} from 'react-native';
-import { PopoverButton } from '../../../../../shared/components/PopoverButton';
+import React, { useEffect, useRef } from 'react';
+import { Modal, View, Text, StyleSheet, Animated, Platform} from 'react-native';
+import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 
 
 interface Props {
@@ -12,15 +12,19 @@ interface Props {
   onClose?: () => void;
 
   date: string;
-  time: string;
+  time1: string;
+  time2: string;
+
   onDate: () => void;
-  onTime: () => void;
-  isTime: boolean;
+  onTime: (isStart: boolean) => void;
+
   isDate: boolean;
+  isTime: boolean;
+  isStart: boolean
 }
 
-export const CustomAlert: React.FC<Props> = (
-  { visible, title, children, handleYes, buttonText, onClose, date, time, onDate, onTime, isTime, isDate }) => {
+export const CustomAlert: React.FC<Props> = ({ visible, title, children, handleYes, buttonText, onClose,
+    date, time1, time2, onDate, onTime, isTime, isDate, isStart }) => {
     
   const slideAnim = useRef(new Animated.Value(-16)).current;
   const top = 5;
@@ -35,7 +39,7 @@ export const CustomAlert: React.FC<Props> = (
 
   return (
     <Modal transparent visible={visible} animationType='fade'>
-      <TouchableWithoutFeedback  onPress={onClose}>
+      <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.backdrop}>
         <TouchableWithoutFeedback>
           <Animated.View style={[styles.alertBox, { transform: [{ translateY: slideAnim }] }]}>
@@ -43,23 +47,31 @@ export const CustomAlert: React.FC<Props> = (
               <Text style={styles.title}>{title}</Text>
 
               <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                <Text style={[styles.date, isDate && {backgroundColor: '#2E4A7C'}]} onPress={onDate}>{date}</Text>
-                <Text style={[styles.date, isTime && {backgroundColor: '#2E4A7C'}]} onPress={onTime}>{time}</Text>
+                <Text style={[styles.date, isDate && {backgroundColor: '#2E4A7C'}]}
+                  onPress={onDate}>{date}</Text>
+
+                <Text style={[styles.time, isTime && isStart && {backgroundColor: '#2E4A7C'}]}
+                  onPress={() => onTime(true)}>{time1}</Text>
+                <Text style={{color: '#ccc', paddingTop: 3}}>-</Text>
+                <Text style={[styles.time, isTime && !isStart && {backgroundColor: '#2E4A7C'}]}
+                  onPress={() => onTime(false)}>{time2}</Text>
               </View>
             </View>
 
             <View style={styles.content}>{children}</View>
 
-            {!isDate && !isTime && <View style={styles.buttonRow}>
-              {handleYes && buttonText && (
-                <TouchableOpacity style={styles.button} onPress={handleYes}>
-                  <Text style={styles.buttonText}>{buttonText}</Text>
+            {!isDate && !isTime &&
+              <View style={styles.buttonRow}>
+                {handleYes && buttonText && (
+                  <TouchableOpacity style={styles.button} onPress={handleYes}>
+                    <Text style={styles.buttonText}>{buttonText}</Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity style={styles.button} onPress={onClose}>
+                  <Text style={styles.buttonText}>Close</Text>
                 </TouchableOpacity>
-              )}
-              <TouchableOpacity style={styles.button} onPress={onClose}>
-                <Text style={styles.buttonText}>Close</Text>
-              </TouchableOpacity>
-            </View>}
+              </View>
+            }
           </Animated.View>
           </TouchableWithoutFeedback>
         </View>
@@ -71,7 +83,6 @@ export const CustomAlert: React.FC<Props> = (
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    //backgroundColor: '#0006',
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-start',
     ...(Platform.OS === 'web' ? { width: 360, alignSelf: 'flex-start' } : {}),
@@ -79,7 +90,7 @@ const styles = StyleSheet.create({
   alertBox: {
     marginHorizontal: 8,
     marginTop: 50,
-    padding: 20,
+    padding: 12,
     backgroundColor: '#152B52',
     borderWidth: 1,
     borderColor: 'rgb(110, 151, 6)',
@@ -90,7 +101,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '500',
-    marginBottom: 16,
+    paddingTop: 4,
+    marginBottom: 12,
   },
   content: {
     marginBottom: 20,
@@ -112,11 +124,22 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 15,
+    color: 'yellow',
+    fontWeight: '600',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    marginRight: 12,
+    height: 28,
+    borderWidth: 1,
+    borderColor: 'green',
+    borderRadius: 8
+  },
+  time: {
+    fontSize: 14,
     color: '#A4FAAA',
     fontWeight: '500',
     paddingVertical: 4,
     paddingHorizontal: 8,
-    marginLeft: 4,
     height: 28,
     borderWidth: 1,
     borderColor: 'green',

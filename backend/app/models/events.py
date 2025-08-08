@@ -9,6 +9,7 @@ class Event(Base):
     id = Column(Integer, primary_key=True, index=True)
     camp_id = Column(Integer, ForeignKey('camps.id', ondelete='CASCADE'))
     timestamp = Column(Integer, nullable=False)
+    duration = Column(Integer, nullable=False, default=3600000)
     type = Column(String, nullable=False)
     desc = Column(String)
     group1_id = Column(Integer, nullable=False)

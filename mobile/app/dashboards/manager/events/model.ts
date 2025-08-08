@@ -25,6 +25,7 @@ export interface Event {
   id: number;
   camp_id: number
   timestamp: number;
+  duration: number;
   type: string;
   desc: string;
   day?: number;

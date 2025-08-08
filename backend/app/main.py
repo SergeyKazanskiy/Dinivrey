@@ -95,19 +95,19 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
     # except Exception as e:
     #     print("!!!!! error:", e)
 
-    # try:
-    #     await session.execute(text("""
-    #         ALTER TABLE games ADD COLUMN points2 INTEGER NOT NULL DEFAULT 0;
-    #     """))
-    # except Exception as e:
-    #     print("!!!!! error:", e)    
-
     try:
         await session.execute(text("""
-            ALTER TABLE coaches ADD COLUMN firebase_uid TEXT;
+            ALTER TABLE events ADD COLUMN duration INTEGER NOT NULL DEFAULT 3600000;
         """))
     except Exception as e:
-        print("!!!!! error:", e)  
+        print("!!!!! error:", e)    
+
+    # try:
+    #     await session.execute(text("""
+    #         ALTER TABLE coaches ADD COLUMN firebase_uid TEXT;
+    #     """))
+    # except Exception as e:
+    #     print("!!!!! error:", e)  
 
     # try:
     #     await session.execute(text("""

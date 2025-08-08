@@ -15,12 +15,20 @@ export const AddCompetitionAlert = () => {
 
   const [isDate, setIsDate] = useState(false);
   const [isTime, setIsTime] = useState(false);
+  const [isStartTime, setIsStartTime] = useState(true);
+
   const [isError, setIsError] = useState(false);
+  const [isTimeError, setIsTimeError] = useState(false);
 
   const [timestamp, setTimestamp] = useState(0);
+  const [duration, setDuration] = useState(36000000);
   const [day, setDay] = useState(1);
-  const [hour, setHour] = useState(16);
-  const [minute, setMinute] = useState(0);
+
+  const [hour1, setHour1] = useState(16);
+  const [minute1, setMinute1] = useState(0);
+  const [hour2, setHour2] = useState(16);
+  const [minute2, setMinute2] = useState(0);
+
   const [group1_inx, setGroup1] = useState(-1);
   const [group2_inx, setGroup2] = useState(-1);
   const [desc, setDesc] = useState('');
@@ -30,17 +38,27 @@ export const AddCompetitionAlert = () => {
       const event = filtredEvents.find(el => el.id === event_id)
       
       if (event) {
+        const hour1 = getWeekHourMinute(event.timestamp).hours
+        const minute1 = getWeekHourMinute(event.timestamp).minutes
+
+        const hour2 = getWeekHourMinute(event.timestamp + duration).hours
+        const minute2 = getWeekHourMinute(event.timestamp + duration).minutes
+
         const group1_inx = groups.findIndex(el => el.id === event.group1_id)
         const group2_inx = groups.findIndex(el => el.id === event.group2_id)
-        const hour = getWeekHourMinute(event.timestamp).hours
-        const minute = getWeekHourMinute(event.timestamp).minutes
 
         setTimestamp(event.timestamp);
-        setHour(hour);
-        setMinute(minute);
+        setDuration(event.duration);
+        setDesc(event.desc);
+
+        setHour1(hour1);
+        setMinute1(minute1);
+
+        setHour2(hour2);
+        setMinute2(minute2);
+
         setGroup1(group1_inx);
         setGroup2(group2_inx);
-        setDesc(event.desc);
       }
     } else {
       const {year: currentYear, month: currentMonth} = getYearAndMonth(today)
@@ -54,6 +72,19 @@ export const AddCompetitionAlert = () => {
   }, [event_id]);
 
   function handleSave() {
+    const newDate1 = new Date(year, month - 1, day, hour1, minute1);
+    const newDate2 = new Date(year, month - 1, day, hour2, minute2);
+
+    const newTimestamp1 = newDate1.getTime();
+    const newTimestamp2 = newDate2.getTime();
+    const newDuration = newTimestamp2 - newTimestamp1
+    
+    if (newDuration < 1000) {
+      setIsTimeError(true);
+      setTimeout(() => {setIsTimeError(false)}, 2000);
+      return
+    }
+
     const group1_id = groups[group1_inx]?.id || 0;
     const group2_id = groups[group2_inx]?.id || 0;
 
@@ -62,42 +93,56 @@ export const AddCompetitionAlert = () => {
       setTimeout(() => {setIsError(false)}, 2000);
       return
     }
-    const newDate = new Date(year, month - 1, day, hour, minute);
-    const newTimestamp = newDate.getTime();
 
     if (event_id === 0) {
-      addEvent({ camp_id, timestamp: newTimestamp, type: "Game", desc, group1_id, group2_id });
+      addEvent({ camp_id, timestamp: newTimestamp1, duration: newDuration,
+        type: "Game", desc, group1_id, group2_id });
     } else {
-      updateEvent({ id: event_id, camp_id, timestamp: newTimestamp, type: "Game", desc, group1_id, group2_id });
+      updateEvent({ id: event_id, camp_id, timestamp: newTimestamp1, duration: newDuration,
+        type: "Game", desc, group1_id, group2_id });
     }
   }
 
   const groupNames: Option[] = groups.map(el => ({"id": el.id, "name": el.name}));
-  const formatedMinute = minute < 10 ? "0" + minute : minute;
+  const formateMinute = (minute: number): string => minute < 10 ? "0" + minute : "" + minute;
+
+  const onTime = (isStart: boolean) => {
+    setIsStartTime(isStart);
+    setIsDate(false);
+
+    if (isTime && isStart === isStartTime) {
+      setIsTime(false);
+    } else {
+      setIsTime(true);
+    }
+  }
 
   return (
-    <CustomAlert visible={isAddAlert} 
-      title="Competition!"
-      buttonText='Save'
+    <CustomAlert visible={isAddAlert} title="Competition!" buttonText='Save'
       handleYes={handleSave}
       onClose={hideAddAlert}
 
       date={formatDateTime(timestamp).date}
-      time={hour + ':' + formatedMinute}
+      time1={hour1 + ':' + formateMinute(minute1)}
+      time2={hour2 + ':' + formateMinute(minute2)}
+
       onDate={()=>(setIsDate(!isDate), setIsTime(false))}
-      onTime={()=>(setIsTime(!isTime), setIsDate(false))}
-      isTime={isTime}
-      isDate={isDate}
+      onTime={onTime}
+
+      isTime={isTime} isDate={isDate} isStart={isStartTime}
     >
       {isDate && <DateView timestamp={timestamp}
         setDate={(timestamp, day) => (setTimestamp(timestamp), setDay(day))}/>}
-      {isTime && <TimeView hour={hour} minute={minute} setHour={setHour} setMinute={setMinute}/>}
+      {isTime && <TimeView
+        hour={isStartTime ? hour1 : hour2}
+        minute={isStartTime ? minute1 : minute2}
+        setHour={(hour) => isStartTime ? setHour1(hour) : setHour2(hour)}
+        setMinute={(minute) => isStartTime ? setMinute1(minute) : setMinute2(minute)}
+        />}
 
-      {!isTime && !isDate &&  <>
-        <View style={styles.section}>
-          <Text style={{fontSize: 16, color: '#ccc', fontWeight: '500', left: 4}}>Finish time: </Text>
-          <Text style={[styles.time]}>19:00</Text>
-        </View>
+      {!isTime && !isDate && <>
+        {isTimeError && <Text style={styles.time_error}>Time error!</Text>}
+
         <View style={[styles.row, {borderColor: '#555', borderTopWidth: 1}]}>
           {!isError && <Text style={styles.label}>Groups: </Text>}
           {isError && <Text style={styles.error}>Select groups! </Text>}
@@ -142,6 +187,13 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 10,
   },
+  time_error: {
+    alignSelf: 'flex-end',
+    fontSize: 16,
+    fontWeight: '400',
+    color: 'red',
+    paddingHorizontal: 12
+  },
   date: {
     width: 140,
     fontSize: 16,
@@ -150,7 +202,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 60,
+    height: 68,
     backgroundColor: '#2E4A7C',
     color: '#eee',
     fontSize: 15,
