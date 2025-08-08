@@ -1,20 +1,21 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { cellStyles } from '../styles/appStyles';
+import { cellStyles } from '../../../../../shared/styles/appStyles';
 import { Button } from '@rneui/themed';
-import { Group } from '../../dashboards/coach/students/model';
+import { Group } from '../../../../coach/students/model';
 
 export type Props = {
   type: string;
   date: string;
-  time: string;
+  time1: string;
+  time2: string;
   desc: string;
   group1: Group;
   onGroup:(id: number, group_number: number) => void;
   group2?: Group;
 };
   
-export const CampEventCell: React.FC<Props> = ({type, date, time, desc, group1, onGroup, group2}) => {
+export const CampEventCell: React.FC<Props> = ({type, date, time1, time2, desc, group1, onGroup, group2}) => {
   return (
     <View style={styles.container}>
       <View  style={[styles.column, {width: '20%', borderRightWidth: 1, borderColor:'rgb(110, 151, 6)', alignItems: 'center'}]}>
@@ -42,7 +43,7 @@ export const CampEventCell: React.FC<Props> = ({type, date, time, desc, group1, 
 
         <View style={styles.section}>
           <Text style={[cellStyles.description, {marginTop: 8}]}>{desc}</Text>
-          <Text style={[cellStyles.date, {paddingRight: 4, marginTop: 8}]}>{time}</Text>
+          <Text style={[cellStyles.date, {paddingRight: 4, marginTop: 8}]}>{time1 + '-' + time2}</Text>
         </View>
       </View>
     </View>

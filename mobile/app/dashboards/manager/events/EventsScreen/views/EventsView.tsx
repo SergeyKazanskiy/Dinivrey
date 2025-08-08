@@ -1,7 +1,7 @@
 import { StyleSheet, FlatList, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
-import { CampEventCell } from '../../../../../shared/components/CampEventCell';
+import { CampEventCell } from '../cells/CampEventCell';
 import { formatDateTime, objectToJson } from '../../../../../shared/utils';
 import { TypesView } from '../views/TypesView';
 
@@ -35,7 +35,8 @@ export function EventsView() {
             <CampEventCell key={item.id}
               type={item.type}  
               date={formatDateTime(item.timestamp).date}
-              time={formatDateTime(item.timestamp).time}
+              time1={formatDateTime(item.timestamp).time}
+              time2={formatDateTime(item.timestamp + item.duration).time}
               desc={item.desc}
               group1={groups.find(el => el.id === item.group1_id)!}
               onGroup={(group_id, group_number) => handlePressGroup(item.id, group_id)}

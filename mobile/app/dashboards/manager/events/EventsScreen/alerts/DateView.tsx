@@ -62,9 +62,7 @@ export const DateView: React.FC<Props> = ({ timestamp, setDate }) => {
 
 const styles = StyleSheet.create({
   container: {
-    //backgroundColor: '#2E4A7C'
-    // paddingHorizontal: 12,
-    // paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   section: {
     flexDirection: 'row',

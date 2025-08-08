@@ -5,6 +5,7 @@ from typing import Optional, List
 class EventBase(BaseModel):
     camp_id: int
     timestamp: int
+    duration: int
     type: str
     desc: Optional[str] = None
     group1_id: int
@@ -17,6 +18,7 @@ class EventCreate(EventBase):
 
 class EventUpdate(BaseModel):
     timestamp: Optional[int] = None
+    duration: Optional[int] = None
     type: Optional[str] = None
     desc: Optional[str] = None
     group1_id: Optional[int] = None
