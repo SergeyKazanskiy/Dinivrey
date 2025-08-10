@@ -1,5 +1,5 @@
 import { Table, Thead, Tbody, Tr, Th, Td, Flex } from "@chakra-ui/react";
-import { DeleteMenu } from './DeleteMenu';
+import { DeleteMenu } from '../pages/coaches/components/DeleteMenu';
 
 
 interface Props<T> {

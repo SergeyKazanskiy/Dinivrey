@@ -1,16 +1,19 @@
-import { Test } from '../model';
+import { Test, TestUpdate } from '../model';
 import { TestSlice } from './TestSlice';
 import { add_test, update_student_test, delete_student_test} from '../http';
-import { getChanges, formatDateTime, objectToJson } from '../../../shared/utils';
+import { objectToJson, NumericFields, formatDateTime } from '../../../shared/utils';
+import { CampsSlice } from '../../students/store/CampsSlice';
 
 
 export interface TestsSlice {
     tests: Test[];
-    isTestPopover: boolean;
-
     test_id: number;
+
     testColumn: string;
     testValue: number;
+
+    exam: NumericFields<Test>;
+    exam_time: NumericFields<Test>;
 
     isTestModal: boolean;
     isTestUpdate: boolean;
@@ -20,8 +23,7 @@ export interface TestsSlice {
     selectTestCell:(test_id: number, testColumn: string) => void;
     
     addTest:() => void;
-    updateTestCell:(value: number) => void;
-    updateTest:() => void;
+    updateTest:(examValue: number) => void;
     deleteTest:() => void;
 
     openUpdateTest:() => void;
@@ -30,58 +32,15 @@ export interface TestsSlice {
 }
 
 export const createTestsSlice = (set: any, get: any): TestsSlice => ({
-    tests:[
-        {
-            id: 1,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 5,
-            stamina: 4,
-            climbing: 4,
-            evasion: 2,
-            hiding: 7
-        },
-        {
-            id: 2,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 5,
-            stamina: 6,
-            climbing: 4,
-            evasion: 2,
-            hiding: 2
-        },
-        {
-            id: 3,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 4,
-            stamina: 8,
-            climbing: 2,
-            evasion: 2,
-            hiding: 5
-        },
-        {
-            id: 4,
-            student_id: 0,
-            timestamp: 0,
-            date: '',
-            speed: 5,
-            stamina: 8,
-            climbing: 2,
-            evasion: 2,
-            hiding: 5
-        }
-    ],
-    isTestPopover: false,
-    
+    tests:[],
     test_id: 0,
+
     testColumn: '',
     testValue: 0,
 
+    exam: 'speed',
+    exam_time: 'speed_time',
+    
     isTestModal: false,
     isTestUpdate: false,
     isTestDelete: false,
@@ -91,9 +50,22 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
     selectTestCell:(test_id: number, testColumn: string) => {
         const { tests, setTest }: TestsSlice & TestSlice = get();
         const test = tests.find(item => item.id === test_id)!
-        const value = test[testColumn as keyof Test];
-        
-        set({ test_id, testColumn, isTestPopover: testColumn !== 'date', testValue: value})
+
+        let value: number;
+        if (testColumn === 'speed' || testColumn === 'stamina' || testColumn === 'climbing') {
+            value = test[testColumn + '_time' as NumericFields<Test>];
+        } else {
+            value = test[testColumn as NumericFields<Test>];
+        }
+
+        set({ test_id, testColumn,
+            testValue: value,
+            isTestModal: testColumn !== 'date',
+            isTestUpdate: testColumn !== 'date',
+            exam: testColumn === 'date' ? '' : testColumn,
+            exam_time: testColumn === 'speed' || testColumn === 'stamina' || testColumn === 'climbing' ?
+            testColumn + '_time' : '',
+        })
         setTest(test);
     },
 
@@ -103,7 +75,7 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
         const timestamp = Date.now();
         newTest.timestamp = timestamp;
         newTest.date = formatDateTime(timestamp).date;
-        //alert(objectToJson(newTest));
+        
         add_test(newTest, (res) => {
             if (res.id) {
                 const test: Test = {...newTest, id: res.id};
@@ -112,30 +84,55 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
         })
     },
 
-    updateTestCell: (value: number) => {
-        //alert(value)
-        const { testColumn, updateTest }: TestsSlice= get();
-        const { setSpeed, setStamina, setClimbing, setEvasion, setHiding }: TestSlice = get();
-        if (testColumn === "speed") setSpeed(value);
-        if (testColumn === "stamina") setStamina(value);
-        if (testColumn === "climbing") setClimbing(value);
-        if (testColumn === "evasion") setEvasion(value);
-        if (testColumn === "hiding") setHiding(value);
+    // updateTestCell: (value: number) => {
+    //     //alert(value)
+    //     const { testColumn, updateTest }: TestsSlice= get();
+    //     const { setSpeed, setStamina, setClimbing, setEvasion, setHiding }: TestSlice = get();
+    //     if (testColumn === "speed") setSpeed(value);
+    //     if (testColumn === "stamina") setStamina(value);
+    //     if (testColumn === "climbing") setClimbing(value);
+    //     if (testColumn === "evasion") setEvasion(value);
+    //     if (testColumn === "hiding") setHiding(value);
 
-        updateTest();
-    },
+    //     updateTest();
+    // },
 
-    updateTest:() => {
-        const { getUpdatedTest, tests, test_id }: TestSlice & TestsSlice= get();
-        const updatedTest = getUpdatedTest();
-        const test = tests.find(item => item.id === test_id)!
-        const data: Partial<Test> = getChanges(test, updatedTest);
+    // updateTest:() => {
+    //     const { getUpdatedTest, tests, test_id }: TestSlice & TestsSlice= get();
+    //     const updatedTest = getUpdatedTest();
+    //     const test = tests.find(item => item.id === test_id)!
+    //     const data: Partial<Test> = getChanges(test, updatedTest);
 
-        update_student_test(test.id, data, (res => {
-            if (res.isOk) {
+    //     update_student_test(test.id, data, (res => {
+    //         if (res.isOk) {
+    //             set((state: TestsSlice) => ({
+    //                 tests: state.tests.map(el => el.id === test.id ? updatedTest : el),
+    //             }))
+    //         }
+    //     }));
+    // },
+
+    updateTest: (examValue: number) => {
+        const { exam, exam_time, test_id, camp_id, tests }: TestsSlice & CampsSlice = get();
+        const test = tests.find(el => el.id === test_id)!;
+
+        const data: TestUpdate = {
+            exam,
+            value: examValue,
+            camp_id: exam === 'speed' ? 0: camp_id
+        }
+
+        update_student_test(test_id, data, (res => {
+            if (res) {
+                test[exam] = res.score;
+                if (res.time) {
+                    test[exam_time] = res.time;
+                }
                 set((state: TestsSlice) => ({
-                    tests: state.tests.map(el => el.id === test.id ? updatedTest : el),
-                }))
+                    testValue: examValue,
+                    tests: state.tests.map(el => el.id === test_id ? test : el),
+                    isTestModal: false,
+                }));
             }
         }));
     },

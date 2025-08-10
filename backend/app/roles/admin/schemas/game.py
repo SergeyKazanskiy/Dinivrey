@@ -44,3 +44,12 @@ class GamerResponse(GamerBase):
 
     class Config:
         from_attributes = True
+
+# StudentGame
+class StudentGame(BaseModel):
+    id: int
+    timestamp: int
+    team: str
+    caught: int
+    freeded: int
+    is_survived: bool

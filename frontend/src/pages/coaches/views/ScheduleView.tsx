@@ -1,7 +1,7 @@
 import { Container } from "@chakra-ui/react";
 import { useStore } from '../store';
 import { screenStyles } from '../../../shared/appStyles'
-import { SimpleTable } from '../components/SimpleTable';
+import { SimpleTable } from '../../../components/SimpleTable';
 
 
 interface Props {

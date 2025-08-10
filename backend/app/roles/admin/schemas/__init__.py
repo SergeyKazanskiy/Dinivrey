@@ -6,14 +6,14 @@ from .group import CampTestResponse, CampTestAverages, GroupAchieve
 
 
 from .student import StudentCreate, StudentUpdate, StudentResponse, StudentShort, StudentName
-from .student import ParentCreate, ParentUpdate, ParentResponse
+from .student import ParentCreate, ParentUpdate, ParentResponse, TestUpdate2
 from .student import TestCreate, TestUpdate, TestResponse, StudentTestLider, StudentAchieveLider
 from .student import AchievementCreate, AchievementUpdate, AchievementResponse
 
 from .event import EventCreate, EventUpdate, EventResponse
 from .event import AttendanceDataCreate, AttendanceCreate, AttendanceUpdate, AttendanceResponse
 
-from .game import GameCreate, GameResponse
+from .game import GameCreate, GameResponse, StudentGame
 from .game import GamerCreate, GamerResponse
 
 from .coach import CoachCreate, CoachUpdate, CoachResponse
