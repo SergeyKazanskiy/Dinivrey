@@ -88,7 +88,7 @@ export function delete_student_test(id: number, callback: (res: {isOk: boolean})
     return httpWrapper(() => api.delete(`students/tests/${id}`), callback);
 };
 
-export function update_student_test(id: number, data: TestUpdate, callback: (res: {"score": number, 'time?': number}) => void) {
+export function update_student_test(id: number, data: TestUpdate, callback: (res: {"score": number, 'time'?: number}) => void) {
     return httpWrapper(() => api.put(`students/tests/${id}`, data), callback);
 };
 

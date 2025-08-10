@@ -5,7 +5,7 @@ import { useStore } from "../store";
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 import { RadarChart } from '../../../components/RadarChart';
 import { LineChart } from '../../../components/LineChart';
-
+import { formatDateTime } from '../../../shared/utils';
 
 export const ChartsView: React.FC = () => {
   const { tests, games } = useStore();
@@ -17,16 +17,17 @@ export const ChartsView: React.FC = () => {
   const testLabels: string[] = ["speed", "stamina", "climbing", "evasion", "hiding"];
   const testsDatasets = testLabels.map((key) => ({
     title: key.charAt(0).toUpperCase() + key.slice(1),
-    labels: tests.map(m => m.date),
-    values: tests.map(m => Number(m[key as keyof Test])),
+    labels: tests.map(el => formatDateTime(el.timestamp).date),
+    values: tests.map(el => Number(el[key as keyof Test])),
   }));
 
   const gameLabels: string[] = ["caughted", "freeded"];
   const gamesDatasets = gameLabels.map((key) => ({
     title: key.charAt(0).toUpperCase() + key.slice(1),
-    labels: games.map(m => m.date),
-    values: games.map(m => Number(m[key as keyof Game])),
+    labels: games.map(el => formatDateTime(el.timestamp).date),
+    values: games.map(el => Number(el[key as keyof Game])),
   }));
+
 
   return (
     <HStack px={2}>

@@ -1,7 +1,7 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from '../../api/api';
 import { Student, Camp, Group, Parent, Attendance } from './model';
-import { Test, Game, Achieve, AchieveAttach, Achievement } from './model';
+import { Test, Game, Achieve, AchieveAttach, Achievement, TestUpdate } from './model';
 import { objectToJson } from '../../shared/utils';
 
 
@@ -24,6 +24,10 @@ export function get_student_parents(student_id: number, callback: (parents: Pare
 
 export function get_student_attendance(student_id: number, callback: (attendance: Attendance) => void) {
   return httpWrapper(() => api.get(`students/${student_id}/attendance`), callback);
+};
+
+export function get_last_test_date(student_id: number, callback: (res: {year: number, month: number, isEvents: boolean}) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/tests/last/date`), callback);
 };
 
 export function get_student_tests(student_id: number, year: number, month: number, callback: (tests: Test[]) => void) {
@@ -56,7 +60,7 @@ export function update_student_group(student_id: number, data: Group, callback: 
   return httpWrapper(() => api.put(`students/${student_id}/group`, data), callback);
 };
 
-export function update_student_test(id: number, data: Partial<Test>, callback: (res: {isOk: boolean}) => void) {
+export function update_student_test(id: number, data: TestUpdate, callback: (res: {"score": number, 'time'?: number}) => void) {
   return httpWrapper(() => api.put(`students/tests/${id}`, data), callback);
 };
 

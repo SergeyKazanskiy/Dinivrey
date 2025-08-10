@@ -16,8 +16,8 @@ export interface GameSlice {
     setDesc:(description: string) => void;
 
     setGame: (game: Game) => void;
-    getNewGame: () => Omit<Game, 'id'>;
-    getUpdatedGame: () => Game;
+    // getNewGame: () => Omit<Game, 'id'>;
+    // getUpdatedGame: () => Game;
 }
 
 export const createGameSlice = (set: any, get: any): GameSlice => ({
@@ -32,16 +32,16 @@ export const createGameSlice = (set: any, get: any): GameSlice => ({
     setFreeded:(freeded: number) => set({ freeded }),
     setDesc:(desc: string) => set({ desc }),
 
-    setGame: ({ id, timestamp, caughted, freeded, description }: Game) =>
-            set({ id, timestamp, caughted, freeded, description }),
+    setGame: ({ id, timestamp, caught, freeded, is_survived }: Game) =>
+            set({ id, timestamp, caught, freeded, is_survived }),
 
-    getNewGame:() => {
-        const { student_id, timestamp, date, caughted, freeded, description }: StateSlice & EventsSlice & GameSlice = get();
-        return { student_id, timestamp, date, caughted, freeded, description }
-    },
+    // getNewGame:() => {
+    //     const { student_id, timestamp, date, caughted, freeded, description }: StateSlice & EventsSlice & GameSlice = get();
+    //     return { student_id, timestamp, date, caughted, freeded, description }
+    // },
 
-    getUpdatedGame:() => {
-        const { student_id, id, timestamp, date, caughted, freeded, description }: StateSlice & EventsSlice & GameSlice = get();
-        return { student_id, id, timestamp, date, caughted, freeded, description }
-    },
+    // getUpdatedGame:() => {
+    //     const { student_id, id, timestamp, date, caughted, freeded, description }: StateSlice & EventsSlice & GameSlice = get();
+    //     return { student_id, id, timestamp, date, caughted, freeded, description }
+    // },
 });

@@ -1,7 +1,7 @@
 import { Container, HStack, VStack, Flex, Text, Button } from "@chakra-ui/react";
 import { useStore } from '../store';
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
-import { SimpleTable } from '../components/SimpleTable';
+import { SimpleTable } from '../../../components/SimpleTable';
 import { GroupsPopover } from '../components/GroupsPopover';
 
 

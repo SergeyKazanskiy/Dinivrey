@@ -55,28 +55,46 @@ export interface Attendance {
   total: number;
 }
 
+// Test
 export type Test = {
   id: number;
-  student_id: number;
   timestamp: number;
-  date: string;
+  date: string
+
   speed: number;
   stamina: number;
   climbing: number;
   evasion: number;
   hiding: number;
+
+  speed_time: number;
+  stamina_time: number;
+  climbing_time: number;
 };
 
-export type Game = {
+export interface TestUpdate {
+  exam: string;
+  value: number;
+  camp_id: number;
+}
+
+// Game
+export enum Team {
+  RED = "Red",
+  GREEN = "Green"
+};
+
+export type Game = { 
   id: number;
-  student_id: number;
   timestamp: number;
-  date: string;
-  caughted: number;
-  freeded: number;
-  description?: string;
-};
+  team: Team;
 
+  caught: number;
+  freeded: number;
+  is_survived: boolean;
+}
+
+// Achievement
 export interface Achievement {
   id: number; // Achievement id
   image: string;

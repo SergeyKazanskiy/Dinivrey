@@ -109,7 +109,7 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
         update_student_test(tester.test_id, data, (res => {
             if (res) {
                 tester[exam] = res.score;
-                tester[exam + '_time'] = res.time;
+                if (res.time) tester[exam + '_time'] = res.time;
                // alert(objectToJson(tester));
                 set((state: TestingSlice) => ({
                     examValue,

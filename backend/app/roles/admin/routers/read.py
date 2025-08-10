@@ -255,6 +255,21 @@ async def get_student(id: int, session: AsyncSession = Depends(get_session)):
 async def get_student_parents(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Parent, session, filters={'student_id': id})
 
+@router.get("/students/{id}/tests/last/date", tags=["Admin_select"])
+async def get_last_test_date(id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Test)
+        .where(models.Test.student_id == id)
+        .order_by(desc(models.Test.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    event = result.scalar_one_or_none()
+    isEvents = True if event else False
+    timestamp = event.timestamp if event else int(datetime.now().timestamp() * 1000)
+    date = datetime.fromtimestamp(timestamp / 1000)
+    return {"year": date.year, "month": date.month, "isEvents": isEvents}
+
 @router.get("/students/{id}/tests", response_model=List[schemas.TestResponse], tags=["Admin_select"])
 async def get_student_tests(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
@@ -264,14 +279,32 @@ async def get_student_tests(id: int, year: int, month: int, session: AsyncSessio
     )
     return result.scalars().all()
 
-@router.get("/students/{id}/games", response_model=List[schemas.GameResponse], tags=["Admin_select"])#??? year, month
+
+@router.get("/students/{id}/games", response_model=List[schemas.StudentGame], tags=["Admin_select"])
 async def get_student_games(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):
     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
-    result = await session.execute(
-        select(models.Game).where(models.Game.timestamp.between(start_ts, end_ts), models.Game.student_id == id)
+
+    Gamer = models.Gamer
+    Game = models.Game
+
+    stmt = (
+        select(Game.id, Game.timestamp, Gamer.team, Gamer.caught, Gamer.freeded, Gamer.is_survived)
+        .join(Gamer, Gamer.game_id == Game.id )
+        .where( Gamer.student_id == id, Game.timestamp.between(start_ts, end_ts))
+        .order_by(Game.timestamp)
     )
-    return result.scalars().all()
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [ schemas.StudentGame(
+                id = row[0],
+                timestamp = row[1],
+                team = row[2],
+                caught = row[3],
+                freeded = row[4],
+                is_survived = row[5]
+            ) for row in rows]
 
 @router.get("/students/{id}/attendance", tags=["Admin_select"])
 async def get_student_attendance(id: int, session: AsyncSession = Depends(get_session)):

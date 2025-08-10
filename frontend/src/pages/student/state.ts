@@ -1,5 +1,5 @@
 import { get_student, get_student_parents, get_student_attendance,
-    get_student_achieves, get_student_tests, get_student_games} from './http';
+    get_student_achieves, get_student_tests, get_student_games, get_last_test_date} from './http';
 import { Student, Parent, Attendance, Test, Game, Achieve, Achievement } from './model';
 import { ProfileSlice } from './store/ProfileSlice';
 import { AddressSlice } from './store/AddressSlice';
@@ -28,8 +28,11 @@ export interface StateSlice {
     updateStudent:(completed: (student: StudentShort) => void) => void;
 
     loadAttendance: () => void;
+
+    loadLastTestDate: () => void;
     loadTests: () => void;
     loadGames: () => void;
+
     loadAchieves: () => void;
     loadBaseAchieves: (category: string) => void;
 }
@@ -47,7 +50,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         const { setPhoto, setFirstName, setLastName, setGender, setAge, setIsActive, setPhone }: ProfileSlice = get();
         const { setCity, setStreet, setHome}: AddressSlice = get();
         const { setCamp, setGroup, setGroupExtra}: GroupsSlice = get();
-        const { initialStudent, loadTests, loadGames, loadAchieves, loadAttendance }: StateSlice = get();
+        const { initialStudent, loadLastTestDate, loadGames, loadAchieves, loadAttendance }: StateSlice = get();
         const { selectDate }: EventsSlice = get();
 
         get_student(studentId, (student: Student) => {
@@ -84,7 +87,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 });
 
                 selectDate(getCurrentYear(), getCurrentMonth());
-                loadTests();
+                loadLastTestDate();
                 loadGames();
                 loadAchieves();
                 //loadAttendance();
@@ -100,14 +103,28 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         })
     },
 
+    loadLastTestDate: () => {
+        const { student_id, loadTests }: StateSlice & EventsSlice = get();
+
+        get_last_test_date(student_id, (res => {
+            set({ year: res.year, month: res.month });
+        
+            if (res.isEvents) {
+                loadTests();
+            }
+        }));
+    },
+
     loadTests: () => {
         const { student_id, year, month }: StateSlice & EventsSlice = get();
+
         get_student_tests(student_id, year, month, (tests: Test[]) => {
             const { setTests }: TestsSlice = get();
+            
             setTests(tests)
         })
     },
-
+    
     loadGames: () => {
         const { student_id, year, month }: StateSlice & EventsSlice = get();
         get_student_games(student_id, year, month, (games: Game[]) => {

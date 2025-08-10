@@ -1,20 +1,20 @@
 import { Table, Thead, Tbody, Tr, Th, Td, Flex } from "@chakra-ui/react";
-import { widgetStyles } from '../shared/appStyles'
-import { RowMenu } from '../components/RowMenu';
+import { widgetStyles } from '../../../shared/appStyles'
+import { RowMenu } from '../../../components/RowMenu';
+import { formatSeconds, formatSecondsWithMilli } from '../../../shared/utils';
 
 
 interface Props<T> {
   columns: { name: string, title: string, width: string }[];
   data: T[];
   selected: { id: number, column: string };
-  children: React.ReactNode;
   onClick: (row: number, column: string ) => void;
   onUpdate: () => void;
   onDelete: () => void;
 }
 
 export function TableView<T extends Record<string, any>>(
-  { columns, data, selected, children, onClick, onUpdate, onDelete }: Props<T>) {
+  { columns, data, selected, onClick, onUpdate, onDelete }: Props<T>) {
   return (
     <Table variant="simple" size='sm' m={2}
       sx={{ "th, td": {
@@ -36,18 +36,24 @@ export function TableView<T extends Record<string, any>>(
             <Td bg='gray.100' p={0}>
               {selected.id === item.id && <RowMenu onUpdate={onUpdate} onDelete={onDelete}/>}
             </Td>  
-            {columns.map((col, colInx) => (
-              <Td key={colInx} style={widgetStyles.text}
-                onClick={() => onClick(item.id, col.name)}>
-                <Flex justifyContent='space-between'>
+            {columns.map((col, colInx) => {
+              let title: string;
 
-                  {item[col.name]}
-                  {selected.id === item.id && selected.column === col.name && children}
-                </Flex>
+              if (col.name === 'speed' || col.name === 'climbing') {
+                title = item[col.name] + ' (' + formatSeconds(item[col.name + '_time']) + ')'
+              } else if (col.name === 'stamina') {
+                title = item[col.name] + ' (' + formatSecondsWithMilli(item[col.name + '_time']) + ')'
+              } else {
+                title = item[col.name]
+              }
+              return (
+              <Td key={colInx} style={widgetStyles.text} onClick={() => onClick(item.id, col.name)}>
+                {title}
               </Td>
-            ))}
+            )})}
           </Tr>
-        ))}
+        ))
+        }
       </Tbody>
     </Table>
   );
