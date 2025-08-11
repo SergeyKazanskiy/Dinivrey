@@ -41,7 +41,7 @@ export function StudentList() {
                             {`${student.gender}, ${student.age} years old`}
                         </ListItem.Subtitle>
                     </ListItem.Content>
-                    <Badge value="3.5" status="success" />
+                    <Badge value={student.test_avg} status="success" />
                 </ListItem>
             )})
         }

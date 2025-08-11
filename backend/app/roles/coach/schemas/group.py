@@ -39,4 +39,14 @@ class StudentShort(BaseModel):
     active: bool
 
     class Config:
-        from_attributes = True        
+        from_attributes = True
+
+class StudentAvgScore(BaseModel):
+    id: int
+    photo: str
+    first_name: str
+    last_name: str
+    gender: str
+    age: int
+    active: bool
+    test_avg: float

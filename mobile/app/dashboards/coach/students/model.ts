@@ -59,6 +59,7 @@ export interface StudentProfile {
   }
   
  interface StudentSummaries {
+  test_avg: number;
   summary_tests: string;
   summary_achievements: string;
   summary_games: string;
