@@ -10,7 +10,8 @@ export function get_groups(coach_id: number, callback: (camps: Group[]) => void)
 };
 
 export function get_students(group_id: number, callback: (students: Student[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
+  return httpWrapper(() => api.get(`groups/${group_id}/students`), callback, 'Getting students');
+  //return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
 };
 
 export function get_liders(group_id: number, callback: (liders: Lider[]) => void) { //???

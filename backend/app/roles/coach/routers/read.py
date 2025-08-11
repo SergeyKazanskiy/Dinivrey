@@ -36,15 +36,54 @@ async def get_camp_groups(coach_id: int, session: AsyncSession = Depends(get_ses
              "camp_name": row[4]} for row in rows]
 
 
-@router.get("/camps/groups/{id}/students", response_model=List[schemas.StudentShort], tags=["Coach"])
+@router.get("/camps/groups/{id}/students", tags=["Coach"]) #response_model=List[schemas.StudentAvgScore], 
 async def get_students(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Student, session, filters={"group_id": id}, order_by="first_name")
+
+@router.get("/groups/{group_id}/students", response_model=List[schemas.StudentAvgScore], tags=["Coach"])
+async def get_students_with_test_avg( group_id: int, session: AsyncSession = Depends(get_session)):
+    Test = models.Test
+    Student = models.Student
+
+    last_test_with_avg = (
+        select(
+            Test.student_id,
+            (
+                (Test.speed + Test.stamina + Test.climbing + Test.evasion + Test.hiding) / 5
+            ).label("test_avg"),
+            func.row_number().over(
+                partition_by=Test.student_id,
+                order_by=Test.timestamp.desc()
+            ).label("rn")
+        ).subquery()
+    )
+    stmt = (
+        select( Student.id, Student.photo, Student.first_name, Student.last_name, Student.gender, Student.age, Student.active,
+            last_test_with_avg.c.test_avg
+        )
+        .join(
+            last_test_with_avg,
+            last_test_with_avg.c.student_id == Student.id,
+            isouter=True
+        )
+        .where(Student.group_id == group_id)
+        .where(last_test_with_avg.c.rn == 1)
+        .order_by(Student.first_name)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [{ "id": row[0], "photo": row[1], "first_name": row[2], "last_name": row[3], "gender": row[4], "age": row[5],
+            "active": row[6], "test_avg": row[7]
+        } for row in rows ]
 
 
 # Student
 @router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Coach"])
 async def get_student(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.read(models.Student, id, session)
+
 
 @router.get("/students/{id}/parents", response_model=List[schemas.ParentResponse], tags=["Coach"])
 async def get_student_parents(id: int, session: AsyncSession = Depends(get_session)):

@@ -58,7 +58,7 @@ class StudentShort(BaseModel):
 
     class Config:
         from_attributes = True
-
+      
 class StudentName(BaseModel):
     first_name: str
     last_name: str
