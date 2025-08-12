@@ -45,6 +45,7 @@ export interface CoachSlice {
 
 export const createCoachSlice = (set: any, get: any): CoachSlice => ({
     coach: {
+        photo: 'test',
         first_name: 'First',
         last_name: 'Second',
         phone: '',
@@ -70,6 +71,7 @@ export const createCoachSlice = (set: any, get: any): CoachSlice => ({
 
     loadCoach: (coach_id: number) => {
         get_coach(coach_id, (coach => {
+            //alert(objectToJson(coach));
             set({ coach, signature: "data:image/png;base64," + coach.signature });
 
             const {loadCoachGroups}: CoachSlice = get();

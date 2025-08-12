@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,15 +9,28 @@ import { AddCoachAlert } from './alerts/AddCoachAlert';
 
 
 export default function CoachesScreen() {
-  const { campId } = useStore();
-  const { loadCoaches } = useStore();
+  const { campId, camp_inx } = useStore();
+  const { loadCamps, selectCamp, updateCoach } = useStore();
 
-  useFocusEffect(
-    useCallback(() => {
-     // alert(campId)
-      loadCoaches(campId);
-    }, [campId])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (campId === 0) {
+  //       if (camps.length > 0) {
+  //         selectCamp(camps[0].id, 0);
+  //       }
+  //     } else {
+  //       loadCoaches(campId);
+  //     }
+  //   }, [campId])
+  // );
+
+  useEffect(() => {
+    loadCamps();
+  }, [updateCoach]);
+
+  useEffect(() => {
+    selectCamp(campId, camp_inx);
+  }, [updateCoach]);
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>

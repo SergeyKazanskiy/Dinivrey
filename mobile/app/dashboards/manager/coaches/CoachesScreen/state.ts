@@ -1,20 +1,26 @@
-import { Coach, CoachShort } from '../model';
-import { get_coaches, create_coach, delete_coach  } from '../http';
+import { Coach, CoachShort, Camp } from '../model';
+import { get_camps, get_coaches, create_coach, delete_coach  } from '../http';
 import { objectToJson } from '../../../../shared/utils';
+import { sanitizeName } from '../../../../shared/utils';
 
 
 export interface CoachesSlice {
+    camps: Camp[],
     coaches: CoachShort[];
 
     campId: number;
-    coach_id: number;
+    camp_inx: number;
+    camp_name: string;
 
+    coach_id: number;
+    
     isAddAlert: boolean;
     isDeleteAlert: boolean;
 
+    loadCamps: () => void;
     loadCoaches: (camp_id: number) => void;
 
-    selectCamp: (camp_id: number) => void;
+    selectCamp: (camp_id: number, camp_inx: number) => void;
     selectCoach: (coach_id: number) => void;
 
     showAddAlert: () => void;
@@ -28,14 +34,31 @@ export interface CoachesSlice {
 }
 
 export const createCoachesSlice = (set: any, get: any): CoachesSlice => ({
+    camps: [],
     coaches: [],
 
-    campId: 1,
-    coach_id: 0,
+    campId: 0,
+    camp_inx: 0,
+    camp_name: '',
     
+    coach_id: 0,
+
     isAddAlert: false,
     isDeleteAlert: false,
 
+
+    loadCamps: () => {
+        get_camps((camps: Camp[]) => {
+            set({ camps });
+            if (camps.length > 0) {
+            const camp_id = camps[0].id;
+            const { selectCamp }: CoachesSlice = get();
+
+            set({camp_id});
+            selectCamp(camp_id, 0);
+            }
+        })
+    },
 
     loadCoaches: (camp_id: number) => { 
         get_coaches(camp_id, (coaches => {
@@ -43,10 +66,14 @@ export const createCoachesSlice = (set: any, get: any): CoachesSlice => ({
         }));
     },
 
-    selectCamp: (camp_id: number) => {
-        const { campId, loadCoaches }: CoachesSlice = get();
+    selectCamp: (camp_id: number, camp_inx: number) => {
+        const { camps, campId, loadCoaches }: CoachesSlice = get();
+
         if (campId !== camp_id) {
-            set({ campId: camp_id });
+            set({
+                campId: camp_id, camp_inx,
+                camp_name: sanitizeName(camps[camp_inx].name),
+            });
             loadCoaches(camp_id);
         } 
     },
@@ -61,7 +88,7 @@ export const createCoachesSlice = (set: any, get: any): CoachesSlice => ({
 
     addCoach: (camp_id: number, first_name: string, last_name: string) => {
         set({isAddAlert: false});
-        const data: Coach = { camp_id, first_name, last_name, phone: '', email: '', active: true, signature: ''}
+        const data: Coach = { camp_id, photo: '', first_name, last_name, phone: '', email: '', active: true, signature: ''}
 
         create_coach(data, (res => {
             if (res) {

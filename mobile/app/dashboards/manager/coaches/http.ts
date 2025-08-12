@@ -1,9 +1,13 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/manager_api';
-import { Group, Coach, CoachShort, CoachGroup, FreeGroup} from './model';
+import { Camp, Group, Coach, CoachShort, CoachGroup, FreeGroup} from './model';
 
 
-// Get get_coache_groups
+// Get 
+export function get_camps(callback: (camps: Camp[]) => void) {
+  return httpWrapper(() => api.get(`camps`), callback);
+};
+
 export function get_coaches(camp_id: number, callback: (coaches: CoachShort[]) => void) {
   return httpWrapper(() => api.get(`camps/${camp_id}/coaches`), callback, 'Getting coaches');
 };

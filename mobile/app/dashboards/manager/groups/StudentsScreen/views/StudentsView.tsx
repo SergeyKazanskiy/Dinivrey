@@ -41,7 +41,7 @@ export function StudentsView() {
                             {`${student.gender}, ${student.age} years old`}
                         </ListItem.Subtitle>
                     </ListItem.Content>
-                    <Badge value="3.5" status="success" />
+                    {/* <Badge value="3.5" status="success" /> */}
                 </ListItem>
             )})
         }
