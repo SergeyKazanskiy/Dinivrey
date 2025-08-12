@@ -10,6 +10,7 @@ export interface Group {
 }
 
 export interface Coach {
+  photo: string;
   first_name: string;
   last_name: string;
   phone: string;

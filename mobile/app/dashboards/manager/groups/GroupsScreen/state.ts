@@ -49,10 +49,10 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
       set({ camps });
       if (camps.length > 0) {
         const camp_id = camps[0].id;
-        const { loadGroups }: GroupsSlice = get();
+        const { selectCamp }: GroupsSlice = get();
 
         set({camp_id});
-        loadGroups(camp_id);
+        selectCamp(camp_id, 0);
       }
     })
   },
@@ -65,13 +65,11 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
 
   selectCamp: (campId: number, camp_inx: number) => {
     const { camps, camp_id, loadGroups }: GroupsSlice = get();
-    if (campId !== camp_id) {
       set({
         camp_id: campId,
         camp_name: sanitizeName(camps[camp_inx].name),
       })
       loadGroups(campId);
-    } 
   },
 
   selectGroup: (group_id: number, group_inx: number) => {

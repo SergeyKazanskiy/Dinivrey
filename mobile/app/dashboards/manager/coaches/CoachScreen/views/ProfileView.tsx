@@ -6,7 +6,7 @@ import { ImagesPath } from '../../../../../shared/constants';
 
 
 export const ProfileView = () => {
-    const { coach } = useStore();
+    const { coach, camp_name } = useStore();
     const { updateCoach } = useStore();
 
     const [firstName, setFirstName] = useState('');
@@ -20,11 +20,10 @@ export const ProfileView = () => {
         setPhone(coach.phone);
         setEmail(coach.email);
     }, [coach]);
-
     return (
         <View style={styles.container}>
             <View style={styles.section}>
-                <Image source={{ uri: `${ImagesPath}/photos/Student_boy.png` }} style={styles.avatar} />
+                <Image source={{ uri: `${ImagesPath + '/photos/' + camp_name + '/coaches/' + coach.photo}` }} style={styles.avatar} />
 
                 <View style={styles.group}>
                     <Text style={styles.label}>First name</Text>
@@ -52,7 +51,7 @@ export const ProfileView = () => {
                 </View>
                 <View style={styles.section}>
                     <Text style={[styles.label, {width: 64}]}>Email: </Text>
-                    <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={20} placeholder="Enter"
+                    <TextInput style={styles.value} keyboardType='name-phone-pad' maxLength={30} placeholder="Enter"
                         value={email}
                         onChangeText={setEmail}
                         onBlur={() => updateCoach({email: email})}
