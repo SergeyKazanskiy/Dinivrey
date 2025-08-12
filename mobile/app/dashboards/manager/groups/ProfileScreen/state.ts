@@ -1,6 +1,6 @@
 import { Store } from "../store";
 import { Student, Parent, Attendance, Test } from "../model";
-import { get_student, get_student_parents, get_last_test } from '../http';
+import { get_student, get_student_parents, get_last_test, get_student_attendance_percent } from '../http';
 import { objectToJson } from '../../../../shared/utils';
 
 
@@ -34,7 +34,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     { id: 1, name: '', phone: '', email: '', student_id: 0},
   ],
 
-  attendance: {trainings: 97, tests: 55, games: 34},
+  attendance: {Training: 0, Exam: 0, Game: 0},
   isCommentsScreen: false,
 
   loadStudent: (student_id: number) => {
@@ -53,6 +53,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
       });
 
       get_last_test(student_id, (tests: Test[]) => {
+        //alert(objectToJson(tests))
         if (tests.length > 0) {
           set({ last_test: tests[0]});
         } else {
@@ -60,6 +61,10 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
             speed_time: 0, stamina_time: 0, climbing_time: 0 }
           set({ last_test: emptyTest});
         }
+      });
+
+      get_student_attendance_percent(student_id, (attendance: Attendance) => {
+        set({ attendance });
       });
     })
   },

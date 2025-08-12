@@ -6,7 +6,7 @@ from crud import CRUD
 from roles.admin import schemas
 import models
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc, outerjoin, func
+from sqlalchemy import desc, asc, outerjoin, func, cast, Float
 from datetime import datetime
 from sqlalchemy.orm import selectinload
 import helpers
@@ -306,9 +306,27 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
                 is_survived = row[5]
             ) for row in rows]
 
-@router.get("/students/{id}/attendance", tags=["Admin_select"])
-async def get_student_attendance(id: int, session: AsyncSession = Depends(get_session)):
-    return {}
+@router.get("/students/{student_id}/attendances/percent", response_model=schemas.AttendancePercent, tags=["Admin_select"])
+async def get_student_attendance_percent( student_id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(
+            models.Event.type,
+            func.round(
+                (func.sum(cast(models.Attendance.present, Float)) / func.count() * 100), 0
+            ).label("attendance_percent")
+        )
+        .join(models.Event, models.Event.id == models.Attendance.event_id)
+        .where(models.Attendance.student_id == student_id)
+        .group_by(models.Event.type)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    attendance_stats = {t: 0 for t in ["Training", "Exam", "Game"]}
+    attendance_stats.update({row.type: int(row.attendance_percent) for row in rows})
+
+    return attendance_stats
 
 @router.get("/students/{id}/achievements", tags=["Admin_select"])
 async def get_student_achieves(id: int, session: AsyncSession = Depends(get_session)):

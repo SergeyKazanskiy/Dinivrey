@@ -47,13 +47,11 @@ export interface Parent {
   email: string;
 }
 
-export interface Attendance {
-  student_id: number;
-  trainings: number;
-  tests: number;
-  games: number;
-  total: number;
-}
+  export interface Attendance {
+    Training: number;
+    Exam: number;
+    Game: number;
+  }
 
 // Test
 export type Test = {

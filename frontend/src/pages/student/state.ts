@@ -1,4 +1,4 @@
-import { get_student, get_student_parents, get_student_attendance,
+import { get_student, get_student_parents, get_student_attendance_percent,
     get_student_achieves, get_student_tests, get_student_games, get_last_test_date} from './http';
 import { Student, Parent, Attendance, Test, Game, Achieve, Achievement } from './model';
 import { ProfileSlice } from './store/ProfileSlice';
@@ -90,14 +90,14 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 loadLastTestDate();
                 loadGames();
                 loadAchieves();
-                //loadAttendance();
+                loadAttendance();
             }
         });
     },
 
     loadAttendance: () => {
         const { student_id }: StateSlice = get();
-        get_student_attendance(student_id, (attendance: Attendance) => {
+        get_student_attendance_percent(student_id, (attendance: Attendance) => {
             const { setAttendance }: AttendanceSlice = get();
             setAttendance(attendance);
         })

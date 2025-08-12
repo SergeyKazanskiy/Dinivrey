@@ -97,4 +97,7 @@ class AttendanceDataForReport(BaseModel):
     group_name: str
     group_number: int
 
-  
+class AttendancePercent(BaseModel):
+    Training: int
+    Exam: int
+    Game: int

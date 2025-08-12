@@ -5,11 +5,14 @@ import { ImagesPath } from '../../../../../shared/constants';
 
 
 export const ProfileView = () => {
-  const { student } = useStore();
+  const { student, camp_name, group_name } = useStore();
+  const photoPath = student.photo === 'Student_boy.png' || student.photo === 'Student_girl.png' ?
+  ImagesPath + '/photos/' + student.photo :
+  ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + student.photo
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: `${ImagesPath}/photos/${student.photo}` }} style={styles.avatar} />
+      <Image source={{ uri: `${photoPath}` }} style={styles.avatar} />
     
       <View style={styles.group}>
         <Text style={styles.name}>{student.first_name}</Text>
