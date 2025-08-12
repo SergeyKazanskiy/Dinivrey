@@ -4,7 +4,7 @@ from .coach import CoachResponse, CoachShortResponse, CoachCreate, CoachUpdate
 from .coach import CoachGroupResponse, CoachGroupAdd, CoachSchedualResponse
 
 from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse, EventReportResponse
-from .event import AttendanceResponse
+from .event import AttendanceResponse, AttendancePercent
 
 from .camp import CampResponse, CampScheduleResponse
 

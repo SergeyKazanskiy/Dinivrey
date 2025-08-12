@@ -7,7 +7,7 @@ from roles.coach import schemas
 import models
 from datetime import datetime, timedelta
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc, or_, func
+from sqlalchemy import desc, asc, or_, func, cast, Float
 
 from helpers import get_week_range, get_current_week_range, get_week_number, get_month_range
 
@@ -242,6 +242,28 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
 async def get_achieves(category: str, trigger: str, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Achieve, session, filters={"trigger": trigger, "category": category})
 
+# Attendance
+@router.get("/students/{student_id}/attendances/percent", response_model=schemas.AttendancePercent, tags=["Coach"])
+async def get_student_attendance_percent( student_id: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(
+            models.Event.type,
+            func.round(
+                (func.sum(cast(models.Attendance.present, Float)) / func.count() * 100), 0
+            ).label("attendance_percent")
+        )
+        .join(models.Event, models.Event.id == models.Attendance.event_id)
+        .where(models.Attendance.student_id == student_id)
+        .group_by(models.Event.type)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    attendance_stats = {t: 0 for t in ["Training", "Exam", "Game"]}
+    attendance_stats.update({row.type: int(row.attendance_percent) for row in rows})
+
+    return attendance_stats
 
 # Schedule
 @router.get("/camps/groups/schedule", tags=["Coach"])

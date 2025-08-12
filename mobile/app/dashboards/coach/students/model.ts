@@ -77,9 +77,9 @@ export interface StudentProfile {
   }
   
   export interface Attendance {
-    trainings: number;
-    tests: number;
-    games: number;
+    Training: number;
+    Exam: number;
+    Game: number;
   }
   
   export type Test = {

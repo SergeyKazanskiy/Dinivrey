@@ -8,7 +8,7 @@ from .student import SummaryTests, SummaryAchievements, SummaryGames
 
 from .event import EventCreate, EventUpdate, EventResponse, GroupEventsResponse, EventReportResponse
 from .event import AttendanceDataCreate, AttendanceCreate, AttendanceUpdate, AttendanceResponse
-from .event import AttendanceDataForReport, StudentReport, AttendanceReport
+from .event import AttendanceDataForReport, StudentReport, AttendanceReport, AttendancePercent
 from .drill import EventDrillCreate, EventDrillUpdate, ShortDrillResponse, DrillResponse
 
 from .settings import MetricBase, MetricCreate, MetricResponse, MetricUpdate

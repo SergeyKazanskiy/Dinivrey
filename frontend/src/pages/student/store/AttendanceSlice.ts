@@ -17,9 +17,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
     totalAttendance: 0,
 
     setAttendance:(attendance: Attendance) => set({
-        trainingsAttendance: attendance.trainings,
-        testsAttendance: attendance.tests,
-        gamesAttendance: attendance.games,
-        totalAttendance: attendance.total,
+        trainingsAttendance: attendance.Training,
+        testsAttendance: attendance.Exam,
+        gamesAttendance: attendance.Game,
+        totalAttendance: Math.round((attendance.Training + attendance.Exam + attendance.Game)/3),
     }),
 });

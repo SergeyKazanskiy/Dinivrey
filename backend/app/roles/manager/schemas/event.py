@@ -55,3 +55,7 @@ class AttendanceResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class AttendancePercent(BaseModel):
+    Training: int
+    Exam: int
+    Game: int

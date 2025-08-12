@@ -20,17 +20,17 @@ export const AttendanceView: React.FC = () => {
     <View style={[styles.container, styles.section]}>
       <View style={styles.cell}>
         <Text style={styles.info}>Trains: </Text>
-        <Text style={styles.value}>{attendance.trainings}</Text>
+        <Text style={styles.value}>{attendance.Training}</Text>
       </View>
 
       <View style={styles.cell}>
         <Text style={styles.info}>Tests: </Text>
-        <Text style={styles.value}>{attendance.tests}</Text>
+        <Text style={styles.value}>{attendance.Exam}</Text>
       </View>
 
       <View style={styles.cell}>
         <Text style={styles.info}>Games: </Text>
-        <Text style={styles.value}>{attendance.games}</Text>
+        <Text style={styles.value}>{attendance.Game}</Text>
       </View>
     </View>
     </>

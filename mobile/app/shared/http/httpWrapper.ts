@@ -50,7 +50,7 @@ async function retryWithFreshToken(
     if (!newToken) throw new Error('Token refresh failed');
 
     await useAuthState.getState().refreshToken(newToken);
-
+    //alert(objectToJson(newToken))
     const retryResponse = await apiCall();
     callback(retryResponse.data);
 

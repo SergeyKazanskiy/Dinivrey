@@ -28,8 +28,8 @@ export function get_student_parents(student_id: number, callback: (parents: Pare
   return httpWrapper(() => api.get(`students/${student_id}/parents`), callback);
 };
 
-export function get_student_attendance(student_id: number, callback: (attendance: Attendance) => void) {
-  return httpWrapper(() => api.get(`students/${student_id}/attendance`), callback);
+export function get_student_attendance_percent(student_id: number, callback: (attendance: Attendance) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/attendances/percent`), callback);
 };
 
 export function get_student_coach_comments(student_id: number, callback: (comments: Comment[]) => void) {
