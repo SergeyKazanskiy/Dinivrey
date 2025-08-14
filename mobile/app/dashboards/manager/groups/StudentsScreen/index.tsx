@@ -25,6 +25,7 @@ export default function StudentsScreen() {
   );
 
   function handleBack() {
+    //router.navigate('/dashboards/manager/groups/GroupScreen');
     router.back();
     clearStudents();
   }

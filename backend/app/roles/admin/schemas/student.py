@@ -114,6 +114,10 @@ class TestUpdate(BaseModel):
     evasion: Optional[float] = None
     hiding: Optional[float] = None
 
+    speed_time: Optional[float] = None
+    stamina_time: Optional[float] = None
+    climbing_time: Optional[float] = None
+
 class TestUpdate2(BaseModel):
     exam: str
     value: float

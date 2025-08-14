@@ -18,8 +18,8 @@ export const AchievesView: React.FC = () => {
         <Spacer/>
         <DeletePopover title='Delete' isDisabled={achieve_id === 0 && achievement_id === 0}
           isOpen={isOpen} onOpen={onOpen} onClose={onClose} onDelete={detachAchieve}/>
-        <Button size='sm' colorScheme="blue" isDisabled={achieve_id === 0 && achievement_id === 0}
-          onClick={attachProfileAchieve}>{updateButtonTitle}</Button>
+        {/* <Button size='sm' colorScheme="blue" isDisabled={achieve_id === 0 && achievement_id === 0}
+          onClick={attachProfileAchieve}>{updateButtonTitle}</Button> */}
       </HStack>               
        
       <VStack spacing='8px' pt='2px'>

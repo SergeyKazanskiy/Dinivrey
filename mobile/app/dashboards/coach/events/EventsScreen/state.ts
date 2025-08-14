@@ -12,6 +12,7 @@ export interface EventsSlice {
     event_id: number;
     group_id: number;
     group_number: number;
+    group_name: string;
 
     event_timestamp: number;
     event_type: string;
@@ -33,6 +34,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     event_id: 0,
     group_id: 0,
     group_number: 0,
+    group_name: '',
 
     event_timestamp: 0,
     event_type:'',
@@ -136,10 +138,13 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
     },
 
     selectEvent: ( event_id: number, group_id: number, timestamp: number, group_number: number) => {
-        const { events_shedules }: EventsSlice & HistorySlice= get()
+        const { events_shedules, groups }: EventsSlice & HistorySlice= get()
         const event = events_shedules.find(el => el.id === event_id)!;
-
-        set({ event_id, group_id, event_timestamp: timestamp, event_type: event.type, group_number});
+        const group = groups.find(el => el.id === group_id)
+        const group_name = group?.name || 'Group'
+        
+        set({ event_id, group_id, event_timestamp: timestamp, event_type: event.type,
+            group_number, group_name });
     },
     //updateEvent: (type: string) => {
         // const { events_shedules,  }: EventsSlice = get();

@@ -10,9 +10,11 @@ import { useStore } from '../store';
 import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { ExamModal } from './views/ExamModal';
 import { HeaderMenu } from './views/HeaderMenu';
+import { formatDateTime } from '../../../../shared/utils';
 
 
 export default function TestingScreen() {
+  const { event_timestamp, group_name } = useStore();
   const { loadTesters, selectMenu } = useStore();
 
   const [isMenu, setIsMenu] = useState(false);
@@ -27,7 +29,8 @@ export default function TestingScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
       <Stack.Screen options={{ headerShown: false }} />
-      <CustomNavbar title='Students' onClick={() => router.back()}/>
+      <CustomNavbar title={`${group_name} (${formatDateTime(event_timestamp).date})`}
+        onClick={() => router.back()}/>
 
       <HeaderMenu isOpen={isMenu}
         items={['Add participants', 'Remove participants']}

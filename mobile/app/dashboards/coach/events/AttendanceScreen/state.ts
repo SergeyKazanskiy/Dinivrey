@@ -76,10 +76,10 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
 
     loadAttendances: () => {
-        const { event_id, group_id }: EventsSlice = get();
+        const { event_id, group_id, event_timestamp }: EventsSlice = get();
         set({ isAllChecked: false});
         
-        get_attendances(event_id, group_id, (attendances: Attendance[]) => {
+        get_attendances(event_id, group_id, event_timestamp, (attendances: Attendance[]) => {
             //alert(objectToJson(attendances))
             if (attendances.length > 0) {
                 const attendancesAmount = attendances.reduce((acc, item) => {
@@ -114,14 +114,14 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                     const currentEvent = events_shedules.find(el => el.id === event_id);
 
                     if (currentEvent && currentEvent.type === 'Exam') {
-                        if (attendance.present) {
+                        if (attendance.present && attendance.test_id > 0) {
                             delete_student_test(attendance.test_id!, (res => {
                                 if (res.isOk) {
                                     //alert('test deleted')
-                                    attendance.test_id = undefined;
+                                    attendance.test_id = 0;
                                 } 
                             }));
-                        } else {
+                        } else if (!attendance.present && attendance.test_id === 0) {
                             const newTest: Omit<Test, 'id'> = {
                                 student_id: attendance.student_id,
                                 timestamp: event_timestamp,
@@ -171,7 +171,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                     
                 if (currentEvent && currentEvent.type === 'Exam') {
                     add_all_present_students_new_tests(event_id, group_id, (res) => {
-                        
+                        alert('isOk')
                     })
                 }
             }

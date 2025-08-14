@@ -42,3 +42,11 @@ export function delete_achieve(achieve_id: number, callback: (res: {isOk: boolea
 export function delete_rule(rule_id: number, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.delete(`achieves/rules/${rule_id}`), callback);
 };
+
+// Gif
+export function add_achieve_gif_file(achieve_id: number, formData: FormData,
+  callback: (res: {isOk: boolean, error_code: number, error_message: string}) => void) {
+
+  return httpWrapper(() => api.post(`achieves/${achieve_id}/gif_file`, formData,
+      { headers: {'Content-Type': 'multipart/form-data'}}), callback);
+};

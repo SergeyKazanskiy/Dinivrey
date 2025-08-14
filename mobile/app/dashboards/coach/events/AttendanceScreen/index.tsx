@@ -18,8 +18,8 @@ import DrillsScreen from '../DrillsScreen';
 
 
 export default function AttendanceScreen() {
-  const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type } = useStore();
-  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent, wasReportSent, games} = useStore();
+  const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type, group_name } = useStore();
+  const { studentsAmount, attendancesAmount, isSendingReport, isReportSent, wasReportSent, games, attendances} = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, loadWasReportSent } = useStore();
   const { openDrillsModal, loadEventDrills, sendAttedanceReport, closeSuccessAlert, selectGameReport } = useStore();
   const { loadGames } = useStore();
@@ -64,9 +64,11 @@ export default function AttendanceScreen() {
     setIsMailAlert(false)
   }
 
+  const checkedStudents = attendances.filter(el => el.present)
+
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <CustomNavbar title={`Students (${attendancesAmount}/${studentsAmount})`} onClick={() => router.back()}>
+      <CustomNavbar title={`${group_name} (${attendancesAmount}/${studentsAmount})`} onClick={() => router.back()}>
         {!wasReportSent && <Ionicons name='airplane-outline' size={20} color='#D1FF4D' style={{ marginRight: 8, marginTop: 0 }}
           onPress={()=>setIsMailAlert(true)}
         />}
@@ -125,12 +127,14 @@ export default function AttendanceScreen() {
                 onPress={handleDeleteBlank}>Delete Blank</Button>}
 
               <View style={[styles.section, {marginRight: 11}]}>
-                {isAttendanceView && <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>}
+                {isAttendanceView && checkedStudents.length === 0 && <>
+                  <Text style={[styles.allSelect, {paddingTop: 4}]}>All select</Text>
 
-                {isAttendanceView && <CheckBox checked={isAllChecked} onPress={setAllChecked}
-                  iconType="material-community" checkedIcon="checkbox-outline" uncheckedIcon={'checkbox-blank-outline'}
-                  containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}} checkedColor='#ddd'
-                />}
+                  <CheckBox checked={isAllChecked} onPress={setAllChecked}
+                    iconType="material-community" checkedIcon="checkbox-outline" uncheckedIcon={'checkbox-blank-outline'}
+                    containerStyle={{margin:0, padding: 0, backgroundColor: 'rgba(45, 75, 10, 0.3)'}} checkedColor='#ddd'
+                  />
+                </>}
               </View>
             </View>
         

@@ -164,7 +164,7 @@ export interface Attendance {
   last_name: string;
   present: boolean;
   comment: string;
-  test_id?: number;
+  test_id: number;
 }
 
 export interface EventDrill {

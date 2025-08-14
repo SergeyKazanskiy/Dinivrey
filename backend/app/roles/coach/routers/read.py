@@ -425,31 +425,64 @@ async def get_is_report_sent(event_id: int, group_number: int, session: AsyncSes
 
 
 
+# @router.get("/camps/events/{event_id}/groups/{group_id}/attendances", tags=["Coach"])
+# async def get_attendances(event_id:int, group_id: int, timestamp: int, session: AsyncSession = Depends(get_session)):
+#     A = models.Attendance
+#     S = models.Student
+
+#     stmt = (
+#         select(A.id, A.student_id, S.first_name, S.last_name, A.present, A.comment)
+#             .join(S, A.student_id == S.id)
+#             .where((A.group_id == group_id) & (A.event_id == event_id))
+#             .order_by(asc(S.first_name))
+#     )
+#     result = await session.execute(stmt)
+#     rows = result.all()
+#     return [{"id": row[0],
+#              "student_id": row[1],
+#              "first_name": row[2],
+#              "last_name": row[3],
+#              "present": row[4],
+#              "comment": row[5]} for row in rows]
+
 @router.get("/camps/events/{event_id}/groups/{group_id}/attendances", tags=["Coach"])
-async def get_attendances(event_id:int, group_id: int, session: AsyncSession = Depends(get_session)):
+async def get_attendances( event_id: int, group_id: int, timestamp: int, session: AsyncSession = Depends(get_session)):
     A = models.Attendance
     S = models.Student
+    T = models.Test
+
     stmt = (
-        select(A.id, A.student_id, S.first_name, S.last_name, A.present, A.comment)
-            .join(S, A.student_id == S.id)
-            .where((A.group_id == group_id) & (A.event_id == event_id))
-            .order_by(asc(S.first_name))
+        select( A.id, A.student_id, S.first_name, S.last_name, A.present, A.comment, T.id.label("test_id"))
+        .join(S, A.student_id == S.id)
+        .join(T, (T.student_id == S.id) & (T.timestamp == timestamp),
+            isouter=True  # LEFT JOIN
+        )
+        .where((A.group_id == group_id) & (A.event_id == event_id))
+        .order_by(asc(S.first_name))
     )
+
     result = await session.execute(stmt)
     rows = result.all()
-    return [{"id": row[0],
-             "student_id": row[1],
-             "first_name": row[2],
-             "last_name": row[3],
-             "present": row[4],
-             "comment": row[5]} for row in rows]
+
+    return [
+        {
+            "id": row[0],
+            "student_id": row[1],
+            "first_name": row[2],
+            "last_name": row[3],
+            "present": row[4],
+            "comment": row[5],
+            "test_id": row[6] or 0
+        }
+        for row in rows
+    ]
 
 
 @router.get("/camps/groups/{group_id}/students/names", response_model=List[schemas.StudentName], tags=["Coach"]) #
 async def get_student_names(group_id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Student, session, filters={"group_id": group_id}, order_by="first_name")
 
-# Testers
+# Testers 
 @router.get("/camps/events/{event_id}/groups/{group_id}/testers", response_model=List[schemas.Tester], tags=["Coach"]) #
 async def get_testers(event_id: int, group_id: int, timestamp: int, session: AsyncSession = Depends(get_session)):
     E = models.Event
@@ -500,13 +533,9 @@ async def get_testers(event_id: int, group_id: int, timestamp: int, session: Asy
                 'id': row[1],
                 'first_name': row[2],
                 'last_name': row[3],
-
-                'test_id': 0,
-                'speed': 0,
-                'stamina': 0,
-                'climbing': 0,
-                'evasion': 0,
-                'hiding': 0,  
+                
+                'test_id': 0, 'speed': 0,'stamina': 0, 'climbing': 0, 'evasion': 0, 'hiding': 0,
+                'speed_time': 0, 'stamina_time': 0,'climbing_time': 0 
             }
             liders.append(lider)   
     return liders

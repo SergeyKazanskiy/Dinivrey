@@ -75,11 +75,8 @@ async def add_all_present_students_new_tests(event_id: int, group_id: int, sessi
             student_id=row[0],
             timestamp=row[1],
             date=date,
-            speed=0.0,
-            stamina=0.0,
-            climbing=0.0,
-            evasion=0.0,
-            hiding=0.0
+            speed=0.0, stamina=0.0, climbing=0.0, evasion=0.0, hiding=0.0,
+            speed_time=0, stamina_time=0.0, climbing_time=0
         )
         id = await CRUD.add(models.Test, test, session) # & != timestamp !!!
 

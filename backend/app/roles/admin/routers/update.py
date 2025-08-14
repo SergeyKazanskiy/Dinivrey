@@ -122,6 +122,10 @@ async def update_achieve_rules(id: int, data: List[schemas.RuleCreate], session:
         await CRUD.add(models.Rule, rule, session)   
     return {"isOk": True}
 
+@router.post("/camps/coaches/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_coach_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    return await PhotoStorageService.upload_coach_photo(id, file, session)
+
 # Coaches
 @router.put("/camps/managers/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_manager(id: int, data: schemas.ManagerUpdate, session: AsyncSession = Depends(get_session)):
