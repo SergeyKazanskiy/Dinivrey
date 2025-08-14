@@ -116,10 +116,6 @@ async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)
 async def get_camp_managers(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Manager, session, filters={"camp_id": id}, order_by="first_name")
 
-# @router.get("/camps/coache/{id}/groups", response_model=List[schemas.CoachGroupResponse], tags=["Admin_select"])#severel groups
-# async def get_camp_coaches(id: int, session: AsyncSession = Depends(get_session)):
-#     return await CRUD.read(models.CoachGroup, id, session)
-
 @router.get("/camps/{id}/coaches/groups", response_model=List[schemas.CoachGroup], tags=["Admin_select"])
 async def get_coache_groups( id: int, session: AsyncSession = Depends(get_session)):
     group = models.Group
@@ -245,6 +241,8 @@ async def get_achieve(id: int, session: AsyncSession = Depends(get_session)):
 @router.get("/achieves/{id}/rules", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
 async def get_achieve_rules(session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Achieve, session)
+
+
 
 # Student
 @router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Admin_select"])

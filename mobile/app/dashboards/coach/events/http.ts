@@ -42,8 +42,8 @@ export function update_event(event_id: number, data: Partial<Event>, callback: (
 };
 
 // Attendance
-export function get_attendances(event_id: number, group_id: number, callback: (attendances: Attendance[]) => void) {
-    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/attendances`), callback);
+export function get_attendances(event_id: number, group_id: number, timestamp: number, callback: (attendances: Attendance[]) => void) {
+    return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/attendances?timestamp=${timestamp}`), callback);
 };
 
 export function get_students_names(group_id: number, callback: (students: Student[]) => void) {

@@ -61,6 +61,7 @@ export function update_student_group(student_id: number, data: Group, callback: 
 };
 
 export function update_student_test(id: number, data: TestUpdate, callback: (res: {"score": number, 'time'?: number}) => void) {
+  alert(objectToJson(data))
   return httpWrapper(() => api.put(`students/tests/${id}`, data), callback);
 };
 

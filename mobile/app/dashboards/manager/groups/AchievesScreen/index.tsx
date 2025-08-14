@@ -28,7 +28,7 @@ export const AchievesScreen = () => {
   
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper} >
-      <CustomNavbar title='Achievements' onClick={() => router.push("/dashboards/manager/groups/StudentsScreen")}>
+      <CustomNavbar title='Achievements' onClick={() => router.back()}>
         <Ionicons name='trash-outline' size={20} color={achievement_id === 0 ? 'gray' :'#D1FF4D'}
           onPress={detachAchieve}
         />

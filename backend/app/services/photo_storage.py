@@ -485,7 +485,9 @@ class PhotoStorageService:
             return ResponseOk(isOk=False, error_code=500, error_message=f"Failed to delete group folder: {e}")
 
         return ResponseOk(isOk=True)
+    
 
+# --------------------------------------- Achievement ---------------------------------------------
 
    # ADD GIF
     @staticmethod
