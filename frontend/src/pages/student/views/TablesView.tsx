@@ -12,7 +12,7 @@ export const TablesView: React.FC = () => {
   const { closeTestModal, deleteTest } = useStore();
 
   return (
-    <Box style={screenStyles.widget} h='450px' w='650px'>  
+    <Box style={screenStyles.widget} h='450px' w='690px'>  
       {isTestModal && <ExamModal/>}
       
       {isTestDelete && <DeleteModal title='Clear test cells' isOpen={isTestDelete}

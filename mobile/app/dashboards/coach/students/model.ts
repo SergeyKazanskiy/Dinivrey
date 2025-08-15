@@ -110,7 +110,8 @@ export interface StudentProfile {
 
     caught: number;
     freeded: number;
-    is_survived: boolean;
+    is_survived: number;
+    won: string;
   };
   
   export interface Achievement {

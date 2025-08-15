@@ -26,10 +26,10 @@ export const EventsView: React.FC = () => {
   const columns = [
     {name: 'date', title: 'Date', width: '13%'},
     {name: 'time', title: 'Time', width: '12%'},
-    {name: 'type', title: 'Type', width: '14%'},
-    {name: 'desc', title: 'Description', width: '34%'},
-    {name: 'group1', title: 'Group', width: '13%'},
-    {name: 'group2', title: 'Extra', width: '13%'},
+    {name: 'type', title: 'Type', width: '12%'},
+    {name: 'desc', title: 'Description', width: '32%'},
+    {name: 'group1', title: 'Group', width: '14%'},
+    {name: 'group2', title: 'Extra', width: '14%'},
   ];
 
   const { formatedEvents, column, event_id } = useStore();

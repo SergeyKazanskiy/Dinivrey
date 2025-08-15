@@ -431,7 +431,7 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
                 team = row[2],
                 caught = row[3],
                 freeded = row[4],
-                is_survived = row[5]
+                is_survived = 0 if row[5] is False else 1,
             ) for row in rows]
 
 

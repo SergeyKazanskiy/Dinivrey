@@ -16,7 +16,7 @@ export const ProfileView: React.FC = () => {
     }, [active, first_name, last_name, phone, gender, age ]);
 
   return (
-    <Container style={screenStyles.widget} h='172px' w='320px'>                 
+    <Container style={screenStyles.widget} h='172px' w='300px'>                 
       <Flex justify="space-between" align="center" mb="2">
         <Text style={widgetStyles.title}>Personal information</Text>
         

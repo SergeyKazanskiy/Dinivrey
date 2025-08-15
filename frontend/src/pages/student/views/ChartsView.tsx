@@ -5,14 +5,18 @@ import { useStore } from "../store";
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 import { RadarChart } from '../../../components/RadarChart';
 import { LineChart } from '../../../components/LineChart';
-import { formatDateTime } from '../../../shared/utils';
+import { formatDateTime, objectToJson } from '../../../shared/utils';
 
 export const ChartsView: React.FC = () => {
   const { tests, games } = useStore();
 
-  const lastTest = tests[tests.length - 1];
-  const lastTestValues: number[] = [lastTest.speed, lastTest.stamina,
-    lastTest.climbing, lastTest.evasion, lastTest.hiding];
+  let lastTestValues: number[] = [];
+
+  if (tests.length > 0) {
+    const lastTest = tests[tests.length - 1];
+    lastTestValues = [lastTest.speed, lastTest.stamina,
+      lastTest.climbing, lastTest.evasion, lastTest.hiding];
+  }
 
   const testLabels: string[] = ["speed", "stamina", "climbing", "evasion", "hiding"];
   const testsDatasets = testLabels.map((key) => ({
@@ -21,18 +25,17 @@ export const ChartsView: React.FC = () => {
     values: tests.map(el => Number(el[key as keyof Test])),
   }));
 
-  const gameLabels: string[] = ["caughted", "freeded"];
+  const gameLabels: string[] = ["caught", "freeded", "is_survived"];
   const gamesDatasets = gameLabels.map((key) => ({
     title: key.charAt(0).toUpperCase() + key.slice(1),
     labels: games.map(el => formatDateTime(el.timestamp).date),
     values: games.map(el => Number(el[key as keyof Game])),
   }));
 
-
   return (
     <HStack px={2}>
       <SimpleGrid columns={2} spacing={2} h='450px' w='450px' mt={4}>
-        <Box mt='-20px'pl={4} h='180px' overflow='scroll' >
+        <Box mt='-30px'pl={4} h='190px'  >
           <RadarChart labels={testLabels} values={lastTestValues}/>
         </Box>
         {testsDatasets.map((dataset, index) => (
@@ -50,10 +53,6 @@ export const ChartsView: React.FC = () => {
             <LineChart labels={dataset.labels} values={dataset.values}/>
           </Box>
         ))}
-        <Text style={widgetStyles.text} mt={4} >Description</Text>
-         <Box h='100px' bg='gray.200'>
-
-         </Box>
       </Box>
     </HStack>
   );

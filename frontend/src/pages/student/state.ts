@@ -127,8 +127,11 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     
     loadGames: () => {
         const { student_id, year, month }: StateSlice & EventsSlice = get();
+
         get_student_games(student_id, year, month, (games: Game[]) => {
+            //alert(objectToJson(games))
             const { setGames }: GamesSlice = get();
+
             setGames(games)
         })
     },
