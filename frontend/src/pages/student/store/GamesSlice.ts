@@ -48,7 +48,10 @@ export const createGamesSlice = (set: any, get: any): GamesSlice => ({
     // isGameUpdate: false,
     // isGameDelete: false,
 
-    setGames:(games: Game[]) => set({ games }),
+    setGames:(games: Game[]) => {
+        const formated = games.map(el => ({...el, date: formatDateTime(el.timestamp).date}))
+        set({ games: formated })
+    },
     
     // selectGameCell:(game_id: number, gameColumn: string) => {
     //     const { games, setGame }: GamesSlice & GameSlice = get();

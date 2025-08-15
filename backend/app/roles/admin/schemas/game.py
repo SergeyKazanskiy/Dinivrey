@@ -52,4 +52,5 @@ class StudentGame(BaseModel):
     team: str
     caught: int
     freeded: int
-    is_survived: bool
+    is_survived: int
+    won: str

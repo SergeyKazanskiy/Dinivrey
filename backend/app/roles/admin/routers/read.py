@@ -287,7 +287,7 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
     Game = models.Game
 
     stmt = (
-        select(Game.id, Game.timestamp, Gamer.team, Gamer.caught, Gamer.freeded, Gamer.is_survived)
+        select(Game.id, Game.timestamp, Gamer.team, Gamer.caught, Gamer.freeded, Gamer.is_survived, Game.winner)
         .join(Gamer, Gamer.game_id == Game.id )
         .where( Gamer.student_id == id, Game.timestamp.between(start_ts, end_ts))
         .order_by(Game.timestamp)
@@ -301,7 +301,8 @@ async def get_student_games(id: int, year: int, month: int, session: AsyncSessio
                 team = row[2],
                 caught = row[3],
                 freeded = row[4],
-                is_survived = row[5]
+                is_survived = 0 if row[5] is False else 1,
+                won = 'Yes' if row[2] == row[6] else 'No'
             ) for row in rows]
 
 @router.get("/students/{student_id}/attendances/percent", response_model=schemas.AttendancePercent, tags=["Admin_select"])

@@ -14,11 +14,11 @@ interface Props {
 export const ParentRecord: React.FC<Props> = ({name, phone, email, setName, setPhone, setEmail }) => {
   return (
     <HStack justifyContent='space-around' pt='4px'>
-        <ProfileCell label="Name" value={name} maxLength={20} w1='50px' w2='160px'
+        <ProfileCell label="Name" value={name} maxLength={20} w1='50px' w2='140px'
           onChange={(value) => setName(String(value))}/>
-        <ProfileCell label="Phone" value={phone} maxLength={12} w1='50px' w2='110px'
+        <ProfileCell label="Phone" value={phone} maxLength={12} w1='50px' w2='116px'
           onChange={(value) => setPhone(String(value))}/>
-        <ProfileCell label="Email" value={email} maxLength={20} w1='44px' w2='170px'
+        <ProfileCell label="Email" value={email} maxLength={32} w1='44px' w2='220px'
           onChange={(value) => setEmail(String(value))}/>
       </HStack>
   );

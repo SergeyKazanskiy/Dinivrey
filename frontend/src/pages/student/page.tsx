@@ -77,7 +77,7 @@ export const StudentPage: React.FC = () => {
                     </HStack>
                     <GroupsView/>
                 </VStack>
-                <VStack minW='636px' w='50%' spacing={4}>
+                <VStack minW='664px' spacing={4}>
                     <ParentsView/>
                     <AddressView/>
                     <AttendanceView/>

@@ -16,7 +16,7 @@ export const LabelText: React.FC<Props> = ({ label, value, w1, w2 }) => {
         {label}:
       </Text>
       <Text style={widgetStyles.value} fontWeight="text" minW={w2}>
-        {value}
+        {value}%
       </Text>
     </Flex>
   );

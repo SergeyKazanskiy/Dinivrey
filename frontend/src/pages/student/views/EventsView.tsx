@@ -24,7 +24,7 @@ export const EventsView: React.FC = () => {
     }
 
     return (
-        <Box style={screenStyles.widget} h='500px' w='690px' p={1}>
+        <Box style={screenStyles.widget} h='500px' w='720px' p={1}>
             <HStack px={4}>
                 <RepeatIcon onClick={onToggle} />
                 <Text style={widgetStyles.title}>Performance trends</Text>
