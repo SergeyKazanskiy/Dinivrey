@@ -17,6 +17,9 @@ export interface AuthState {
 
   restoreAuth: () => Promise<void>;
   refreshToken: (newToken?: string) => Promise<void>;
+
+  loginStudent: (userId: number, token: string) => void;
+  logoutStudent: () => void;
 }
 
 export const useAuthState = create<AuthState>((set, get) => ({
@@ -58,6 +61,7 @@ export const useAuthState = create<AuthState>((set, get) => ({
       AsyncStorage.getItem('role'),
     ]);
     if (token && userId && role) {
+     // alert(userId)
       set({ token, userId: Number(userId), role: role as UserRole, isLogin: true });
     }
   },
@@ -71,5 +75,19 @@ export const useAuthState = create<AuthState>((set, get) => ({
       const {role} = get()
       if (role) setAuthToken(token, role);
     }
+  },
+
+  loginStudent: (userId: number, token: string) => {
+    set({ token, userId, isLogin: true });
+
+    AsyncStorage.setItem('token', token);
+    AsyncStorage.setItem('userId', userId.toString());
+    AsyncStorage.setItem('role', "student");
+  },
+
+    logoutStudent: () => {
+      set({ token: null, userId: 0, role: null, isLogin: false });
+
+      AsyncStorage.multiRemove(['token', 'userId', 'role']);
   },
 }));

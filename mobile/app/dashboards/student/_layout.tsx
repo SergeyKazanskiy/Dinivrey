@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { DraverMenu } from './DraverMenu';
 import { useAuthState } from '../../shared/http/state';
-import LoginScreen from '../../shared/http/LoginScreen';
+import StudentLoginScreen from '../../shared/http/StudentLoginScreen';
 import { ActivityIndicator, View } from 'react-native';
 
 
@@ -13,7 +13,7 @@ export default function RootLayout() {
   }, []);
 
   if (isLogin === false) {
-    return <LoginScreen role='student' />;
+    return <StudentLoginScreen />;
   }
 
   if (isLogin === true) {

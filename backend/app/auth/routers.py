@@ -80,21 +80,25 @@ async def user_logout(
     return {"isOk": True}
 
 
-# @router.get("/auth/admin/verify", response_model=schemas.ResponseId, tags=["Auth"])
-# async def user_admin_verify( decoded_token: dict = Depends(get_decoded_token)):
+@router.post("/student/login", tags=["Auth"])
+async def login(data: schemas.LoginRequest, session: AsyncSession = Depends(get_session)):
+    Student = models.Student
+    Parent = models.Parent
 
-#     email = decoded_token.get("email")
-#     uid = decoded_token.get("uid")
-#     if not email:
-#         raise HTTPException(400, detail="Email missing in token")
+    stmt = (
+        select(Student)
+        .join(Parent, Parent.student_id == Student.id)
+        .where((Student.firebase_uid == data.password) & (Parent.email == data.email))
+    )
+    result = await session.execute(stmt)
+    student = result.scalar_one_or_none()
 
-    # db = firestore.Client()
-    # doc = db.collection("roles").document("adminEmails").get()
-    # admin_emails = doc.to_dict() if doc.exists else {}
-    # is_admin = admin_emails.get(email, False)
+    if not student:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    # if not is_admin:
-    #     raise HTTPException(status_code=403, detail="Email not allowed")
+    firebase_token = auth.create_custom_token(str(student.firebase_uid))
 
-    #auth.set_custom_user_claims(uid, {"admin": True})
-    #return {"isOk": True}
+    return {
+        "id_student": student.id,
+        "token": firebase_token.decode("utf-8")
+    }

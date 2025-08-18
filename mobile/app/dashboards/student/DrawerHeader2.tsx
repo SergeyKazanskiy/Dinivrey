@@ -10,13 +10,13 @@ import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
 
 
 export function DrawerHeader(props: any) {  
-  const { logoutUser } = useAuthState();
+  const { logoutUser, logoutStudent } = useAuthState();
   const { student } = useStore();
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <DinivreyHeader title='Welcome!'
-        onExit={()=>(router.replace('/'), logoutUser('student'))}/>
+        onExit={()=>(router.replace('/'), logoutStudent())}/>
       
       <Image style={[styles.image, {padding: 16}]}
           source={require('../../../assets/images/DinivreyCompany.png')} />

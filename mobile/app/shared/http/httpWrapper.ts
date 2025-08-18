@@ -7,13 +7,12 @@ import { objectToJson } from '../utils';
 
 const isDevelopMode = false; 
 
-
 export const httpWrapper = async (
   apiCall: () => Promise<any>,
   callback: (data: any) => void,
   title?: string
 ) => {
-  const { setLoading, setSuccess, setError } = useSharedHttpClient.getState();
+  const { setLoading, setError } = useSharedHttpClient.getState();
 
   const run = async (): Promise<boolean> => {
     try {
@@ -21,7 +20,6 @@ export const httpWrapper = async (
 
       const response = await apiCall();
       callback(response.data);
-      //setSuccess(title ?? 'The request was completed successfully!'); where?
       return true;
     } catch (error: any) {
       const message = error instanceof AxiosError ? error.message : 'Server error!';
@@ -50,13 +48,12 @@ async function retryWithFreshToken(
     if (!newToken) throw new Error('Token refresh failed');
 
     await useAuthState.getState().refreshToken(newToken);
-    //alert(objectToJson(newToken))
     const retryResponse = await apiCall();
     callback(retryResponse.data);
 
     return true;
   } catch (err) {
-    setError('Auth retry failed');
+    setError('Auth retry failed: ' + err);
     console.warn('Retry after token refresh failed:', err);
     return false;
   }

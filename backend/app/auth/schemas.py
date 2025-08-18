@@ -23,3 +23,7 @@ class StudentInDB(StudentBase):
 
 class RoleBase(BaseModel):
     role: str
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str    
