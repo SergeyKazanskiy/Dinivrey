@@ -53,7 +53,7 @@ const AuthGate: React.FC<Props> = ({ children }) => {
   return (
     <>
       {verified && children}
-
+      
       <Modal isOpen={!verified && isOpen} isCentered onClose={() => {}}>
         <ModalOverlay />
         <ModalContent>

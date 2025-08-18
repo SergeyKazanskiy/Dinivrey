@@ -19,7 +19,7 @@ const ProfileScreen = () => {
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
   const { userId } = useAuthState();
-
+  //alert(userId)
   const navigation = useNavigation();
   const router = useRouter();
 

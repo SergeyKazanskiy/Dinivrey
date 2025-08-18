@@ -38,7 +38,7 @@ async def setup_database():
 app.include_router(router)
 app.include_router(auth_router)
 
-app.include_router(admin_select, prefix="/admin_api")
+app.include_router(admin_select, prefix="/admin_api") #get_decoded_token?
 app.include_router(admin_create, prefix="/admin_api")
 app.include_router(admin_update, prefix="/admin_api")
 app.include_router(admin_delete, prefix="/admin_api")
