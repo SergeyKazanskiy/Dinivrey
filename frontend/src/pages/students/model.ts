@@ -53,4 +53,5 @@ export interface Lider {
     hiding: number;
 
     achieves: Achieve[];
+    password:string;
 }

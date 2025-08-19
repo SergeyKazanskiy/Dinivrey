@@ -40,6 +40,7 @@ class StudentUpdate(BaseModel):
     city: Optional[str] = None
     street: Optional[str] = None
     house: Optional[str] = None
+    password: Optional[str] = None
 
 class StudentResponse(StudentBase):
     id: int

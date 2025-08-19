@@ -88,7 +88,7 @@ async def login(data: schemas.LoginRequest, session: AsyncSession = Depends(get_
     stmt = (
         select(Student)
         .join(Parent, Parent.student_id == Student.id)
-        .where((Student.firebase_uid == data.password) & (Parent.email == data.email))
+        .where((Student.password == data.password) & (Parent.email == data.email))
     )
     result = await session.execute(stmt)
     student = result.scalar_one_or_none()
@@ -96,7 +96,7 @@ async def login(data: schemas.LoginRequest, session: AsyncSession = Depends(get_
     if not student:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    firebase_token = auth.create_custom_token(str(student.firebase_uid))
+    firebase_token = auth.create_custom_token(str(student.password))
 
     return {
         "id_student": student.id,

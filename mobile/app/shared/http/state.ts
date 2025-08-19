@@ -78,6 +78,8 @@ export const useAuthState = create<AuthState>((set, get) => ({
   },
 
   loginStudent: (userId: number, token: string) => {
+    setAuthToken(token, "student");
+    
     set({ token, userId, isLogin: true });
 
     AsyncStorage.setItem('token', token);
@@ -85,9 +87,9 @@ export const useAuthState = create<AuthState>((set, get) => ({
     AsyncStorage.setItem('role', "student");
   },
 
-    logoutStudent: () => {
-      set({ token: null, userId: 0, role: null, isLogin: false });
+  logoutStudent: () => {
+    set({ token: null, userId: 0, role: null, isLogin: false });
 
-      AsyncStorage.multiRemove(['token', 'userId', 'role']);
+    AsyncStorage.multiRemove(['token', 'userId', 'role']);
   },
 }));
