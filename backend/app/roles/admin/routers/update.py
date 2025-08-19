@@ -91,6 +91,10 @@ async def update_coach_photo(id: int, file: UploadFile = File(...), session: Asy
 async def update_achieve(id: int, data: schemas.AchievementUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Achievement, id, data, session)}
 
+@router.put("/students/{id}/password", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def update_password(id: int, data: schemas.StudentUpdate, session: AsyncSession = Depends(get_session)):
+    return {"isOk": await CRUD.update(models.Student, id, data, session)}
+
 # Events
 @router.put("/camps/events/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession = Depends(get_session)):

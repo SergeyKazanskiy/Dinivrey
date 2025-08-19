@@ -141,7 +141,7 @@ router4 = APIRouter()
 async def rename_fields(session: AsyncSession = Depends(get_session)):
     try:
         await session.execute(text("""
-            ALTER TABLE games RENAME COLUMN points TO points1;
+            ALTER TABLE students RENAME COLUMN firebase_uid TO password;
         """))
         # await session.execute(text("""
         #     ALTER TABLE tests ALTER COLUMN stamina_time TYPE REAL;

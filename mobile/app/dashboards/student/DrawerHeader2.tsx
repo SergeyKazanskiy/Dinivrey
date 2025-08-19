@@ -2,21 +2,29 @@ import { useEffect } from 'react';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { router } from 'expo-router';
 import { View, ScrollView, StyleSheet, Image } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { signOut } from "firebase/auth";
 import { useAuthState } from '../../shared/http/state';
 import { useStore } from './store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
+import { auth } from "../../shared/http/firebaseConfig";
 
 
 export function DrawerHeader(props: any) {  
-  const { logoutUser, logoutStudent } = useAuthState();
+  const { logoutStudent } = useAuthState();
   const { student } = useStore();
+
+  async function logout() {
+    router.replace('/');
+    logoutStudent();
+    await signOut(auth);
+    //await auth.currentUser?.delete();
+  }
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <DinivreyHeader title='Welcome!'
-        onExit={()=>(router.replace('/'), logoutStudent())}/>
+        onExit={logout}/>
       
       <Image style={[styles.image, {padding: 16}]}
           source={require('../../../assets/images/DinivreyCompany.png')} />

@@ -3,6 +3,13 @@ from firebase_admin import auth
 from config import settings
 import jwt
 import requests
+import json
+from pathlib import Path
+
+with open(Path(__file__).parent.parent / "secrets" / "firebase-key.json") as f:
+    firebase_config = json.load(f)
+
+FIREBASE_PROJECT_ID = firebase_config["project_id"]
 
 
 async def get_decoded_token2(authorization: str = Header(None)) -> dict:
@@ -55,7 +62,7 @@ async def get_decoded_token(authorization: str = Header(None)) -> dict:
                     id_token,
                     public_key,
                     algorithms=["RS256"],
-                    audience=settings.FIREBASE_PROJECT_ID,
+                    audience=FIREBASE_PROJECT_ID,
                     leeway=5
                 )
                 return decoded_token

@@ -58,6 +58,10 @@ export function update_group_schedule(schedule_id: number, data: Partial<Schedul
   return httpWrapper(() => api.put(`camps/groups/schedule/${schedule_id}`, data), callback);
 };
 
+export function update_password(student_id: number, data: {password: string}, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`students/${student_id}/password`, data), callback);
+};
+
 //Delete
 export function delete_camp(id: number, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.delete(`camps/${id}`), callback);

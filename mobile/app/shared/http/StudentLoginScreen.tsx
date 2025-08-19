@@ -32,7 +32,9 @@ export default function StudentLoginScreen() {
       const { id_student, token } = res.data;
       //alert(id_student + "  " + token)
       await signInWithCustomToken(auth, token);
-      loginStudent(id_student, token);
+      const idToken = await auth.currentUser?.getIdToken(true)!;
+
+      loginStudent(id_student, idToken);
     })
     .catch(err => {
       setIsError(true);

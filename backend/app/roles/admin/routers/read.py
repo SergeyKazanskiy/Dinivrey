@@ -370,7 +370,8 @@ async def get_liders(group_id: int, session: AsyncSession = Depends(get_session)
                 'climbing': test.climbing,
                 'evasion': test.evasion,
                 'hiding': test.hiding,  
-                'achieves': await getAchievements(student.id, session)
+                'achieves': await getAchievements(student.id, session),
+                'password': student.password or ''
             }
             liders.append(lider)
     return liders
