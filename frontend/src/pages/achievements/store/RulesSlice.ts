@@ -1,16 +1,17 @@
 import {  Rule } from '../model';
 import { RuleLevels } from '../../../shared/constants';
+import { objectToJson } from '../../../shared/utils';
 
 
 export interface RulesSlice {
     levels: string[];
     level: string;
     rules: Rule[];
-    ruleInx: number;
+    ruleId: number;
 
     setLevel: (level: string, inx: number) => void;
     setRules: (rules: Rule[]) => void;
-    selectRule: (inx: number) => void;
+    selectRule: (id: number) => void;
 
     createRule: (rule: Rule) => void;
     updateRule: (rule: Rule) => void;
@@ -20,7 +21,7 @@ export interface RulesSlice {
 export const createRulesSlice = (set: any, get: any): RulesSlice => ({
     levels: RuleLevels,
     rules: [],
-    ruleInx: 0,
+    ruleId: 0,
     level: 'Common',
 
     setLevel: (level: string, inx: number) => set((state: RulesSlice) => ({
@@ -28,19 +29,28 @@ export const createRulesSlice = (set: any, get: any): RulesSlice => ({
         levelInx: inx + 1,
     })),
 
-    setRules: (rules: Rule[]) => set({ rules }),
-    selectRule: (inx: number) => set({ ruleInx: inx }),
+    setRules: (rules: Rule[]) => {
+        set({ rules });
+
+        const { setLevel }: RulesSlice = get();
+        setLevel('Common', 0);
+    },
+
+    selectRule: (id: number) => {
+        //alert(id)
+        set({ ruleId: id });
+    },
 
     createRule: (rule: Rule) => set((state: RulesSlice) => ({
         rules: [...state.rules, rule],
     })),
 
     updateRule: (newRule: Rule) => set((state: RulesSlice) => ({
-        rules: state.rules.map((el, inx) => inx === state.ruleInx ? newRule : el),
+        rules: state.rules.map(el => el.id === state.ruleId ? newRule : el),
     })),
 
     deleteRule: () => set((state: RulesSlice) => ({
-        rules: state.rules.filter((el, inx) => inx !== state.ruleInx),
+        rules: state.rules.filter(el => el.id !== state.ruleId),
     })),
 });
 

@@ -8,12 +8,12 @@ import { RuleCell } from '../components/RuleCell';
 
 export const RulesView: React.FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { levels, rules, ruleInx, level, hasRules, achieveId } = useStore();
+    const { levels, rules, ruleId, hasRules, achieveId } = useStore();
     const {setLevel, selectRule, updateRule, createRule, deleteRule, setHasRules } = useStore();
 
-    function getEmptyRule(achieveId: number, level: string) {
+    function getEmptyRule(achieveId: number, level: number) {
         return {
-            level: level,
+            level,
             parameter: 'Speed',
             condition: '>',
             value: 5,
@@ -28,25 +28,26 @@ export const RulesView: React.FC = () => {
             <Text mt={1} float='left' style={widgetStyles.text} fontWeight="medium">Rules</Text>
             <Checkbox  size='sm'  mt={2}  ml={2}  isChecked={hasRules} colorScheme="green"  borderColor='blue.400'
                 onChange={(e) => setHasRules(e.target.checked)}/>
-            <Box borderWidth={2} borderColor='gray.300' borderRadius={8} w='100%'  h='340px'>
+            <Box borderWidth={2} borderColor='gray.300' borderRadius={8} w='100%'  h='320px'>
                 {hasRules && <Tabs variant='soft-rounded' style={screenStyles.tab} colorScheme='blue'>
-                    <TabList pb={1} bg='gray.200'>
+                    <TabList py={1} bg='gray.200' overflowX="auto">
                         {levels.map((item, inx) => (
-                            <Tab key={inx} onClick={()=>setLevel(item, inx)}>{item}</Tab>
+                            <Tab key={inx} fontSize={15} px={2}
+                                onClick={()=>setLevel(item, inx)}>{item}</Tab>
                         ))}
                     </TabList>
                     <TabPanels>
                         {levels.map((tab, index) => (
                             <TabPanel key={index}>
-                                {rules.filter(((rule: Rule) => rule.level === level)).map((rule, inx) => (
-                                    <Box cursor='pointer' mb={2} onClick={() => selectRule(inx)}>
-                                        <RuleCell rule={rule} isSelected={inx === ruleInx}
+                                {rules.filter(((rule: Rule) => rule.level === index + 1)).map((rule) => (
+                                    <Box cursor='pointer' mb={2} onClick={() => selectRule(rule.id!)}>
+                                        <RuleCell rule={rule} isSelected={rule.id === ruleId}
                                             updateRule={updateRule} deleteRule={deleteRule}/>
                                     </Box>
                                 ))}
 
                                 <RulePopover isNew={true} isOpen={isOpen} onOpen={onOpen} onClose={onClose}
-                                    rule={getEmptyRule(achieveId, level)} onSave={createRule} onDelete={deleteRule}/>
+                                    rule={getEmptyRule(achieveId, index + 1)} onSave={createRule} onDelete={deleteRule}/>
                             </TabPanel>
                         ))}
                     </TabPanels>

@@ -37,13 +37,13 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     photo: '', group_id: 3, group_extra_id: 0 },
   
   achievement_id: 0,
-  profile_achievements: [{ id:0, image: 'medal', name: 'Medal', level: RuleLevels[0], effect: effectNames[0]}],
+  profile_achievements: [{ id:0, image: 'medal', name: 'Medal', level: 1, effect: effectNames[0]}],
   isAchievementAdding: false,
 
   last_test: { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },
   last_game: { game_id: 0, timestamp: 0, caught: 0, freeded: 0, is_survived: true },
 
-  upcoming_events: [{ id: 0, type: eventTypes[0], desc: "We going to running", timestamp: getTodayTimestamp() }],
+  upcoming_events: [],
 
   isBackDrawer: true,
 

@@ -68,12 +68,13 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
                     image: achieve.image,
                     category: achieve.category
                  }
-                 addAchieve(achieveShort)
+                addAchieve(achieveShort)
                 if (achieve.hasRules) {
                     const state: RulesSlice = get();
-                    const newRules = state.rules.map(rule => ({ ...rule, achieve_id: res.id}))
-                    add_rules(newRules, (res) => {})
+                    const newRules = state.rules.map(rule => ({ ...rule, achieve_id: res.id }));
+                    add_rules(newRules, (res) => {});
                 } 
+                set({ achieveId: 0, ruleInx: 0 });
            })
         } else {
             update_achieve(achieveId, achieve, (res) => {
@@ -88,7 +89,8 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
                     const state: RulesSlice = get();
                     const newRules = state.rules.map(rule => ({ ...rule, achieve_id: achieveId}))
                     replace_rules(achieveId, newRules, (res) => {})
-                } 
+                };
+                set({ achieveId: 0, ruleInx: 0 });
             }) 
         }
     },

@@ -106,7 +106,7 @@ class AchievementBase(BaseModel):
     student_id: int
     achieve_id: int
     in_profile: bool
-    level: str
+    level: int
 
 class AchievementCreate(AchievementBase):
     pass
@@ -127,7 +127,7 @@ class AchieveResponse(BaseModel):
     name: str
     in_profile: bool
     category: str
-    level: str
+    level: int
     effect: str
         
     class Config:

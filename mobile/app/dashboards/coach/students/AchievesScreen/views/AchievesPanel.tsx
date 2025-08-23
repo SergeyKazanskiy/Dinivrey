@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { Achieve } from '../../model';
+import { Achievement } from '../../model';
 import { AchieveIcon } from '../../../../../shared/components/AchieveIcon';
 
 
 export type Props = {
-  achieves: Achieve[];
+  achieves: Achievement[];
   achieve_id: number;
   category: string;
   onClick: (id: number) => void;

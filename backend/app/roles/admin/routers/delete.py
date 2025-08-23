@@ -54,11 +54,6 @@ async def delete_student_game(id: int, session: Session = Depends(get_session)):
 
 @router.delete("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def remove_student_achievement(id: int, session: Session = Depends(get_session)):
-
-    result = await PhotoStorageService.delete_student_photo(id, session)
-    if not result.isOk:
-        raise HTTPException(status_code=result.error_code, detail=result.error_message)
-
     return {"isOk": await CRUD.delete(models.Achievement, id, session)}
 
 # Achieves

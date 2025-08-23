@@ -44,11 +44,8 @@ export const createTestSlice = (set: any, get: any): TestSlice => ({
     climbing_time: 0,
 
     setSpeed:(speed: number) => set({ speed }),
-
     setStamina:(stamina: number) => set({ stamina }),
-
     setClimbing:(climbing: number) => set({ climbing }),
-
     setEvasion:(evasion: number) => set({ evasion }),
     setHiding:(hiding: number) => set({ hiding }),
 
@@ -60,8 +57,8 @@ export const createTestSlice = (set: any, get: any): TestSlice => ({
     getNewTest:() => {
         const { student_id, timestamp, date, speed, stamina, climbing, evasion, hiding,
             speed_time, stamina_time, climbing_time }: StateSlice & TestSlice = get();
-        return { student_id, timestamp, date, speed, stamina, climbing, evasion, hiding,
-            speed_time, stamina_time, climbing_time }
+        return { student_id, timestamp, date, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0,
+            speed_time: 0, stamina_time: 0, climbing_time: 0 }
     },
 
     // getUpdatedTest:() => {

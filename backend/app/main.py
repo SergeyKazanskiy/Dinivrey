@@ -159,53 +159,37 @@ router5 = APIRouter()
 
 @router5.put("/change_field_type", tags=["Auth"])
 async def change_field_type(session: AsyncSession = Depends(get_session)):
-
+    
     try:
-        # 1. Создаём временную таблицу с изменённым типом поля `stamina_time` (FLOAT)
         await session.execute(text("""
-            CREATE TABLE tests_temp (
+            CREATE TABLE rules_new (
                 id INTEGER PRIMARY KEY,
-                timestamp INTEGER NOT NULL,
-                date TEXT NOT NULL,
-                speed FLOAT NOT NULL,
-                stamina FLOAT NOT NULL,
-                climbing FLOAT NOT NULL,
-                evasion FLOAT NOT NULL,
-                hiding FLOAT NOT NULL,
-                speed_time INTEGER NOT NULL DEFAULT 0,
-                stamina_time FLOAT NOT NULL DEFAULT 0,
-                climbing_time INTEGER NOT NULL DEFAULT 0,
-                student_id INTEGER,
-                FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
-            );
+                level INTEGER NOT NULL,
+                parameter TEXT NOT NULL,
+                condition TEXT NOT NULL,
+                value FLOAT NOT NULL,
+                isPersonal BOOLEAN NOT NULL,
+                selection TEXT NOT NULL,
+                achieve_id INTEGER,
+                FOREIGN KEY(achieve_id) REFERENCES achieves(id) ON DELETE CASCADE
+            )
         """))
 
         # 2. Копируем данные из старой таблицы
         await session.execute(text("""
-            INSERT INTO tests_temp (
-                id, timestamp, date, speed, stamina, climbing,
-                evasion, hiding, speed_time, stamina_time, climbing_time, student_id
-            )
-            SELECT
-                id, timestamp, date, speed, stamina, climbing,
-                evasion, hiding, speed_time, stamina_time, climbing_time, student_id
-            FROM tests;
+            INSERT INTO rules_new (id, level, parameter, condition, value, isPersonal, selection, achieve_id)
+            SELECT id, level_tmp, parameter, condition, value, isPersonal, selection, achieve_id
+            FROM rules
         """))
 
-        # 3. Удаляем старую таблицу
-        await session.execute(text("DROP TABLE tests;"))
-
-        # 4. Переименовываем временную таблицу обратно
-        await session.execute(text("ALTER TABLE tests_temp RENAME TO tests;"))
+        await session.execute(text("DROP TABLE rules"))
+        await session.execute(text("ALTER TABLE rules_new RENAME TO rules"))
 
         await session.commit()
-        print("Поле stamina_time успешно изменено на FLOAT.")
     except Exception as e:
         await session.rollback()
         print(f"Ошибка при изменении: {e}")
 
-    
-    #await session.commit()
     return {"status": "Success"}
 
 app.include_router(router5)
@@ -228,4 +212,49 @@ async def drop_table(table_name: str):
         except Exception as e:
             return {"error": str(e)}
         
-app.include_router(router6)        
+app.include_router(router6)
+
+
+router7 = APIRouter()
+@router7.post("/fix-achievements-level", tags=["Auth"])
+async def change_achievement_level_type(session: AsyncSession = Depends(get_session)):
+    # если нужно маппить строковые значения, то сделай словарь
+    mapping = {
+        "Common": 1,
+        "Rare": 2,
+        "Epic": 3,
+        "Mythic": 4,
+        "Legendary": 5,
+    }
+
+    # 1. Создаём новую таблицу с level INTEGER
+    await session.execute(text("""
+        CREATE TABLE achievements_new (
+            id INTEGER PRIMARY KEY,
+            achieve_id INTEGER NOT NULL,
+            in_profile BOOLEAN DEFAULT 0,
+            level INTEGER NOT NULL,
+            student_id INTEGER,
+            FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
+        )
+    """))
+
+    # 2. Переносим данные с преобразованием level
+    for key, val in mapping.items():
+        await session.execute(text("""
+            INSERT INTO achievements_new (id, achieve_id, in_profile, level, student_id)
+            SELECT id, achieve_id, in_profile, :val, student_id
+            FROM achievements
+            WHERE level = :key
+        """), {"val": val, "key": key})
+
+    # 3. Удаляем старую таблицу
+    await session.execute(text("DROP TABLE achievements"))
+
+    # 4. Переименовываем
+    await session.execute(text("ALTER TABLE achievements_new RENAME TO achievements"))
+
+    await session.commit()
+    return {"status": "ok"}
+
+app.include_router(router7)

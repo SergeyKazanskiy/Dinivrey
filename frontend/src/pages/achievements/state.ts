@@ -2,6 +2,9 @@ import {  AchieveShort, Achieve } from './model';
 import { get_achieves, get_achieve, delete_achieve, get_rules } from './httpClient';
 import { api } from '../../api/api';
 import axios, {AxiosError} from 'axios';
+import { RulesSlice } from './store/RulesSlice';
+import { AchieveSlice } from './store/AchieveSlice';
+import { objectToJson } from '../../shared/utils';
 
 
 export interface StateSlice {
@@ -28,16 +31,23 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     isReportShown: false,
 
     selectAchieve: (id: number, inx: number) => {
-        const {achieveId, isEditorOpened, setAchieve, setRules} = get();
+        const {achieveId, isEditorOpened, setAchieve, setRules}: StateSlice & RulesSlice & AchieveSlice = get();
+
         if (achieveId === id && isEditorOpened) {
-            set(() => ({ isEditorOpened: false, achieveId: 0 }));
+            set(() => ({ isEditorOpened: false, achieveId: 0, achieveInx: -1 }));
+        } else if (achieveId > 0) {
+            alert('Save achievement');
         } else {
             get_achieve(id, (achieve) => {
                 setAchieve(achieve);
+
                 if (achieve.hasRules) {
                     get_rules(id, (rules)=> {
-                        setRules(rules)
+                        //alert(objectToJson(rules))
+                        setRules(rules);
                     })
+                } else {
+                    setRules([]);
                 }
                 set(() => ({ isEditorOpened: true, achieveId: id }));
             })

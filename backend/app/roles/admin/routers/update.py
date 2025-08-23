@@ -8,6 +8,7 @@ import models
 from sqlalchemy.future import select
 from sqlalchemy import delete
 from services.photo_storage import PhotoStorageService
+from services.AchievementService import AchievementService
 
 
 router = APIRouter()
@@ -54,8 +55,8 @@ async def update_student_parents(id: int, data: List[schemas.ParentUpdate], sess
         await CRUD.update(models.Parent, parent.id, parent, session)   
     return {"isOk": True}
 
-@router.put("/students/tests/{id}", tags=["Admin_update"])
-async def update_student_test(id: int, data: schemas.TestUpdate2, session: AsyncSession = Depends(get_session)):
+@router.put("/students/{student_id}/tests/{test_id}", tags=["Admin_update"])
+async def update_student_test(student_id: int, test_id: int, data: schemas.TestUpdate2, session: AsyncSession = Depends(get_session)):
     metric = models.Metric
     
     if data.exam == 'speed' or data.exam == 'stamina'  or data.exam == 'climbing':
@@ -71,13 +72,17 @@ async def update_student_test(id: int, data: schemas.TestUpdate2, session: Async
         result = await session.execute(stmt)
         score = result.scalar_one_or_none() or 0
         fields = schemas.TestUpdate(**{data.exam: score, data.exam + '_time': data.value})
-        await CRUD.update(models.Test, id, fields, session)
+        await CRUD.update(models.Test, test_id, fields, session)
 
-        return {"score": score, 'time': data.value}
+        achievements_message = await AchievementService.evaluate_achievements(student_id, test_id, session)
+        return {"score": score, 'time': data.value, 'achievements': achievements_message}
     else: 
         fields = schemas.TestUpdate(**{data.exam: data.value})
-        await CRUD.update(models.Test, id, fields, session)
-        return {"score": data.value }
+        await CRUD.update(models.Test, test_id, fields, session)
+        
+        achievements_message = await AchievementService.evaluate_achievements(student_id, test_id, session)
+        return {"score": data.value, 'achievements': achievements_message}
+
 
 @router.post("/students/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_coach_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):

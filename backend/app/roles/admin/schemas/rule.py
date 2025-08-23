@@ -4,7 +4,7 @@ from datetime import date
 
 
 class RuleBase(BaseModel):
-    level: str
+    level: int
     parameter: str
     condition: str
     value: float
@@ -19,7 +19,7 @@ class RuleUpdate(RuleBase):
     pass
 
 class RuleResponse(RuleBase):
-    pass
+    id: int
 
     class Config:
         from_attributes = True

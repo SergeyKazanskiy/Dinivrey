@@ -10,6 +10,7 @@ from roles.admin import schemas
 import models
 from .read import get_coache_groups
 
+
 router = APIRouter()
 
 
@@ -76,7 +77,8 @@ async def add_student_parents(data: List[schemas.ParentCreate], session: AsyncSe
 
 @router.post("/students/tests", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def add_student_test(data: schemas.TestCreate, session: AsyncSession = Depends(get_session)):
-    return {"id": await CRUD.add(models.Test, data, session)}
+    test_id = await CRUD.add(models.Test, data, session)
+    return {"id": test_id}
 
 @router.post("/students/games", response_model=schemas.ResponseId, tags=["Admin_create"])
 async def add_student_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):

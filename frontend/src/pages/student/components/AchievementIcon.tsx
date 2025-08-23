@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { EffectName, effects } from '../../../shared/constants'
 import { Box, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { ImagesPath } from '../../../shared/constants';
+import { ImagesPath, RuleLevels } from '../../../shared/constants';
 
 
 interface Props {
   image: string;
   label: string;
-  level: string;
+  level: number;
   effect: EffectName;
   onClick: () => void;
 }
 
 export const AchievementIcon: React.FC<Props> = ({ image, label, level, effect: selectedEffect, onClick }) => {
-  const frameSrc = ImagesPath + `/achieves/frames/${level}.png`;
+  
+  const frameSrc = ImagesPath + `/achieves/frames/${RuleLevels[level - 1]}.png`;
   const gifSrc = ImagesPath + `/achieves/gifs/${image}.gif`;
   
   const [animationStyle, setAnimationStyle] = useState<React.CSSProperties>({});
@@ -34,7 +35,7 @@ export const AchievementIcon: React.FC<Props> = ({ image, label, level, effect: 
     >
       <Box style={{ ...animationStyle }} position="relative" display="inline-block" mx='8px'
         onClick={handlePress}>
-        <Image src={frameSrc} alt="Background" boxSize={level === 'Epic' ? "58px" : "58px"} objectFit='cover' />
+        <Image src={frameSrc} alt="Background" boxSize={level === 3 ? "58px" : "58px"} objectFit='cover' />
         <Image src={gifSrc} alt="GIF" boxSize="46px" borderRadius='23px'
           position="absolute" top="29px" left="50%" transform="translate(-50%, -50%)"/>
         <Text fontSize={12} align='center' color='gray.400'>{label}</Text>

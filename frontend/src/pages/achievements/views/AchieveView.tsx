@@ -9,7 +9,7 @@ import { EnumSelect } from '../../../components/EnumSelect';
 
 export const AchieveView: React.FC = () => {
   const { image, name, desc, category, trigger, effect, level } = useStore();
-  const {setName, setDesc, setCategery, setTrigger } = useStore();
+  const { setName, setDesc, setCategery, setTrigger } = useStore();
 
   return (
     <Container>
@@ -30,10 +30,10 @@ export const AchieveView: React.FC = () => {
         </HStack>  
       </Box>
       <Text mt={3} style={widgetStyles.text} fontWeight="medium">Description</Text>
-      <Editable borderWidth={2} borderColor='gray.300' borderRadius={8} px={2} h='80px'
+      <Editable borderWidth={2} borderColor='gray.300' borderRadius={8} h='100px' overflowY="auto"
         value={desc} onChange={setDesc}> 
-        <EditablePreview fontSize={16} color='gray.500'/>
-        <EditableTextarea color='gray.500'/>
+        <EditablePreview fontSize={15} color='gray.500' px={2}/>
+        <EditableTextarea fontSize={15} h='100px' color='gray.500' px={2}/>
       </Editable>
     </Container>
   );

@@ -3,6 +3,7 @@ import { TestSlice } from './TestSlice';
 import { add_test, update_student_test, delete_student_test} from '../http';
 import { objectToJson, NumericFields, formatDateTime } from '../../../shared/utils';
 import { CampsSlice } from '../../students/store/CampsSlice';
+import { StateSlice } from '../state';
 
 
 export interface TestsSlice {
@@ -113,7 +114,7 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
     // },
 
     updateTest: (examValue: number) => {
-        const { exam, exam_time, test_id, camp_id, tests }: TestsSlice & CampsSlice = get();
+        const { exam, exam_time, test_id, camp_id, tests, student_id }: TestsSlice & CampsSlice & StateSlice = get();
         const test = tests.find(el => el.id === test_id)!;
 
         const data: TestUpdate = {
@@ -122,7 +123,7 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
             camp_id: exam === 'speed' ? 0: camp_id
         }
 
-        update_student_test(test_id, data, (res => {
+        update_student_test(student_id, test_id, data, (res => {
             if (res) {
                 test[exam] = res.score;
                 if (res.time) {
@@ -133,6 +134,10 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
                     tests: state.tests.map(el => el.id === test_id ? test : el),
                     isTestModal: false,
                 }));
+
+                const { loadAchieves }: StateSlice = get();
+                alert(objectToJson(res.achievements))
+                loadAchieves();
             }
         }));
     },
