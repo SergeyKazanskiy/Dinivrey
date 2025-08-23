@@ -121,7 +121,7 @@ export interface StudentProfile {
     achieve_id: number;
     in_profile: boolean;
     category: string;
-    level: string;
+    level: number;
     trigger: string;
     effect: string;
   }
@@ -137,7 +137,7 @@ export interface StudentProfile {
   export interface AchieveAttach {
     student_id: number;
     achieve_id: number;
-    level: string;
+    level: number;
     in_profile: boolean;
   }
 

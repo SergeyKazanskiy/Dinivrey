@@ -33,7 +33,7 @@ export interface Achievement {
   id: number;
   image: string;
   name: string;
-  level: string;
+  level: number;
   effect: string;
 }
 
@@ -43,7 +43,7 @@ export interface Achieve {
   name: string;
   in_profile: boolean;
   category: string;
-  level: string;
+  level: number;
   effect: string;
 }
 

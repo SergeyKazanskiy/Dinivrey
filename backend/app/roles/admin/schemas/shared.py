@@ -10,3 +10,4 @@ class ResponseOk(BaseModel):
 
 class ResponseId(BaseModel):
     id: int
+    message: Optional[str] = None

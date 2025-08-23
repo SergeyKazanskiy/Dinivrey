@@ -67,7 +67,7 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
       set({ isBaseAchieves: false });
 
       const { student_id }: GroupsSlice = get();
-      const data: AchieveAttach = { student_id, achieve_id, level: RuleLevels[0], in_profile: false }
+      const data: AchieveAttach = { student_id, achieve_id, level: 1, in_profile: false }
 
       attach_student_achieve(data, (achievement => {
           if (achievement) {

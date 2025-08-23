@@ -60,9 +60,10 @@ export function update_student_group(student_id: number, data: Group, callback: 
   return httpWrapper(() => api.put(`students/${student_id}/group`, data), callback);
 };
 
-export function update_student_test(id: number, data: TestUpdate, callback: (res: {"score": number, 'time'?: number}) => void) {
-  alert(objectToJson(data))
-  return httpWrapper(() => api.put(`students/tests/${id}`, data), callback);
+export function update_student_test(student_id: number, test_id: number, data: TestUpdate,
+  callback: (res: {"score": number, 'time'?: number, 'achievements': object}) => void) {
+  //alert(objectToJson(data))
+  return httpWrapper(() => api.put(`students/${student_id}/tests/${test_id}`, data), callback);
 };
 
 export function update_student_game(id: number, data: Partial<Game>, callback: (res: {isOk: boolean}) => void) {

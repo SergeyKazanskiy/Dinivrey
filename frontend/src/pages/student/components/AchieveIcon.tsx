@@ -1,17 +1,17 @@
 import { Box, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { ImagesPath } from '../../../shared/constants';
+import { ImagesPath, RuleLevels } from '../../../shared/constants';
 
 
 interface AnimatedIconProps {
   image: string;
   label: string;
-  level: string;
+  level: number;
   onClick: () => void;
 }
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, onClick }) => {
-  const frameSrc = ImagesPath + `/achieves/frames/${level}.png`;
+  const frameSrc = ImagesPath + `/achieves/frames/${RuleLevels[level - 1]}.png`;
   const pngSrc = ImagesPath + `/achieves/images/${image}.png`;
 
   return (
@@ -22,7 +22,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, 
     >
       <Box position="relative" display="inline-block" mx='8px'
         onClick={onClick}>
-        <Image src={frameSrc} alt="Background" boxSize={level === 'Epic' ? "58px" : "58px"} objectFit='cover' />
+        <Image src={frameSrc} alt="Background" boxSize={level === 3 ? "58px" : "58px"} objectFit='cover' />
         <Image src={pngSrc} alt="GIF" boxSize="46px" borderRadius='23px'
           position="absolute" top="29px" left="50%" transform="translate(-50%, -50%)"/>
         <Text fontSize={12} align='center' color='gray.400'>{label}</Text>

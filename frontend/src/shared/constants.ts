@@ -27,7 +27,7 @@ export const AchieveTypes: string[] = ['Manual', 'Automatic'];
 export const AchieveImages: string[] = ['alpinism', 'clock','award-2', 'award', 'dartboard', 'medal', 'rock', 'rocket'];
 
 export const RuleTypes: string[] = ['Common', 'Personal'];
-export const RuleLevels: string[] = ['Common', 'Rare', 'Super', 'Epic'];
+export const RuleLevels: string[] = ['Common', 'Rare', 'Epic', 'Mythic', 'Legendary'];
 
 export const RuleTests: string[] = ['Speed', 'Stamina', 'Climbing', 'Evasion', 'Hiding'];
 export const RuleConditions: string[] = ['<', '>', '='];

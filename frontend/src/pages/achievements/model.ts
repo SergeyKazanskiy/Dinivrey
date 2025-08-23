@@ -18,7 +18,8 @@ export interface Achieve {
   }
   
 export interface Rule {
-  level: string;
+  id?: number;
+  level: number;
   parameter: string;
   condition: string;
   value: number;

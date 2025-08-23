@@ -238,10 +238,9 @@ async def get_achieves(category: str, session: AsyncSession = Depends(get_sessio
 async def get_achieve(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.read(models.Achieve, id, session)
 
-@router.get("/achieves/{id}/rules", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
-async def get_achieve_rules(session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Achieve, session)
-
+@router.get("/achieves/{id}/rules", response_model=List[schemas.RuleResponse], tags=["Admin_select"])
+async def get_achieve_rules(id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Rule, session, filters={"achieve_id": id})
 
 
 # Student

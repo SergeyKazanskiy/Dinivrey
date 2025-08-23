@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Image, Text, StyleSheet, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { ImagesPath } from '../constants';
+import { ImagesPath, RuleLevels } from '../constants';
 
 
 interface AnimatedIconProps {
   onClick: () => void;
   image: string;
   label: string;
-  level: string; //'Common', 'Rare', 'Super', 'Epic']
+  level: number;
   size?: number;
   effect?: string; //'fade' | 'rotate' | 'pulse' | 'jump' | 'ripple';
   isGif?: boolean;
@@ -25,7 +25,7 @@ const effectMapping: Record<string, Animatable.Animation> = {
 
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label, level, size = 80, effect: selectedEffect, isGif, isAnimate = true}) => {
-  const frameSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/frames/${level}.png` };
+  const frameSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/frames/${RuleLevels[level - 1]}.png` };
   const pngSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/images/${image}.png` };
   const gifSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/gifs/${image}.gif` };
 
@@ -41,7 +41,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label
     }
   };
 
-  const frameSize = level === 'Epic' ? size * 0.975 : size; 
+  const frameSize = level === 3 ? size * 0.975 : size; 
   const iconSize = size * 0.75;
   const iconOffset = frameSize / 2; // for center
 

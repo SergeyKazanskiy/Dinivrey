@@ -21,7 +21,7 @@ class Rule(Base):
     __tablename__ = 'rules'
 
     id = Column(Integer, primary_key=True, index=True)
-    level = Column(String, nullable=False)
+    level = Column(Integer, nullable=False)
     parameter = Column(String, nullable=False)   
     condition = Column(String, nullable=False)
     value = Column(Float, nullable=False)
