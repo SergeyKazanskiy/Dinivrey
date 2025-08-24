@@ -43,6 +43,8 @@ export function TableView<T extends Record<string, any>>(
                 title = item[col.name] + ' (' + formatSeconds(item[col.name + '_time']) + ')'
               } else if (col.name === 'stamina') {
                 title = item[col.name] + ' (' + formatSecondsWithMilli(item[col.name + '_time']) + ')'
+              } else if (col.name === 'is_survived') {
+                title = item[col.name] ? "1" : "0"
               } else {
                 title = item[col.name]
               }

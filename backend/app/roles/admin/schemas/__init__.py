@@ -6,7 +6,7 @@ from .group import CampTestResponse, CampTestAverages, GroupAchieve
 
 
 from .student import StudentCreate, StudentUpdate, StudentResponse, StudentShort, StudentName
-from .student import ParentCreate, ParentUpdate, ParentResponse, TestUpdate2
+from .student import ParentCreate, ParentUpdate, ParentResponse, TestUpdate2, GameUpdate
 from .student import TestCreate, TestUpdate, TestResponse, StudentTestLider, StudentAchieveLider
 from .student import AchievementCreate, AchievementUpdate, AchievementResponse
 

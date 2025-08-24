@@ -142,10 +142,10 @@ class TestResponse(TestBase):
 # class GameCreate(GameBase):
 #     pass
 
-# class GameUpdate(BaseModel):
-#     caughted: Optional[float] = None
-#     freeded: Optional[float] = None
-#     description: Optional[str] = None
+class GameUpdate(BaseModel):
+    caught: Optional[float] = None
+    freeded: Optional[float] = None
+    is_survived: Optional[float] = None
 
 # class GameResponse(GameBase):
 #     id: int

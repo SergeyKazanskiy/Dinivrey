@@ -50,7 +50,7 @@ async def delete_student_test(id: int, session: Session = Depends(get_session)):
 
 @router.delete("/students/games/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_student_game(id: int, session: Session = Depends(get_session)):
-    return {"isOk": await CRUD.delete(models.Game, id, session)}
+    return {"isOk": await CRUD.delete(models.Gamer, id, session)}
 
 @router.delete("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def remove_student_achievement(id: int, session: Session = Depends(get_session)):

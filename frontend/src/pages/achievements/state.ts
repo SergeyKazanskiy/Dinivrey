@@ -12,9 +12,10 @@ export interface StateSlice {
     achieveId: number;
     isEditorOpened: boolean;
     isReportShown: boolean;
+    category: string;
 
     selectAdd: (category: string) => void;
-    selectAchieve: (id: number, inx: number) => void;
+    selectAchieve: (id: number, category: string) => void;
     deleteAchieve: (achieveId: number) => void;
     addAchieve: (achieve: AchieveShort) => void;
     updateAchieve: (id: number, achieve: AchieveShort) => void;
@@ -29,8 +30,9 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     achieveId: 0,
     isEditorOpened: false,
     isReportShown: false,
+    category: 'Test',
 
-    selectAchieve: (id: number, inx: number) => {
+    selectAchieve: (id: number, category: string) => {
         const {achieveId, isEditorOpened, setAchieve, setRules}: StateSlice & RulesSlice & AchieveSlice = get();
 
         if (achieveId === id && isEditorOpened) {
@@ -49,7 +51,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 } else {
                     setRules([]);
                 }
-                set(() => ({ isEditorOpened: true, achieveId: id }));
+                set({ isEditorOpened: true, achieveId: id, category });
             })
         }
     },

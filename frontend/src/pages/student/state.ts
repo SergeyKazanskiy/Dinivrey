@@ -1,6 +1,6 @@
-import { get_student, get_student_parents, get_student_attendance_percent,
+import { get_student, get_student_parents, get_student_attendance_percent, get_test_games,
     get_student_achieves, get_student_tests, get_student_games, get_last_test_date} from './http';
-import { Student, Parent, Attendance, Test, Game, Achieve, Achievement } from './model';
+import { Student, Parent, Attendance, Test, Game, Achieve, Achievement, TestGame } from './model';
 import { ProfileSlice } from './store/ProfileSlice';
 import { AddressSlice } from './store/AddressSlice';
 import { GroupsSlice } from './store/GroupsSlice';
@@ -32,6 +32,7 @@ export interface StateSlice {
     loadLastTestDate: () => void;
     loadTests: () => void;
     loadGames: () => void;
+    loadTestGames: () => void;
 
     loadAchieves: () => void;
     loadBaseAchieves: (category: string) => void;
@@ -133,6 +134,14 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
             const { setGames }: GamesSlice = get();
 
             setGames(games)
+        })
+    },
+
+    loadTestGames: () => {
+        get_test_games((games: TestGame[]) => {
+            const { setTestGames }: GamesSlice = get();
+           // alert(objectToJson(games))
+            setTestGames(games)
         })
     },
 

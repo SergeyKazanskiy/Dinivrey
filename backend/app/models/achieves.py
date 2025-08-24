@@ -25,7 +25,7 @@ class Rule(Base):
     parameter = Column(String, nullable=False)   
     condition = Column(String, nullable=False)
     value = Column(Float, nullable=False)
-    isPersonal = Column(Boolean, nullable=False)
+    type = Column(String, nullable=False)
     selection = Column(String, nullable=False)
     achieve_id = Column(Integer, ForeignKey('achieves.id', ondelete='CASCADE'))
     achieve = relationship("Achieve", back_populates="rules")

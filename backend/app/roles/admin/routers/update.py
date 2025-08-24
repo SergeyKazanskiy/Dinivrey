@@ -74,23 +74,26 @@ async def update_student_test(student_id: int, test_id: int, data: schemas.TestU
         fields = schemas.TestUpdate(**{data.exam: score, data.exam + '_time': data.value})
         await CRUD.update(models.Test, test_id, fields, session)
 
-        achievements_message = await AchievementService.evaluate_achievements(student_id, test_id, session)
+        achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
         return {"score": score, 'time': data.value, 'achievements': achievements_message}
     else: 
         fields = schemas.TestUpdate(**{data.exam: data.value})
         await CRUD.update(models.Test, test_id, fields, session)
-        
-        achievements_message = await AchievementService.evaluate_achievements(student_id, test_id, session)
+
+        achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
         return {"score": data.value, 'achievements': achievements_message}
 
 
 @router.post("/students/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
-async def update_coach_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+async def update_coach_photo(game_id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     return await PhotoStorageService.upload_student_photo(id, file, session)
 
-# @router.put("/students/games/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
-# async def update_student_game(id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
-#     return {"isOk": await CRUD.update(models.Game, id, data, session)}
+@router.put("/students/{student_id}/games/{game_id}", tags=["Admin_update"])
+async def update_student_game(student_id: int, game_id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
+    return {
+        "isOk": await CRUD.update(models.Gamer, game_id, data, session),
+        "achievements": await AchievementService.update_game_achievements(student_id, game_id, session)
+        }
 
 @router.put("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_achieve(id: int, data: schemas.AchievementUpdate, session: AsyncSession = Depends(get_session)):

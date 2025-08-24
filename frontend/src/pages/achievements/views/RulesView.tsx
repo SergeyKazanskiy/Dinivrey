@@ -8,7 +8,7 @@ import { RuleCell } from '../components/RuleCell';
 
 export const RulesView: React.FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { levels, rules, ruleId, hasRules, achieveId } = useStore();
+    const { levels, rules, ruleId, hasRules, achieveId, category } = useStore();
     const {setLevel, selectRule, updateRule, createRule, deleteRule, setHasRules } = useStore();
 
     function getEmptyRule(achieveId: number, level: number) {
@@ -17,7 +17,7 @@ export const RulesView: React.FC = () => {
             parameter: 'Speed',
             condition: '>',
             value: 5,
-            isPersonal: false,
+            type: 'Common',
             selection: 'max',
             achieve_id: achieveId
         }
@@ -41,12 +41,12 @@ export const RulesView: React.FC = () => {
                             <TabPanel key={index}>
                                 {rules.filter(((rule: Rule) => rule.level === index + 1)).map((rule) => (
                                     <Box cursor='pointer' mb={2} onClick={() => selectRule(rule.id!)}>
-                                        <RuleCell rule={rule} isSelected={rule.id === ruleId}
+                                        <RuleCell category={category} rule={rule} isSelected={rule.id === ruleId}
                                             updateRule={updateRule} deleteRule={deleteRule}/>
                                     </Box>
                                 ))}
 
-                                <RulePopover isNew={true} isOpen={isOpen} onOpen={onOpen} onClose={onClose}
+                                <RulePopover isNew={true} isOpen={isOpen} onOpen={onOpen} onClose={onClose} category={category}
                                     rule={getEmptyRule(achieveId, index + 1)} onSave={createRule} onDelete={deleteRule}/>
                             </TabPanel>
                         ))}

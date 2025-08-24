@@ -1,4 +1,4 @@
-import {  Game } from '../model';
+import {  Game, TestGame } from '../model';
 import { EventsSlice } from './EventsSlice';
 import { StateSlice } from '../state';
 
@@ -16,7 +16,7 @@ export interface GameSlice {
     setDesc:(description: string) => void;
 
     setGame: (game: Game) => void;
-    // getNewGame: () => Omit<Game, 'id'>;
+    getNewGame: () => Omit<TestGame, 'id'>;
     // getUpdatedGame: () => Game;
 }
 
@@ -35,10 +35,11 @@ export const createGameSlice = (set: any, get: any): GameSlice => ({
     setGame: ({ id, timestamp, caught, freeded, is_survived }: Game) =>
             set({ id, timestamp, caught, freeded, is_survived }),
 
-    // getNewGame:() => {
-    //     const { student_id, timestamp, date, caughted, freeded, description }: StateSlice & EventsSlice & GameSlice = get();
-    //     return { student_id, timestamp, date, caughted, freeded, description }
-    // },
+    getNewGame:() => {
+        const { student_id }: StateSlice = get();
+        return { game_id: 1, student_id, name: 'Test Student',
+            team: 'Green', caught: 0, freeded: 0, is_survived: 0 }
+    },
 
     // getUpdatedGame:() => {
     //     const { student_id, id, timestamp, date, caughted, freeded, description }: StateSlice & EventsSlice & GameSlice = get();

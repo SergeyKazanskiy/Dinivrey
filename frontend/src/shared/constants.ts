@@ -26,10 +26,14 @@ export const AchieveCategories: string[] = ['Test', 'Game', 'Participate', 'Addi
 export const AchieveTypes: string[] = ['Manual', 'Automatic'];
 export const AchieveImages: string[] = ['alpinism', 'clock','award-2', 'award', 'dartboard', 'medal', 'rock', 'rocket'];
 
-export const RuleTypes: string[] = ['Common', 'Personal'];
+export const RuleTypes: string[] = ['Common', 'Personal', 'Total'];
 export const RuleLevels: string[] = ['Common', 'Rare', 'Epic', 'Mythic', 'Legendary'];
 
 export const RuleTests: string[] = ['Speed', 'Stamina', 'Climbing', 'Evasion', 'Hiding'];
+export const RuleGames: string[] = ['Caught', 'Freeded', 'Is_survived'];
+//“Sportsmanship” - Friendly, Positive, Leader, Technical, Supporter.
+
+
 export const RuleConditions: string[] = ['<', '>', '='];
 export const RulePersonal: string[] = ['first', 'last', 'max', 'min', 'agv'];
 
