@@ -19,11 +19,11 @@ export interface Achieve {
   
 export interface Rule {
   id?: number;
+  type: string;
   level: number;
   parameter: string;
   condition: string;
   value: number;
-  isPersonal: boolean;
   selection: string;
   achieve_id: number;
 }

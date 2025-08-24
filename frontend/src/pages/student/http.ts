@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from '../../api/api';
-import { Student, Camp, Group, Parent, Attendance } from './model';
+import { Student, Camp, Group, Parent, Attendance, TestGame } from './model';
 import { Test, Game, Achieve, AchieveAttach, Achievement, TestUpdate } from './model';
 import { objectToJson } from '../../shared/utils';
 
@@ -38,6 +38,10 @@ export function get_student_games(student_id: number, year: number, month: numbe
   return httpWrapper(() => api.get(`students/${student_id}/games?year=${year}&month=${month}`), callback);
 };
 
+export function get_test_games(callback: (games: TestGame[]) => void) {
+  return httpWrapper(() => api.get(`students/tests/games`), callback);
+};
+
 export function get_student_achieves(student_id: number, callback: (achieves: Achievement[]) => void) {
   return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
   //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
@@ -66,8 +70,9 @@ export function update_student_test(student_id: number, test_id: number, data: T
   return httpWrapper(() => api.put(`students/${student_id}/tests/${test_id}`, data), callback);
 };
 
-export function update_student_game(id: number, data: Partial<Game>, callback: (res: {isOk: boolean}) => void) {
-  return httpWrapper(() => api.put(`students/games/${id}`, data), callback);
+export function update_test_game(student_id: number, game_id: number, data: Partial<TestGame>,
+    callback: (res: {isOk: boolean, achievements: object}) => void) {
+  return httpWrapper(() => api.put(`students/${student_id}/games/${game_id}`, data), callback);
 };
 
 export function update_student_achieve(id: number, data: Partial<Achievement>, callback: (res: {isOk: boolean}) => void) {
@@ -79,7 +84,7 @@ export function add_test(data: Omit<Test, 'id'>, callback: (res: {id: number}) =
   return httpWrapper(() => api.post(`students/tests`, data), callback);
 };
 
-export function add_game(data: Omit<Game, 'id'>, callback: (res: {id: number}) => void) {
+export function add_game(data: Omit<TestGame, 'id'>, callback: (res: {id: number}) => void) { //!!! only for test
   return httpWrapper(() => api.post(`students/games`, data), callback);
 };
 
@@ -103,6 +108,7 @@ export function delete_student_test(id: number, callback: (res: {isOk: boolean})
 };
 
 export function delete_student_game(id: number, callback: (res: {isOk: boolean}) => void) {
+  //alert(id)
   return httpWrapper(() => api.delete(`students/games/${id}`), callback);
 };
 

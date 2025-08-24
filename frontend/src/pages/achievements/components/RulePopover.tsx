@@ -5,26 +5,29 @@ import { PopoverFooter, PopoverArrow, PopoverCloseButton, IconButton } from '@ch
 import { EditIcon, AddIcon } from '@chakra-ui/icons';
 import { Rule } from '../model';
 import { SimpleSelect } from '../../../components/SimpleSelect';
-import { RuleTests, RuleConditions, RulePersonal } from '../../../shared/constants'
-import { v4 as uuidv4 } from 'uuid';
+import { RuleTests, RuleConditions, RulePersonal, RuleTypes } from '../../../shared/constants'
+import { AchieveCategories, RuleGames, eventTypes } from '../../../shared/constants'
 
 
 interface IPopover {
   isNew: boolean;
   rule: Rule;
   isOpen: boolean;
+  category: typeof AchieveCategories[number];
   onOpen: () => void;
   onClose: () => void;
   onSave: (rule: Rule) => void;
   onDelete: () => void;
 }
 
-export function RulePopover({isNew, rule, isOpen, onOpen, onClose, onSave, onDelete}: IPopover) {
-  const [isPersonal, setIsPersonal] = useState<boolean>(rule.isPersonal);
+export function RulePopover({isNew, rule, isOpen, category, onOpen, onClose, onSave, onDelete}: IPopover) {
+  const [ryleType, setRyleType] = useState<typeof RuleTypes[number]>(rule.type);
   const [parameter, setParameter] = useState<string>(rule.parameter);
   const [condition, setCondition] = useState<string>(rule.condition);
   const [selection, setSelection] = useState<string>(rule.selection);
   const [value, setValue] = useState<number>(rule.value);
+
+  const parameters = category === 'Test' ? RuleTests : category === 'Game' ? RuleGames : eventTypes;
 
   function handleDelete () {
     onDelete();
@@ -33,8 +36,8 @@ export function RulePopover({isNew, rule, isOpen, onOpen, onClose, onSave, onDel
 
   function handleSave () {
     //const ruleId = rule.id.length === 0 ? uuidv4() : rule.id;
-    const newRule: Rule = { parameter, condition, selection,
-      value, isPersonal, level: rule.level, achieve_id: rule.achieve_id};
+    const newRule: Rule = { parameter, condition, selection, type: ryleType,
+      value, level: rule.level, achieve_id: rule.achieve_id};
     onSave(newRule);
     onClose();
   }
@@ -51,8 +54,8 @@ export function RulePopover({isNew, rule, isOpen, onOpen, onClose, onSave, onDel
         <IconButton size='20px' colorScheme='green' aria-label='Edit'
           icon={isNew ? <AddIcon /> : <EditIcon />}/>
       </PopoverTrigger>
-      <PopoverContent w={isPersonal ? '380px' : '300px'} >
-        <PopoverArrow bg='blue.200'  />
+      <PopoverContent w={ ryleType === 'Personal' ? '380px' : ryleType === 'Total' ? '340px' : '300px' }>
+        <PopoverArrow bg='blue.200'/>
         <PopoverHeader bg='blue.200' color='white'>
           {isNew ? 'Create new rule' : 'Update rule'}
         </PopoverHeader>
@@ -60,21 +63,32 @@ export function RulePopover({isNew, rule, isOpen, onOpen, onClose, onSave, onDel
 
         <PopoverBody >
             <ButtonGroup size='sm' colorScheme='gray' display='flex' justifyContent='start'>
-              <Button variant={ isPersonal ? 'outline' : 'solid' }
-                  onClick={() => setIsPersonal(false)}>Common</Button>
-              <Button variant={ !isPersonal ? 'outline' : 'solid' }
-                onClick={() => setIsPersonal(true)}>Personal</Button>
+              <Button variant={ ryleType === 'Common' ? 'solid' : 'outline' }
+                onClick={() => setRyleType('Common')}>Common</Button>
+              <Button variant={ ryleType === 'Personal' ? 'solid' : 'outline' }
+                onClick={() => setRyleType('Personal')}>Personal</Button>
+              <Button variant={ ryleType === 'Total' ? 'solid' : 'outline' }
+                onClick={() => setRyleType('Total')}>Total</Button>
             </ButtonGroup>
             
             <Flex gap={3} my={4}>
-                <SimpleSelect value={parameter} options={RuleTests} w1='110px'
+                {ryleType === 'Total' &&
+                <Text fontSize={15} fontWeight='500' color='blue.600' pt={1} pl='2px' pr={0}>
+                  Total
+                </Text>}
+
+                <SimpleSelect value={parameter} options={parameters} w1='110px'
                     onChange={(value) => setParameter(String(value))}/>
                 <SimpleSelect value={condition} options={RuleConditions} w1='70px'
                     onChange={(value) => setCondition(String(value))}/>
-                {isPersonal && <SimpleSelect value={selection} options={RulePersonal} w1='90px'
-                    onChange={(value) => setSelection(String(value))}/>}
-                {isPersonal && (<Text>by</Text>)}
-                <Input size="sm" fontWeight="medium" w='46px' color='red.500'
+
+                {ryleType === 'Personal' && <>
+                  <SimpleSelect value={selection} options={RulePersonal} w1='90px'
+                    onChange={(value) => setSelection(String(value))}/>
+                  <Text>by</Text>
+                </>}
+
+                <Input size="sm" fontWeight="medium" w='52px' color='red.500'
                         value={value} type='number' borderColor='gray.200'
                         onChange={handleInputChange}/>
             </Flex>

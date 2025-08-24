@@ -159,8 +159,8 @@ router5 = APIRouter()
 
 @router5.put("/change_field_type", tags=["Auth"])
 async def change_field_type(session: AsyncSession = Depends(get_session)):
-    
     try:
+        # 1. Создаём новую таблицу с полем "type"
         await session.execute(text("""
             CREATE TABLE rules_new (
                 id INTEGER PRIMARY KEY,
@@ -168,23 +168,25 @@ async def change_field_type(session: AsyncSession = Depends(get_session)):
                 parameter TEXT NOT NULL,
                 condition TEXT NOT NULL,
                 value FLOAT NOT NULL,
-                isPersonal BOOLEAN NOT NULL,
+                type TEXT NOT NULL,
                 selection TEXT NOT NULL,
                 achieve_id INTEGER,
                 FOREIGN KEY(achieve_id) REFERENCES achieves(id) ON DELETE CASCADE
             )
         """))
 
-        # 2. Копируем данные из старой таблицы
+        # 2. Копируем данные из старой таблицы, поле type всегда "Common"
         await session.execute(text("""
-            INSERT INTO rules_new (id, level, parameter, condition, value, isPersonal, selection, achieve_id)
-            SELECT id, level_tmp, parameter, condition, value, isPersonal, selection, achieve_id
+            INSERT INTO rules_new (id, level, parameter, condition, value, type, selection, achieve_id)
+            SELECT id, level, parameter, condition, value, 'Common' as type, selection, achieve_id
             FROM rules
         """))
 
+        # 3. Заменяем таблицу
         await session.execute(text("DROP TABLE rules"))
         await session.execute(text("ALTER TABLE rules_new RENAME TO rules"))
 
+        # 4. Фиксируем изменения
         await session.commit()
     except Exception as e:
         await session.rollback()
@@ -199,7 +201,7 @@ router6 = APIRouter()
 
 @router6.delete("/drop_table/{table_name}", tags=["Auth"])
 async def drop_table(table_name: str):
-    valid_tables = {"games", "gamers"}  # ✅ Белый список разрешённых к удалению таблиц
+    valid_tables = {"rules_new"}  # ✅ Белый список разрешённых к удалению таблиц
 
     if table_name not in valid_tables:
         return {"error": "Table not allowed to be dropped"}

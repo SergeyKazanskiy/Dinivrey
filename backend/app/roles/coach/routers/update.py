@@ -53,6 +53,7 @@ async def update_student_test(id: int, data: schemas.TestUpdate2, session: Async
         fields = schemas.TestUpdate(**{data.exam: score, data.exam + '_time': data.value})
         await CRUD.update(models.Test, id, fields, session)
 
+        #achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
         return {"score": score, 'time': data.value}
     else: 
         fields = schemas.TestUpdate(**{data.exam: data.value})

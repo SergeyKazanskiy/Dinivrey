@@ -102,8 +102,8 @@ export function ExamModal() {
           </Flex>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={closeTestModal} mr={3}>Cancel</Button>
-          <Button onClick={handleSave} colorScheme="blue">Save</Button>
+          <Button size='sm' onClick={closeTestModal} mr={3}>Cancel</Button>
+          <Button size='sm' onClick={handleSave} colorScheme="blue">Save</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -276,6 +276,9 @@ async def get_student_tests(id: int, year: int, month: int, session: AsyncSessio
     )
     return result.scalars().all()
 
+@router.get("/students/tests/games", tags=["Admin_select"])
+async def get_tests_games(session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Gamer, session, filters={"student_id": 2})
 
 @router.get("/students/{id}/games", response_model=List[schemas.StudentGame], tags=["Admin_select"])
 async def get_student_games(id: int, year: int, month: int, session: AsyncSession = Depends(get_session)):

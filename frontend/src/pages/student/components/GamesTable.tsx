@@ -1,15 +1,15 @@
-import { Box, Text, Modal, ModalContent } from "@chakra-ui/react";
+import { Box, Text, Flex } from "@chakra-ui/react";
 import { useStore } from "../store";
+import { TableView } from '../components/TableView';
 import { SimpleTable } from '../../../components/SimpleTable';
-import { NumberPopover } from '../../../components/NumberPopover';
-import { DescMenu } from './DescMenu';
 import { ActionButton } from '../../../components/ActionButton';
 import { getCurrentYear, getCurrentMonth } from '../../../shared/utils';
+import { RepeatIcon } from "@chakra-ui/icons";
 
 
 export const GamesTable: React.FC = () => {
-  const { games, year, month } = useStore();
-  const { } = useStore();
+  const { games, year, month, game_id, gameColumn, isTestGames } = useStore();
+  const { togleTestGames, selectGameCell, openUpdateGame, deleteGame, addGame } = useStore();
 
   const gameColumns = [
     {name: 'date', title: 'Date', width: '20%'},
@@ -21,11 +21,25 @@ export const GamesTable: React.FC = () => {
   ];
 
   return (
-    <Box> 
-      <Text fontSize={18} color='blue.500' align='center'>Games table</Text>
+    <Box>
+      <Flex align="center" justify="center">
+        <Text fontSize={18} color='blue.500' align='center'>
+          {isTestGames ? "Games table for test achievements" : "Games table" }
+        </Text>
+        <RepeatIcon ml={4} color='blue.500' onClick={togleTestGames} />
+      </Flex>  
 
-      <Box h='200px' overflow='scroll' ml={4}> 
-        <SimpleTable columns={gameColumns} data={games}/>
+      <Box h='200px' overflow='scroll' ml={4}>
+        { !isTestGames ? <SimpleTable columns={gameColumns} data={games}/> :
+          <>
+            <TableView columns={gameColumns} data={games} selected={{id: game_id, column: gameColumn}}
+              onClick={selectGameCell} onUpdate={openUpdateGame} onDelete={deleteGame}/>
+
+            <ActionButton type="add"
+              available={getCurrentYear() === year && getCurrentMonth() === month}
+              onClick={addGame}/>
+          </>
+        }
       </Box>
     </Box>
   );

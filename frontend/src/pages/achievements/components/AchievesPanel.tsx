@@ -12,7 +12,7 @@ interface Props {
   achieves: AchieveShort[];
   category: string;
   achieveId: number;
-  onClick: (id: number, inx: number) => void;
+  onClick: (id: number, category: string) => void;
   onAddClick: () => void;
 }
 
@@ -24,7 +24,7 @@ export const AchievesPanel: React.FC<Props> = ({ title, achieves, category, achi
         <SimpleGrid display='flex' flexWrap='wrap'>
           {achieves.filter(((item: AchieveShort) => item.category === category)).map((item, inx) => (
             <Box key={inx} bg={item.id === achieveId ? 'gray.100' : 'unset'}
-              onClick={() => onClick(item.id, inx)}>
+              onClick={() => onClick(item.id, category)}>
               <AchieveImage
                 uri={item.image} 
                 label={item.name}/>

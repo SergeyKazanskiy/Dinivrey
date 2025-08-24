@@ -94,6 +94,18 @@ export type Game = {
   date: string;
 }
 
+export type TestGame = { 
+  id: number;
+  game_id: number;
+  student_id: number;
+  name: string;
+
+  team: string;
+  caught: number;
+  freeded: number;
+  is_survived: number;
+}
+
 // Achievement
 export interface Achievement {
   id: number; // Achievement id

@@ -4,14 +4,14 @@ from datetime import date
 
 
 class RuleBase(BaseModel):
+    achieve_id: int
     level: int
     parameter: str
     condition: str
     value: float
-    isPersonal: bool
+    type: str
     selection: str
-    achieve_id: int
-                    
+               
 class RuleCreate(RuleBase):
     pass
 

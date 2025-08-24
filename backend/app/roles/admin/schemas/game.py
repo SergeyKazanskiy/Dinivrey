@@ -33,7 +33,7 @@ class GamerBase(BaseModel):
     caught: int
     freeded: int
     is_survived: bool
-
+    team: str
 
 class GamerCreate(GamerBase):
     pass
