@@ -6,7 +6,7 @@ from crud import CRUD
 from roles.admin import schemas
 import models
 from sqlalchemy.future import select
-from sqlalchemy import delete
+from sqlalchemy import delete, update
 from services.photo_storage import PhotoStorageService
 from services.AchievementService import AchievementService
 
@@ -134,6 +134,13 @@ async def update_achieve_rules(id: int, data: List[schemas.RuleCreate], session:
         await CRUD.add(models.Rule, rule, session)   
     return {"isOk": True}
 
+# @router.post("/achieves/rules/all", response_model=schemas.ResponseOk, tags=["Admin_update"])
+# async def update_achieve_rules_all(session: AsyncSession = Depends(get_session)):
+#     await session.execute(update(models.Rule).values(type="AND"))
+#     await session.commit()
+#     return {"isOk": True}
+
+# Photo
 @router.post("/camps/coaches/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_coach_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     return await PhotoStorageService.upload_coach_photo(id, file, session)

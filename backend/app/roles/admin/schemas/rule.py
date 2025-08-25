@@ -5,12 +5,12 @@ from datetime import date
 
 class RuleBase(BaseModel):
     achieve_id: int
-    level: int
-    parameter: str
-    condition: str
+    level: int # 1 - 5
+    parameter: str # Exam, Game or Event table fields
+    condition: str # "<" | "=" | ">"
     value: float
-    type: str
-    selection: str
+    type: str # "AND" | "OR" only for level (раньше был "Common" | "Personal" | "Cumulative")
+    selection: str # "Current" | "Max" | "Summ" | "Count"
                
 class RuleCreate(RuleBase):
     pass
