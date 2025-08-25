@@ -35,7 +35,6 @@ export const RuleCell: React.FC<Props> = ({ rule, isSelected, category, updateRu
             {isSelected && (<RulePopover isNew={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}
                 rule={rule} category={category} onSave={updateRule} onDelete={deleteRule}/>)}
         </Flex>
-        {rule.type !== 'Total' && <Text style={widgetStyles.value}>And</Text>}
     </>
   );
 };

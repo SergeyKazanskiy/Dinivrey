@@ -6,14 +6,11 @@ from models import Rule, Achievement, Achieve, Test, Gamer, Event, Attendance
 
 # ======================= маленькие утилиты =======================
 
-def _group_rules_by_level(rules: List[Rule]) -> Dict[int, dict]:
-    by_level: Dict[int, dict] = {}
+def _group_rules_by_level(rules: List[Rule]) -> Dict[int, List]:
+    by_level: Dict[int, List] = {}
     for r in rules:
-        if r.level not in by_level:
-            by_level[r.level] = {"type": r.type, "rules": []}
-        by_level[r.level]["rules"].append(r)
+        by_level.setdefault(r.level, []).append(r)
     return by_level
-
 
 def _rule_group_text(ruleset: List[Rule]) -> str:
     return " и ".join(f"{r.parameter} {r.condition} {r.selection} {r.value}" for r in ruleset)
@@ -27,39 +24,66 @@ def _cmp(lhs: float, op: str, rhs: float) -> bool:
 
 # --- проверка уровней по сценариям ---
 
-async def _check_level(
+def _check_common_level(ruleset: List[Rule], current: Dict[str, float]) -> bool:
+    # все правила уровня должны выполниться по текущим значениям (AND)
+    for r in ruleset:
+        v = current.get(r.parameter)
+        
+        if v is None or not _cmp(v, r.condition, r.value):
+            return False
+    return True
+
+async def _check_personal_level(
     ruleset: List[Rule],
-    logic_type: str,
     current: Dict[str, float],
-    prev_max_getter: Optional[Callable[[str], Awaitable[Optional[float]]]] = None,
+    prev_max_getter: Callable[[str], Awaitable[Optional[float]]],
+) -> bool:
+    # достаточно одного правила уровня (OR)
+    for r in ruleset:
+        if r.selection != "Max":
+            # допускаем смешанные правила: если selection не Max — трактуем как "Current"
+            v = current.get(r.parameter)
+            if v is not None and _cmp(v, r.condition, r.value):
+                return True
+            continue
+
+        v = current.get(r.parameter)
+        if v is None:
+            continue
+        prev_max = await prev_max_getter(r.parameter) or 0
+        # трактовка:
+        #   ">" : текущее > prev_max + delta
+        #   "=" : текущее == prev_max + delta
+        #   "<" : текущее < prev_max - delta   (резкое падение, если понадобится)
+        target = prev_max + r.value if r.condition in (">", "=") else prev_max - r.value
+        if _cmp(v, r.condition, target):
+            return True
+    return False
+
+async def _check_cumulative_level(
+    ruleset: List[Rule],
     sum_getter: Optional[Callable[[str], Awaitable[Optional[float]]]] = None,
     count_getter: Optional[Callable[[str], Awaitable[Optional[int]]]] = None,
 ) -> bool:
-    results: List[bool] = []
-
+    # в этом сценарии, как правило, одно правило на уровень
+    # поддержим и несколько — все должны выполниться (AND), чтобы не ломать расширяемость
     for r in ruleset:
-        value: Optional[float] = None
-
-        if r.selection == "Current":
-            value = current.get(r.parameter)
-        elif r.selection == "Max" and prev_max_getter:
-            cur = current.get(r.parameter)
-            if cur is not None:
-                prev_max = await prev_max_getter(r.parameter) or 0
-                target = prev_max + r.value if r.condition in (">", "=") else prev_max - r.value
-                results.append(_cmp(cur, r.condition, target))
-                continue
-        elif r.selection == "Sum" and sum_getter:
-            value = await sum_getter(r.parameter) or 0
-        elif r.selection == "Count" and count_getter:
-            value = float(await count_getter(r.parameter) or 0)
-
-        if value is not None:
-            results.append(_cmp(value, r.condition, r.value))
+        agg_val: Optional[float] = None
+        if r.selection == "Sum":
+            if not sum_getter:
+                return False
+            agg_val = await sum_getter(r.parameter) or 0
+        elif r.selection == "Count":
+            if not count_getter:
+                return False
+            agg_val = float(await count_getter(r.parameter) or 0)
         else:
-            results.append(False)
+            # на всякий случай — не поддерживаемые selection считаем невыполненными
+            return False
 
-    return all(results) if logic_type == "AND" else any(results)
+        if not _cmp(agg_val, r.condition, r.value):
+            return False
+    return True
 
 
 # --- общий обработчик для любых сценариев ---
@@ -69,6 +93,7 @@ async def _process_achievements(
     session: AsyncSession,
     student_id: int,
     current_values: Dict[str, float],
+    types: List[str],  # например: ["Common", "Personal"]
     prev_max_getter: Optional[Callable[[str], Awaitable[Optional[float]]]] = None,
     sum_getter: Optional[Callable[[str], Awaitable[Optional[float]]]] = None,
     count_getter: Optional[Callable[[str], Awaitable[Optional[int]]]] = None,
@@ -76,33 +101,50 @@ async def _process_achievements(
     added: List[dict] = []
     updated: List[dict] = []
 
+    # Берём все достижения
     achieves = (await session.execute(select(Achieve))).scalars().all()
 
     for achieve in achieves:
+        # Берём правила только нужных сценариев
         rules = (
             await session.execute(
-                select(Rule).where(Rule.achieve_id == achieve.id)
+                select(Rule).where(
+                    Rule.achieve_id == achieve.id,
+                    Rule.type.in_(types)  # <<< изменено
+                )
             )
         ).scalars().all()
+   
         if not rules:
             continue
-
+         
         by_level = _group_rules_by_level(rules)
         max_level = 0
-        best_ruleset: Optional[List[Rule]] = None
+        best_ruleset: Optional[List] = None
 
-        for level, data in by_level.items():
-            ok = await _check_level(
-                data["rules"],
-                data["type"],
-                current_values,
-                prev_max_getter=prev_max_getter,
-                sum_getter=sum_getter,
-                count_getter=count_getter,
-            )
+        for level, ruleset in by_level.items():
+            ok = False
+            # теперь проверяем по типу правила
+            if all(r.type == "Common" for r in ruleset):
+                ok = _check_common_level(ruleset, current_values)  
+            elif all(r.type == "Personal" for r in ruleset):
+                ok = await _check_personal_level(
+                    ruleset,
+                    current_values,
+                    prev_max_getter=prev_max_getter or (lambda p: None)  # type: ignore
+                )
+            elif all(r.type == "Cumulative" for r in ruleset):
+                ok = await _check_cumulative_level(
+                    ruleset,
+                    sum_getter=sum_getter,
+                    count_getter=count_getter
+                )
+            else:
+                ok = False
+            
             if ok and level > max_level:
                 max_level = level
-                best_ruleset = data["rules"]
+                best_ruleset = ruleset
 
         if max_level == 0 or not best_ruleset:
             continue
@@ -110,7 +152,7 @@ async def _process_achievements(
         student_ach = await session.scalar(
             select(Achievement).where(
                 Achievement.student_id == student_id,
-                Achievement.achieve_id == achieve.id,
+                Achievement.achieve_id == achieve.id
             )
         )
 
@@ -172,6 +214,7 @@ class AchievementService:
             session=session,
             student_id=student_id,
             current_values=current,
+            types=["Common", "Personal"],
             prev_max_getter=prev_max_getter,
             sum_getter=sum_getter,
             count_getter=None,
@@ -218,6 +261,7 @@ class AchievementService:
             session=session,
             student_id=student_id,
             current_values=current,
+            types=["Common", "Cumulative"],
             prev_max_getter=prev_max_getter,
             sum_getter=sum_getter,
             count_getter=None,
@@ -242,6 +286,7 @@ class AchievementService:
             session=session,
             student_id=student_id,
             current_values={},
+            types=["Cumulative"],
             prev_max_getter=None,
             sum_getter=None,
             count_getter=count_getter,

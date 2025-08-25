@@ -113,3 +113,81 @@ class AchievementService:
             "added": added,
             "updated": updated
         }
+    
+
+
+
+
+
+
+
+
+# async def _process_achievements1(
+#     *,
+#     session: AsyncSession,
+#     student_id: int,
+#     current_values: Dict[str, float],
+#     type: str,  # "Common" | "Personal" | "Cumulative"
+#     prev_max_getter: Optional[Callable[[str], Awaitable[Optional[float]]]] = None,
+#     sum_getter: Optional[Callable[[str], Awaitable[Optional[float]]]] = None,
+#     count_getter: Optional[Callable[[str], Awaitable[Optional[int]]]] = None,
+# ):
+#     added: List[dict] = []
+#     updated: List[dict] = []
+
+#     # Берём все достижения
+#     achieves = (await session.execute(select(Achieve))).scalars().all()
+
+#     for achieve in achieves:
+#         # Берём правила только нужного сценария
+#         rules = (
+#             await session.execute(
+#                 select(Rule).where(
+#                     Rule.achieve_id == achieve.id,
+#                     Rule.type == type #???
+#                 )
+#             )
+#         ).scalars().all()
+   
+#         if not rules:
+#             continue
+         
+#         by_level = _group_rules_by_level(rules)
+#         max_level = 0
+#         best_ruleset: Optional[List] = None
+
+#         for level, ruleset in by_level.items():
+#             ok = False
+#             if type == "Common":
+#                 ok = _check_common_level(ruleset, current_values)  
+#             elif type == "Personal":
+#                 ok = await _check_personal_level(ruleset, current_values, prev_max_getter=prev_max_getter or (lambda p: None))  # type: ignore
+#             elif type == "Cumulative":
+#                 ok = await _check_cumulative_level(ruleset, sum_getter=sum_getter, count_getter=count_getter)
+            
+#             if ok and level > max_level:
+#                 max_level = level
+#                 best_ruleset = ruleset
+
+#         if max_level == 0 or not best_ruleset:
+#             continue
+
+#         student_ach = await session.scalar(
+#             select(Achievement).where(
+#                 Achievement.student_id == student_id,
+#                 Achievement.achieve_id == achieve.id
+#             )
+#         )
+
+#         rule_str = _rule_group_text(best_ruleset)
+
+#         if student_ach is None:
+#             session.add(Achievement(student_id=student_id, achieve_id=achieve.id, level=max_level))
+#             added.append({"name": achieve.name, "level": max_level, "rule": rule_str})
+#         elif max_level > student_ach.level:
+#             student_ach.level = max_level
+#             updated.append({"name": achieve.name, "level": max_level, "rule": rule_str})
+
+#     await session.commit()
+#     return {"added": added, "updated": updated}
+
