@@ -14,6 +14,9 @@ export interface StateSlice {
     isReportShown: boolean;
     category: string;
 
+    isAchieveChanged: boolean;
+    isBackAlert: boolean;
+
     selectAdd: (category: string) => void;
     selectAchieve: (id: number, category: string) => void;
     deleteAchieve: (achieveId: number) => void;
@@ -23,6 +26,7 @@ export interface StateSlice {
     loadAchieves: () => void;
     closeAchieveView: () => void;
     showReportView: () => void;
+    hideBackAlert: () => void;
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
@@ -32,13 +36,17 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     isReportShown: false,
     category: 'Test',
 
+    isAchieveChanged: false,
+    isBackAlert: false,
+
+
     selectAchieve: (id: number, category: string) => {
-        const {achieveId, isEditorOpened, setAchieve, setRules}: StateSlice & RulesSlice & AchieveSlice = get();
+        const {achieveId, isEditorOpened, isAchieveChanged, setAchieve, setRules}: StateSlice & RulesSlice & AchieveSlice = get();
 
         if (achieveId === id && isEditorOpened) {
             set(() => ({ isEditorOpened: false, achieveId: 0, achieveInx: -1 }));
-        } else if (achieveId > 0) {
-            alert('Save achievement');
+        } else if (achieveId > 0 && isAchieveChanged) {
+            set({isBackAlert: true});
         } else {
             get_achieve(id, (achieve) => {
                 setAchieve(achieve);
@@ -104,8 +112,9 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         })
     },
 
-    closeAchieveView: () => set({ isEditorOpened: false,  achieveId: 0 }),
+    closeAchieveView: () => set({ isEditorOpened: false,  achieveId: 0, isAchieveChanged: false, isBackAlert: false }),
     showReportView: () => set((state: any) => ({isReportShown: !state.isReportShown})),
+    hideBackAlert: () => set({isBackAlert: false})
 });
 
 

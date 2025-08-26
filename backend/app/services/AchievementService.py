@@ -36,12 +36,14 @@ async def _check_level(
     count_getter: Optional[Callable[[str], Awaitable[Optional[int]]]] = None,
 ) -> bool:
     results: List[bool] = []
-
+    #print('!!!!!_1', ruleset)
+    #print('!!!!!_2', current, logic_type)
     for r in ruleset:
         value: Optional[float] = None
-
+        #print('!!!!!_3', r.selection, r.condition,  r.value, r.parameter)
         if r.selection == "Current":
             value = current.get(r.parameter)
+            #print('!!!!!_4', value)
         elif r.selection == "Max" and prev_max_getter:
             cur = current.get(r.parameter)
             if cur is not None:
@@ -51,6 +53,7 @@ async def _check_level(
                 continue
         elif r.selection == "Sum" and sum_getter:
             value = await sum_getter(r.parameter) or 0
+            print('!!!!!_7', value, r.selection, r.condition, r.value, r.type, r.level)
         elif r.selection == "Count" and count_getter:
             value = float(await count_getter(r.parameter) or 0)
 
@@ -88,6 +91,7 @@ async def _process_achievements(
             continue
 
         by_level = _group_rules_by_level(rules)
+        #print('!!!!!_0', by_level)
         max_level = 0
         best_ruleset: Optional[List[Rule]] = None
 
@@ -210,7 +214,7 @@ class AchievementService:
             return await session.scalar(
                 select(func.sum(col)).where(
                     Gamer.student_id == student_id,
-                    Gamer.id != gamer_id,
+                    #Gamer.id != gamer_id,
                 )
             )
 

@@ -54,18 +54,22 @@ export const createRulesSlice = (set: any, get: any): RulesSlice => ({
 
     createRule: (rule: Rule) => set((state: RulesSlice) => ({
         rules: [...state.rules, rule],
+        isAchieveChanged: true
     })),
 
     updateRule: (newRule: Rule) => set((state: RulesSlice) => ({
         rules: state.rules.map(el => el.id === state.ruleId ? newRule : el),
+        isAchieveChanged: true
     })),
 
     deleteRule: () => set((state: RulesSlice) => ({
         rules: state.rules.filter(el => el.id !== state.ruleId),
+        isAchieveChanged: true
     })),
 
     setLogic:(isAnd: boolean) => set((state: RulesSlice) => ({
         isAnd,
         rules: state.rules.map(el => el.level === state.levelInx ? {...el, type: isAnd ? 'AND' : 'OR'} : el),
+        isAchieveChanged: true
     })),
 });

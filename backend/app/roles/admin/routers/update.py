@@ -108,9 +108,11 @@ async def update_password(id: int, data: schemas.StudentUpdate, session: AsyncSe
 async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession = Depends(get_session)):
     return {"isOk": await CRUD.update(models.Event, id, data, session)}
 
-@router.put("/camps/events/attendances/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
+@router.put("/camps/events/attendances/{id}", tags=["Admin_update"])
 async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Attendance, id, data, session)}
+    return {"isOk": await CRUD.update(models.Attendance, id, data, session),
+            "achievements": ["Test add attendances achievements"]}
+            # "achievements": await AchievementService.update_participate_achievements(data.student_id, session)}
 
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):

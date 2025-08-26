@@ -109,6 +109,7 @@ export type TestGame = {
 // Achievement
 export interface Achievement {
   id: number; // Achievement id
+  achieve_id: number;
   image: string;
   name: string;
   desc: string;

@@ -3,7 +3,7 @@ import { Text, HStack, VStack, Button, CloseButton, useDisclosure } from "@chakr
 import { RepeatIcon } from "@chakra-ui/icons";
 import { useStore } from "./store";
 import { screenStyles, widgetStyles } from '../../shared/appStyles'
-
+import { BackAlert } from '../../components/BackAlert';
 import { AchievesView } from './views/AchievesView'
 import { AchieveView } from './views/AchieveView';
 import { RulesView } from './views/RulesView';
@@ -15,8 +15,8 @@ import { DeletePopover } from '../../components/DeletePopover';
 
 export const AchievementsPage: React.FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { isEditorOpened, isReportShown, achieveId } = useStore();
-    const { deleteAchieve, saveAchieve, closeAchieveView, showReportView, loadAchieves } = useStore();
+    const { isEditorOpened, isReportShown, achieveId, isBackAlert } = useStore();
+    const { deleteAchieve, saveAchieve, closeAchieveView, showReportView, loadAchieves, hideBackAlert } = useStore();
     const title = isReportShown ? 'Achievement report' : 'Achievement editor';
     const w1 = isEditorOpened ? '680px' : '1140px';
 
@@ -26,6 +26,11 @@ export const AchievementsPage: React.FC = () => {
 
     return (
         <HStack align='start' spacing={4} p={3}>
+            <BackAlert isOpen={isBackAlert}
+                onCancel={hideBackAlert}
+                onYes={saveAchieve}
+                onNo={closeAchieveView}
+            />
             <AchievesView/>
 
             {isEditorOpened && (<VStack style={screenStyles.widget} pr='2px'>

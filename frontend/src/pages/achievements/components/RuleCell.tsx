@@ -3,7 +3,7 @@ import { widgetStyles } from '../../../shared/appStyles'
 import { RulePopover } from './RulePopover';
 import { Rule } from '../model';
 import { getMetric } from '../../../shared/utils';
-import { AchieveCategories } from '../../../shared/constants'
+import { AchieveCategories, RuleSelection } from '../../../shared/constants'
 
 
 interface Props {
@@ -20,16 +20,29 @@ export const RuleCell: React.FC<Props> = ({ rule, isSelected, category, updateRu
   return (
     <>
         <Flex gap={3}>
-            {rule.type === 'Total' && 
-              <Text fontSize={16}>Total</Text>
+            {rule.selection === RuleSelection.Count && 
+              <Text fontSize={16} color='blue.500'>Attended</Text>
             }
-            <Text fontSize={16} color='blue.500'>{rule.parameter}</Text>
+            {rule.selection === RuleSelection.Sum && 
+              <Text fontSize={16} color='blue.500'>Total</Text>
+            }
+
+            <Text fontSize={16} color='red.500'>{rule.parameter}</Text>
+
             <Text fontSize={16} >{rule.condition}</Text>
-            {rule.type === 'Personal' && 
-              <Text fontSize={16} color='red.500'>{rule.selection}<Text fontSize={16}>by</Text></Text>
+            {rule.selection === RuleSelection.Max &&
+              <>
+                <Text fontSize={16} color='red.500'>{rule.selection}</Text>
+                <Text fontSize={16} color='blue.500'>by</Text>
+              </>
             }
+
             <Text fontSize={16} color='red.500'>{rule.value}</Text>
-            <Text fontSize={16} color='blue.500'>points</Text>
+            <Text fontSize={16} color='blue.500'>
+              {rule.selection === RuleSelection.Count ? "times" :
+                rule.selection === RuleSelection.Sum ? "players" :
+                "points"}
+            </Text>
             <Spacer/>
 
             {isSelected && (<RulePopover isNew={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}

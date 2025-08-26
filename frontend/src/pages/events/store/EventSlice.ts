@@ -35,7 +35,7 @@ export const createEventSlice = (set: any, get: any): EventSlice => ({
 
     getNewEvent:() => {
         const { camp_id, timestamp, type, desc, group1_id, group2_id }: EventsSlice & EventSlice & FiltersSlice = get();
-        return { camp_id, timestamp, type, desc, group1_id, group2_id }
+        return { camp_id, timestamp, type, desc, group1_id, group2_id, duration: 3600000 }
     },
 
     getUpdatedEvent:() => {

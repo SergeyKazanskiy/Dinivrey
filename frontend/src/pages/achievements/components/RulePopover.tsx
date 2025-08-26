@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ButtonGroup, Button, Flex, Input, Text } from '@chakra-ui/react';
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverBody} from '@chakra-ui/react';
 import { PopoverFooter, PopoverArrow, PopoverCloseButton, IconButton } from '@chakra-ui/react';
@@ -8,6 +8,7 @@ import { SimpleSelect } from '../../../components/SimpleSelect';
 import { RuleTests, RuleConditions, RuleSelections, RuleSelection } from '../../../shared/constants'
 import { AchieveCategories, RuleGames, eventTypes } from '../../../shared/constants'
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { objectToJson } from '../../../shared/utils';
 
 
 interface IPopover {
@@ -27,6 +28,13 @@ export function RulePopover({isNew, rule, isOpen, category, onOpen, onClose, onS
   const [selection, setSelection] = useState<string>(rule.selection);
   const [value, setValue] = useState<number>(rule.value);
   const [isExplanation, setIsExplanation] = useState(false);
+
+  useEffect(() => {
+    setParameter(rule.parameter);
+    setCondition(rule.condition);
+    setSelection(rule.selection);
+    setValue(rule.value);
+  }, [isNew])
 
   const parameters = category === 'Test' ? RuleTests : category === 'Game' ? RuleGames : eventTypes;
   const explanation =
@@ -88,7 +96,7 @@ export function RulePopover({isNew, rule, isOpen, category, onOpen, onClose, onS
 
             <Flex gap={3} my={4}>
               {selection === RuleSelection.Count &&
-                <Text fontSize={15} fontWeight='500' color='blue.600' pt={1} pl='2px' pr={0}>Visit</Text>}
+                <Text fontSize={15} fontWeight='500' color='blue.600' pt={1} pl='2px' pr={0}>Attended</Text>}
 
               {selection === RuleSelection.Sum &&
                 <Text fontSize={15} fontWeight='500' color='blue.600' pt={1} pl='2px' pr={0}>Total</Text>}  

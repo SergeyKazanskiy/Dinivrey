@@ -230,9 +230,13 @@ async def get_events(year: int, month: int, camp_id: int, session: AsyncSession 
 async def get_achieves(session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Achieve, session)
 
+# @router.get("/achieves", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
+# async def get_achieves(category: str, session: AsyncSession = Depends(get_session)):
+#     return await CRUD.get(models.Achieve, session, filters={"category": category})
+
 @router.get("/achieves", response_model=List[schemas.AchieveResponse], tags=["Admin_select"])
-async def get_achieves(category: str, session: AsyncSession = Depends(get_session)):
-    return await CRUD.get(models.Achieve, session, filters={"category": category})
+async def get_achieves(category: str, trigger: str, session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Achieve, session, filters={"trigger": trigger, "category": category})
 
 @router.get("/achieves/{id}", response_model=schemas.AchieveResponse, tags=["Admin_select"])
 async def get_achieve(id: int, session: AsyncSession = Depends(get_session)):
@@ -334,7 +338,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
     A = models.Achieve
     S = models.Achievement
     stmt = (
-        select(S.id, A.category, A.name, A.image, S.level, S.in_profile, A.effect, A.trigger, A.desc)
+        select(S.id, A.category, A.name, A.image, S.level, S.in_profile, A.effect, A.trigger, A.desc, A.id)
         .join(A, S.achieve_id == A.id )
         .where( S.student_id == id )
         .order_by(asc(A.name))
@@ -349,7 +353,8 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
              "in_profile": row[5],
              "effect": row[6],
              "trigger": row[7],
-             "desc": row[8]} for row in rows]
+             "desc": row[8],
+             "achieve_id": row[9],} for row in rows]
 
 @router.get("/camps/groups/{group_id}/liders", tags=["Admin_select"])
 async def get_liders(group_id: int, session: AsyncSession = Depends(get_session)):

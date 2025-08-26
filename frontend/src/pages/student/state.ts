@@ -8,7 +8,7 @@ import { ParentsSlice } from './store/ParentsSlice';
 import { update_student } from './http';
 import { getChanges, getCurrentYear, getCurrentMonth } from '../../shared/utils';
 import { Normalize, normalizeObject, objectToJson } from '../../shared/utils';
-import { update_student_parents, get_achieves } from './http';
+import { update_student_parents, get_base_achieves } from './http';
 import { Student as StudentShort  } from '../students/model';
 import { TestsSlice } from './store/TestsSlice';
 import { GamesSlice } from './store/GamesSlice';
@@ -156,8 +156,12 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
     loadBaseAchieves: (category: string) => {
         const { setBaseAchieves }: AchievesSlice = get();
             setBaseAchieves([]);
-        get_achieves(category, (achieves: Achieve[]) => {
-            setBaseAchieves(achieves);
+        get_base_achieves(category, 'Manual', (achieves: Achieve[]) => {
+            const {studentAchieves}: AchievesSlice = get();
+            const ids: number[] = studentAchieves.map(el => el.achieve_id);
+            const unik: Achieve[] = achieves.filter(el => !ids.includes(el.id))
+
+            setBaseAchieves(unik);
         });
     },
 
