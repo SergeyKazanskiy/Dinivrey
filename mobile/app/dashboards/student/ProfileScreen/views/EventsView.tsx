@@ -27,7 +27,7 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
 
           <TouchableOpacity onPress={() => onClick(item.id, item.timestamp)}>
             <EventCell
-              type={item.type}
+              type={'Game'}
               date={formatDateTime(item.timestamp).date}
               time={formatDateTime(item.timestamp).time}
               desc={item.desc}

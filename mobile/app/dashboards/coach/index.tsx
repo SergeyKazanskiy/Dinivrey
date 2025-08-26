@@ -42,7 +42,7 @@ function TabNavigatorWrapper() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
       <DinivreyHeader title='Coach'
-        onExit={()=>(router.replace('/'), logoutUser('manager'))}
+        onExit={()=>(router.replace('/'), logoutUser('coach'))}
       />
       <Image style={[styles.image]}
         source={require('../../../assets/images/DinivreyCompany.png')} /> 
