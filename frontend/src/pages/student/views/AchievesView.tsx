@@ -26,7 +26,8 @@ export const AchievesView: React.FC = () => {
         <AchievesPanel title="Test achievements" category='Test'/>
         <AchievesPanel title="Game achievements" category='Game'/>
         <AchievesPanel title="Participate achievements" category='Participate'/>
-        <AchievementsPanel title="Profile achievements"/>
+        <AchievesPanel title="Additional rewards" category='Additional'/>
+        {/* <AchievementsPanel title="Profile achievements"/> */}
       </VStack>
     </Box>
   );

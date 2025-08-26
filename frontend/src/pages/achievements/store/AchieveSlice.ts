@@ -4,6 +4,7 @@ import { create_achieve, add_rules, update_achieve, replace_rules } from '../htt
 import { objectToJson } from '../../../shared/utils';
 import axios, {AxiosError} from 'axios';
 import { RulesSlice } from './RulesSlice';
+import { StateSlice } from '../state';
 
 
 export interface AchieveSlice {
@@ -38,13 +39,13 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
     trigger: 'Manual',
     effect: '',  
 
-    setImage: (image: string) => set({ image }),
-    setName: (name: string) => set({ name }),
-    setDesc: (desc: string) => set({ desc }),
-    setHasRules: (hasRules: boolean) => set({ hasRules }),
-    setCategery: (category: string) => set({ category }),
-    setTrigger: (trigger: string) => set({ trigger }),
-    setEffect: (effect: string) => set({ effect }),
+    setImage: (image: string) => set({ image, isAchieveChanged: true }),
+    setName: (name: string) => set({ name, isAchieveChanged: true }),
+    setDesc: (desc: string) => set({ desc, isAchieveChanged: true }),
+    setHasRules: (hasRules: boolean) => set({ hasRules, isAchieveChanged: true }),
+    setCategery: (category: string) => set({ category, isAchieveChanged: true }),
+    setTrigger: (trigger: string) => set({ trigger, isAchieveChanged: true }),
+    setEffect: (effect: string) => set({ effect, isAchieveChanged: true }),
 
     setAchieve: (achieve: Achieve) => set({ 
         image: achieve.image,
@@ -57,7 +58,8 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
     }),
     
     saveAchieve: () => {
-        const {achieveId, image, name, desc, hasRules, category, trigger, effect, addAchieve, updateAchieve } = get();
+        const { achieveId, image, name, desc, hasRules, category, trigger, effect }: AchieveSlice & StateSlice = get();
+        const { addAchieve, updateAchieve, hideBackAlert }: StateSlice = get();
         const achieve: Achieve = {image, name, desc, hasRules, category, trigger, effect};
         //alert(objectToJson(achieve))
         if (achieveId === 0) {
@@ -74,7 +76,8 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
                     const newRules = state.rules.map(rule => ({ ...rule, achieve_id: res.id }));
                     add_rules(newRules, (res) => {});
                 } 
-                set({ achieveId: 0, ruleInx: 0 });
+                set({ achieveId: 0, ruleInx: 0, isAchieveChanged: false });
+                hideBackAlert();
            })
         } else {
             update_achieve(achieveId, achieve, (res) => {
@@ -88,9 +91,11 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
                 if (achieve.hasRules) {
                     const state: RulesSlice = get();
                     const newRules = state.rules.map(rule => ({ ...rule, achieve_id: achieveId}))
+                    //alert(objectToJson(newRules))
                     replace_rules(achieveId, newRules, (res) => {})
                 };
-                set({ achieveId: 0, ruleInx: 0 });
+                set({ achieveId: 0, ruleInx: 0, isAchieveChanged: false });
+                hideBackAlert();
             }) 
         }
     },

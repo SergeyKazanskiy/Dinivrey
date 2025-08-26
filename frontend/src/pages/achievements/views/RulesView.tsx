@@ -1,4 +1,4 @@
-import { Tabs, TabList, Tab, TabPanels, TabPanel, Text, Checkbox, Box, useDisclosure, Container, Spacer, HStack, Button} from "@chakra-ui/react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Text, Checkbox, Box, useDisclosure, Container} from "@chakra-ui/react";
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 import { useStore } from "../store";
 import { RulePopover } from '../components/RulePopover';
@@ -42,9 +42,9 @@ export const RulesView: React.FC = () => {
                     <RuleLogicView isAnd={isAnd} onAnd={setLogic}/>    
                     <TabPanels>
                         {levels.map((tab, index) => (
-                            <TabPanel key={index}>
+                            <TabPanel key={index} h='230px' overflow='scroll'>
                                 {rules.filter(((rule: Rule) => rule.level === index + 1)).map((rule) => (
-                                    <Box cursor='pointer' mb={2} onClick={() => selectRule(rule.id!)}>
+                                    <Box cursor='pointer' onClick={() => selectRule(rule.id!)}>
                                         <RuleCell category={category} rule={rule} isSelected={rule.id === ruleId}
                                             updateRule={updateRule} deleteRule={deleteRule}/>
                                         <Text style={widgetStyles.value}>{isAnd ? "And" : "Or"}</Text>
@@ -52,7 +52,7 @@ export const RulesView: React.FC = () => {
                                 ))}
 
                                 <RulePopover isNew={true} isOpen={isOpen} onOpen={onOpen} onClose={onClose} category={category}
-                                    rule={getEmptyRule(achieveId, index + 1, isAnd)} onSave={createRule} onDelete={deleteRule}/>
+                                    rule={getEmptyRule(achieveId, index + 1, isAnd)} onSave={createRule} onDelete={deleteRule}/>  
                             </TabPanel>
                         ))}
                     </TabPanels>

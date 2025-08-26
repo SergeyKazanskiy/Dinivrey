@@ -44,7 +44,7 @@ import { objectToJson } from '../../shared/utils';
     return httpWrapper(() => api.put(`camps/events/${event_id}`, data), callback);
   };
 
-  export function update_attendance(attendance_id: number, data: {present: boolean}, callback: (res: {isOk: boolean}) => void) {
+  export function update_attendance(attendance_id: number, data: {student_id: number, present: boolean}, callback: (res: {isOk: boolean, achievements: string[]}) => void) {
     return httpWrapper(() => api.put(`camps/events/attendances/${attendance_id}`, data), callback);
   };
 

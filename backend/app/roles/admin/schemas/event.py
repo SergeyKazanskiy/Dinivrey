@@ -44,6 +44,7 @@ class AttendanceCreate(AttendanceBase):
 
 class AttendanceUpdate(BaseModel):
     present: bool
+    student_id: Optional[int] = None
 
 class AttendanceResponse(BaseModel):
     id: int

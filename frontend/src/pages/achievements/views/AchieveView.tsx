@@ -1,7 +1,7 @@
 import { Text, Box, VStack, HStack, Editable, EditablePreview, EditableTextarea, Checkbox, Spacer, Container } from "@chakra-ui/react";
 import { useStore } from "../store";
 import { screenStyles, widgetStyles } from '../../../shared/appStyles'
-import { AchieveIcon } from '../../../components/AchieveIcon'
+import { AchieveIcon } from '../components/AchieveIcon'
 import { AchieveCategories, AchieveTypes } from '../../../shared/constants';
 import  ProfileCell from '../../../components/ProfileCell';
 import { EnumSelect } from '../../../components/EnumSelect';
@@ -16,7 +16,7 @@ export const AchieveView: React.FC = () => {
       <Text style={widgetStyles.text} fontWeight="medium">Info</Text>
       <Box borderWidth={2} borderColor='gray.300' borderRadius={8} pb='4px' h='142px' p={3}>
         <HStack align='start'>
-          <Box mt={3} h='90px' w='90px'>
+          <Box mt={2} h='90px' w='90px'>
             <AchieveIcon level={level} image={image} label={name} effect={effect}/>
           </Box>
           <VStack ml={2}>

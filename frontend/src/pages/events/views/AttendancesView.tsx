@@ -17,7 +17,7 @@ export function AttendancesView() {
                   {attendance.first_name} {attendance.last_name}
               </Text>
               <Checkbox size='md' pr={3} isChecked={attendance.present} colorScheme="gray" opacity={0.7}
-                onChange={(e) => checkStudent(attendance.id)}/>
+                onChange={(e) => checkStudent(attendance.id, attendance.student_id)}/>
             </Flex>
             <Divider/>
           </Box>

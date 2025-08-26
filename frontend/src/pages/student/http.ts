@@ -47,8 +47,12 @@ export function get_student_achieves(student_id: number, callback: (achieves: Ac
   //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
 };
 
-export function get_achieves(category: string, callback: (achieves: Achieve[]) => void) {
-  return httpWrapper(() => api.get(`achieves?category=${category}`), callback);
+// export function get_achieves(category: string, callback: (achieves: Achieve[]) => void) {
+//   return httpWrapper(() => api.get(`achieves?category=${category}`), callback);
+// };
+
+export function get_base_achieves(category: string, trigger: string, callback: (achieves: Achieve[]) => void) {
+  return httpWrapper(() => api.get(`achieves?category=${category}&trigger=${trigger}`), callback);
 };
 
 // Update

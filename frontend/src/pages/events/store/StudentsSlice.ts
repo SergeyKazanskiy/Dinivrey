@@ -3,7 +3,7 @@ import { add_attendances, update_attendance, delete_attendances, update_all_atte
 import { EventsSlice } from '../store/EventsSlice';
 import { EventSlice } from '../store/EventSlice';
 import { StateSlice } from '../state';
-import { isPast, isToday, isFuture} from '../../../shared/utils';
+import { isPast, isToday, isFuture, objectToJson} from '../../../shared/utils';
 
 
 export interface StudentsSlice {
@@ -16,7 +16,8 @@ export interface StudentsSlice {
     setStudents: (students: Student[]) => void;
     addAttendances: () => void;
     setAttendances: (attendances: Attendance[]) => void;
-    checkStudent: (id: number) => void;
+
+    checkStudent: (attendance_id: number, student_id: number) => void;
     deleteAttendances: () => void;
     setAllChecked: () => void;
 }
@@ -58,7 +59,7 @@ export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
 
     setAttendances: (attendances: Attendance[]) => set({ attendances }),
 
-    checkStudent: (attendance_id: number) => {
+    checkStudent: (attendance_id: number, student_id: number) => {
         const { timestamp }: EventSlice = get();
         if (isPast(timestamp)) {
             alert('It is not possible to change past attendance!');
@@ -68,13 +69,15 @@ export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
         const attendance = attendances.find(el => el.id === attendance_id);
         
         if (attendance) {
-            update_attendance(attendance_id, {present: !attendance.present}, (res) => {
+            update_attendance(attendance_id, {present: !attendance.present, student_id}, (res) => {
                 if (res.isOk) {
                     attendance.present = !attendance.present;
                     set({
                         attendance_id,
                         attendances: attendances.map(el => el.id === attendance_id ? attendance : el)
                     });
+
+                    if (attendance.present) alert(objectToJson(res.achievements));
                 }
             });
         };
