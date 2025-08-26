@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { DraverMenu } from './DraverMenu';
+import { Stack } from 'expo-router';
 import { useAuthState } from '../../shared/http/state';
 import StudentLoginScreen from '../../shared/http/StudentLoginScreen';
 import { ActivityIndicator, View } from 'react-native';
@@ -17,7 +18,8 @@ export default function RootLayout() {
   }
 
   if (isLogin === true) {
-    return <DraverMenu />;
+    //return <DraverMenu />;
+    return <Stack screenOptions={{ headerShown: false }} />;
   }
 
   return (

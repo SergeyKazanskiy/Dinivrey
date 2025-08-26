@@ -11,6 +11,8 @@ import { screenStyles } from '../../../shared/styles/appStyles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { objectToJson } from '@/app/shared/utils';
 import { useAuthState } from '../../../shared/http/state';
+import { CalendarView } from '../EventsScreen/views/CalendarView';
+import { EventsView as EventsView2 } from '../EventsScreen/views/EventsView';
 
 
 const ProfileScreen = () => {
@@ -108,9 +110,12 @@ const ProfileScreen = () => {
           />
         </LinearGradient>
         <Text style={[styles.upcomingClass]}>Upcoming class</Text>
-        <LinearGradient colors={['#152B52', '#152B52']} >
-          
-          <EventsView onClick={openEventsScreen}/>
+        <LinearGradient colors={['#152B52', '#152B52']} style={{paddingHorizontal: 10}}>
+          <EventsView onClick={()=>{}}/>
+
+          <Text style={[styles.upcomingClass]}>Previous class</Text>
+          <CalendarView/>
+          <EventsView2 onClick={()=>{}}/>
         </LinearGradient>
       </ScrollView>
     </LinearGradient>
