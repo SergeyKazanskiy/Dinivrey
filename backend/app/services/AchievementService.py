@@ -233,6 +233,7 @@ class AchievementService:
         async def count_getter(param: str) -> int:
             value = await session.scalar(
                 select(func.count())
+                .select_from(Attendance)
                 .join(Event, Event.id == Attendance.event_id)
                 .where(
                     Attendance.student_id == student_id,
