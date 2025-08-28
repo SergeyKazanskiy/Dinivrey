@@ -5,6 +5,7 @@ from database import get_session
 from crud import CRUD
 from roles.coach import schemas
 import models
+from services.AchievementService import AchievementService
 
 router = APIRouter()
 
@@ -22,20 +23,26 @@ router = APIRouter()
 #     return {"isOk": await CRUD.update(models.Coach, id, data, session)}
 
 # Attendances
-@router.put("/camps/events/attendances/{id}", response_model=schemas.ResponseOk, tags=["Coach"])
+@router.put("/camps/events/attendances/{id}", tags=["Coach"])
 async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
-    return {"isOk": await CRUD.update(models.Attendance, id, data, session)}
+    message = ''
+    if data.present == True:
+        message = await AchievementService.update_participate_achievements(data.student_id, session)
+
+    return {"isOk": await CRUD.update(models.Attendance, id, data, session),
+            "achievements": message}
 
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Coach"])
 async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     rows = await CRUD.get(models.Attendance, session, filters={"event_id": event_id, "group_id": group_id})
     for row in rows:
         await CRUD.update(models.Attendance, row.id, data, session)
+        await AchievementService.update_participate_achievements(row.id, session)
     return {"isOk": True}
 
 # Test
-@router.put("/students/tests/{id}", tags=["Coach"])
-async def update_student_test(id: int, data: schemas.TestUpdate2, session: AsyncSession = Depends(get_session)):
+@router.put("/students/{student_id}/tests/{test_id}", tags=["Coach"])
+async def update_student_test(student_id: int, test_id: int, data: schemas.TestUpdate2, session: AsyncSession = Depends(get_session)):
     metric = models.Metric
     
     if data.exam == 'speed' or data.exam == 'stamina'  or data.exam == 'climbing':
@@ -51,13 +58,14 @@ async def update_student_test(id: int, data: schemas.TestUpdate2, session: Async
         result = await session.execute(stmt)
         score = result.scalar_one_or_none() or 0
         fields = schemas.TestUpdate(**{data.exam: score, data.exam + '_time': data.value})
-        await CRUD.update(models.Test, id, fields, session)
+        await CRUD.update(models.Test, test_id, fields, session)
 
-        #achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
+        achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
         return {"score": score, 'time': data.value}
     else: 
         fields = schemas.TestUpdate(**{data.exam: data.value})
-        await CRUD.update(models.Test, id, fields, session)
+        await CRUD.update(models.Test, test_id, fields, session)
+        achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
         return {"score": data.value }
 
 

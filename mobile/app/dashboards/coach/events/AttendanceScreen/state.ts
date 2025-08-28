@@ -109,7 +109,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         const attendance = attendances.find(el => el.id === attendance_id);  
         
         if (attendance) {
-            update_attendance(attendance_id, {present: !attendance.present}, (res) => {
+            update_attendance(attendance_id, {student_id: attendance.student_id, present: !attendance.present}, (res) => {
                 if (res.isOk) {
                     const currentEvent = events_shedules.find(el => el.id === event_id);
 
