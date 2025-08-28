@@ -12,6 +12,7 @@ from jinja2 import Environment, FileSystemLoader
 from typing import List
 from fastapi.responses import JSONResponse
 from pathlib import Path
+from services.AchievementService import AchievementService
 
 router = APIRouter()
 
@@ -27,6 +28,17 @@ async def add_event_game_gamers(data: List[schemas.GamerCreate], session: AsyncS
     stmt = insert(models.Gamer).values([item.model_dump() for item in data])
     await session.execute(stmt)
     await session.commit()
+
+    stmt = (
+        select(models.Gamer.student_id, models.Gamer.id)
+        .where(models.Gamer.game_id == data[0].game_id)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    for row in rows:
+        achievements = await AchievementService.update_game_achievements(row[0], row[1], session)
+        #print('!!!!!_12', achievements)
 
     return {"isOk": True}
 
