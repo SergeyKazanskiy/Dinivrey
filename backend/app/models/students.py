@@ -23,6 +23,7 @@ class Student(Base):
     summary_achievements = Column(String, default="", nullable=False)
     summary_games = Column(String, default="", nullable=False)
     password = Column(String, unique=True, nullable=True)
+    token_FCM = Column(String, default="", nullable=False)
     group = relationship("Group", back_populates="students")
     parents = relationship("Parent", back_populates="student", cascade="all, delete")
     tests = relationship("Test", back_populates="student", cascade="all, delete")
