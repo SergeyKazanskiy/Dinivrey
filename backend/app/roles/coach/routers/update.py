@@ -6,6 +6,7 @@ from crud import CRUD
 from roles.coach import schemas
 import models
 from services.AchievementService import AchievementService
+from services.NotificationService import send_notifications
 
 router = APIRouter()
 
@@ -25,20 +26,30 @@ router = APIRouter()
 # Attendances
 @router.put("/camps/events/attendances/{id}", tags=["Coach"])
 async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
-    message = ''
+    achievements = ''
     if data.present == True:
-        message = await AchievementService.update_participate_achievements(data.student_id, session)
+        achievements = await AchievementService.update_participate_achievements(data.student_id, session)
+
+    if achievements["added"] or achievements["updated"]:
+            notifications = send_notifications([{'student_id': data.student_id, **achievements}])
 
     return {"isOk": await CRUD.update(models.Attendance, id, data, session),
-            "achievements": message}
+            "notifications": notifications}
 
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Coach"])
 async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     rows = await CRUD.get(models.Attendance, session, filters={"event_id": event_id, "group_id": group_id})
+    
+    notifications = []
     for row in rows:
         await CRUD.update(models.Attendance, row.id, data, session)
-        await AchievementService.update_participate_achievements(row.id, session)
-    return {"isOk": True}
+        
+        achievements = await AchievementService.update_participate_achievements(row.id, session)
+        if achievements["added"] or achievements["updated"]:
+            notifications.append({'student_id': row[0], **achievements});
+    
+    notifications_report = send_notifications(notifications)    
+    return {"isOk": True, 'notifications': notifications_report}
 
 # Test
 @router.put("/students/{student_id}/tests/{test_id}", tags=["Coach"])
@@ -60,13 +71,18 @@ async def update_student_test(student_id: int, test_id: int, data: schemas.TestU
         fields = schemas.TestUpdate(**{data.exam: score, data.exam + '_time': data.value})
         await CRUD.update(models.Test, test_id, fields, session)
 
-        achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
-        return {"score": score, 'time': data.value}
+        achievements = await AchievementService.update_test_achievements(student_id, test_id, session)
+        if achievements["added"] or achievements["updated"]:
+            notifications = send_notifications([{'student_id': student_id, **achievements}])
+        return {"score": score, 'time': data.value, 'notifications': notifications}
     else: 
         fields = schemas.TestUpdate(**{data.exam: data.value})
         await CRUD.update(models.Test, test_id, fields, session)
-        achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
-        return {"score": data.value }
+
+        achievements = await AchievementService.update_test_achievements(student_id, test_id, session)
+        if achievements["added"] or achievements["updated"]:
+            notifications = send_notifications([{'student_id': student_id, **achievements}])
+        return {"score": data.value, 'notifications': notifications }
 
 
 # Summary
