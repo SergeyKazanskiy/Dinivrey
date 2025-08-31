@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Flex, Text, Select, Checkbox, HStack, Container, NumberInput, Box } from "@chakra-ui/react";
+import { Flex, Text, Select, Checkbox, HStack, Container, NumberInput, Box, Badge } from "@chakra-ui/react";
 import { NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from "@chakra-ui/react";
 import { useStore } from "../store";
 import ProfileCell from "../../../components/ProfileCell";
@@ -8,17 +8,22 @@ import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 
 
 export const ProfileView: React.FC = () => {
-  const { active, first_name, last_name, phone, gender, age } = useStore();
-  const {setFirstName, setLastName, setPhone, setGender, setAge, setIsActive, checkProfile} = useStore();
+  const { active, first_name, last_name, phone, gender, age, notifications_count} = useStore();
+  const { setFirstName, setLastName, setPhone, setGender, setAge, setIsActive, checkProfile } = useStore();
+  const { showNotificationsModal } = useStore();
 
     useEffect(() => {
       checkProfile();
     }, [active, first_name, last_name, phone, gender, age ]);
 
   return (
-    <Container style={screenStyles.widget} h='172px' w='300px'>                 
+    <Container style={screenStyles.widget} h='172px' w='300px'>
       <Flex justify="space-between" align="center" mb="2">
         <Text style={widgetStyles.title}>Personal information</Text>
+        <Badge ml='1' fontSize='0.8em' colorScheme='green' cursor='pointer'
+          onClick={showNotificationsModal}>
+          {notifications_count}
+        </Badge>
         
         <Flex pt={1}>
             <Text fontSize="sm" color="blue.500">Active:</Text>

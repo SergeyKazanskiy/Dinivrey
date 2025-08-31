@@ -8,6 +8,7 @@ import models
 from sqlalchemy.future import select
 from sqlalchemy import desc, asc, or_
 from datetime import datetime
+from services.NotificationService import NotificationService
 
 router = APIRouter()
 
@@ -77,6 +78,16 @@ async def get_next_events(group_id: int, session: AsyncSession = Depends(get_ses
         sorted_keys = sorted(events_by_date.keys())
         selected_events = events_by_date[sorted_keys[0]]
     return selected_events
+
+
+# Notifications
+@router.get("/students/{id}/notifications/count", response_model=List[str], tags=["Student"])
+async def get_notifications_count(id: int, session: AsyncSession = Depends(get_session)):
+    return await NotificationService.get_notifications_count(id, session)
+
+@router.get("/students/{id}/notifications", response_model=List[str], tags=["Student"])
+async def get_notifications(id: int, session: AsyncSession = Depends(get_session)):
+    return await NotificationService.get_notifications(id, session)
 
 
 # Statistics (tests)

@@ -13,14 +13,15 @@ import { useStore  } from './store';
 import { BackAlert } from '../../components/BackAlert';
 import { PhotoUploader } from '../../components/PhotoUploader';
 import { ImagesPath } from '../../shared/constants';
+import { NotificationsModal } from './components/NotificationsModal';
 
 
 export const StudentPage: React.FC = () => {
     const { studentId, camps, camp_id, group_id, groups, camp_name, group_name } = useStudentsStore();
     const { closeStudent, updateStudents } = useStudentsStore();
-    const { photo, first_name, last_name } = useStore();
+    const { photo, first_name, last_name, isNotificationsModal, notifications } = useStore();
     const { isProfileChanged, isParentsChanged, isAddressChanged, isGroupsChanged } = useStore();
-    const { loadStudent, updateStudent, setPhoto, uploadPhoto } = useStore();
+    const { loadStudent, updateStudent, deleteNotifications, uploadPhoto, hideNotificationsModal } = useStore();
 
     const camp = camps.find(el => el.id === camp_id)!;
     const group = groups.find(el => el.id === group_id)!;
@@ -55,6 +56,10 @@ export const StudentPage: React.FC = () => {
                 })}
                 onNo={closeStudent}
             />
+            <NotificationsModal isOpen={isNotificationsModal} notifications={notifications}
+                onRead={deleteNotifications} onCancel={hideNotificationsModal}
+            />
+
             <HStack w='100%' h='36px' bg='gray.200' borderWidth={1} borderColor='gray.300'>
                 <Text pl={4} color='gray.500' fontWeight='medium'>{breadcrumb}</Text>
                 <Spacer/>

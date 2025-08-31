@@ -13,7 +13,7 @@ from typing import List
 from fastapi.responses import JSONResponse
 from pathlib import Path
 from services.AchievementService import AchievementService
-from services.NotificationService import send_notifications
+from services.NotificationService import NotificationService
 
 router = APIRouter()
 
@@ -43,7 +43,7 @@ async def add_event_game_gamers(data: List[schemas.GamerCreate], session: AsyncS
         if achievements["added"] or achievements["updated"]:
             notifications.append({'student_id': row[0], **achievements});
 
-    notifications_report = send_notifications(notifications)
+    notifications_report = NotificationService.send_notifications(notifications)
     return {"isOk": True, 'notifications': notifications_report}
 
 # Attendances

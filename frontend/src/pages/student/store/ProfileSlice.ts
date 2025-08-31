@@ -1,7 +1,7 @@
 import { AspectRatio } from '@chakra-ui/react';
 import { StudentProfile } from '../model';
 import { StateSlice } from '../state';
-import { add_student_photo } from '../http';
+import { add_student_photo, delete_notifications } from '../http';
 
 
 export interface ProfileSlice {
@@ -15,6 +15,11 @@ export interface ProfileSlice {
 
     isProfileChanged: false,
 
+    notifications_count: number;
+    notifications: string[];
+    isNotificationsModal: boolean;
+
+
     setPhoto:(photo: string) => void;
     setFirstName:(firstName: string) => void;
     setLastName:(lastName: string) => void;
@@ -27,6 +32,10 @@ export interface ProfileSlice {
     getProfile:() => StudentProfile ;
 
     uploadPhoto: (student_id: number, file: File, file_name: string) => void;
+
+    showNotificationsModal:() => void;
+    hideNotificationsModal:() => void;
+    deleteNotifications:() => void;
 }
 
 export const createProfileSlice = (set: any, get: any): ProfileSlice => ({
@@ -39,6 +48,10 @@ export const createProfileSlice = (set: any, get: any): ProfileSlice => ({
     active: true,
     
     isProfileChanged: false,
+
+    notifications_count: 0,
+    notifications: [],
+    isNotificationsModal: false,
 
     setPhoto:(photo: string) => set({ photo }),
     setFirstName:(first_name: string) => set({ first_name }),
@@ -78,6 +91,24 @@ export const createProfileSlice = (set: any, get: any): ProfileSlice => ({
                 set((state: ProfileSlice) => ({
                     photo: file_name,
                 }))
+            }
+        }));
+    },
+
+    showNotificationsModal:() => {
+        const { student_id, loadNotifications }: StateSlice = get();
+        loadNotifications(student_id);
+
+        set({isNotificationsModal: true});
+    },
+
+    hideNotificationsModal:() => set({isNotificationsModal: false, notifications: []}),
+
+    deleteNotifications:() => {
+        const { student_id }: StateSlice = get();
+        delete_notifications(student_id, (res => {
+            if (res.isOk) {
+                set({isNotificationsModal: false, notifications: [], notifications_count: 0});
             }
         }));
     },

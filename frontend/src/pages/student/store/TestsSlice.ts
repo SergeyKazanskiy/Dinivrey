@@ -135,9 +135,10 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
                     isTestModal: false,
                 }));
 
-                const { loadAchieves }: StateSlice = get();
+                const { loadAchieves, loadNotificationsCount }: StateSlice = get();
                 alert(objectToJson(res.achievements))
                 loadAchieves();
+                loadNotificationsCount(student_id);
             }
         }));
     },

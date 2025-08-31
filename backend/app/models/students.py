@@ -29,7 +29,8 @@ class Student(Base):
     tests = relationship("Test", back_populates="student", cascade="all, delete")
     gamers = relationship("Gamer", back_populates="student", cascade="all, delete")
     achievements = relationship("Achievement", back_populates="student", cascade="all, delete")
-    attendances = relationship("Attendance", back_populates="students")     
+    attendances = relationship("Attendance", back_populates="students")
+    notifications = relationship("Notification", back_populates="student", cascade="all, delete")   
 
 class Parent(Base):
     __tablename__ = 'parents'

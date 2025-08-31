@@ -11,6 +11,7 @@ from datetime import datetime
 from sqlalchemy.orm import selectinload
 import helpers
 from collections import defaultdict
+from services.NotificationService import NotificationService
 
 
 router = APIRouter()
@@ -399,6 +400,14 @@ async def getAchievements(student_id: int, session: AsyncSession = Depends(get_s
     rows = result.all()
     return [{"name": row[0], "image": row[1], "level": row[2]} for row in rows]
 
+# Notifications
+@router.get("/students/{id}/notifications/count", tags=["Admin_select"])
+async def get_notifications_count(id: int, session: AsyncSession = Depends(get_session)):
+    return await NotificationService.get_notifications_count(id, session)
+
+@router.get("/students/{id}/notifications", response_model=List[str], tags=["Admin_select"])
+async def get_notifications(id: int, session: AsyncSession = Depends(get_session)):
+    return await NotificationService.get_notifications(id, session)
 
 # Drills
 @router.get("/drills/all", response_model=List[schemas.DrillResponse], tags=["Admin_select"])

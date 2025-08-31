@@ -6,6 +6,7 @@ from crud import CRUD
 from roles.admin import schemas
 import models
 from services.photo_storage import PhotoStorageService
+from services.NotificationService import NotificationService
 
 router = APIRouter()
 
@@ -55,6 +56,11 @@ async def delete_student_game(id: int, session: Session = Depends(get_session)):
 @router.delete("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def remove_student_achievement(id: int, session: Session = Depends(get_session)):
     return {"isOk": await CRUD.delete(models.Achievement, id, session)}
+
+# Notifications
+@router.delete("/students/{id}/notifications", response_model=schemas.ResponseOk, tags=["Admin_delete"])
+async def delete_student_notifications(id: int, session: Session = Depends(get_session)):
+    return {"isOk": await NotificationService.delete_notifications(id, session)}
 
 # Achieves
 @router.delete("/achieves/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])

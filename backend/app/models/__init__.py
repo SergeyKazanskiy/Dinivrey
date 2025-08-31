@@ -8,3 +8,4 @@ from .drills import Drill, EventDrill
 from .settings import Metric
 from .games import Game, Gamer
 from .managers import Manager
+from .notifications import Notification

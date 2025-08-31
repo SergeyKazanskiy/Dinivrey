@@ -6,7 +6,7 @@ from crud import CRUD
 from roles.coach import schemas
 import models
 from services.AchievementService import AchievementService
-from services.NotificationService import send_notifications
+from services.NotificationService import NotificationService
 
 router = APIRouter()
 
@@ -31,7 +31,7 @@ async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: As
         achievements = await AchievementService.update_participate_achievements(data.student_id, session)
 
     if achievements["added"] or achievements["updated"]:
-            notifications = send_notifications([{'student_id': data.student_id, **achievements}])
+            notifications = NotificationService.send_notifications([{'student_id': data.student_id, **achievements}])
 
     return {"isOk": await CRUD.update(models.Attendance, id, data, session),
             "notifications": notifications}
