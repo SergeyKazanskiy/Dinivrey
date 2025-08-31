@@ -12,6 +12,8 @@ from jinja2 import Environment, FileSystemLoader
 from typing import List
 from fastapi.responses import JSONResponse
 from pathlib import Path
+from services.AchievementService import AchievementService
+from services.NotificationService import send_notifications
 
 router = APIRouter()
 
@@ -28,7 +30,21 @@ async def add_event_game_gamers(data: List[schemas.GamerCreate], session: AsyncS
     await session.execute(stmt)
     await session.commit()
 
-    return {"isOk": True}
+    stmt = (
+        select(models.Gamer.student_id, models.Gamer.id)
+        .where(models.Gamer.game_id == data[0].game_id)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    notifications = []
+    for row in rows:
+        achievements = await AchievementService.update_game_achievements(row[0], row[1], session)
+        if achievements["added"] or achievements["updated"]:
+            notifications.append({'student_id': row[0], **achievements});
+
+    notifications_report = send_notifications(notifications)
+    return {"isOk": True, 'notifications': notifications_report}
 
 # Attendances
 @router.post("/camps/events/attendances", response_model=schemas.ResponseOk, tags=["Coach"])
