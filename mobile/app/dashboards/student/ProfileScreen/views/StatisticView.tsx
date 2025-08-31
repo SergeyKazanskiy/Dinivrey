@@ -18,7 +18,22 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
 
   return (
     <View style={styles.container}>
-      <RadarChart test={last_test} onExam={onExam} onLiders={onLiders} />
+      <View style={{flexDirection: 'column', alignItems: 'center'}}>
+        <View style={styles.container2}>
+          <View style={styles.box}>
+            <Text style={styles.text2}>Statistics</Text>
+          </View>
+        </View>
+        <RadarChart test={last_test} onExam={(exam)=>{}} onLiders={onLiders}/>
+      </View>
+
+      <StatsIndicators stats={[
+          last_test.climbing || 0, 
+          last_test.stamina || 0, 
+          last_test.speed || 0, 
+          last_test.evasion || 0, 
+          last_test.hiding || 0
+          ]}/>
 
       {/* <View style={styles.section}>
         <RadarChart test={last_test} onExam={onExam} onLiders={onLiders} />
@@ -49,9 +64,27 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  container2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  box: {
+    backgroundColor: "#000",
+    borderRadius: 11,
+  },
+  text2: {
+    marginHorizontal: 20,
+    marginVertical: 3,
+    fontSize: 25,
+    fontWeight: "600",
+    color: "#fff",
+  },
   container: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     marginTop: 12,
-    paddingBottom: 12,
+    paddingBottom: 12
   },
   col: {
     paddingTop: 16,
