@@ -18,7 +18,6 @@ export default function RootLayout() {
   }
 
   if (isLogin === true) {
-    //return <DraverMenu />;
     return <Stack screenOptions={{ headerShown: false }} />;
   }
 
