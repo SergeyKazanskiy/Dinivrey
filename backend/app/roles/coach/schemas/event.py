@@ -59,6 +59,7 @@ class AttendanceCreate(AttendanceBase):
 class AttendanceUpdate(BaseModel):
     present: Optional[bool] = None
     comment: Optional[str] = None
+    student_id: Optional[int] = None
 
 class AttendanceResponse(BaseModel):
     id: int

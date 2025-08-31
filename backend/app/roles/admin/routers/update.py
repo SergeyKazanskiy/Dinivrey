@@ -110,14 +110,19 @@ async def update_event(id: int, data: schemas.EventUpdate, session: AsyncSession
 
 @router.put("/camps/events/attendances/{id}", tags=["Admin_update"])
 async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
+    message = None
+    if data.present == True:
+        message = await AchievementService.update_participate_achievements(data.student_id, session)
+
     return {"isOk": await CRUD.update(models.Attendance, id, data, session),
-            "achievements": await AchievementService.update_participate_achievements(data.student_id, session)}
+            "achievements": message or ''}
 
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     rows = await CRUD.get(models.Attendance, session, filters={"event_id": event_id, "group_id": group_id})
     for row in rows:
         await CRUD.update(models.Attendance, row.id, data, session)
+        await AchievementService.update_participate_achievements(row.id, session)
     return {"isOk": True}
 
 
