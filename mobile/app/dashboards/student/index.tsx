@@ -1,20 +1,15 @@
 import React from 'react';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { router } from 'expo-router';
 import { View, StyleSheet, Platform, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { DinivreyHeader } from '../../shared/components/DinivreyHeader';
+import { useNavigationState } from '@react-navigation/native';
+import { useAuthState } from '../../shared/http/state';
+import { useStore } from './store';
 import GamesScreen from './GamesScreen';
 import LidersScreen from './LidersScreen';
 import ProfileScreen from './ProfileScreen';
 import AchievesScreen from './AchievesScreen';
 import StatisticsScreen from './StatisticsScreen';
-
-import { useAuthState } from '../../shared/http/state';
-import { useStore } from './store';
-
 
 type TabRoutes = {
   Games: undefined;
@@ -29,37 +24,77 @@ const Tab = createBottomTabNavigator<TabRoutes>();
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
     case 'Games':
-      return require('../../../assets/images/Logo.png')
+      return focused
+        ? require('../../../assets/images/icons/TabIcons/game-selected.png')
+        : require('../../../assets/images/icons/TabIcons/game.png');
     case 'Liders':
-      return require('../../../assets/images/icons/iLeaders.png')
+      return focused
+        ? require('../../../assets/images/icons/TabIcons/leaderboard-selected.png')
+        : require('../../../assets/images/icons/TabIcons/leaderboard.png');
     case 'Main':
-      return require('../../../assets/images/icons/iMain.png')
+      return focused
+        ? require('../../../assets/images/icons/TabIcons/home-selected.png')
+        : require('../../../assets/images/icons/TabIcons/home.png');
     case 'Achieves':
-      return require('../../../assets/images/icons/iAchieves.png')
+      return focused
+        ? require('../../../assets/images/icons/TabIcons/achievements-selected.png')
+        : require('../../../assets/images/icons/TabIcons/achievements.png');
     default:
-      return require('../../../assets/images/icons/iStatistics.png')
+      return focused
+        ? require('../../../assets/images/icons/TabIcons/stats-selected.png')
+        : require('../../../assets/images/icons/TabIcons/stats.png');
   }
+}
+
+function isShouldShowDiviver(tab: string, selected: string, focused: boolean) {
+  // if (focused) return false;
+
+  // switch (tab) {
+  //   case 'Games':
+  //     return selected === 'Liders';
+  //   case 'Liders':
+  //     return selected === 'Main';
+  //   case 'Main':
+  //     return selected === 'Achieves';
+  //   case 'Achieves':
+  //     return selected !== 'Statistics';
+  //   default:
+  //     return false;
+  // }
+  
+  return selected == 'Games'
 }
 
 function TabNavigatorWrapper() {
   const { student } = useStore();
   const { logoutUser } = useAuthState();
 
+  // Get the current active route from navigation state
+  const state = useNavigationState((state) => state);
+  const currentRouteName = state.routes[state.index]?.name || '';
+
+  console.log('Current tab: ', state.routes, 'thats')
+
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
-      <DinivreyHeader title={student.first_name + ' ' + student.last_name}
-        onExit={()=>(router.replace('/'), logoutUser('student'))}
-      />
-      
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: false, tabBarShowLabel: false, tabBarStyle: styles.tabbar,
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: styles.tabbar,
           tabBarIcon: ({ focused }) => {
             return (
-              <View style={[focused && styles.icon_focused]}>
-                <Image style={[styles.image, focused && styles.image_focused]}
-                  source={getTabIcon(route.name, focused)}
-                />
+              <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                <View style={[{ marginHorizontal: 10 }, focused && styles.icon_focused]}>
+                  <Image
+                    source={getTabIcon(route.name, focused)}
+                    style={styles.image}
+                  />
+                </View>
+
+                {isShouldShowDiviver(route.name, currentRouteName, focused) && (
+                  <View style={{ width: 3, height: 38, backgroundColor: '#161D21' }} />
+                )}
               </View>
             );
           },
@@ -76,9 +111,7 @@ function TabNavigatorWrapper() {
 }
 
 export default function CoachLayout() {
-  return (
-    <TabNavigatorWrapper />
-  );
+  return <TabNavigatorWrapper />;
 }
 
 const styles = StyleSheet.create({
@@ -89,26 +122,33 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tabbar: {
-    backgroundColor: '#D1FF4D',
-    borderRadius: 27,
-    marginHorizontal: 16,
-    marginVertical: 8,
+    position: 'absolute',
+    bottom: 11,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 54,
+    backgroundColor: '#D8F207',
+    borderRadius: 26,
+    marginHorizontal: 14,
     borderTopWidth: 0,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 10,
+    shadowOpacity: 0.1,
+    paddingHorizontal: 4,
   },
   icon_focused: {
-    backgroundColor: '#000',
-    borderRadius: 24,
+    justifyContent: 'center',
+    backgroundColor: '#161D21',
+    borderRadius: 45,
     paddingVertical: 6,
     paddingHorizontal: 16,
   },
   image: {
     alignSelf: 'center',
     resizeMode: 'contain',
-    width: 28,
-    height: 28,
-    tintColor: '#000'
-  },
-  image_focused: {
-    tintColor: '#D1FF4D'
+    width: 36,
+    height: 36,
   },
 });

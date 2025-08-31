@@ -23,7 +23,7 @@ const labels = ['climbing', 'stamina', 'speed', 'evasion', 'hiding'];
 
 export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }) => {
   const { width } = useWindowDimensions();
-  const size = Math.min(width * 0.8, 300);
+  const size = Math.min(width * 0.6, 300);
   const center = size / 2;
   const radius = size * 0.35;
 
@@ -43,10 +43,6 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }
     test.hiding || 0,
   ];
 
-  const average = (
-    values.reduce((acc, v) => acc + v, 0) / values.length
-  ).toFixed(1);
-
   const angleSlice = (Math.PI * 2) / 5;
 
   const getPoint = (value: number, i: number) => {
@@ -63,60 +59,75 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam, onLiders }
     return `${x},${y}`;
   }).join(' ');
 
-  const outerPoints = labels.map((_, i) => {
+  const mainPolyPoints = values.map((_, i) => {
     const { x, y } = getPoint(10, i);
-    return { x, y };
-  });
+    return `${x},${y}`;
+  }).join(' ');
+
+  const outerPoints = values.map((_, i) => getPoint(10, i)); // 10 = max value
 
   return (
     <View style={styles.container}>
       <Svg width={size} height={size}>
         <Defs>
-          <RadialGradient id="grad" cx="50%" cy="50%" rx="50%" ry="50%">
-            <Stop offset="0%" stopColor="black" stopOpacity="1" />
-            <Stop offset="100%" stopColor="white" stopOpacity="1" />
+          <RadialGradient id="grad" cx="50%" cy="55%" rx="50%" ry="50%">
+            <Stop offset="0%" stopColor="#464646ff" stopOpacity="1" />
+            <Stop offset="40%" stopColor="#7d7d7dff" stopOpacity="1" />
+            <Stop offset="75%" stopColor="#d8d8d8ff" stopOpacity="1" />
           </RadialGradient>
         </Defs>
 
-        <Circle cx={center} cy={center} r={radius}
-          fill="url(#grad)" fillOpacity={0.8} stroke="limegreen" strokeWidth={5}/>
-        
-        {outerPoints.map((p, i) => (
-          <Line key={i}
-            x1={center} y1={center} x2={p.x} y2={p.y}
-            stroke="white" strokeWidth={2}
-          />
-        ))}
-        <Polygon points={points} fill="green"  fillOpacity={0.9} stroke="limegreen" strokeWidth={3}/>
+        {/* Main polygon as background */}
+        <Polygon
+          points={mainPolyPoints}
+          fill="url(#grad)"
+          stroke="yellow"
+          strokeWidth={7}
+        />
+
+        {/* Полигон чтоб закрыть градиент */}
+        <Polygon
+          points={points}
+          fill="#9caa00ff"
+          stroke="#edff27ff"
+          strokeWidth={3}
+        />
+
+        {/* Lines from center to polygon corners */}
+        {values.map((_, i) => {
+          const { x, y } = getPoint(10, i); // max value radius
+          return (
+            <Line
+              key={i}
+              x1={center}
+              y1={center}
+              x2={x}
+              y2={y}
+              stroke="white"
+              strokeWidth={2}
+            />
+          );
+        })}
+
+        {/* Polygon for actual values */}
+        <Polygon
+          points={points}
+          fill="#9caa00ff"
+          fillOpacity={0.9}
+          stroke="#edff27ff"
+          strokeWidth={3}
+        />
       </Svg>
 
       {outerPoints.map((p, i) => (
-        <TouchableOpacity key={i}
-          style={[styles.iconWrapper, { left: p.x + 4, top: p.y - 22 }]}
-          onPress={() => onExam(labels[i])} >
-
-          <Image key={i} source={{ uri: icons[i] }}
-            style={styles.icon}
-          />
+        <TouchableOpacity
+          key={i}
+          style={[styles.iconWrapper, { left: p.x - 25, top: p.y - 25 }]} // center icon
+          onPress={() => onExam(labels[i])}
+        >
+          <Image source={{ uri: icons[i] }} style={styles.icon} />
         </TouchableOpacity>
       ))}
-
-      {values.map((v, i) => {
-        //const { x, y } = getPoint(v, i);
-        const x = outerPoints[i].x;
-        const y = outerPoints[i].y;
-        return (
-          <Text key={i}
-            style={[styles.valueText, { left: x*1.32-32, top: y*1.3 - 52 }]}
-          >
-            {v.toFixed(1)}
-          </Text>
-        );
-      })}
-      <TouchableOpacity  style={styles.centerText}
-         onPress={onLiders}>
-        <Text style={styles.average}>{average}</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -131,9 +142,9 @@ const styles = StyleSheet.create({
     position: 'absolute', // ← важно!
   },
   icon: {
-    width: 50,
-    height: 50,
-    //position: 'absolute',
+    width: 40,
+    height: 40,
+    // position: 'absolute',
   },
   valueText: {
     position: 'absolute',
