@@ -50,6 +50,7 @@ export const useAuthState = create<AuthState>((set, get) => ({
         set({ token: null, userId: 0, role: null, isLogin: false });
 
         AsyncStorage.multiRemove(['token', 'userId', 'role']);
+        AsyncStorage.multiRemove(['fcm_token', 'fcm_token_timestamp']); //for notifications
       // }
     // }))
   },

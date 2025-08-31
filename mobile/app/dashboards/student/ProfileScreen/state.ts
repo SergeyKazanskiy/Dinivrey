@@ -1,9 +1,17 @@
 import { Store } from "../store";
 import { Student, Achievement, Test, Game, Event } from "../model";
-import { get_student, get_profile_achievements, get_last_test } from '../http';
+import { get_student, get_profile_achievements, get_last_test, save_notification_token } from '../http';
 import { get_last_game, get_upcoming_events, update_student_achieve} from '../http';
 import { effectNames, RuleLevels, eventTypes } from '../../../shared/constants';
 import { getTodayTimestamp, objectToJson } from '../../../shared/utils';
+import messaging from "@react-native-firebase/messaging";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert, Platform } from 'react-native';
+
+
+const TOKEN_KEY = "fcm_token";
+const TOKEN_TS_KEY = "fcm_token_timestamp";
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 
 export interface ProfileSlice {
@@ -19,9 +27,11 @@ export interface ProfileSlice {
   
   isBackDrawer: boolean;
 
+  saveNotificationToken: (student_id: number) => void;
+
   loadStudent: (studentId: number) => void;
   loadAchievements: (studentId: number) => void;
-
+  
   clickAchievement: (achievement_id: number) => void;
   detachAchievement: () => void;
 
@@ -48,10 +58,46 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   isBackDrawer: true,
 
 
-  loadStudent:(student_id: number,) => {
+  saveNotificationToken: async (student_id: number) => {
+    const now = Date.now();
+
+    if (Platform.OS === "web") { // only for test
+      const testToken = "web-test-token";
+      save_notification_token(student_id, { token: testToken }, (res => {
+        if (res.isOk) {
+            AsyncStorage.setItem(TOKEN_KEY, testToken);
+            AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
+          }
+      }));
+      return;
+    }
+
+    const storedToken = await AsyncStorage.getItem(TOKEN_KEY);
+    const storedTs = await AsyncStorage.getItem(TOKEN_TS_KEY);
+    const isExpired = !storedTs || now - parseInt(storedTs, 10) > WEEK_MS;
+
+    if (!storedToken || isExpired) {
+      try {
+        const newToken = await messaging().getToken(); // onTokenRefresh where?
+        save_notification_token(student_id, {token: newToken}, (res => {
+          if (res.isOk) {
+            AsyncStorage.setItem(TOKEN_KEY, newToken);
+            AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
+          }
+        }));
+      } catch (err) {
+        Alert.alert('FCM onTokenRefresh error:', JSON.stringify(err));
+      }
+    }
+  },
+
+  loadStudent:(student_id: number) => {
     
     get_student(student_id, (student: Student) => {
       if (student) {
+        const { saveNotificationToken }: ProfileSlice = get();
+        saveNotificationToken(student_id);
+
         set({ student, student_id });
 
         const {loadAchievements}: ProfileSlice = get();

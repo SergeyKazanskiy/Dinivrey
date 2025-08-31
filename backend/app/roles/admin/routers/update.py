@@ -9,6 +9,7 @@ from sqlalchemy.future import select
 from sqlalchemy import delete, update
 from services.photo_storage import PhotoStorageService
 from services.AchievementService import AchievementService
+from services.NotificationService import NotificationService
 
 
 router = APIRouter()
@@ -75,12 +76,18 @@ async def update_student_test(student_id: int, test_id: int, data: schemas.TestU
         await CRUD.update(models.Test, test_id, fields, session)
 
         achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
+        if achievements_message["added"] or achievements_message["updated"]:
+            notifications = await NotificationService.send_notifications(session, [{'student_id': student_id, **achievements_message}])
+
         return {"score": score, 'time': data.value, 'achievements': achievements_message}
     else: 
         fields = schemas.TestUpdate(**{data.exam: data.value})
         await CRUD.update(models.Test, test_id, fields, session)
 
         achievements_message = await AchievementService.update_test_achievements(student_id, test_id, session)
+        if achievements_message["added"] or achievements_message["updated"]:
+            notifications = await NotificationService.send_notifications(session, [{'student_id': student_id, **achievements_message}])
+
         return {"score": data.value, 'achievements': achievements_message}
 
 

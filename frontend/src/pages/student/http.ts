@@ -47,13 +47,18 @@ export function get_student_achieves(student_id: number, callback: (achieves: Ac
   //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
 };
 
-// export function get_achieves(category: string, callback: (achieves: Achieve[]) => void) {
-//   return httpWrapper(() => api.get(`achieves?category=${category}`), callback);
-// };
-
 export function get_base_achieves(category: string, trigger: string, callback: (achieves: Achieve[]) => void) {
   return httpWrapper(() => api.get(`achieves?category=${category}&trigger=${trigger}`), callback);
 };
+
+export function get_notifications_count(student_id: number, callback: (count: number) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/notifications/count`), callback);
+};
+
+export function get_notifications(student_id: number, callback: (notifications: string[]) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/notifications`), callback);
+};
+
 
 // Update
 export function update_student(student_id: number, data: Partial<Student>, callback: (res: {isOk: boolean}) => void) {
@@ -118,4 +123,8 @@ export function delete_student_game(id: number, callback: (res: {isOk: boolean})
 
 export function detach_student_achieve(achieve_id: number, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.delete(`students/achievements/${achieve_id}`), callback);
+};
+
+export function delete_notifications(student_id: number, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.delete(`students/${student_id}/notifications`), callback);
 };

@@ -1,9 +1,12 @@
 from typing import List, Dict, Any
+from sqlalchemy import delete, insert, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from firebase_admin import messaging, exceptions as fb_exceptions
+from datetime import timedelta, datetime
+from models import Student, Notification
 
-from models import Student
+STORAGE_PERIOD_DAYS = 7
 
 # payloads = [
 #     {
@@ -11,7 +14,6 @@ from models import Student
 #         "added":   [{"name": "Speed", "level": 1, "rule": "Win race"}],
 #         "updated": [{"name": "Stamina", "level": 2, "rule": "Run 5 km"}]
 #     },
-#     ...
 # ]
 
 LEVELS = {
@@ -24,7 +26,7 @@ LEVELS = {
 
 # ======================= Privite =======================
 
-def _build_notifications(added, updated) -> list[str]:
+def _build_notifications(added, updated) -> List[str]:
     notifications = []
     for a in added:
         lvl = LEVELS.get(a["level"], str(a["level"]))
@@ -36,7 +38,7 @@ def _build_notifications(added, updated) -> list[str]:
 
     return notifications
 
-async def _send_to_student(token: str, notifications: list[str]):
+async def _send_to_student(token: str, notifications: List[str]):
     last_error = None
     for note in notifications:
         msg = messaging.Message(
@@ -55,6 +57,11 @@ async def _send_to_student(token: str, notifications: list[str]):
         "success": last_error is None,
         "error_message": last_error
     }
+
+async def add_new_notifications(student_id: int, data: List[str], db: AsyncSession):
+    notifications = [{"student_id": student_id, "notification": text} for text in data]
+    await db.execute(insert(Notification), notifications)
+    await db.commit()
 
 # ======================= Public =======================
 
@@ -76,68 +83,102 @@ class NotificationService:
 
         return {"isOk": True}
 
+    @staticmethod
+    async def send_notifications(session: AsyncSession, payloads: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+        sent, failed = [], []
 
-@staticmethod
-async def send_notifications(session: AsyncSession, payloads: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-    sent, failed = [], []
+        for payload in payloads:
+            student_id = payload["student_id"]
+            added = payload.get("added", [])
+            updated = payload.get("updated", [])
+            
+            result = await session.execute(
+                select(Student).where(Student.id == student_id)
+            )
+            student = result.scalars().first()
 
-    for payload in payloads:
-        student_id = payload["student_id"]
-        added = payload.get("added", [])
-        updated = payload.get("updated", [])
+            # if not student or not student.token_FCM:
+            #     failed.append({
+            #         "first_name": getattr(student, "first_name", None),
+            #         "second_name": getattr(student, "last_name", None),
+            #         "phone": getattr(student, "phone", None),
+            #         "achievements": added + updated,
+            #         "error_message": "Student not found or no token"
+            #     })
+            #     continue
 
-        result = await session.execute(
-            select(Student).where(Student.id == student_id)
+            # 1. Collect and send notifications
+            notifications = _build_notifications(added, updated)
+            # print("!!!!!_2", notifications)
+            await add_new_notifications(student_id, notifications, session)
+            # res = await _send_to_student(student.token_FCM, notifications)
+
+            # 2. Collect the achievements array for the answer
+            achievements = []
+            for a in added:
+                achievements.append({
+                    "isNew": True,
+                    "name": a["name"],
+                    "level": LEVELS.get(a["level"], str(a["level"])),
+                    "rule": a["rule"]
+                })
+            for u in updated:
+                achievements.append({
+                    "isNew": False,
+                    "name": u["name"],
+                    "level": LEVELS.get(u["level"], str(u["level"])),
+                    "rule": u["rule"]
+                })
+
+            # if res["success"]:
+            #     sent.append({
+            #         "first_name": student.first_name,
+            #         "second_name": student.last_name,
+            #         "phone": student.phone,
+            #         "achievements": achievements
+            #     })
+            # else:
+            #     student.token_FCM = None
+            #     failed.append({
+            #         "first_name": student.first_name,
+            #         "second_name": student.last_name,
+            #         "phone": student.phone,
+            #         "achievements": achievements,
+            #         "error_message": res["error_message"]
+            #     })
+
+        await session.commit()
+        return {"sent": sent, "failed": failed}
+
+    @staticmethod
+    async def delete_old_notifications(session: AsyncSession):
+        cutoff_date = datetime.now() - timedelta(days=STORAGE_PERIOD_DAYS)
+
+        await session.execute(
+            delete(Notification).where(Notification.created_at < cutoff_date)
         )
-        student = result.scalars().first()
+        await session.commit()
 
-        if not student or not student.token_FCM:
-            failed.append({
-                "first_name": getattr(student, "first_name", None),
-                "second_name": getattr(student, "last_name", None),
-                "phone": getattr(student, "phone", None),
-                "achievements": added + updated,
-                "error_message": "Student not found or no token"
-            })
-            continue
+    @staticmethod
+    async def delete_notifications(student_id: int, db: AsyncSession) -> bool:
+        await db.execute(
+            delete(Notification).where(Notification.student_id == student_id)
+        )
+        await db.commit()
+        return True    
 
-        # 1. Collect and send notifications
-        notifications = _build_notifications(added, updated)
-        res = await _send_to_student(student.token_FCM, notifications)
-
-        # 2. Collect the achievements array for the answer
-        achievements = []
-        for a in added:
-            achievements.append({
-                "isNew": True,
-                "name": a["name"],
-                "level": LEVELS.get(a["level"], str(a["level"])),
-                "rule": a["rule"]
-            })
-        for u in updated:
-            achievements.append({
-                "isNew": False,
-                "name": u["name"],
-                "level": LEVELS.get(u["level"], str(u["level"])),
-                "rule": u["rule"]
-            })
-
-        if res["success"]:
-            sent.append({
-                "first_name": student.first_name,
-                "second_name": student.last_name,
-                "phone": student.phone,
-                "achievements": achievements
-            })
-        else:
-            student.token_FCM = None
-            failed.append({
-                "first_name": student.first_name,
-                "second_name": student.last_name,
-                "phone": student.phone,
-                "achievements": achievements,
-                "error_message": res["error_message"]
-            })
-
-    await session.commit()
-    return {"sent": sent, "failed": failed}
+    @staticmethod
+    async def get_notifications(student_id: int, db: AsyncSession) -> List[str]:
+        result = await db.execute(
+            select(Notification.notification)
+            .where(Notification.student_id == student_id)
+            .order_by(Notification.created_at.desc())
+        )
+        return [row[0] for row in result.all()]
+    
+    @staticmethod
+    async def get_notifications_count(student_id: int, db: AsyncSession) -> int:
+        result = await db.execute(
+            select(func.count()).where(Notification.student_id == student_id)
+        )
+        return result.scalar_one()

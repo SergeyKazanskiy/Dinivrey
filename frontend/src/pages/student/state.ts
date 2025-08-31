@@ -5,7 +5,7 @@ import { ProfileSlice } from './store/ProfileSlice';
 import { AddressSlice } from './store/AddressSlice';
 import { GroupsSlice } from './store/GroupsSlice';
 import { ParentsSlice } from './store/ParentsSlice';
-import { update_student } from './http';
+import { update_student, get_notifications_count, get_notifications } from './http';
 import { getChanges, getCurrentYear, getCurrentMonth } from '../../shared/utils';
 import { Normalize, normalizeObject, objectToJson } from '../../shared/utils';
 import { update_student_parents, get_base_achieves } from './http';
@@ -36,6 +36,9 @@ export interface StateSlice {
 
     loadAchieves: () => void;
     loadBaseAchieves: (category: string) => void;
+
+    loadNotificationsCount: (studentId: number) => void;
+    loadNotifications: (studentId: number) => void;
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
@@ -165,6 +168,17 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         });
     },
 
+    loadNotificationsCount: (studentId: number) => {
+        get_notifications_count(studentId, (count: number) => {
+            set({notifications_count: count});
+        })
+    },
+
+    loadNotifications: (studentId: number) => {
+        get_notifications(studentId, (notifications: string[]) => {
+            set({notifications});
+        })
+    },
 
     updateStudent:(completed: (student: StudentShort) => void) => {
         const { isProfileChanged, isAddressChanged, isGroupsChanged }: ProfileSlice & AddressSlice & GroupsSlice= get();

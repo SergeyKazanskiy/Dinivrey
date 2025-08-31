@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html
 from models.base import Base
@@ -12,9 +12,12 @@ from roles.manager.routers import manager_select, manager_create, manager_update
 
 from fastapi.staticfiles import StaticFiles
 from auth.auth_utils import get_decoded_token
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from services.NotificationService import NotificationService
 
 
 app = FastAPI()
+# scheduler = AsyncIOScheduler()
 
 app.add_middleware(
     CORSMiddleware,
@@ -55,6 +58,10 @@ app.include_router(manager_select, prefix="/manager_api", dependencies=[Depends(
 app.include_router(manager_create, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
 app.include_router(manager_update, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
 app.include_router(manager_delete, prefix="/manager_api", dependencies=[Depends(get_decoded_token)])
+
+# scheduler.add_job(NotificationService.delete_old_notifications, "interval", weeks=1)
+# scheduler.start()
+
 
 @app.get("/redoc", include_in_schema=False)
 async def custom_redoc_html():
