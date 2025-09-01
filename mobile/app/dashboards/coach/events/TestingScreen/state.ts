@@ -139,12 +139,6 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
         }));
     },
 
-    showNotificationsModal:() => {
-        // const { student_id, loadNotifications }: StateSlice = get();
-        // loadNotifications(student_id);
-
-        set({isNotificationsModal: true});
-    },
-
+    showNotificationsModal:() => { set({isNotificationsModal: true})},
     hideNotificationsModal:() => set({isNotificationsModal: false, notifications: []}),
 });

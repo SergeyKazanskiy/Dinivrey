@@ -13,11 +13,15 @@ import { objectToJson } from '@/app/shared/utils';
 import { useAuthState } from '../../../shared/http/state';
 import { CalendarView } from '../EventsScreen/views/CalendarView';
 import { EventsView as EventsView2 } from '../EventsScreen/views/EventsView';
+import { CustomAlert } from '../../../shared/components/CustomAlert';
+import { NotificationsView } from './views/NotificationsView';
 
 
 const ProfileScreen = () => {
+  const { student, last_test, last_game, isNotificationsModal } = useStore();
+
   const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
-  const { student, last_test, last_game, loadTest, loadGame, loadEvent, setBackDrawer } = useStore();
+  const { loadTest, loadGame, loadEvent, setBackDrawer, hideNotificationsModal } = useStore();
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
   const { userId } = useAuthState();
@@ -100,6 +104,11 @@ const ProfileScreen = () => {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <ScrollView style={styles.container}>
+        <CustomAlert visible={isNotificationsModal} title="Notifications!"
+          onClose={hideNotificationsModal}>
+          <NotificationsView/>
+        </CustomAlert>
+
         <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
 
         <StatisticView
