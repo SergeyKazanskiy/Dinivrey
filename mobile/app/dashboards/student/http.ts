@@ -38,6 +38,18 @@ export function get_upcoming_events(group_id: number, callback: (events: Event[]
     return httpWrapper(() => api.get(`camps/groups/${group_id}/events/upcoming`), callback);
 };
 
+// Notifications
+export function get_notifications_count(student_id: number, callback: (count: number) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/notifications/count`), callback);
+};
+
+export function get_notifications(student_id: number, callback: (notifications: string[]) => void) {
+  return httpWrapper(() => api.get(`students/${student_id}/notifications`), callback);
+};
+
+export function delete_notifications(student_id: number, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.delete(`students/${student_id}/notifications`), callback);
+};
 
 // Statistics
 export function get_student_tests(student_id: number, year: number, month: number, callback: (tests: Test[]) => void) {

@@ -13,7 +13,9 @@ export type Props = {
 };
 
 export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
-    const { profile_achievements, student, last_test } = useStore();
+    const { profile_achievements, student, last_test, notifications } = useStore();
+    const { showNotificationsModal } = useStore();
+
     const values = [
         last_test.climbing || 0,
         last_test.stamina || 0,
@@ -34,7 +36,13 @@ export const AchievesView: React.FC<Props> = ({ onClick, onAddClick }) => {
                 />
             </View>
             <View style={styles.mainComponentsV}>
-                <Text style={styles.studentName}>{student.first_name} {student.last_name.charAt(0)}.</Text>
+                <View style={{flexDirection:'row', justifyContent: 'flex-start'}}>
+                    <Text style={styles.studentName}>{student.first_name} {student.last_name.charAt(0)}.</Text>
+                    {notifications.length > 0 && <Ionicons name='mail-unread-outline' size={22} color='#D1FF4D' style={{ marginRight: 8, marginTop: -1 }}
+                        onPress={showNotificationsModal}
+                    />}
+                </View>
+
                 <View style={{flexDirection:'row'}}>
                     <View style={styles.studentTeam}>
                         <View style={{position: "relative", alignItems: 'center'}}>

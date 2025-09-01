@@ -2,6 +2,7 @@ import { Store } from "../store";
 import { Student, Achievement, Test, Game, Event } from "../model";
 import { get_student, get_profile_achievements, get_last_test, save_notification_token } from '../http';
 import { get_last_game, get_upcoming_events, update_student_achieve} from '../http';
+import { get_notifications_count, get_notifications, delete_notifications } from '../http';
 import { effectNames, RuleLevels, eventTypes } from '../../../shared/constants';
 import { getTodayTimestamp, objectToJson } from '../../../shared/utils';
 import messaging from "@react-native-firebase/messaging";
@@ -27,6 +28,10 @@ export interface ProfileSlice {
   
   isBackDrawer: boolean;
 
+  isNotificationsModal: boolean;
+  notifications: string[];
+ 
+
   saveNotificationToken: (student_id: number) => void;
 
   loadStudent: (studentId: number) => void;
@@ -39,6 +44,10 @@ export interface ProfileSlice {
   finishAdding: () => void;
 
   setBackDrawer: (isBackDrawer: boolean) => void;
+
+  loadNotifications: (studentId: number) => void;
+  showNotificationsModal: () => void;
+  hideNotificationsModal: () => void;
 }
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
@@ -57,6 +66,8 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
   isBackDrawer: true,
 
+  isNotificationsModal: false,
+  notifications: ['⭐ Great progress! Your achievement Speed has been upgraded to Mythic'],
 
   saveNotificationToken: async (student_id: number) => {
     const now = Date.now();
@@ -95,8 +106,9 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     
     get_student(student_id, (student: Student) => {
       if (student) {
-        const { saveNotificationToken }: ProfileSlice = get();
+        const { saveNotificationToken, loadNotifications }: ProfileSlice = get();
         saveNotificationToken(student_id);
+        loadNotifications(student_id);
 
         set({ student, student_id });
 
@@ -166,5 +178,25 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     set({ isAchievementAdding: false });
   },
 
-   setBackDrawer: (isBackDrawer: boolean) => set({isBackDrawer})
+   setBackDrawer: (isBackDrawer: boolean) => set({isBackDrawer}),
+
+  loadNotifications: (studentId: number) => {
+    get_notifications(studentId, (notifications: string[]) => {
+      alert(objectToJson(notifications))
+
+      set({notifications});
+    })
+  },
+
+  showNotificationsModal:() => set({isNotificationsModal: true}),
+
+  hideNotificationsModal:() => {
+    const { student_id }: ProfileSlice = get();
+    delete_notifications(student_id, (res => {
+        if (res.isOk) {
+            set({notifications: [], notifications_count: 0});
+        }
+    }));
+    set({isNotificationsModal: false})
+  }, 
 });
