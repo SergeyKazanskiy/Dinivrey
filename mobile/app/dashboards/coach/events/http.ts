@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../../shared/http/httpWrapper';
 import { api } from '../../../api/coach_api';
-import { Attendance, Test, Game, Event, Tester, Student, Schedule, Gamer } from './model';
+import { Attendance, Test, Game, Event, Tester, Student, Schedule, Gamer, Notification } from './model';
 import { EventDrill, ShortDrill, Drill, TestUpdate, GroupEvent, AttendanceDataForReport } from './model';
 
 
@@ -89,7 +89,8 @@ export function delete_student_test(id: number, callback: (res: {isOk: boolean})
     return httpWrapper(() => api.delete(`students/tests/${id}`), callback);
 };
 
-export function update_student_test(student_id: number, test_id: number, data: TestUpdate, callback: (res: {"score": number, 'time'?: number}) => void) {
+export function update_student_test(student_id: number, test_id: number, data: TestUpdate,
+    callback: (res: {"score": number, 'time'?: number, "notifications": Notification[]}) => void) {
     return httpWrapper(() => api.put(`students/${student_id}/tests/${test_id}`, data), callback);
 };
 

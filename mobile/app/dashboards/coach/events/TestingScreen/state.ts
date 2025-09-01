@@ -1,5 +1,5 @@
 import { Store } from "../store";
-import { Tester, Test, TestUpdate } from "../model";
+import { Tester, Test, TestUpdate, Notification } from "../model";
 import { get_testers, update_student_test, add_all_present_students_new_tests } from '../http';
 import { NumericFields, objectToJson } from '../../../../shared/utils';
 import { EventsSlice } from '../EventsScreen/state';
@@ -16,6 +16,9 @@ export interface TestingSlice {
     tester_id: number;
     examValue: number;
 
+    notifications: Notification[];
+    isNotificationsModal: boolean;
+
     selectMenu: (item: string) => void;
     loadTesters: () => void;
     selectExam: (test: NumericFields<Tester>) => void;
@@ -25,6 +28,9 @@ export interface TestingSlice {
 
     closeModal: () => void;
     updateTest: (examValue: number) => void;
+
+    showNotificationsModal:() => void;
+    hideNotificationsModal:() => void;
 }
 
 export const createTestingSlice = (set: any, get: () => Store): TestingSlice => ({
@@ -38,6 +44,8 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
     tester_id: 0,
     examValue: 0,
 
+    notifications: [],
+    isNotificationsModal: false,
 
     selectMenu: (item: string) => {
         if (item === 'Add participants') {
@@ -107,6 +115,8 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
         }
         //alert(objectToJson(data))
         update_student_test(tester.id, tester.test_id, data, (res => {
+            alert(objectToJson(res))
+
             if (res) {
                 tester[exam] = res.score;
                 if (res.time) tester[exam + '_time'] = res.time;
@@ -116,7 +126,25 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
                     testers: state.testers.map(el => el.id === tester_id ? tester : el),
                     isModal: false,
                 }));
+                if (res.notifications) {
+                    res.notifications.forEach(el => {
+                        el.added = el.achievements.filter(item => item.isNew).length;
+                        el.updated = el.achievements.filter(item => !item.isNew).length;
+                    });
+                    set((state: TestingSlice) => ({
+                        notifications: state.notifications.concat(res.notifications)
+                    }))
+                }
             }
         }));
     },
+
+    showNotificationsModal:() => {
+        // const { student_id, loadNotifications }: StateSlice = get();
+        // loadNotifications(student_id);
+
+        set({isNotificationsModal: true});
+    },
+
+    hideNotificationsModal:() => set({isNotificationsModal: false, notifications: []}),
 });

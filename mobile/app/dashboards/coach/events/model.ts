@@ -223,5 +223,18 @@ export interface AttendanceDataForReport {
     coach_id: number;
 }
 
+export interface Achieve {
+  isNew: boolean;
+  name: string;
+  level: string;
+  rule: string;
+}
 
-
+export interface Notification {
+    first_name: string;
+    second_name: string;
+    added?: number;
+    updated?: number;
+    achievements: Achieve[];
+    error_message?: string;
+}
