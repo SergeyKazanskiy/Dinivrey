@@ -1,8 +1,9 @@
 import { Store } from "../store";
-import { Tester, Test, TestUpdate, Notification } from "../model";
+import { Tester, TestUpdate } from "../model";
 import { get_testers, update_student_test, add_all_present_students_new_tests } from '../http';
 import { NumericFields, objectToJson } from '../../../../shared/utils';
 import { EventsSlice } from '../EventsScreen/state';
+import { AttendanceSlice } from "../AttendanceScreen/state";
 
 
 export interface TestingSlice {
@@ -16,8 +17,6 @@ export interface TestingSlice {
     tester_id: number;
     examValue: number;
 
-    notifications: Notification[];
-    isNotificationsModal: boolean;
 
     selectMenu: (item: string) => void;
     loadTesters: () => void;
@@ -28,9 +27,6 @@ export interface TestingSlice {
 
     closeModal: () => void;
     updateTest: (examValue: number) => void;
-
-    showNotificationsModal:() => void;
-    hideNotificationsModal:() => void;
 }
 
 export const createTestingSlice = (set: any, get: () => Store): TestingSlice => ({
@@ -44,8 +40,6 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
     tester_id: 0,
     examValue: 0,
 
-    notifications: [],
-    isNotificationsModal: false,
 
     selectMenu: (item: string) => {
         if (item === 'Add participants') {
@@ -131,14 +125,11 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
                         el.added = el.achievements.filter(item => item.isNew).length;
                         el.updated = el.achievements.filter(item => !item.isNew).length;
                     });
-                    set((state: TestingSlice) => ({
+                    set((state: AttendanceSlice) => ({
                         notifications: state.notifications.concat(res.notifications)
                     }))
                 }
             }
         }));
     },
-
-    showNotificationsModal:() => { set({isNotificationsModal: true})},
-    hideNotificationsModal:() => set({isNotificationsModal: false, notifications: []}),
 });

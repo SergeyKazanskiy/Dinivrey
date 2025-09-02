@@ -275,6 +275,19 @@ export const createReportSlice = (set: any, get: any): ReportSlice => ({
                 const complitedGamers: Gamer[] = gamers.map(el => ({...el, game_id: res.id, student_id: el.student_id | 0}))
 
                 add_event_game_gamers(complitedGamers, (res => {
+                    alert(objectToJson(res))
+
+                    
+                    if (res.notifications) {
+                        res.notifications.forEach(el => {
+                            el.added = el.achievements.filter(item => item.isNew).length;
+                            el.updated = el.achievements.filter(item => !item.isNew).length;
+                        });
+                        set((state: AttendanceSlice) => ({
+                            notifications: state.notifications.concat(res.notifications)
+                        }))
+                    }
+
                     callback(res.isOk);
                 }));
             }

@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter, Stack } from 'expo-router';
-import { StyleSheet, Platform, Text, FlatList, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SportsView } from './views/SportsView';
 import { TestersView } from './views/TestersView';
@@ -11,13 +10,11 @@ import { CustomNavbar } from '../../../../shared/components/CustomNavbar';
 import { ExamModal } from './views/ExamModal';
 import { HeaderMenu } from './views/HeaderMenu';
 import { formatDateTime } from '../../../../shared/utils';
-import { CustomAlert } from '../../../../shared/components/CustomAlert';
-import { NotificationsView } from './views/NotificationsView';
 
 
 export default function TestingScreen() {
-  const { event_timestamp, group_name, isNotificationsModal, notifications } = useStore();
-  const { loadTesters, selectMenu, showNotificationsModal, hideNotificationsModal } = useStore();
+  const { event_timestamp, group_name } = useStore();
+  const { loadTesters, selectMenu } = useStore();
 
   const [isMenu, setIsMenu] = useState(false);
   const router = useRouter();
@@ -33,16 +30,7 @@ export default function TestingScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <CustomNavbar title={`${group_name} (${formatDateTime(event_timestamp).date})`}
         onClick={() => router.back()}>
-
-        {notifications.length > 0 && <Ionicons name='mail-unread-outline' size={22} color='#D1FF4D' style={{ marginRight: 8, marginTop: -1 }}
-          onPress={showNotificationsModal}
-        />}
       </CustomNavbar>
-
-      <CustomAlert visible={isNotificationsModal} title="Notifications!"
-        onClose={hideNotificationsModal}>
-        <NotificationsView/>
-      </CustomAlert>
 
       <HeaderMenu isOpen={isMenu}
         items={['Add participants', 'Remove participants']}

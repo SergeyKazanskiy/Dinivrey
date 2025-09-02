@@ -15,14 +15,16 @@ import { isPast, isToday, isFuture, getWeekHourMinute} from '../../../../shared/
 import { ButtonsView } from './views/ButtonsView';
 import { DrillsView } from './views/DrillsView';
 import DrillsScreen from '../DrillsScreen';
+import { NotificationsView } from '../AttendanceScreen/views/NotificationsView';
 
 
 export default function AttendanceScreen() {
   const { isStudentsView, isAttendanceView, students, event_timestamp, isAllChecked, event_type, group_name } = useStore();
   const { studentsAmount, attendancesAmount, isSendingReport, isReportSent, wasReportSent, games, attendances} = useStore();
+  const { isNotificationsModal, notifications } = useStore();
   const { loadAttendances, addAttendances, deleteAttendances, setAllChecked, loadWasReportSent } = useStore();
   const { openDrillsModal, loadEventDrills, sendAttedanceReport, closeSuccessAlert, selectGameReport } = useStore();
-  const { loadGames } = useStore();
+  const { loadGames, showNotificationsModal, hideNotificationsModal } = useStore();
 
   const [isCreateAlert, setIsCreateAlert] = useState<boolean>(false);
   const [isDeleteAlert, setIsDeleteAlert] = useState<boolean>(false);
@@ -105,13 +107,19 @@ export default function AttendanceScreen() {
         <Text style={styles.alertText}>Deleting a list will delete all entered data.</Text>
       </CustomAlert>
 
+      <CustomAlert visible={isNotificationsModal} title="Notifications!"
+        onClose={hideNotificationsModal}>
+        <NotificationsView/>
+      </CustomAlert>
+
       <ButtonsView event_type={event_type}
         onAdd={openDrillsModal}
         onExam={()=>router.push(`/dashboards/coach/events/TestingScreen`)}
         onGame={()=>router.push(`/dashboards/coach/events/GamingScreen`)}
-
         games={games}
         onGameReport={(id)=>(selectGameReport(id), router.push(`/dashboards/coach/events/GameReport`))}
+        isNotifications={notifications.length > 0}
+        onNotifications={showNotificationsModal}
       />
 
       <ScrollView>

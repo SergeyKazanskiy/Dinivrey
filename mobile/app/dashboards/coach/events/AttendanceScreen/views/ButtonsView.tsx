@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { Button } from '@rneui/themed';
-import { PopoverButton } from '../../../../../shared/components/PopoverButton';
+import { Ionicons } from '@expo/vector-icons';
 import { SelectWrapper } from '../../../../../shared/components/SelectWrapper';
 import { GamesMenu } from './GamesMenu';
 import { Game } from '../../model';
@@ -28,15 +28,21 @@ interface Props {
   onGame: () => void;
   games: Game[];
   onGameReport: (id_game: number) => void;
+  isNotifications: boolean;
+  onNotifications: () => void;
 }
 
-export function ButtonsView({ event_type, onAdd, onExam, onGame, games, onGameReport }: Props) {
+export function ButtonsView({ event_type, onAdd, onExam, onGame, games, onGameReport, isNotifications, onNotifications }: Props) {
   return (
     <View style= {styles.container}>
       <SelectButton label='Add drills' onPress={onAdd}/>
 
       <View style= {styles.section}>
-        <Text style={styles.text}>Go to </Text>
+        {isNotifications ?
+          <Ionicons name='mail-unread-outline' size={20} color='#D1FF4D' style={{ marginRight: 32 }}
+            onPress={onNotifications}/> :
+          <Text style={styles.text}>Go to </Text>
+        }
 
         { games.length === 0 && <SelectButton label='Game' onPress={onGame}/> }
 

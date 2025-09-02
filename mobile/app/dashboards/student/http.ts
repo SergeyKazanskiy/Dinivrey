@@ -5,7 +5,7 @@ import { Student, Achievement, Achieve, Test, Game, Event,
 
 
 // Profile
-export function save_notification_token(id: number, data: { "token": string }, callback: (res: {isOk: boolean}) => void) {
+export function save_notification_token(id: number, data: { "token_FCM": string }, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.post(`students/${id}/notification_token`, data), callback);
 };
 

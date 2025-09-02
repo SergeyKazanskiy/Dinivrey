@@ -55,11 +55,12 @@ export function add_attendances(data: {event_id: number, group_id: number}, call
 };
 
 export function update_attendance(attendance_id: number, data: {student_id?: number, present?: boolean, comment?: string},
-    callback: (res: {isOk: boolean}) => void) {
+    callback: (res: {isOk: boolean, "notifications": Notification[]}) => void) {
     return httpWrapper(() => api.put(`camps/events/attendances/${attendance_id}`, data), callback);
 };
 
-export function update_all_attendances(event_id: number, group_id: number, data: {present: boolean}, callback: (res: {isOk: boolean}) => void) {
+export function update_all_attendances(event_id: number, group_id: number, data: {present: boolean},
+    callback: (res: {isOk: boolean, "notifications": Notification[]}) => void) {
     return httpWrapper(() => api.put(`camps/events/${event_id}/groups/${group_id}/attendances`, data), callback);
 };
 
@@ -112,7 +113,7 @@ export function add_event_game(data: Omit<Game, 'id'>, callback: (res: {id: numb
     return httpWrapper(() => api.post(`camps/events/games`, data), callback);
 };
 
-export function add_event_game_gamers(data: Gamer[], callback: (res: {isOk: boolean}) => void) {
+export function add_event_game_gamers(data: Gamer[], callback: (res: {isOk: boolean, "notifications": Notification[]}) => void) {
     return httpWrapper(() => api.post(`camps/events/games/gamers`, data), callback);
 };
 

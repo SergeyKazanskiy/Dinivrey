@@ -67,14 +67,15 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   isBackDrawer: true,
 
   isNotificationsModal: false,
-  notifications: ['⭐ Great progress! Your achievement Speed has been upgraded to Mythic'],
+  notifications: [], //'⭐ Great progress! Your achievement Speed has been upgraded to Mythic'
+
 
   saveNotificationToken: async (student_id: number) => {
     const now = Date.now();
 
     if (Platform.OS === "web") { // only for test
       const testToken = "web-test-token";
-      save_notification_token(student_id, { token: testToken }, (res => {
+      save_notification_token(student_id, { token_FCM: testToken }, (res => {
         if (res.isOk) {
             AsyncStorage.setItem(TOKEN_KEY, testToken);
             AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
@@ -90,7 +91,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     if (!storedToken || isExpired) {
       try {
         const newToken = await messaging().getToken(); // onTokenRefresh where?
-        save_notification_token(student_id, {token: newToken}, (res => {
+        save_notification_token(student_id, {token_FCM: newToken}, (res => {
           if (res.isOk) {
             AsyncStorage.setItem(TOKEN_KEY, newToken);
             AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());

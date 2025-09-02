@@ -23,7 +23,7 @@ router = APIRouter()
 async def add_event_game(data: schemas.GameCreate, session: AsyncSession = Depends(get_session)):
     return {"id": await CRUD.add(models.Game, data, session)}
 
-@router.post("/camps/events/games/gamers", response_model=schemas.ResponseOk, tags=["Coach"])
+@router.post("/camps/events/games/gamers", tags=["Coach"])
 async def add_event_game_gamers(data: List[schemas.GamerCreate], session: AsyncSession = Depends(get_session)):
 
     stmt = insert(models.Gamer).values([item.model_dump() for item in data])
@@ -43,7 +43,7 @@ async def add_event_game_gamers(data: List[schemas.GamerCreate], session: AsyncS
         if achievements["added"] or achievements["updated"]:
             notifications.append({'student_id': row[0], **achievements});
 
-    notifications_report = NotificationService.send_notifications(notifications)
+    notifications_report = await NotificationService.send_notifications(session, notifications)
     return {"isOk": True, 'notifications': notifications_report}
 
 # Attendances
