@@ -81,3 +81,7 @@ class AchieveResponse(BaseModel):
 
 class AchieveUpdate(BaseModel):
     in_profile: bool
+
+class TokenUpdate(BaseModel):
+    token_FCM: str
+

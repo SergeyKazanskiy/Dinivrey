@@ -91,71 +91,6 @@ class NotificationService:
 
         return {"isOk": True}
 
-    @staticmethod
-    async def send_notifications1(session: AsyncSession, payloads: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-        sent, failed = [], []
-
-        for payload in payloads:
-            student_id = payload["student_id"]
-            added = payload.get("added", [])
-            updated = payload.get("updated", [])
-            
-            result = await session.execute(
-                select(Student).where(Student.id == student_id)
-            )
-            student = result.scalars().first()
-
-            if not student or not student.token_FCM:
-                failed.append({
-                    "first_name": getattr(student, "first_name", None),
-                    "second_name": getattr(student, "last_name", None),
-                    "phone": getattr(student, "phone", None),
-                    "achievements": added + updated,
-                    "error_message": "Student not found or no token"
-                })
-                continue
-
-            # 1. Collect and send notifications
-            notifications = _build_notifications(added, updated)
-            await add_new_notifications(student_id, notifications, session)
-            res = await _send_to_student(student.token_FCM, notifications)
-
-            # 2. Collect the achievements array for the answer
-            achievements = []
-            for a in added:
-                achievements.append({
-                    "isNew": True,
-                    "name": a["name"],
-                    "level": LEVELS.get(a["level"], str(a["level"])),
-                    "rule": a["rule"]
-                })
-            for u in updated:
-                achievements.append({
-                    "isNew": False,
-                    "name": u["name"],
-                    "level": LEVELS.get(u["level"], str(u["level"])),
-                    "rule": u["rule"]
-                })
-
-            if res["success"]:
-                sent.append({
-                    "first_name": student.first_name,
-                    "second_name": student.last_name,
-                    "phone": student.phone,
-                    "achievements": achievements
-                })
-            else:
-                student.token_FCM = None
-                failed.append({
-                    "first_name": student.first_name,
-                    "second_name": student.last_name,
-                    "phone": student.phone,
-                    "achievements": achievements,
-                    "error_message": res["error_message"]
-                })
-
-        await session.commit()
-        return {"sent": sent, "failed": failed}
 
     @staticmethod
     async def send_notifications(session: AsyncSession, payloads: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
@@ -165,7 +100,7 @@ class NotificationService:
             student_id = payload["student_id"]
             added = payload.get("added", [])
             updated = payload.get("updated", [])
-
+            
             # Достаём студента
             result = await session.execute(select(Student).where(Student.id == student_id))
             student = result.scalars().first()
@@ -182,14 +117,21 @@ class NotificationService:
                 for a in items
             ]
 
-            # Если студент не найден или нет токена
-            if not student or not student.token_FCM:
-                notifications.append(_make_notification(student, achievements, "Student not found or no token"))
+            # Если студент не найден
+            if not student:
+                notifications.append(_make_notification(student, achievements, "Student not found"))
+                continue
+
+            # Сохраняем уведомления в базе
+            built_notifications = _build_notifications(added, updated)
+            await add_new_notifications(student_id, built_notifications, session)
+
+            # Если у студента не нет токена
+            if not student.token_FCM:
+                notifications.append(_make_notification(student, achievements, "Student has no token for notification"))
                 continue
 
             # Отправляем пуши
-            built_notifications = _build_notifications(added, updated)
-            await add_new_notifications(student_id, built_notifications, session)
             res = await _send_to_student(student.token_FCM, built_notifications)
 
             if res["success"]:

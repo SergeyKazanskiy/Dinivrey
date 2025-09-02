@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { Student, Attendance, Test, AttendanceDataForReport, Game } from '../model';
+import { Student, Attendance, Test, AttendanceDataForReport, Game, Notification } from '../model';
 import { get_attendances, get_students_names, add_student_test, delete_student_test } from '../http';
 import { add_attendances, update_attendance, delete_attendances, update_all_attendances } from '../http';
 import { add_all_present_students_new_tests, send_attendance_report, get_is_report, get_event_games } from '../http';
@@ -29,6 +29,10 @@ export interface AttendanceSlice {
     games: Game[];
     game_id: number;
 
+    notifications: Notification[];
+    isNotificationsModal: boolean;
+
+
     loadAttendances:() => void;
     loadStudentsNames: (group_id: number) => void;
 
@@ -46,6 +50,9 @@ export interface AttendanceSlice {
 
     loadGames: () => void; // for reports
     selectGameReport: (game_id: number) => void;
+
+    showNotificationsModal:() => void;
+    hideNotificationsModal:() => void;
 }
 
 export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
@@ -73,6 +80,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
 
     games: [],
     game_id: 0,
+
+    notifications: [],
+    isNotificationsModal: false,
 
 
     loadAttendances: () => {
@@ -111,6 +121,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         if (attendance) {
             update_attendance(attendance_id, {student_id: attendance.student_id, present: !attendance.present}, (res) => {
                 if (res.isOk) {
+                    alert(objectToJson(res))
+
+                    
                     const currentEvent = events_shedules.find(el => el.id === event_id);
 
                     if (currentEvent && currentEvent.type === 'Exam') {
@@ -151,6 +164,16 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                         attendance_id, attendancesAmount,
                         attendances: attendances.map(el => el.id === attendance_id ? attendance : el),
                     });
+
+                    if (res.notifications.length > 0) {
+                        res.notifications.forEach(el => {
+                            el.added = el.achievements.filter(item => item.isNew).length;
+                            el.updated = el.achievements.filter(item => !item.isNew).length;
+                        });
+                        set((state: AttendanceSlice) => ({
+                            notifications: state.notifications.concat(res.notifications)
+                        }))
+                    }
                 }
             });
         };
@@ -171,8 +194,18 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
                     
                 if (currentEvent && currentEvent.type === 'Exam') {
                     add_all_present_students_new_tests(event_id, group_id, (res) => {
-                        alert('isOk')
+                        //alert('isOk')
                     })
+                }
+
+                if (res.notifications.length > 0) {
+                    res.notifications.forEach(el => {
+                        el.added = el.achievements.filter(item => item.isNew).length;
+                        el.updated = el.achievements.filter(item => !item.isNew).length;
+                    });
+                    set((state: AttendanceSlice) => ({
+                        notifications: state.notifications.concat(res.notifications)
+                    }))
                 }
             }
         });
@@ -259,6 +292,9 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         })
     },
 
-    selectGameReport: (game_id: number) => set({game_id})
+    selectGameReport: (game_id: number) => set({game_id}),
+
+    showNotificationsModal:() => { set({isNotificationsModal: true})},
+    hideNotificationsModal:() => set({isNotificationsModal: false, notifications: []}),
 });
 
