@@ -103,6 +103,13 @@ async def add_all_present_students_new_tests(event_id: int, group_id: int, sessi
 async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSession = Depends(get_session)):
     id = await CRUD.add(models.Achievement, data, session)
     achieve = await CRUD.read(models.Achieve, data.achieve_id, session)
+
+    await NotificationService.send_notifications(session, [{
+        'student_id': data.student_id,
+         "added": [{"name": achieve.name, "level": data.level, "rule": ""}],
+         "updated": []
+        }])
+
     return {
         "id": id,
         "achieve_id": data.achieve_id,
@@ -113,6 +120,7 @@ async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSes
         "level": data.level,
         "effect": achieve.effect
     }
+
 
 # Events
 @router.post("/camps/events", response_model=schemas.ResponseId, tags=["Coach"])

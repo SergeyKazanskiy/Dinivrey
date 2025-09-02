@@ -9,6 +9,7 @@ from crud import CRUD
 from roles.admin import schemas 
 import models
 from .read import get_coache_groups
+from services.NotificationService import NotificationService
 
 
 router = APIRouter()
@@ -88,6 +89,13 @@ async def add_student_game(data: schemas.GamerCreate, session: AsyncSession = De
 async def add_student_achieve(data: schemas.AchievementCreate, session: AsyncSession = Depends(get_session)):
     id = await CRUD.add(models.Achievement, data, session)
     achieve = await CRUD.read(models.Achieve, data.achieve_id, session)
+
+    await NotificationService.send_notifications(session, [{
+        'student_id': data.student_id,
+         "added": [{"name": achieve.name, "level": data.level, "rule": ""}],
+         "updated": []
+        }])
+    
     return {
         "id": id,
         "image": achieve.image,
