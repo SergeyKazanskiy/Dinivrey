@@ -18,11 +18,12 @@ export const SchedulePage: React.FC = () => {
         <VStack >
             <CampsView/>
 
-            <Box h='740px' w='1120px' display='flex' flexDirection='column' flexWrap='wrap' pl={2} gap={4}>
+            <Box h='740px' w='1120px' display='flex'
+                flexDirection='column' flexWrap='wrap' alignContent='flex-start' pl={2} gap={4}>
                 {days.length > 0 &&
                     <> 
                         {days.map(day => (
-                            <Box style={screenStyles.widget} w='546px' h='230px'>
+                            <Box style={screenStyles.widget} w='380px' h='230px'>
                                 <Box bg='gray.200' borderWidth={1} borderColor='gray.300' py={2} pl={4} w='100%'>
                                     <Text key={day.day} color='gray.700' fontSize={16} fontWeight={400}>
                                         {day.weekday}

@@ -47,6 +47,7 @@ async def get_groups_with_schedule(id: int, session: AsyncSession = Depends(get_
         group.description = f"{', '.join(times)}"
     return groups
 
+
 @router.get("/camps/groups/{id}/students", response_model=List[schemas.StudentShort], tags=["Admin_select"])
 async def get_students(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Student, session, filters={"group_id": id}, order_by="first_name")
@@ -435,19 +436,22 @@ async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_sessio
     stmt = (
         select( GS.id, GS.weekday, GS.hour, GS.minute, Group.name, Coach.first_name, Coach.last_name, Coach.camp_id, Camp.name)
             .join(GS, GS.group_id == Group.id)
-            .join(Coach, Coach.id == GS.coach_id)
+            .outerjoin(Coach, Coach.id == GS.coach_id)
             .join(Camp, Camp.id == Group.camp_id )
             .where(Camp.id == id)
-            .order_by(GS.weekday, GS.hour, GS.minute)
+            .order_by(GS.weekday, GS.hour, GS.minute) 
     )
     result = await session.execute(stmt)
     rows = result.all()
     schedule = []
     for row in rows:
-        coach_name = f"{row[5]} {row[6]}"
 
-        if row[7] != id:
-            coach_name += f" ({row[8]})"
+        if row[5] and row[6]:
+            coach_name = f"{row[5]} {row[6]}"
+            if row[7] != id:
+                 coach_name += f" ({row[8]})"
+        else:
+            coach_name = "" 
 
         schedule.append(
             schemas.CampScheduleResponse(

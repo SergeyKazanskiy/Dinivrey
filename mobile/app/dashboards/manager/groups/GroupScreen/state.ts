@@ -183,7 +183,7 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
   setDay: (weekday: number) => set({ weekday }),
 
   setTime: (h: number, m: number) => {
-      const { schedule_id, hour, minute, schedules, updateGroup, groups, groupInx }: GroupSlice & GroupsSlice= get();
+      const { schedule_id, hour, minute, schedules, updateGroup, groups, group_inx }: GroupSlice & GroupsSlice= get();
       
       if ( h !== hour) {
           update_group_schedule(schedule_id, {hour: h}, (res)=> {
@@ -192,7 +192,7 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
                   schedule.hour = h;
                   set({ hour: h });
       
-                  updateGroup(groups[groupInx].name, getDescription(schedules));
+                  updateGroup(groups[group_inx].name, getDescription(schedules));
               }
           })
       }
@@ -203,14 +203,14 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
                   schedule.minute = m;
                   set({ minute: m });
 
-                  updateGroup(groups[groupInx].name, getDescription(schedules));
+                  updateGroup(groups[group_inx].name, getDescription(schedules));
               }
           })
       }
   },
 
   createSchedule: () => {
-      const { group_id, weekday, updateGroup, groups, groupInx, coach_id }: GroupSlice & GroupsSlice = get();
+      const { group_id, weekday, updateGroup, groups, group_inx, coach_id }: GroupSlice & GroupsSlice = get();
       const hour = 16; const minute = 0;
       const schedule: Omit<Schedule, 'id'> = { group_id, weekday, hour, minute, coach_id }
       alert(objectToJson(schedule))
@@ -225,13 +225,13 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
                   schedule_id: res.id,
               }));
               const desc = weekDays[weekday - 1] + ' ' + hour + ' : 00'
-              updateGroup(groups[groupInx].name, desc);
+              updateGroup(groups[group_inx].name, desc);
           }
       })
   },
 
   deleteSchedule: () => {
-      const { schedule_id, updateGroup, groups, groupInx, schedules }: GroupSlice & GroupsSlice = get();
+      const { schedule_id, updateGroup, groups, group_inx, schedules }: GroupSlice & GroupsSlice = get();
 
       delete_group_schedule(schedule_id, (res) => {
           if (res.isOk) {
@@ -240,7 +240,7 @@ export const createGroupSlice = (set: any, get: any): GroupSlice => ({
                   schedule_id: 0
               }));
               const desc = getDescription(schedules);
-              updateGroup(groups[groupInx].name, desc);
+              updateGroup(groups[group_inx].name, desc);
           };
       });
   },
