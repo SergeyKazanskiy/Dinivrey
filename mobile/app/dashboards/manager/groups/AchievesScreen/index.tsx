@@ -52,6 +52,7 @@ export const AchievesScreen = () => {
         <AchievesSection title='Test achievements' category='Test' />
         <AchievesSection title='Game achievements' category='Game' />
         <AchievesSection title='Participate achievements' category='Participate' />
+        <AchievesSection title="Additional rewards" category='Additional' />  
       </ScrollView>
       
       <Text style={[screenStyles.gold, styles.summary]}

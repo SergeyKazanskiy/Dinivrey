@@ -16,8 +16,8 @@ export function SchedulesView({ day, weekday }: {day: number, weekday: string}) 
   }, []);
  
   const columns = [
-    {name: 'time', title: 'Time', width: '20%'},
-    {name: 'group', title: 'Group', width: '25%'},
+    {name: 'time', title: 'Time', width: '15%'},
+    {name: 'group', title: 'Group', width: '30%'},
     {name: 'coach', title: 'Coach', width: '55%'},
   ];
  

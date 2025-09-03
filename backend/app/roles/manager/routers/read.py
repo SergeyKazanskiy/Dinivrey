@@ -164,20 +164,24 @@ async def get_camp_schedule( id: int, session: AsyncSession = Depends(get_sessio
 
     stmt = (
         select( GS.id, GS.weekday, GS.hour, GS.minute, Group.id, Coach.first_name, Coach.last_name, Coach.camp_id, Camp.name)
-            .join(GS, GS.group_id == Group.id)
-            .join(Coach, Coach.id == GS.coach_id)
-            .join(Camp, Camp.id == Group.camp_id )
-            .where(Camp.id == id)
-            .order_by(GS.weekday, GS.hour, GS.minute)
+        .join(GS, GS.group_id == Group.id)
+        .outerjoin(Coach, Coach.id == GS.coach_id)  # ← заменил join на outerjoin
+        .join(Camp, Camp.id == Group.camp_id)
+        .where(Camp.id == id)
+        .order_by(GS.weekday, GS.hour, GS.minute)
     )
     result = await session.execute(stmt)
     rows = result.all()
     schedule = []
     for row in rows:
-        coach_name = f"{row[5]} {row[6]}"
+        first_name, last_name, coach_camp_id, camp_name = row[5], row[6], row[7], row[8]
 
-        if row[7] != id:
-            coach_name += f" ({row[8]})"
+        if first_name and last_name:
+            coach_name = f"{first_name} {last_name}"
+            if coach_camp_id != id:
+                coach_name += f" ({camp_name})"
+        else:
+            coach_name = ""  # если тренер не назначен
 
         schedule.append(
             schemas.CampScheduleResponse(

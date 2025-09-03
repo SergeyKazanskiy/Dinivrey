@@ -4,6 +4,9 @@ from database import get_session
 from crud import CRUD
 from roles.manager import schemas
 import models
+from sqlalchemy import delete, update
+from sqlalchemy.engine import CursorResult
+from services.photo_storage import PhotoStorageService
 
 router = APIRouter()
 
@@ -33,7 +36,25 @@ async def delete_achieve(id: int, session: Session = Depends(get_session)):
 # Coaches
 @router.delete("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
 async def delete_coach(id: int, session: Session = Depends(get_session)):
-    return {"isOk": await CRUD.delete(models.Coach, id, session)}
+
+    await session.execute(
+        update(models.GroupSchedule)
+        .where(models.GroupSchedule.coach_id == id)
+        .values(coach_id=0)
+    )
+
+    result: CursorResult = await session.execute(
+        delete(models.Coach).where(models.Coach.id == id)
+    )
+
+    await session.commit()
+
+    res = await PhotoStorageService.delete_coach_photo(id, session)
+    if not res.isOk:
+        raise HTTPException(status_code=res.error_code, detail=res.error_message)
+    
+    return {"isOk": result.rowcount > 0}
+
 
 @router.delete("/camps/coaches/groups/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
 async def remove_coach_group(id: int, session: Session = Depends(get_session)):

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import delete
+from sqlalchemy import delete, update
+from sqlalchemy.engine import CursorResult
 from database import get_session
 from crud import CRUD
 from roles.admin import schemas
@@ -98,11 +99,24 @@ async def delete_manager(id: int, session: Session = Depends(get_session)):
 @router.delete("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_coach(id: int, session: Session = Depends(get_session)):
 
-    result = await PhotoStorageService.delete_coach_photo(id, session)
-    if not result.isOk:
-        raise HTTPException(status_code=result.error_code, detail=result.error_message)
+    await session.execute(
+        update(models.GroupSchedule)
+        .where(models.GroupSchedule.coach_id == id)
+        .values(coach_id=0)
+    )
 
-    return {"isOk": await CRUD.delete(models.Coach, id, session)}
+    result: CursorResult = await session.execute(
+        delete(models.Coach).where(models.Coach.id == id)
+    )
+
+    await session.commit()
+
+    res = await PhotoStorageService.delete_coach_photo(id, session)
+    if not res.isOk:
+        raise HTTPException(status_code=res.error_code, detail=res.error_message)
+    
+    return {"isOk": result.rowcount > 0}
+
 
 @router.delete("/camps/coaches/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def remove_coach_group(id: int, session: Session = Depends(get_session)):
