@@ -59,6 +59,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 } else {
                     setRules([]);
                 }
+                //alert(category)
                 set({ isEditorOpened: true, achieveId: id, category });
             })
         }

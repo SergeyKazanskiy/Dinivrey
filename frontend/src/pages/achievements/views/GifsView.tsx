@@ -2,6 +2,7 @@ import { SimpleGrid, Box, IconButton, Text, VStack, Image, useDisclosure} from "
 import { widgetStyles } from '../../../shared/appStyles'
 import { useStore } from '../store';
 import { AddIcon } from '@chakra-ui/icons'
+import { ImagesPath } from '../../../shared/constants'
 
 
 export function GifsView() {
@@ -11,7 +12,7 @@ export function GifsView() {
   function onAddClick() {
     addGif()  
   }
-
+ //const gifSrc = ImagesPath + `/achieves/gifs/${image}.gif`;
   return (
       <VStack h='700px' align='start'>
         <Text style={widgetStyles.text} fontWeight="medium" mb='-8px'>Gifs</Text>
@@ -20,7 +21,7 @@ export function GifsView() {
             <Box borderColor='gray.400' borderWidth={1} borderRadius={8}
               bg={item === image ? 'gray.200' : 'unset' }
               onClick={() => setImage(item)}>
-              <Image src={`/achieves/images/${item}.png`} alt='GIF' borderRadius='full' boxSize='60px'mb={1}/>
+              <Image src={ImagesPath + `/achieves/images/${item}.png`} alt='GIF' borderRadius='full' boxSize='60px'mb={1} objectFit='cover'/>
             </Box>
           ))}
           <IconButton my='20px' ml='4px' borderRadius={20} variant='outline' colorScheme='blue'
