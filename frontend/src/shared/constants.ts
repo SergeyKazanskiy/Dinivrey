@@ -24,7 +24,9 @@ export const eventTypes = ["Game", "Exam", "Training"];
 
 export const AchieveCategories: string[] = ['Test', 'Game', 'Participate', 'Additional'];
 export const AchieveTypes: string[] = ['Manual', 'Automatic'];
-export const AchieveImages: string[] = ['alpinism', 'clock','award-2', 'award', 'dartboard', 'medal', 'rock', 'rocket'];
+export const AchieveImages: string[] = ['alpinism', 'clock','award-2', 'award', 'dartboard', 'medal', 'rock', 'rocket',
+  'route', 'climbing', 'muscle', 'tape', 'stopwatch', 'schedule', 'rope'
+];
 
 export const RuleSelections: string[] = ["Current", "Max", "Sum", "Count"];
 export enum RuleSelection {
