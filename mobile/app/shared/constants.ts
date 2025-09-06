@@ -55,3 +55,5 @@ export const TabIcons = {
   Gaming: 'trophy-outline',
   Drills:'cube-outline'
 }
+
+export const examColors: string[] = ['#FFD13A', '#FF006F', '#FF5E1A', '#23FFB2', '#48F3FF']
