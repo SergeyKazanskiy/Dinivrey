@@ -1,4 +1,6 @@
 import { EventType } from "../../shared/models/Event";
+import { NumericFields, objectToJson } from '../../shared/utils';
+
 
 export interface Student {
     id: number;
@@ -62,6 +64,8 @@ export type Test = {
   stamina_time: number;
   climbing_time: number;
 };
+
+export const TestFields: NumericFields<Lider>[] = ['speed', 'stamina', 'climbing', 'evasion', 'hiding']
 
 // Game
 export type Game = { 

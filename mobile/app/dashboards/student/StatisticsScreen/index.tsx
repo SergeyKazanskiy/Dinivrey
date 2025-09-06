@@ -10,11 +10,12 @@ import { ChartView } from './views/ChartView';
 import { DatesView } from './views/DatesView';
 import { TableView } from './views/TableView';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useAuthState } from '../../../shared/http/state';
 
 export default function StatisticsScreen() {
   const { timestamp,  metricName } = useStore();
   const { loadStatistics, togleStatistic } = useStore();
+  const { logoutStudent } = useAuthState();
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -46,6 +47,10 @@ export default function StatisticsScreen() {
           <Text style={[screenStyles.gold, styles.comment]}>Comment</Text>
         </>
       }
+      <Text style={{color: 'red', fontSize: 18, fontWeight: 600, alignSelf: 'center', paddingTop: 16}}
+        onPress={logoutStudent}>
+        Logout
+      </Text>
     </LinearGradient>
   );
 };

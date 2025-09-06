@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation, useRouter } from 'expo-router';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { SportsView } from './views/SportsView';
+import { HeaderView } from './views/HeaderView';
 import { LidersView } from './views/LidersView';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -39,7 +39,7 @@ export default function LidersScreen() {
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <View style={styles.container}>
-        <SportsView/>
+        <HeaderView/>
         <LidersView/>
       </View>
     </LinearGradient>
