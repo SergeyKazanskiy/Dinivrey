@@ -1,22 +1,28 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { ImagesPath } from '../../../shared/constants';
+import { RuleTests, ExamIcons } from '../../../shared/constants';
 
 
 export type ExamBannerProps = {
   value: number;
   color: string;
-  icon: any;
+  icon: string;
+  isSelected?: boolean
 };
 
-export const ExamBanner: React.FC<ExamBannerProps> = ({ value, color, icon }) => (
+export const ExamBanner: React.FC<ExamBannerProps> = ({ value, color, icon, isSelected }) => {
+
+  return(
   <View style={[styles.container, { backgroundColor: color }]}>
     <View style={styles.label}>
       <Text style={styles.value}>{value}</Text>
     </View>
-    
-    <Image source={icon} style={styles.icon} />
+    <View style={styles.icon}>
+      <Image source={ExamIcons[icon]} style={[styles.image, isSelected && {backgroundColor: '#fff'}]} />
+    </View>
   </View>
-);
+)};
 
 
 const styles = StyleSheet.create({
@@ -26,7 +32,6 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "space-between",
-    //paddingVertical: 6,
   },
   label: {
     backgroundColor: "#000",
@@ -43,8 +48,16 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   icon: {
-    width: 20,
-    height: 20,
-    tintColor: "#000",
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden"
+  },
+  image: {
+    height: 40,
+    width: 40,
+    backgroundColor: "#000",
   },
 });

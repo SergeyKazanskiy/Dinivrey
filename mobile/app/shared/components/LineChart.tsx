@@ -18,7 +18,6 @@ export function LineChart({ labels, values, w, h=200 }: Props) {
         data: values,
         color: (opacity = 1) => `rgba(209, 255, 77, ${opacity})`, //line color
         strokeWidth: 8,
-        //backgroundColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity * 0.5})`, 
       },
     ],
   };

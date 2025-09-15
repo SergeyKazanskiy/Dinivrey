@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import { widgetStyles, screenStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
-//import { RadarChart } from '../components/RadarChart';
+import { Ionicons } from '@expo/vector-icons';
 import { StatsIndicators } from '../../../../shared/components/StatsIndicators';
 import { RadarChart } from '../../../../shared/components/RadarChart';
 
@@ -14,7 +13,8 @@ export type Props = {
 };
 
 export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
-  const { last_test, last_game } = useStore();
+  const { last_test, last_game, notifications } = useStore();
+  const { showNotificationsModal } = useStore();
 
   return (
     <View style={styles.container}>
@@ -23,6 +23,10 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
           <View style={styles.box}>
             <Text style={styles.text2}>Statistics</Text>
           </View>
+          {notifications.length > 0 && <Ionicons name='mail-unread-outline'size={22}
+            color='#D1FF4D' style={{ marginLeft: 12, marginTop: -1 }}
+            onPress={showNotificationsModal}
+          />}
         </View>
         <RadarChart test={last_test} onExam={(exam)=>{}} onLiders={onLiders}/>
       </View>
@@ -64,10 +68,18 @@ export const StatisticView = ({ onExam, onGame, onLiders }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 12,
+    paddingBottom: 12
+  },
   container2: {
-    flex: 1,
+    marginTop: 6,
+    flexDirection: 'row',
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    paddingLeft: 28
   },
   box: {
     backgroundColor: "#000",
@@ -79,12 +91,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "600",
     color: "#fff",
-  },
-  container: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginTop: 12,
-    paddingBottom: 12
   },
   col: {
     paddingTop: 16,

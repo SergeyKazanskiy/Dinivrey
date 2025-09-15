@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity, FlatList, Text } from 'react-native';
 import { cellStyles, widgetStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
-import { EventCell } from '../../../../shared/components/EventCell';
+import { EventCell } from '../components/EventCell';
 import { formatDateTime } from '../../../../shared/utils';
 
 
@@ -23,16 +23,19 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
       {upcoming_events.length > 0 &&
         <FlatList data={upcoming_events}
           keyExtractor={(index) => '№' + index}
-          renderItem={({ item }) => 
+          renderItem={({ item }) => {
+          const time2 = item.timestamp + item.duration
 
-          <TouchableOpacity onPress={() => onClick(item.id, item.timestamp)}>
+          return (
+          // <TouchableOpacity onPress={() => onClick(item.id, item.timestamp)}>
             <EventCell
-              type={'Game'}
+              isSelected={false}
               date={formatDateTime(item.timestamp).date}
-              time={formatDateTime(item.timestamp).time}
+              time={formatDateTime(item.timestamp).time + ' - ' + formatDateTime(time2).time}
               desc={item.desc}
             />  
-          </TouchableOpacity>
+          // </TouchableOpacity>
+          )}
           } style={styles.list} />
       }
     </View>
@@ -42,7 +45,10 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 120
+    minHeight: 88,
+    borderBottomWidth: 1,
+    borderBottomColor: '#6F6F6F',
+    marginBottom: 20
   },
   summary: {    
     paddingTop: 20,

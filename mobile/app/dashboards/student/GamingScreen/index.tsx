@@ -58,7 +58,11 @@ export default function GamingScreen() {
 
   const returnBack = () => {
     setGamingScreen(false);
-    router.push('/dashboards/student/GamesScreen');
+    if (navigation.canGoBack()) {
+      router.back();
+    } else {
+      router.push('/dashboards/student/GamesScreen'); 
+    }
   };
 
   return (

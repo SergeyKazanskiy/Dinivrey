@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Modal, TouchableOpacity, View, LayoutRectangle, StyleSheet,
     Dimensions, StyleProp, TextStyle, ViewStyle, Platform} from 'react-native';
 import { Button } from '@rneui/themed';
+import { Ionicons } from '@expo/vector-icons';
 
 
 const screenWidth = Platform.OS === 'web' ? 360 : Dimensions.get('window').width;
@@ -10,18 +11,23 @@ type SelectWrapperProps = {
   label: string;
   buttonStyle: StyleProp<ViewStyle>;
   labelStyle: StyleProp<TextStyle>;
+  isIcon?: boolean;
+  onOpen?: () => void,
   children: (
     close: () => void,
     position: LayoutRectangle | null
   ) => React.ReactNode;
 };
 
-export const SelectWrapper: React.FC<SelectWrapperProps> = ({ label, buttonStyle, labelStyle, children }) => {
+export const SelectWrapper: React.FC<SelectWrapperProps> =
+  ({ label, buttonStyle, labelStyle, isIcon, onOpen, children }) => {
+
   const buttonRef = useRef<View>(null);
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState<LayoutRectangle | null>(null);
 
   const open = () => {
+    onOpen?.();
     buttonRef.current?.measureInWindow((x, y, width, height) => {
       setPosition({ x: 8, y: y + height + 4, width, height });
       setVisible(true);
@@ -31,14 +37,17 @@ export const SelectWrapper: React.FC<SelectWrapperProps> = ({ label, buttonStyle
   const close = () => setVisible(false);
 
   return (
-    <View ref={buttonRef} >
+    <View ref={buttonRef} style={{ flex: 1}} >
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
         <Button title={label}
-            type='outline' 
+            type='clear' 
             buttonStyle={buttonStyle}
             titleStyle={labelStyle}
             onPress={open}
         />
-      
+        {isIcon && <Ionicons name='chevron-down-outline' size={18} color="#777"
+          style={{marginRight: 5, marginTop: 5}} onPress={open} />}
+      </View>
       <Modal transparent visible={visible} animationType="fade" >
         <TouchableOpacity style={styles.backdrop} activeOpacity={1}
           onPress={close}

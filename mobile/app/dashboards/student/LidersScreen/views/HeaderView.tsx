@@ -7,36 +7,38 @@ import { TeamPanel } from '../../components/TeamPanel';
 import { useStore } from '../../store';
 import { examColors, RuleTests } from '../../../../shared/constants';
 import { TestFields } from '../../model';
+import { ImagesPath } from '../../../../shared/constants';
 
 
 export const HeaderView = () => { 
-  const { student, last_test } = useStore();
-  const { selectTest } = useStore();
+  const { student, last_test, level, percent, levelColor, group_name, currentExam } = useStore();
+  const { average, selectTest } = useStore();
 
   return (
     <View style={styles.container}>
       <View style={styles.avatar}>
         <View style={{zIndex: 100}}>
           <AvatarWrapper
-            avatar={require("../../../../../assets/images/kidIconExample1.png")}
-            level={3}
-            percent={0.65}
-            levelColor="#ADFF2F"
+            avatar={{uri: `${ImagesPath}/avatars/${student.avatar}.png`}}
+            level={level}
+            percent={percent}
+            levelColor={levelColor}
           />
         </View>
         <View style={{marginTop: -20, marginBottom: 10}}>
-          <ScoreBanner average={4.1}/>
+          <ScoreBanner average={average}/>
         </View>
       </View>
 
       <View style={styles.info}>
         <Text style={styles.name}>{student.first_name + ' ' + student.last_name}</Text>
-        <TeamPanel w={120} teamName="Group 11" fontS={14}/>
+        <TeamPanel w={152} teamName={group_name} fontS={14}/>
 
         <View style={styles.row}>
           {[last_test.speed, last_test.stamina, last_test.climbing, last_test.evasion, last_test.hiding].map((item, inx) => (
             <TouchableOpacity onPress={() => selectTest(TestFields[inx])}>
-               <ExamBanner value={item?? 0} color={examColors[inx]} icon={RuleTests[inx]} />
+               <ExamBanner value={item?? 0} color={examColors[inx]} icon={RuleTests[inx]}
+                isSelected={currentExam === TestFields[inx]}/>
             </TouchableOpacity>
           ))}
         </View>
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
     paddingBottom: 12
   },

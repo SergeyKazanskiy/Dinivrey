@@ -1,28 +1,100 @@
 import React from "react";
-import { StyleSheet, FlatList, ScrollView, View} from "react-native";
+import { StyleSheet, FlatList, Image, View, Text } from "react-native";
 import { useStore } from '../../store';
 import { LiderCell } from '../../../../shared/components/LiderCell';
+import { ExamBanner2 } from '../../components/ExamBanner2';
+import { examColors, RuleTests, ImagesPath } from '../../../../shared/constants';
+import { ScoreBanner2 } from '../../components/ScoreBanner2';
+import { objectToJson } from "@/app/shared/utils";
+import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
+import { LidersSlice } from "../state";
 
 
-export const LidersView = () => { 
-  const { liders, student_id } = useStore();
-    
+export const LidersView = () => {
+  const { liders, query } = useStore();
+
+  const filtered = liders.filter((lider) => {
+      const fullName = `${lider.first_name} ${lider.last_name}`.toLowerCase();
+
+      return (
+        lider.first_name.toLowerCase().includes(query.toLowerCase()) ||
+        lider.last_name.toLowerCase().includes(query.toLowerCase()) ||
+        fullName.includes(query.toLowerCase())
+      );
+    });
+  
   return (
-    <ScrollView style={styles.container}>
-        <FlatList data={liders} 
-            keyExtractor={(index) => index.toString()}
-            renderItem={({ item, index }) =>
-            <View style={item.id === student_id ? styles.itemSelected : styles.item}>
-              <LiderCell inx={index + 1} lider={item}/>
-            </View>    
-        }/>
-    </ScrollView>
+    <FlatList data={filtered} contentContainerStyle={{paddingBottom: 32}}
+      keyExtractor={(index) => index.toString()}
+      renderItem={({ item, index }) => {
+      const average=(item.speed + item.stamina + item.climbing + item.evasion + item.hiding) / 5
+      return (
+        <View style={[styles.cell, styles.item]}>
+          <View style={{flexDirection: "row"}}>
+            <Image style={styles.image} source={{uri: `${ImagesPath}/avatars/${item.avatar}.png`}} />
+          
+            <View style={{flexDirection: 'column', justifyContent: 'center', gap: 3}}>
+              <Text style={styles.name}>{item.first_name}</Text> 
+              <Text style={styles.name}>{item.last_name}</Text>               
+            </View>
+          </View>
+          
+          <View style={{flexDirection: "row", borderLeftWidth: 2, borderLeftColor: '#444'}}>
+            { item.achieves.length > 0 ? 
+              <AchieveIcon onClick={() => {}}
+                size={38}
+                image={item.achieves[0].image}
+                label={''}
+                level={item.achieves[0].level}
+              /> :
+              <Image source={require("../../../../../assets/images/achievementTest.png")}
+                style={{width: 40, height: 38, marginHorizontal: 4, marginTop: 3}}
+              />
+            }
+
+            <View style={styles.row}>
+              {[item.speed, item.stamina, item.climbing, item.evasion, item.hiding].map((item, inx) => (
+                <ExamBanner2 value={item?? 0} color={examColors[inx]} icon={RuleTests[inx]} />
+              ))}
+            </View>
+
+            <ScoreBanner2 average={average}/>
+          </View>
+        </View>
+      )}
+    }/>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    //marginTop: 60,
+  cell: {
+    backgroundColor: "#000",
+    borderRadius: 12,
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    paddingRight: 4,
+    paddingBottom:4,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderColor: '#ddd'
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 6,
+    gap: 6,
+    marginHorizontal: 4
+  },
+  image: {
+    height: 38,
+    width: 38,
+    borderRadius: 19,
+    marginTop: 4,
+    marginLeft: 4
+  },
+  name: {
+    color: "#fff",
+    fontSize: 11,
+    paddingHorizontal: 4
   },
   item: {
     marginVertical: 4

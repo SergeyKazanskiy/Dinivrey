@@ -69,6 +69,7 @@ export const createEventsSlice = (set: any, get: any): EventsSlice => ({
 
     loadEvents: (group_id: number, event_year: number, event_month: number) => {
         get_group_events(group_id, event_year, event_month, (events: Event[]) => {
+            //alert(objectToJson(events))
             const { event_id }: EventsSlice = get();
             var eventId: Number;
 

@@ -1,45 +1,37 @@
-import { useCallback, useLayoutEffect } from 'react';
+import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { useNavigation, useRouter } from 'expo-router';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet, Text } from 'react-native';
 import { HeaderView } from './views/HeaderView';
 import { LidersView } from './views/LidersView';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SearchBox } from './components/SearchBox';
+import { GroupsSelect } from './components/GroupsSelect';
 
 
 export default function LidersScreen() {
-  const { loadLiders } = useStore();
-
-  const navigation = useNavigation();
-  const router = useRouter();
-
+  const { student, query, camps, groups, camp_inx, loaded_group_name, group_name } = useStore();
+  const { loadLiders, setQuery, loadCamps, selectCamp, selectGroup } = useStore();
+  
   useFocusEffect(
     useCallback(() => {
-      loadLiders();
-    }, [])
+      loadLiders(student.group_id, group_name);
+    }, [student, group_name])
   );
-
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <Pressable style={{ marginRight: 15 }}
-  //         onPress={openGroupsScreen} >
-  //         <Ionicons name='folder-open' size={24} color="#D1FF4D" />
-  //       </Pressable>
-  //     ),
-  //   });
-  // }, [navigation]);
-  
-  // const openGroupsScreen = () => {
-  //   router.push("/dashboards/student/LidersScreen/GroupsScreen");
-  // };
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
       <View style={styles.container}>
         <HeaderView/>
+        <Text style={styles.title}>LEADER BOARD</Text> 
+
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', gap: 8, paddingBottom: 8}}>
+          <GroupsSelect placeholder="Team Filter" loaded_group_name={loaded_group_name}
+            camp_inx={camp_inx} camps={camps} groups={groups}
+            onOpen={loadCamps} onCamp={selectCamp} onGroup={selectGroup}  />
+          <SearchBox placeholder="Search Player" value={query} onChange={setQuery}  />
+        </View>
+        
         <LidersView/>
       </View>
     </LinearGradient>
@@ -56,4 +48,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  title: {
+    color: "#fff",
+    fontSize: 32,
+    fontWeight: "500",
+    paddingVertical: 12
+  },
 });
+
+
+
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <Pressable style={{ marginRight: 15 }}
+  //         onPress={openGroupsScreen} >
+  //         <Ionicons name='folder-open' size={24} color="#D1FF4D" />
+  //       </Pressable>
+  //     ),
+  //   });
+  // }, [navigation]);
+  
+  // const openGroupsScreen = () => {
+  //   router.push("/dashboards/student/LidersScreen/GroupsScreen");
+  // };

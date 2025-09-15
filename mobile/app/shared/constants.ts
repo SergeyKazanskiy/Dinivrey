@@ -24,8 +24,9 @@ export const eventTypes = ["Game", "Exam", "Training"];
 
 export const AchieveCategories: string[] = ['Test', 'Game', 'Participate', 'Additional'];
 export const AchieveTypes: string[] = ['Manual', 'Automatic'];
-export const AchieveImages: string[] = ['alpinism', 'clock','award-2', 'award', 'dartboard', 'medal', 'rock', 'rocket'];
-
+export const AchieveImages: string[] = ['alpinism', 'clock','award-2', 'award', 'dartboard', 'medal', 'rock', 'rocket',
+  'route', 'climbing', 'muscle', 'tape', 'stopwatch', 'schedule', 'rope'
+];
 export const RuleTypes: string[] = ['Common', 'Personal'];
 export const RuleLevels: string[] = ['Common', 'Rare', 'Epic', 'Mythic', 'Legendary'];
 
@@ -57,3 +58,19 @@ export const TabIcons = {
 }
 
 export const examColors: string[] = ['#FFD13A', '#FF006F', '#FF5E1A', '#23FFB2', '#48F3FF']
+
+export const ExamIcons: Record<string, any> = {
+  Speed: require("../../assets/images/exercise/Speed.png"),
+  Stamina: require("../../assets/images/exercise/Stamina.png"),
+  Climbing: require("../../assets/images/exercise/Climbing.png"),
+  Evasion: require("../../assets/images/exercise/Evasion.png"),
+  Hiding: require("../../assets/images/exercise/Hiding.png"),
+};
+
+export const ExamGradientColors: Record<string, any> = {
+  Speed: ['#3D3C0F', '#F0EE6E'],
+  Stamina: ['#3E172C', '#ED3496'],
+  Climbing: ['#715533', '#E79531'],
+  Evasion: ['#16420F', '#8DCB83'],
+  Hiding: ['#123d41ff', '#48F3FF'],
+};

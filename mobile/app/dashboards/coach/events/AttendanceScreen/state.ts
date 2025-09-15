@@ -103,6 +103,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
             } else {
                 const { loadStudentsNames }: AttendanceSlice = get();
                 loadStudentsNames(group_id);
+                set({ attendancesAmount: 0});
             }
         })
     },

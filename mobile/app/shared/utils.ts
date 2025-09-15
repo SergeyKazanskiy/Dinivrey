@@ -55,6 +55,16 @@ export function getMetric(key: string) {
     //console.log(formatted.date, formatted.time); // "Wed, 07 Feb" "14:30"
 }
 
+export function formatDate(timestamp: number): string {
+  const date = new Date(timestamp);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // месяцы с 0
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
 export function objectToJson<T>(obj: T): string {
   try {
     return JSON.stringify(obj, null, 2); // Преобразуем в JSON с отступами для читаемости

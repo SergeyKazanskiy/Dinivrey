@@ -1,20 +1,20 @@
-import { useCallback, useLayoutEffect, useEffect } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet, ScrollView, View } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { screenStyles } from '../../../shared/styles/appStyles';
 import { useStore } from '../store';
-import { CalendarView } from './views/CalendarView';
-import { ChartView } from './views/ChartView';
-import { DatesView } from './views/DatesView';
-import { TableView } from './views/TableView';
+import { ChartView2 } from './views/ChartView2';
+import { WrapperAlert } from './components/WrapperAlert';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuthState } from '../../../shared/http/state';
+import { HeaderView } from './views/HeaderView';
+import { ChartView } from './views/ChartView';
+
 
 export default function StatisticsScreen() {
-  const { timestamp,  metricName } = useStore();
-  const { loadStatistics, togleStatistic } = useStore();
+  const { timestamp,  metricName, student_id, isExamChartModal } = useStore();
+  const { hideExamChartModal, togleStatistic, loadLimitTests } = useStore();
   const { logoutStudent } = useAuthState();
 
   const navigation = useNavigation();
@@ -22,7 +22,7 @@ export default function StatisticsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadStatistics();
+      loadLimitTests(student_id, 3);
     }, [])
   );
 
@@ -37,20 +37,23 @@ export default function StatisticsScreen() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
-      <CalendarView/>
-      {timestamp > 0 &&
-        <>
-          <Text style={styles.metric}>{metricName}</Text>
-          <ChartView/>
-          <DatesView/>
-          <TableView/>
-          <Text style={[screenStyles.gold, styles.comment]}>Comment</Text>
-        </>
-      }
-      <Text style={{color: 'red', fontSize: 18, fontWeight: 600, alignSelf: 'center', paddingTop: 16}}
-        onPress={logoutStudent}>
-        Logout
-      </Text>
+      <WrapperAlert visible={isExamChartModal} 
+        onClose={hideExamChartModal}>
+          <View style={{height: 200, borderRadius: 16}}>
+            <ChartView/>
+          </View>
+      </WrapperAlert>
+
+      <ScrollView style={{paddingBottom: 64}}>
+        <HeaderView/>
+
+        <ChartView2/>
+
+        <Text style={{color: 'red', fontSize: 18, fontWeight: 600, alignSelf: 'center', paddingTop: 16}}
+          onPress={logoutStudent}>
+          Logout
+        </Text>
+      </ScrollView>
     </LinearGradient>
   );
 };

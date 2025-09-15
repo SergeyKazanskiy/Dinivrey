@@ -4,14 +4,15 @@ import { Text, ImageBackground, StyleSheet } from "react-native";
 
 type Props = {
   w: number;
+  h?: number;
   teamName: string;
   fontS?: number;
 };
 
-export const TeamPanel: React.FC<Props> = ({ w, teamName, fontS = 12 }) => (
+export const TeamPanel: React.FC<Props> = ({ w, h, teamName, fontS = 12 }) => (
   <ImageBackground
     source={require("../../../../assets/images/studentTeam-Back.png")}
-    style={[styles.background, {width: w}]}
+    style={[styles.background, {width: w}, {height: h}]}
     resizeMode='stretch'
   >
     <Text style={[styles.text, {fontSize:fontS}]}>{teamName}</Text>

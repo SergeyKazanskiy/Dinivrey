@@ -15,6 +15,7 @@ type Props = {
 
 const labels = ['Climbing', 'Endurance', 'Speed', 'Evading', 'Hiding'];
 const colors = ['#f59e0b', '#e81cbf', '#fef08a', '#4ade80', '#38bdf8'];
+const w = 65;
 
 export const StatsIndicators: React.FC<Props> = ({ stats }) => {
   const items: Stat[] = stats.map((value, index) => ({
@@ -24,7 +25,7 @@ export const StatsIndicators: React.FC<Props> = ({ stats }) => {
   }));
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container && {width: w}]}>
       {items.map((item, index) => (
         <View key={index} style={styles.itemContainer}>
           <View style={[styles.circle, { backgroundColor: item.color }]}>
@@ -38,14 +39,14 @@ export const StatsIndicators: React.FC<Props> = ({ stats }) => {
                 colors={[item.color, '#000']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                locations={[0, Math.max(Math.min(item.value / 6, 1), 0)]}
-                style={[ styles.bar,{ width: 75}]}
+                locations={[item.value / 20 , item.value / 10 + 0.4]}
+                style={[ styles.bar,{ width: w}]}
               />
 
-              <View style={{position: 'absolute', backgroundColor: item.color, height: 3, width: 75}}/>
+              <View style={{position: 'absolute', backgroundColor: item.color, height: 3, width: w}}/>
             </View>
 
-            <View style={{position: 'absolute', backgroundColor: item.color, height: 3, width: 75}}/>
+            <View style={{position: 'absolute', backgroundColor: item.color, height: 3, width: w}}/>
           </View>
 
           <Text style={styles.label}>{item.label}</Text>
@@ -59,7 +60,8 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 5,
     gap: 6,
-    width: 75
+    //backgroundColor: 'red'
+    //width: 75
   },
   itemContainer: {
     alignItems: 'flex-start',
@@ -97,7 +99,6 @@ const styles = StyleSheet.create({
     color: '#ddd',
     fontSize: 12,
     fontWeight: 600,
-    paddingHorizontal: 3,
     paddingVertical: 2,
     borderRadius: 2,
     overflow: 'hidden',

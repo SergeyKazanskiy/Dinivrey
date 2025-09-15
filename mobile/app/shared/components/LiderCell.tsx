@@ -27,15 +27,15 @@ export function getExerciseImage(imageName: string) {
         case 'Climbing':
             return require('../../../assets/images/exercise/Climbing.png');
         case 'Stamina':
-            return require('../../../assets/images/exercise/Endurance.png');
+            return require('../../../assets/images/exercise/Stamina.png');
         case 'Evading':
-            return require('../../../assets/images/exercise/Evading.png');
+            return require('../../../assets/images/exercise/Evasion.png');
         case 'Hiding':
             return require('../../../assets/images/exercise/Hiding.png');
         case 'Speed':
             return require('../../../assets/images/exercise/Speed.png');
         default:
-            return require('../../../assets/images/exercise/Evading.png'); 
+            return require('../../../assets/images/exercise/Evasion.png'); 
     }
 }
 
@@ -51,6 +51,7 @@ export const LiderCell: React.FC<Props> = ({ inx, lider }) => {
         <View style={styles.container}>
             <View style={styles.section}>
                 <Image style={styles.image} source={require('../../../assets/images/profile/student.png')} />
+
                 <View style={styles.info}>
                     <Text style={widgetStyles.title}>{lider.first_name}</Text>
                     <Text style={widgetStyles.title}>{lider.last_name}</Text>
