@@ -1,6 +1,6 @@
 import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from "../../api/student_api";
-import { Student, Achievement, Achieve, Test, Game, Event,
+import { Student, Achievement, Achieve, Test, Game, Event, Camp,
     Schedule, Lider, Group, GameReport, Gamer, Team } from './model';
 
 
@@ -13,6 +13,10 @@ export function get_student(id: number, callback: (student: Student) => void) {
     return httpWrapper(() => api.get(`students/${id}`), callback);
 };
 
+export function update_student_avatar(id: number, data: { "avatar": string }, callback: (res: {isOk: boolean}) => void) {
+    return httpWrapper(() => api.put(`students/${id}/avatar`, data), callback);
+};
+
 export function get_profile_achievements(id: number, callback: (achievements: Achievement[]) => void) {
     return httpWrapper(() => api.get(`students/${id}/achievements/profile`), callback);
 };
@@ -20,6 +24,10 @@ export function get_profile_achievements(id: number, callback: (achievements: Ac
 
 export function get_last_test(student_id: number, callback: (tests: Test[]) => void) {
     return httpWrapper(() => api.get(`students/${student_id}/tests/last`), callback);
+};
+
+export function get_last_tests_limit(student_id: number, limit: number, callback: (tests: Test[]) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/tests/limit?limit=${limit}`), callback);
 };
 
 export function get_last_game(student_id: number, callback: (games: Game[]) => void) {
@@ -36,6 +44,18 @@ export function get_last_game_date(student_id: number, callback: (res: {year: nu
 
 export function get_upcoming_events(group_id: number, callback: (events: Event[]) => void) {
     return httpWrapper(() => api.get(`camps/groups/${group_id}/events/upcoming`), callback);
+};
+
+export function get_student_attendance_count(student_id: number, callback: (res: {count: number}) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/attendances/count`), callback);
+};
+
+export function get_student_first_achieve(student_id: number, callback: (achievement: Achievement[]) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/achievements/first`), callback);
+};
+
+export function get_student_group(group_id: number, callback: (group: Group) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}`), callback);
 };
 
 // Notifications
@@ -62,11 +82,15 @@ export function get_student_games(student_id: number, year: number, month: numbe
 
 
 // Achievements
-export function get_student_achieves(student_id: number, callback: (achieves: Achieve[]) => void) {
+export function get_student_achieves(student_id: number, callback: (achieves: Achievement[]) => void) {
     return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback); //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
 };
 
-export function update_student_achieve(id: number, data: { "in_profile": boolean }, callback: (res: {isOk: boolean}) => void) {
+export function get_locked_achieves(student_id: number, callback: (achieves: Achieve[]) => void) {
+    return httpWrapper(() => api.get(`students/${student_id}/achievements/locked`), callback); //return httpWrapper(() => api.get(`students/${student_id}/achievements`), callback);
+};
+
+export function update_student_achieve(id: number, data: { "in_profile": boolean, "profile_place": number }, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.put(`students/achievements/${id}`, data), callback);
 };
 
@@ -85,6 +109,10 @@ export function get_group_schedule(group_id: number, callback: (schedules: Sched
 };
 
 // Liders
+export function get_camps(callback: (camps: Camp[]) => void) {
+  return httpWrapper(() => api.get(`camps`), callback);
+};
+
 export function get_groups(camp_id: number, callback: (camps: Group[]) => void) {
     return httpWrapper(() => api.get(`camps/${camp_id}/groups`), callback, 'Getting groups');
 };

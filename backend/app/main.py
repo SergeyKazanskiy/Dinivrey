@@ -104,7 +104,7 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
 
     # try:
     #     await session.execute(text("""
-    #         ALTER TABLE events ADD COLUMN duration INTEGER NOT NULL DEFAULT 3600000;
+    #         ALTER TABLE achievements ADD COLUMN profile_place INTEGER NOT NULL DEFAULT 0;
     #     """))
     # except Exception as e:
     #     print("!!!!! error:", e)    
@@ -118,7 +118,7 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
 
     try:
         await session.execute(text("""
-            ALTER TABLE students ADD COLUMN token_FCM TEXT NOT NULL DEFAULT '';
+            ALTER TABLE students ADD COLUMN avatar TEXT NOT NULL DEFAULT 'Avatar_1';
         """))
     except Exception as e:
         print("!!!!! error:", e)

@@ -1,5 +1,5 @@
 import { Test, Game, Metric } from "../model";
-import { get_last_test_date, get_last_game_date, get_student_tests, get_student_games } from '../http';
+import { get_last_test_date, get_last_game_date, get_student_tests, get_student_games, get_last_tests_limit } from '../http';
 import { ProfileSlice } from '../ProfileScreen/state';
 import { MeasureUnits } from '../../../shared/constants';
 import { objectToJson, getYearAndMonth, formatSeconds, formatSecondsWithMilli } from '../../../shared/utils';
@@ -15,8 +15,10 @@ export interface StatisticsSlice {
 
     timestamps: number[]; 
     metrics: Metric[];
+    metrics_modal: Metric[];
     
     isMainMetric: boolean;
+    isExamChartModal: boolean;
 
     loadStatistics: () => void;
     selectDate: (year: number, month: number) => void;
@@ -30,6 +32,11 @@ export interface StatisticsSlice {
 
     loadTest: (timestamp: number, metricName: string) => void;
     loadGame: (timestamp: number, metricName: string) => void;
+
+    loadLimitTests: (student_id: number, limit: number) => void;
+
+    showExamChartModal: (metricName: string) => void;
+    hideExamChartModal: () => void;
 }
 
 export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
@@ -38,12 +45,14 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     isTests: true,
 
     timestamp: 0,
-    metricName: '',
+    metricName: 'Speed',
 
     timestamps: [], 
     metrics: [],
+    metrics_modal: [],
 
     isMainMetric: false,
+    isExamChartModal: false,
 
 
     loadStatistics: () => {
@@ -71,12 +80,12 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     selectDate: (year: number, month: number) => {
         set({ year, month });
 
-        const { isTests, student_id }: StatisticsSlice & ProfileSlice = get();
-        if (isTests) {
-            get().loadTests( student_id, year, month);
-        } else {
-            get().loadGames( student_id, year, month); 
-        } 
+        const { metricName, student_id }: StatisticsSlice & ProfileSlice = get();
+       // if (isTests) {
+            get().loadTests( student_id, year, month, metricName);
+       // } else {
+       //     get().loadGames( student_id, year, month); 
+       // } 
     },
 
     togleStatistic: () => {
@@ -109,17 +118,17 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
             set({ isTests: true });
 
             if (tests.length > 0) {
-                const metrics = convertTestsToMetrics(tests);
+                const metrics_modal = convertTestsToMetrics(tests);
 
                 set((state: StatisticsSlice) => ({ 
                     timestamp: state.isMainMetric ? state.timestamp : tests[0].timestamp,
                     timestamps: tests.map(el => el.timestamp),
                     metricName,
-                    metrics,
+                    metrics_modal,
                     isMainMetric: false
                  }));
             } else {
-                set({ metricName: '', timestamps: [], metrics: [], timestamp: 0 });
+                set({ metricName: 'Speed', timestamps: [], metrics_modal: [], timestamp: 0 });
             }
         })
     },
@@ -152,7 +161,39 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     loadGame: (timestamp: number, metricName: string) => {
         const { year, month } = getYearAndMonth(timestamp);
         set({ isTests: false, year, month, metricName, timestamp, isMainMetric: true })
-    }
+    },
+
+    loadLimitTests: (student_id2: number, limit: number) => {
+        const { student_id }: ProfileSlice = get();
+
+        get_last_tests_limit(student_id, limit, (tests: Test[]) => {
+            //alert(objectToJson(tests))
+            if (tests.length > 0) {
+                const metrics = convertTestsToMetrics(tests);
+                //alert(objectToJson(metrics))
+                set((state: StatisticsSlice) => ({ 
+                    metrics,
+                    metrics_modal: metrics
+                 }));
+            } else {
+                set({ metricName: '', timestamps: [], metrics: [], timestamp: 0 });
+            }
+        });
+    },
+
+    showExamChartModal:(metricName: string) => {
+        const { student_id }: ProfileSlice = get();
+        
+        get_last_test_date(student_id, (res => {
+            set({ year: res.year, month: res.month });
+        
+            if (res.isEvents) {
+                get().loadTests( student_id, res.year, res.month, metricName);
+            }
+        }));
+        set({isExamChartModal: true, metricName})
+    },
+    hideExamChartModal:() => set({isExamChartModal: false,}),
 });
 
   

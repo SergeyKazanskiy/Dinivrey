@@ -4,6 +4,7 @@ import { attach_student_achieve, detach_student_achieve, update_student_achieves
 import { GroupsSlice } from '../GroupsScreen/state';
 import { objectToJson } from '../../../../shared/utils';
 import {  RuleLevels } from '../../../../shared/constants';
+import { StudentsSlice } from "../StudentsScreen/state";
 
 
 export interface AchievesSlice {
@@ -33,7 +34,7 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   achieve_id: 0,
 
   loadStudentAchieves: () => {
-    const { student_id }: GroupsSlice = get();
+    const { student_id }: StudentsSlice = get();
     get_student_achieves(student_id, (achieves: Achievement[]) => {
        set({studentAchieves: achieves});
     })
@@ -66,7 +67,7 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   attachAchieve:(achieve_id: number) => {
       set({ isBaseAchieves: false });
 
-      const { student_id }: GroupsSlice = get();
+      const { student_id }: StudentsSlice = get();
       const data: AchieveAttach = { student_id, achieve_id, level: RuleLevels[0], in_profile: false }
 
       attach_student_achieve(data, (achievement => {
@@ -93,7 +94,7 @@ export const createAchievesSlice = (set: any, get: any): AchievesSlice => ({
   },
 
   setAchievesSummary:(summary: string) => {
-    const { student_id }: GroupsSlice = get();
+    const { student_id }: StudentsSlice = get();
 
     update_student_achieves_summary(student_id, {summary_achievements: summary},(res => {
       if (res.isOk) {

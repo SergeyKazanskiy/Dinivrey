@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Dict
 from database import get_session
 from crud import CRUD
 from roles.student import schemas
 import models
 from sqlalchemy.future import select
-from sqlalchemy import desc, asc, or_
+from sqlalchemy import desc, asc, or_, exists, func
 from datetime import datetime
 from services.NotificationService import NotificationService
 
@@ -17,6 +17,32 @@ router = APIRouter()
 @router.get("/students/{id}", response_model=schemas.StudentResponse, tags=["Student"])
 async def get_student(id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.read(models.Student, id, session)
+
+@router.get("/camps/groups/{group_id}", response_model=schemas.GroupResponse, tags=["Student"])
+async def get_student_group(group_id: int, session: AsyncSession = Depends(get_session)):
+    return await CRUD.read(models.Group, group_id, session)
+
+@router.get("/students/{id}/achievements/first", response_model=List[schemas.AchievementResponse], tags=["Student"])
+async def get_student_first_achieve(id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Achieve
+    S = models.Achievement
+    stmt = (
+        select(S.id, A.image, A.name, S.level, A.effect)
+        .join(A, S.achieve_id == A.id )
+        .where( S.student_id == id, S.in_profile == True )
+        .order_by(S.profile_place)
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [ schemas.AchievementResponse(
+                id = row[0],
+                image = row[1],
+                name = row[2],
+                level = row[3],
+                effect = row[4]
+            ) for row in rows]
 
 @router.get("/students/{id}/achievements/profile", response_model=List[schemas.AchievementResponse], tags=["Student"])
 async def get_student_achieves(id: int, session: AsyncSession = Depends(get_session)):
@@ -74,7 +100,8 @@ async def get_next_events(group_id: int, session: AsyncSession = Depends(get_ses
     if today_key in events_by_date:
         selected_events = events_by_date[today_key]
     else:
-        # 4. Если за сегодня нет — берем события следующего ближайшего дня
+
+     # 4. Если за сегодня нет — берем события следующего ближайшего дня
         sorted_keys = sorted(events_by_date.keys())
         selected_events = events_by_date[sorted_keys[0]]
     return selected_events
@@ -127,6 +154,16 @@ async def get_last_test(id: int, session: AsyncSession = Depends(get_session)):
     event = result.scalar_one_or_none()
     return [event] if event else []
 
+@router.get("/students/{id}/tests/limit", response_model=List[schemas.TestResponse], tags=["Student"])
+async def get_last_tests_limit(id: int, limit: int, session: AsyncSession = Depends(get_session)):
+    stmt = (
+        select(models.Test)
+        .where(models.Test.student_id == id)
+        .order_by(desc(models.Test.timestamp))
+        .limit(limit)
+    )
+    result = await session.execute(stmt)
+    return result.scalars().all()
 
 # Statistics (games)
 @router.get("/students/{id}/games/last/date", tags=["Student"])
@@ -283,6 +320,7 @@ async def get_group_events(year: int, month: int, group_id: int, session: AsyncS
             desc = event.desc or '',
             group1 = group1.name,
             group2 = group2.name,
+            duration = event.duration
         )
         competitions.append(competition)
 
@@ -299,7 +337,7 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
     A = models.Achieve
     S = models.Achievement
     stmt = (
-        select(S.id, A.image, A.name, S.in_profile, A.category, S.level, A.effect)
+        select(S.id, A.image, A.name, S.in_profile, A.category, S.level, A.effect, S.profile_place)
         .join(A, S.achieve_id == A.id )
         .where( S.student_id == id )
         .order_by(asc(A.name))
@@ -314,9 +352,44 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 in_profile = row[3],
                 category = row[4],
                 level = row[5],
-                effect = row[6]
+                effect = row[6],
+                profile_place = row[7],
             ) for row in rows]
 
+@router.get("/students/{id}/achievements/locked", response_model=List[schemas.AchieveResponse], tags=["Student"])
+async def get_locked_achieves(id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Achieve
+    S = models.Achievement
+
+    subquery = (
+        select(S.id)
+        .where((S.student_id == id) & (S.achieve_id == A.id))
+    )
+
+    stmt = (
+        select(A.id, A.image, A.name, A.category, A.effect)
+        .where(~exists(subquery))
+        .order_by(asc(A.name))
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [ schemas.AchieveResponse(
+                id = row[0],
+                image = row[1],
+                name = row[2],
+                category = row[3],
+                effect = row[4],
+                in_profile = None,
+                profile_place = 0,
+                level = None,
+            ) for row in rows]
+
+# Liders
+@router.get("/camps", response_model=List[schemas.CampResponse], tags=["Student"])
+async def get_camps(session: AsyncSession = Depends(get_session)):
+    return await CRUD.get(models.Camp, session)
 
 @router.get("/camps/{id}/groups", response_model=List[schemas.GroupResponse], tags=["Student"])
 async def get_camp_groups(id: int, session: AsyncSession = Depends(get_session)):
@@ -332,7 +405,7 @@ async def get_liders(group_id: int, session: AsyncSession = Depends(get_session)
         if test:
             lider = {
                 'id': student.id,
-                'photo': student.photo,
+                'avatar': student.avatar,
                 'first_name': student.first_name,
                 'last_name': student.last_name,
                 'gender': student.gender,
@@ -354,8 +427,21 @@ async def getAchievements(id: int, session: AsyncSession = Depends(get_session))
         select(A.name, A.image, S.level)
         .join(A, S.achieve_id == A.id )
         .where(S.student_id == id, S.in_profile == True)
-        .order_by(asc(A.name))
+        .order_by(S.profile_place)
+        .limit(1)
     )
     result = await session.execute(stmt)
     rows = result.all()
     return [{"name": row[0], "image": row[1], "level": row[2]} for row in rows]
+
+@router.get("/students/{student_id}/attendances/count", response_model=Dict[str, int], tags=["Student"])
+async def get_student_attendance_count( student_id: int, session: AsyncSession = Depends(get_session)):
+    value = await session.scalar(
+        select(func.count())
+        .select_from(models.Attendance)
+        .where(
+            models.Attendance.student_id == student_id,
+            models.Attendance.present.is_(True),
+        )
+    )
+    return {"count" : value or 0}

@@ -1,8 +1,8 @@
 import { Store } from "../store";
 import { Student, Achievement, Test, Game, Event } from "../model";
-import { get_student, get_profile_achievements, get_last_test, save_notification_token } from '../http';
-import { get_last_game, get_upcoming_events, update_student_achieve} from '../http';
-import { get_notifications_count, get_notifications, delete_notifications } from '../http';
+import { get_student, get_student_first_achieve, get_last_test, save_notification_token } from '../http';
+import { get_last_game, get_upcoming_events, update_student_avatar, get_student_group} from '../http';
+import { get_student_attendance_count, get_notifications, delete_notifications } from '../http';
 import { effectNames, RuleLevels, eventTypes } from '../../../shared/constants';
 import { getTodayTimestamp, objectToJson } from '../../../shared/utils';
 import messaging from "@react-native-firebase/messaging";
@@ -18,58 +18,73 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 export interface ProfileSlice {
   student_id: number;
   student: Student;
-  achievement_id: number;
-  isAchievementAdding: boolean;
 
-  profile_achievements: Achievement[];
   last_test: Partial<Test>;
+  average: number;
+
   last_game: Partial<Game>;
   upcoming_events: Event[];
   
   isBackDrawer: boolean;
+  isAvatarsModal: boolean;
 
   isNotificationsModal: boolean;
   notifications: string[];
  
+  camp_name: string;
+  group_name: string;
+
+  level: number;
+  percent: number;
+  levelColor: string;
+  profile_achievement: Achievement | undefined;
+
 
   saveNotificationToken: (student_id: number) => void;
 
   loadStudent: (studentId: number) => void;
-  loadAchievements: (studentId: number) => void;
   
   clickAchievement: (achievement_id: number) => void;
-  detachAchievement: () => void;
-
-  clickPlus: () => void;
-  finishAdding: () => void;
 
   setBackDrawer: (isBackDrawer: boolean) => void;
 
   loadNotifications: (studentId: number) => void;
+  deleteNotifications: () => void;
+
   showNotificationsModal: () => void;
   hideNotificationsModal: () => void;
+
+  clickAvatar: (avatar: string) => void;
+  showAvatarsModal: () => void;
+  hideAvatarsModal: () => void;
 }
 
 export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => ({
   student_id: 0,
   student: { first_name: "FirstName", last_name: "LastName", gender: "Girl", age: 10, id: 0, active: true,
-    photo: '', group_id: 3, group_extra_id: 0 },
-  
-  achievement_id: 0,
-  profile_achievements: [{ id:0, image: 'medal', name: 'Medal', level: 1, effect: effectNames[0]}],
-  isAchievementAdding: false,
+    photo: '', group_id: 3, group_extra_id: 0, avatar: 'Avatar_1' },
 
   last_test: { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 },
+  average: 0,
+  
   last_game: { game_id: 0, timestamp: 0, caught: 0, freeded: 0, is_survived: true },
-
   upcoming_events: [],
 
   isBackDrawer: true,
+  isAvatarsModal: false,
 
   isNotificationsModal: false,
   notifications: [], //'⭐ Great progress! Your achievement Speed has been upgraded to Mythic'
 
+  camp_name: '',
+  group_name: '',
+  
+  level: 1,
+  percent: 0,
+  levelColor: '#43BB32',
+  profile_achievement: undefined,
 
+  
   saveNotificationToken: async (student_id: number) => {
     const now = Date.now();
 
@@ -113,12 +128,22 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
         set({ student, student_id });
 
-        const {loadAchievements}: ProfileSlice = get();
-        loadAchievements(student_id);
+        get_student_group(student.group_id, (group => {
+           set({ group_name: group.name });
+        }));
+
+        get_student_first_achieve(student_id, (achievements: Achievement[]) => {
+          if (achievements.length > 0) {
+            set({ profile_achievement: achievements[0] });
+          }
+        }); 
 
         get_last_test(student_id, (tests: Test[]) => {
           if (tests.length > 0) {
-            set({ last_test: tests[0]});
+            const test = tests[0];
+            const average=(test.speed + test.stamina + test.climbing + test.evasion + test.hiding) / 5
+            
+            set({ last_test: test, average});
           } else {
             const emptyTest:  Partial<Test> = { id: 0, timestamp: 0, speed: 0, stamina: 0, climbing: 0, evasion: 0, hiding: 0 };
             set({ last_test: emptyTest});
@@ -137,13 +162,12 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
         get_upcoming_events(student.group_id, (events: Event[]) => {
           set({ upcoming_events: events });
         });
-      }
-    });
-  },
 
-  loadAchievements:(student_id: number) => {
-    get_profile_achievements(student_id, (achievements: Achievement[]) => {
-      set({ profile_achievements: achievements });
+        get_student_attendance_count(student_id, (res: {count: number}) => {
+          const { levelColor, level, percent } = getAttendanceLevel(res.count);
+          set({ levelColor, level, percent });
+        })
+      }
     });
   },
 
@@ -151,53 +175,67 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
     set({ achievement_id })
   },
 
-  detachAchievement:() => {
-    const { achievement_id, profile_achievements }: ProfileSlice = get();
-    const achieve = profile_achievements.find(el => el.id === achievement_id);
-    
-    if (achieve) {
-      const data = { "in_profile": false };
-
-      update_student_achieve(achievement_id, data, (res => {
-        if (res.isOk) {
-          set((state: ProfileSlice) => ({
-            profile_achievements: state.profile_achievements.filter(el => el.id !== achievement_id ),
-            achievement_id: 0,
-          }));
-        }
-      }))
-    } else {
-        alert('Error!')
-    }
-  },
-
-  clickPlus: () => {
-    set({ isAchievementAdding: true });
-  },
-
-  finishAdding: () => {
-    set({ isAchievementAdding: false });
-  },
-
    setBackDrawer: (isBackDrawer: boolean) => set({isBackDrawer}),
 
   loadNotifications: (studentId: number) => {
     get_notifications(studentId, (notifications: string[]) => {
-      alert(objectToJson(notifications))
+      //alert(objectToJson(notifications))
 
       set({notifications});
     })
   },
 
-  showNotificationsModal:() => set({isNotificationsModal: true}),
-
-  hideNotificationsModal:() => {
+  deleteNotifications: () => {
     const { student_id }: ProfileSlice = get();
+
     delete_notifications(student_id, (res => {
         if (res.isOk) {
             set({notifications: [], notifications_count: 0});
         }
     }));
-    set({isNotificationsModal: false})
-  }, 
+  },
+
+  showNotificationsModal:() => set({isNotificationsModal: true}),
+  hideNotificationsModal:() => set({isNotificationsModal: false}),
+
+  clickAvatar: (avatar: string) => {
+    const { student_id, student }: ProfileSlice = get();
+    update_student_avatar(student_id, {avatar}, (res => {
+      if (res.isOk) {
+        student.avatar = avatar;
+        set({ isAvatarsModal: false });
+      }
+    }))
+  },
+  showAvatarsModal: () => set({ isAvatarsModal: true }),
+  hideAvatarsModal: () => set({ isAvatarsModal: false }),
 });
+
+// Private functions
+function getAttendanceLevel(amount: number): {levelColor: string, level: number, percent: number} {
+  let count = 0, level = 0, factor = getLevelData(1).factor, step = 1;
+
+  while (count < amount) {
+    if (step < factor) {
+      step++;
+    } else {
+      level++;
+      factor = getLevelData(level).factor;
+      step = 1;
+    }
+    //alert(level + ' ' + parseFloat((step / factor).toFixed(2)))
+    count++;
+  }
+
+  return {levelColor: getLevelData(level).color, level, percent: parseFloat((step / factor).toFixed(2)) }
+}
+
+function getLevelData(level: number): {color: string, factor: number} {
+
+  if (level > 25) return {color: '#FBFC02', factor: 4};
+  if (level > 20) return {color: '#BE312F', factor: 4};
+  if (level > 15) return {color: '#B139E4', factor: 3};
+  if (level > 10) return {color: '#2D5EC2', factor: 2};
+  if (level > 5) return {color: '#43BB32', factor: 1};
+  else return {color: '#D9D9D9', factor: 1};
+}

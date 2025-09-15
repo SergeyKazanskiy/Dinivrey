@@ -12,11 +12,13 @@ export interface Student {
     active: boolean;
     group_id: number;
     group_extra_id?: number;
+    avatar: string;
   }
 
 export interface Event {
   id: number;
   timestamp: number;
+  duration: number;
   desc: string;
   group1: string;
   group2: string;
@@ -35,6 +37,9 @@ export interface Achievement {
   id: number;
   image: string;
   name: string;
+  in_profile: boolean;
+  profile_place: number;
+  category: string;
   level: number;
   effect: string;
 }
@@ -43,9 +48,7 @@ export interface Achieve {
   id: number;
   image: string;
   name: string;
-  in_profile: boolean;
   category: string;
-  level: number;
   effect: string;
 }
 
@@ -156,12 +159,12 @@ export type Total = {
 // Achieve
 export interface AchieveShort {
   image: string;
-  level: string;
+  level: number;
 }
 
 export interface Lider {
     id: number;
-    photo: string;
+    avatar: string;
     first_name: string;
     last_name: string;
 
@@ -172,6 +175,11 @@ export interface Lider {
     hiding: number;
 
     achieves: AchieveShort[];
+}
+
+export interface Camp {
+    id: number;
+    name: string;
 }
 
 export interface Group {

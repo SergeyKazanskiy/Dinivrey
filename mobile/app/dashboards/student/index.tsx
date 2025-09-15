@@ -77,7 +77,7 @@ function TabNavigatorWrapper() {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
-      <Tab.Navigator
+      <Tab.Navigator initialRouteName="Main"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,

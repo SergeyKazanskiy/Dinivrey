@@ -42,6 +42,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: 'gold', // blue.500
-        paddingVertical: 4,
+       // paddingVertical: 4,
     },
 });

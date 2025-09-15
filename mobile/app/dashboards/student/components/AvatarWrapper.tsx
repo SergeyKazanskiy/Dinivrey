@@ -24,9 +24,9 @@ export const AvatarWrapper: React.FC<Props> = ({ avatar, size = 120, level, perc
  
         <Circle stroke={`url(#grad)`} fill="none" cx={size / 2} cy={size / 2} r={radius}
           strokeWidth={strokeWidth}
-          strokeDasharray={`${progress}, ${circumference}`}
+          strokeDasharray={`${progress}, ${circumference-progress}`}
           strokeLinecap="round"
-          transform={`rotate(80, ${size / 2}, ${size / 2})`}
+          transform={`rotate(${360 * (1 - percent) - 45}, ${size / 2}, ${size / 2})`}
         />
      
         <Defs>
@@ -63,19 +63,18 @@ const styles = StyleSheet.create({
   },
   levelBadge: {
     position: "absolute",
-    //top: 4,
     right: 4,
     backgroundColor: "#000",
-    borderRadius: 28,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderWidth: 2,
-    //borderColor: "#fff",
+    borderRadius: 15,
+    height: 30,
+    width: 30,
+    borderWidth: 4,
   },
   levelText: {
     color: "#fff",
     fontWeight: "700",
     fontSize: 14,
-    padding: 1
+    alignSelf: 'center',
+    paddingTop: 2
   },
 });

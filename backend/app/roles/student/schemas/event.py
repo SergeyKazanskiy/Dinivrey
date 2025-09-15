@@ -9,6 +9,7 @@ class EventBase(BaseModel):
     desc: Optional[str] = None
     group1_id: int
     group2_id: Optional[int] = None
+    duration: int
     
 class EventCreate(EventBase):
     pass
@@ -33,7 +34,7 @@ class CompetitionResponse(BaseModel):
     desc: Optional[str] = None
     group1: str
     group2: Optional[str] = None
-
+    duration: int
 
 
 class AttendanceBase(BaseModel):

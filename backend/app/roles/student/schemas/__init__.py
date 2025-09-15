@@ -1,8 +1,8 @@
 from .shared import ResponseOk, ResponseId
-from .group import GroupResponse, GroupScheduleResponse
+from .group import CampResponse, GroupResponse, GroupScheduleResponse
 
 from .student import StudentResponse, TokenUpdate
-from .student import TestResponse
+from .student import TestResponse, AvatarUpdate
 from .student import  AchievementResponse, AchieveUpdate, AchieveResponse
 
 from .event import EventCreate, EventUpdate, EventResponse, CompetitionResponse

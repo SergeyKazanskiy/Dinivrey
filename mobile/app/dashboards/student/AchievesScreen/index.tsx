@@ -1,17 +1,19 @@
-import { useCallback, useLayoutEffect } from 'react';
+import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { ImageBackground, StyleSheet, ScrollView, Text, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { widgetStyles, screenStyles } from '../../../shared/styles/appStyles';
 import { AchievesPanel } from './views/AchievesPanel';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
+import { HeaderView } from './views/HeaderView';
+import { CustomAlert } from './components/CustomAlert';
+import { AchievesModal } from './components/AchievesModal';
 
 
 export const AchievesScreen = () => {
-  const { achieves, isAchievementAdding } = useStore();
-  const { loadAchieves, selectAchieve, finishAdding } = useStore();
+  const { unlocked_achieves, locked_achieves, isAchievesModal, profile_place } = useStore();
+  const { loadAchieves, selectAchieve, hideAchievesModal, selectPlace } = useStore();
   
   const navigation = useNavigation();
   const router = useRouter();
@@ -22,42 +24,48 @@ export const AchievesScreen = () => {
     }, [])
   );
 
-  function handleBackButton() {
-    finishAdding();
-    router.back();
-  }
+  // function handleBackButton() {
+  //   hideAchievesModal();
+  //   router.back();
+  // }
 
   function handleClickAchieve(id: number) {
-    if (isAchievementAdding) {
-      selectAchieve(id);
-      router.back();
-    }
+    // if (isAchievesModal) {
+    //   selectAchieve(id);
+    //   router.back();
+    // }
   }
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => 
-        isAchievementAdding ? (
-          <Pressable style={{ marginRight: 15 }} onPress={handleBackButton} >
-            <Ionicons name='arrow-back-circle-outline' size={24} color="red" />
-          </Pressable>
-        ): null,
-    });
-  }, [navigation, isAchievementAdding]);
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
+
+      <CustomAlert visible={isAchievesModal} 
+        title="Hall of fame"
+        onClose={hideAchievesModal}>
+        <AchievesModal
+          profile_place ={profile_place}
+          profileAchieves={unlocked_achieves}
+          achieves={unlocked_achieves}
+          onAchievement={selectAchieve}
+          onPlace={selectPlace}
+          />
+      </CustomAlert>
+
       <ScrollView style={styles.container}>
-        <Text style={[widgetStyles.title, styles.title]}>Test achievements</Text>
-        <AchievesPanel achieves={achieves} category='Test' onClick={handleClickAchieve}/>
+        <HeaderView/>
+        
+        <View style={[{flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20}, styles.line]}>
+          <Text style={[styles.title]}>Unlocked</Text>
+          <Ionicons name='lock-open' size={18} color="green" />
+        </View>
+        <AchievesPanel achieves={unlocked_achieves} onClick={handleClickAchieve}/>
 
-        <Text style={[widgetStyles.title, styles.title]}>Game achievements</Text>
-        <AchievesPanel achieves={achieves} category='Game' onClick={handleClickAchieve}/>
-
-        <Text style={[widgetStyles.title, styles.title]}>Additional rewards</Text>
-        <AchievesPanel achieves={achieves} category='Participate' onClick={handleClickAchieve}/>
-
-        <Text style={[screenStyles.gold, styles.summary]}>You still have a little time left !</Text>
+        <View style={[{flexDirection: 'row', justifyContent: 'flex-start', marginTop: 16}, styles.line]}>
+          <Text style={[styles.title]}>Locked</Text>
+          <Ionicons name='lock-closed' size={18} color="red" />
+        </View>
+         <AchievesPanel achieves={locked_achieves} onClick={()=>{}}/>
+        
       </ScrollView>
     </LinearGradient>
   );
@@ -72,10 +80,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingBottom: 48
   },
-  title: {   
-    paddingTop: 20,
-    paddingBottom: 8
+  title: {
+    fontSize: 15,
+    color: 'white',
+    paddingRight: 8,
+    paddingBottom: 2,
+  },
+  line: {
+    width: '100%',
+    borderColor: '#ddd',
+    borderBottomWidth: 1,
+    marginBottom: 8
   },
   summary: { 
     textAlign: 'center',   

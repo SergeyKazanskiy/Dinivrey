@@ -70,19 +70,21 @@ export function GamesView({ onSelect }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     width: '100%',
     marginTop: 8,
+    //paddingBottom: 24
   },
   section: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   cell: {
-    padding: 10,
-    backgroundColor: '#152B52', 
-    borderWidth: 1,
-    borderColor: 'rgb(110, 151, 6)',
+    padding: 8,
+    backgroundColor: '#000', 
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderColor: '#ddd',
     marginVertical: 4,
     borderRadius: 8,
   },
@@ -109,7 +111,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#ddd',
-    fontSize: 14,
+    fontSize: 13,
+    paddingBottom: 3
   },
   small_text: {
     color: '#ddd',

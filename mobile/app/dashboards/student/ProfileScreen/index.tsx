@@ -1,13 +1,11 @@
-import { useLayoutEffect, useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { ImageBackground, StyleSheet, ScrollView, Text, Pressable, Animated } from 'react-native';
+import { StyleSheet, ScrollView, Text, Animated } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { StatisticView } from './views/StatisticView';
-import { AchievesView } from './views/AchievesView';
+import { HeaderView } from './views/HeaderView';
 import { EventsView } from './views/EventsView';
 import { useStore } from '../store';
-import { screenStyles } from '../../../shared/styles/appStyles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { objectToJson } from '@/app/shared/utils';
 import { useAuthState } from '../../../shared/http/state';
@@ -15,12 +13,13 @@ import { CalendarView } from '../EventsScreen/views/CalendarView';
 import { EventsView as EventsView2 } from '../EventsScreen/views/EventsView';
 import { CustomAlert } from '../../../shared/components/CustomAlert';
 import { NotificationsView } from './views/NotificationsView';
+import { AvatarsModal } from './components/AvatarsModal';
 
 
 const ProfileScreen = () => {
-  const { student, last_test, last_game, isNotificationsModal } = useStore();
+  const { student, last_test, last_game, isNotificationsModal, isAvatarsModal } = useStore();
 
-  const { loadStudent, detachAchievement, clickAchievement, clickPlus } = useStore();
+  const { loadStudent, clickAvatar, hideAvatarsModal, deleteNotifications } = useStore();
   const { loadTest, loadGame, loadEvent, setBackDrawer, hideNotificationsModal } = useStore();
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
@@ -35,14 +34,14 @@ const ProfileScreen = () => {
     }, [])
   );
 
-  const handleClickAchievement = (achievement_id: number) => {
-    setShowHeaderButton(true);
-    clickAchievement(achievement_id);
+  // const handleClickAchievement = (achievement_id: number) => {
+  //   setShowHeaderButton(true);
+  //   clickAchievement(achievement_id);
 
-    setTimeout(() => {
-      setShowHeaderButton(false);
-    }, 3000);
-  };
+  //   setTimeout(() => {
+  //     setShowHeaderButton(false);
+  //   }, 3000);
+  // };
 
   const scaleAnim = useRef(new Animated.Value(0)).current;
 
@@ -59,23 +58,23 @@ const ProfileScreen = () => {
     }
   }, [showHeaderButton]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => 
-        showHeaderButton ? (
-          <Animated.View style={{ marginRight: 15, transform: [{ scale: scaleAnim }] }}>
-            <Pressable onPress={detachAchievement} >
-              <Ionicons name='trash-outline' size={24} color="red" />
-            </Pressable>
-          </Animated.View>
-        ): null,
-    });
-  }, [navigation, showHeaderButton]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => 
+  //       showHeaderButton ? (
+  //         <Animated.View style={{ marginRight: 15, transform: [{ scale: scaleAnim }] }}>
+  //           <Pressable onPress={detachAchievement} >
+  //             <Ionicons name='trash-outline' size={24} color="red" />
+  //           </Pressable>
+  //         </Animated.View>
+  //       ): null,
+  //   });
+  // }, [navigation, showHeaderButton]);
   
-  const openAchievesScreen = () => {
-    clickPlus()
-    router.push("/dashboards/student/AchievesScreen");
-  };
+  // const openAchievesScreen = () => {
+  //   showAchievesModal()
+  //   router.push("/dashboards/student/AchievesScreen");
+  // };
 
   const openTestStatistic = (metric: string) => {
     const metricName = metric.charAt(0).toUpperCase() + metric.slice(1);
@@ -103,13 +102,22 @@ const ProfileScreen = () => {
 
   return (
     <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.background} >
-      <ScrollView style={styles.container}>
-        <CustomAlert visible={isNotificationsModal} title="Notifications!"
-          onClose={hideNotificationsModal}>
-          <NotificationsView/>
-        </CustomAlert>
+      <CustomAlert visible={isNotificationsModal}
+        title="Notifications!"
+        buttonText='Read'
+        handleYes={deleteNotifications}
+        onClose={hideNotificationsModal}>
+        <NotificationsView/>
+      </CustomAlert>
 
-        <AchievesView onClick={handleClickAchievement} onAddClick={openAchievesScreen}/>
+      <CustomAlert visible={isAvatarsModal} 
+        title="Chose from selection"
+        onClose={hideAvatarsModal}>
+        <AvatarsModal onAvatar ={clickAvatar}/>
+      </CustomAlert>
+
+      <ScrollView style={styles.container}>
+        <HeaderView />
 
         <StatisticView
             onExam={openTestStatistic}
@@ -120,7 +128,7 @@ const ProfileScreen = () => {
         
         <EventsView onClick={()=>{}}/>
 
-        <Text style={[styles.upcomingClass]}>Previous class</Text>
+        <Text style={[styles.upcomingClass, {marginBottom: 4}]}>Previous class</Text>
         <CalendarView/>
         <EventsView2 onClick={()=>{}}/>
       </ScrollView>
@@ -134,13 +142,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    paddingTop: 8,
+    paddingTop: 16,
   },
   container: {
     flex: 1,
+    paddingBottom: 100
   },
   upcomingClass: {
-    marginTop: 17,
     marginBottom: 4,
     marginLeft: 21,
     color: '#fff',

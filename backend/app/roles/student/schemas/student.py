@@ -8,6 +8,7 @@ class StudentBase(BaseModel):
     first_name: str = Field(..., min_length=2, max_length=50)
     last_name: str = Field(..., min_length=2, max_length=50)
     gender: str
+    avatar: str
     age: int = Field(None, ge=3, le=99)
     active: bool
     group_id: int
@@ -71,9 +72,10 @@ class AchieveResponse(BaseModel):
     id: int
     image: str
     name: str
-    in_profile: bool
+    in_profile:  Optional[bool]
+    profile_place: int
     category: str
-    level: int
+    level:  Optional[int]
     effect: str
         
     class Config:
@@ -81,7 +83,10 @@ class AchieveResponse(BaseModel):
 
 class AchieveUpdate(BaseModel):
     in_profile: bool
+    profile_place: int
 
 class TokenUpdate(BaseModel):
     token_FCM: str
 
+class AvatarUpdate(BaseModel):
+    avatar: str

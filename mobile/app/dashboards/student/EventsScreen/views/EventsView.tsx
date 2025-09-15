@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { formatDateTime } from '../../../../shared/utils';
 import { useStore } from '../../store';
-import { CompetitionCell } from '../components/CompetitionCell';
+import { EventCell } from '../../ProfileScreen/components/EventCell';
 
 
 export type Props = {
@@ -15,19 +15,22 @@ export const EventsView: React.FC<Props> = ({onClick}) => {
   return (
     <ScrollView style={styles.container}>
       <FlatList data={events}
-        renderItem={({ item }) =>
+        renderItem={({ item }) => {
+        const time2 = item.timestamp + item.duration
+
+        return (  
         <TouchableOpacity
-          style={item.id === event_id ? styles.itemSelected :  styles.item}
+          style={styles.item}
           onPress={() => onClick(item.id)}>
 
-          <CompetitionCell
+          <EventCell
+            isSelected={true}
             date={formatDateTime(item.timestamp).date}  
-            time={formatDateTime(item.timestamp).time}
+            time={formatDateTime(item.timestamp).time + ' - ' + formatDateTime(time2).time}
             desc={item.desc}
-            group1={item.group1}
-            group2={item.group2}
           />
-        </TouchableOpacity>        
+        </TouchableOpacity>
+  )}       
         } style={styles.list}
       />
     </ScrollView>
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   item: {    
-    marginBottom: 8,
+    marginBottom: 12,
   },
   itemSelected: {   
     marginBottom: 8, 

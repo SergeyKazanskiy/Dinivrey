@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import { widgetStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../shared/constants';
+import { ImagesPath, RuleTests } from '../../../../shared/constants';
+import { TestFields } from '../../model';
 
 
 export const SportsView = () => {
-    const { lider_tests, lider_test } = useStore();
+    //const { lider_tests, lider_test } = useStore();
     const { selectTest } = useStore();
 
     return (
@@ -17,17 +18,17 @@ export const SportsView = () => {
                     justifyContent: 'center', // центрирует по горизонтали
                     alignItems: 'center',     // выравнивает по вертикали (если нужно)
                 }}
-                data={lider_tests} 
+                data={RuleTests} 
                 horizontal
                 keyExtractor={(item) => item}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                     const capitalizedItem = item.charAt(0).toUpperCase() + item.slice(1);
                     return (
-                        <TouchableOpacity onPress={() => selectTest(item)}>
-                            <Image style={styles.image} 
+                        <TouchableOpacity onPress={() => selectTest(TestFields[index])}>
+                            <Image style={styles.image}
                                 source={{ uri: `${ImagesPath}/icons/tests/${capitalizedItem}.png` }} 
                             />
-                            <Text style={item === lider_test ? widgetStyles.sportSelected : widgetStyles.sport}>{item}</Text>
+                            {/* <Text style={item === lider_test ? widgetStyles.sportSelected : widgetStyles.sport}>{item}</Text> */}
                         </TouchableOpacity>
                     );
                 }}
@@ -52,5 +53,8 @@ const styles = StyleSheet.create({
         width: 60,
         borderRadius: 30,
         marginBottom: -8,
+        backgroundColor: '#fff',
+        overflow: "hidden",
+        transform: [{ scale: 1.2 }]
     },
 });

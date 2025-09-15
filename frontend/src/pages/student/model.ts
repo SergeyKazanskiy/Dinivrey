@@ -114,6 +114,7 @@ export interface Achievement {
   name: string;
   desc: string;
   in_profile: boolean;
+  profile_place: number;
   category: string;
   level: number;
   trigger: string;
