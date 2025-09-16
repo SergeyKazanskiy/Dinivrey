@@ -58,13 +58,13 @@ export const AchievesScreen = () => {
           <Text style={[styles.title]}>Unlocked</Text>
           <Ionicons name='lock-open' size={18} color="green" />
         </View>
-        <AchievesPanel achieves={unlocked_achieves} onClick={handleClickAchieve}/>
+        <AchievesPanel isUnlocked={true} achieves={unlocked_achieves} onClick={handleClickAchieve}/>
 
         <View style={[{flexDirection: 'row', justifyContent: 'flex-start', marginTop: 16}, styles.line]}>
           <Text style={[styles.title]}>Locked</Text>
           <Ionicons name='lock-closed' size={18} color="red" />
         </View>
-         <AchievesPanel achieves={locked_achieves} onClick={()=>{}}/>
+         <AchievesPanel isUnlocked={false} achieves={locked_achieves} onClick={()=>{}}/>
         
       </ScrollView>
     </LinearGradient>
@@ -76,11 +76,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    padding: 16,
+    paddingHorizontal: 16,
   },
   container: {
     flex: 1,
-    paddingBottom: 48
+    paddingBottom: 100
   },
   title: {
     fontSize: 15,

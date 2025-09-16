@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Dict
+from typing import List, Dict, Optional
 from database import get_session
 from crud import CRUD
 from roles.student import schemas
 import models
 from sqlalchemy.future import select
 from sqlalchemy import desc, asc, or_, exists, func
-from datetime import datetime
+from datetime import datetime, timedelta
 from services.NotificationService import NotificationService
 
 router = APIRouter()
@@ -65,7 +65,94 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 effect = row[4]
             ) for row in rows]
 
-@router.get("/camps/groups/{group_id}/events/upcoming", response_model=List[schemas.EventResponse], tags=["Student"])
+@router.get("/camps/groups/{group_id}/events/upcoming", tags=["Student"])
+async def get_next_events(group_id: int, group_extra_id: int, session: AsyncSession = Depends(get_session)):
+    Event = models.Event
+    Schedule = models.GroupSchedule
+
+    # 1. Получаем текущее время
+    now = datetime.now()
+    now_timestamp = int(now.timestamp() * 1000)
+
+    # 2. Находим ближайшее запланированное событие
+    stmt1 = (
+        select(Event)
+        .where(
+            or_(
+                Event.group1_id == group_id,
+                Event.group2_id == group_id
+            ),
+            Event.timestamp >= now_timestamp
+        )
+        .order_by(asc(Event.timestamp))
+        .limit(1)
+    )
+    result = await session.execute(stmt1)
+    event: Optional[models.Event] = result.scalars().first()
+
+    # 3. Достаем расписание для группы и экстра-группы
+    stmt2 = (
+        select(Schedule)
+        .where(
+            or_(
+                Schedule.group_id == group_id,
+                Schedule.group_id == group_extra_id
+            ),
+        )
+        .order_by(Schedule.weekday, Schedule.hour, Schedule.minute)
+    )
+    result = await session.execute(stmt2)
+    schedules = result.scalars().all()
+
+    # 4. Преобразуем расписание в события текущей и следующей недели
+    now_weekday = now.isoweekday()  # 1 = понедельник, 7 = воскресенье
+    schedule_events = []
+
+    for sch in schedules:
+        # timestamp для события в текущей неделе
+        event_date = now + timedelta(days=(sch.weekday - now_weekday))
+        event_date = event_date.replace(
+            hour=sch.hour,
+            minute=sch.minute,
+            second=0,
+            microsecond=0
+        )
+
+        # если время уже прошло, переносим на следующую неделю
+        if event_date < now:
+            event_date += timedelta(days=7)
+
+        timestamp = int(event_date.timestamp() * 1000)
+        schedule_events.append({
+            "timestamp": timestamp,
+            "duration": 60  # по условию расписание всегда = 1 час
+        })
+
+    # 5. Берем ближайшее расписание
+    schedule_event = None
+    if schedule_events:
+        schedule_event = min(schedule_events, key=lambda e: e["timestamp"])
+
+    # 6. Сравниваем с Event
+    candidates = []
+
+    if event:
+        candidates.append({
+            "timestamp": event.timestamp,
+            "duration": event.duration
+        })
+
+    if schedule_event:
+        candidates.append(schedule_event)
+
+    if not candidates:
+        return []
+
+    result_event = min(candidates, key=lambda e: e["timestamp"])
+    return [result_event]
+
+
+@router.get("/camps/groups/{group_id}/events/upcoming2", response_model=List[schemas.EventResponse], tags=["Student"])
 async def get_next_events(group_id: int, session: AsyncSession = Depends(get_session)):
     now = datetime.now()
     now_timestamp = int(now.timestamp() * 1000)  # текущее время в миллисекундах
@@ -138,7 +225,9 @@ async def get_student_tests(id: int, year: int, month: int, session: AsyncSessio
     start_ts = int(datetime(year, month, 1).timestamp() * 1000)
     end_ts = int(datetime(year + (month // 12), (month % 12) + 1, 1).timestamp() * 1000) - 1
     result = await session.execute(
-        select(models.Test).where(models.Test.timestamp.between(start_ts, end_ts), models.Test.student_id == id)
+        select(models.Test)
+        .where(models.Test.timestamp.between(start_ts, end_ts), models.Test.student_id == id)
+        .order_by(models.Test.timestamp)
     )
     return result.scalars().all()
 
@@ -159,7 +248,7 @@ async def get_last_tests_limit(id: int, limit: int, session: AsyncSession = Depe
     stmt = (
         select(models.Test)
         .where(models.Test.student_id == id)
-        .order_by(desc(models.Test.timestamp))
+        .order_by(models.Test.timestamp)
         .limit(limit)
     )
     result = await session.execute(stmt)

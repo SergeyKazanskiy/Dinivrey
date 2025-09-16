@@ -1,19 +1,21 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Metric } from '../../model';
 import { RuleTests, ExamIcons } from '../../../../shared/constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StepChart } from './StepChart';
 import { formatDate, formatDateTime } from '../../../../shared/utils';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export type Props = {
   exam: string;
   metrics: Metric[];
   colors: string[];
+  onShow: () => void;
 };
 
-export const ChartCell: React.FC<Props> = ({ exam, metrics, colors}) => {
+export const ChartCell: React.FC<Props> = ({ exam, metrics, colors, onShow }) => {
   const lastMetric = metrics[metrics.length - 1]
   const points = metrics.map(el => ({'x': formatDateTime(el.timestamp).date, 'y': el.score}))
   const time = lastMetric ? lastMetric.time + ' ' +lastMetric.unit : ''
@@ -25,11 +27,17 @@ export const ChartCell: React.FC<Props> = ({ exam, metrics, colors}) => {
     >
       <View style={{width: 144}}>
 
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-          <View style={styles.icon}>
-            <Image source={ExamIcons[exam]} style={styles.image} />
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+            <View style={styles.icon}>
+              <Image source={ExamIcons[exam]} style={styles.image} />
+            </View>
+            <Text style={styles.title}>{exam}</Text>
           </View>
-          <Text style={styles.title}>{exam}</Text>
+        
+          <TouchableOpacity style={{top: -4, right: -8}} onPress={onShow}>
+            <Ionicons name="arrow-down-circle" size={28} color="white" />
+          </TouchableOpacity>
         </View>
 
         <View style={[styles.widget, {padding: 4}]}>

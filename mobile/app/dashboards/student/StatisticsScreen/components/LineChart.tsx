@@ -1,7 +1,7 @@
 import { objectToJson } from '@/app/shared/utils';
 import React from 'react';
-import { Dimensions } from 'react-native';
 import { LineChart as RNLineChart } from 'react-native-chart-kit';
+
 
 interface Props {
   labels: string[];

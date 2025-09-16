@@ -58,6 +58,7 @@ export const HeaderView = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 16,
     marginHorizontal: 16,
     flexDirection: "row",
     justifyContent: 'space-between',
