@@ -45,7 +45,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     isTests: true,
 
     timestamp: 0,
-    metricName: 'Speed',
+    metricName: '',
 
     timestamps: [], 
     metrics: [],
@@ -113,7 +113,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
     selectTimestamp: (timestamp: number) => set({ timestamp }),
     selectMetric: (metricName: string) => set({ metricName }),
 
-    loadTests: (student_id: number, year: number, month: number, metricName = 'Speed') => {
+    loadTests: (student_id: number, year: number, month: number, metricName = '') => {
         get_student_tests(student_id, year, month, (tests: Test[]) => {
             set({ isTests: true });
 
@@ -128,7 +128,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
                     isMainMetric: false
                  }));
             } else {
-                set({ metricName: 'Speed', timestamps: [], metrics_modal: [], timestamp: 0 });
+                set({ timestamps: [], metrics_modal: [], timestamp: 0 });
             }
         })
     },
@@ -170,7 +170,7 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
             //alert(objectToJson(tests))
             if (tests.length > 0) {
                 const metrics = convertTestsToMetrics(tests);
-                //alert(objectToJson(metrics))
+                
                 set((state: StatisticsSlice) => ({ 
                     metrics,
                     metrics_modal: metrics
@@ -191,9 +191,9 @@ export const createStatisticsSlice = (set: any, get: any): StatisticsSlice => ({
                 get().loadTests( student_id, res.year, res.month, metricName);
             }
         }));
-        set({isExamChartModal: true, metricName})
+        set({ metricName}) //isExamChartModal: true,
     },
-    hideExamChartModal:() => set({isExamChartModal: false,}),
+    hideExamChartModal:() => set({isExamChartModal: false, metricName: ''}),
 });
 
   

@@ -1,35 +1,37 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { Achieve, Achievement } from '../../model';
-import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
+import { AchieveIcon } from '../components/AchieveIcon';
 
 
 export type Props = {
+    isUnlocked: boolean;
     achieves: Achieve[] | Achievement[];
     onClick: (id: number) => void;
 };
 
-export const AchievesPanel: React.FC<Props> = ({ achieves, onClick }) => {  
+export const AchievesPanel: React.FC<Props> = ({ isUnlocked, achieves, onClick }) => {  
     return (
         <View style={styles.container}>
             {achieves.length === 0 && <Text style={styles.emptyLabel}>No achievements</Text>}
             {achieves.length > 0 &&
-                <ScrollView contentContainerStyle={styles.section}>
+                <View style={styles.section}>
                     {achieves.map((item) => {
                         const level = "level" in item ? item.level : 1;
 
                         return (
                             <AchieveIcon key={item.id}
                                 onClick={() => onClick(item.id)}
-                                size={78}
+                                size={64}
                                 image={item.image}
                                 label={item.name}
-                                level={level}
-                                effect={item.effect}
+                                level={level > 0 ? level : 1}
+                                percent={isUnlocked ? 1 : 0.5}
+                                //effect={item.effect}
                             />
                         );
                     })}
-                </ScrollView>}
+                </View>}
         </View>
     );
 };
@@ -40,8 +42,8 @@ const styles = StyleSheet.create({
     section: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 8,
-        padding: 8,
+        rowGap: 4,
+        columnGap: 36,
     },
     icon: {
         backgroundColor: 'red',

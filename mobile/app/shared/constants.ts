@@ -74,3 +74,11 @@ export const ExamGradientColors: Record<string, any> = {
   Evasion: ['#16420F', '#8DCB83'],
   Hiding: ['#123d41ff', '#48F3FF'],
 };
+
+export const AchieveGradientColors: Record<string, any> = [
+  ['#4E4E4E', '#D9D9D9'],
+  ['#0A8703', '#79CB52'],
+  ['#007152', '#00B3FF'],
+  ['#5A4EA1', '#A84B9C'],
+  ['#5A4EA1', '#A84B9C'],
+];

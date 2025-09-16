@@ -53,6 +53,7 @@ export const HeaderView = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 16,
     flexDirection: "row",
     backgroundColor: "#000",
     borderTopLeftRadius: 60,

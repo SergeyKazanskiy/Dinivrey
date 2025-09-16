@@ -1,18 +1,24 @@
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { useStore } from '../../store';
-import { LineChart } from '../components/LineChart';
+import { LineChart } from './LineChart';
 import { formatDateTime } from '../../../../shared/utils';
 import { objectToJson } from '../../../../shared/utils';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ExamGradientColors, RuleTests, ExamIcons } from '../../../../shared/constants';
-import { CalendarView } from './CalendarView';
-import { Icon } from '@rneui/themed';
+import { ExamGradientColors, ExamIcons } from '../../../../shared/constants';
+import { CalendarView } from '../views/CalendarView';
+import { Metric } from '../../model';
+import { Ionicons } from '@expo/vector-icons';
 
 
-export function ChartView() {
-  const { metricName, timestamps, metrics_modal } = useStore();
-  const { hideExamChartModal } = useStore();
+interface Props {
+  metricName: string;
+  timestamps: number[];
+  metrics_modal: Metric[];
+  w: number;
+  onHide: () => void;
+}
 
+export function ChartWidget({metricName, timestamps, metrics_modal, w, onHide}: Props) {
   const colors = ExamGradientColors[metricName];
 
   function getLabels() {
@@ -39,10 +45,13 @@ export function ChartView() {
           <Text style={styles.title}>{metricName}</Text>
         </View>
 
-        <Icon size={24} color="#fff" name="close" onPress={hideExamChartModal}/>
+        <TouchableOpacity style={{top: -4, right: -8}} onPress={onHide}>
+          <Ionicons name="arrow-up-circle" size={28} color="white" />
+        </TouchableOpacity>
+        <View style={{width: '50%'}}></View>
       </View>
 
-      <LineChart w={310} h={180}
+      <LineChart w={w} h={180}
         labels={getLabels()}
         values={getValues()}
       />
@@ -59,6 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 8,
+    marginBottom: 16
   },
   widget: {
     borderRadius: 20,

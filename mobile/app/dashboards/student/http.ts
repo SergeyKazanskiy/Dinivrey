@@ -42,8 +42,8 @@ export function get_last_game_date(student_id: number, callback: (res: {year: nu
     return httpWrapper(() => api.get(`students/${student_id}/games/last/date`), callback);
 };
 
-export function get_upcoming_events(group_id: number, callback: (events: Event[]) => void) {
-    return httpWrapper(() => api.get(`camps/groups/${group_id}/events/upcoming`), callback);
+export function get_upcoming_events(group_id: number, group_extra_id: number, callback: (events: Event[]) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/events/upcoming?group_extra_id=${group_extra_id}`), callback);
 };
 
 export function get_student_attendance_count(student_id: number, callback: (res: {count: number}) => void) {

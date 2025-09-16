@@ -62,8 +62,7 @@ const styles = StyleSheet.create({
     maxWidth: Platform.OS === 'web' ? 360 : undefined,
     width: '100%',
     height: '100%',
-    padding: 16,
-   // marginRight: 16 //???
+    paddingHorizontal: 16
   },
   container: {
     flex: 1,

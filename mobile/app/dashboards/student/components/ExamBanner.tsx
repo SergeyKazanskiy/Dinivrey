@@ -15,8 +15,10 @@ export const ExamBanner: React.FC<ExamBannerProps> = ({ value, color, icon, isSe
 
   return(
   <View style={[styles.container, { backgroundColor: color }]}>
-    <View style={styles.label}>
-      <Text style={styles.value}>{value}</Text>
+    <View style={styles.labelWrapper}>
+      <View style={styles.labelWrapper2}>
+        <Text style={styles.value}>{value}</Text>
+      </View>
     </View>
     <View style={styles.icon}>
       <Image source={ExamIcons[icon]} style={[styles.image, isSelected && {backgroundColor: '#fff'}]} />
@@ -33,12 +35,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  label: {
+  labelWrapper: {
+    width: '104%',
+    paddingBottom: 3,
+    alignItems: "center",
+    justifyContent: "center",
+
+    // iOS shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+
+    // Android
+    elevation: 5,
+
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#000'
+  },
+  labelWrapper2: {
     backgroundColor: "#000",
     width: 24,
     height: 24,
     borderRadius: 12,
-    marginTop: 4,
+    marginTop: 3,
     alignItems: "center",
     justifyContent: "center",
   },

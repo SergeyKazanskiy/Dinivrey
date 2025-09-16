@@ -159,7 +159,8 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
           }
         });
 
-        get_upcoming_events(student.group_id, (events: Event[]) => {
+        const extra = student.group_extra_id ? student.group_extra_id : 0
+        get_upcoming_events(student.group_id, extra, (events: Event[]) => {
           set({ upcoming_events: events });
         });
 
@@ -213,7 +214,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
 // Private functions
 function getAttendanceLevel(amount: number): {levelColor: string, level: number, percent: number} {
-  let count = 0, level = 0, factor = getLevelData(1).factor, step = 1;
+  let count = 0, level = 0, factor = getLevelData(1).factor, step = 0;
 
   while (count < amount) {
     if (step < factor) {

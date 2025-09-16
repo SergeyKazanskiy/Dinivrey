@@ -32,7 +32,7 @@ export const HeaderView = () => {
           <Text style={styles.title}>Hall of fame</Text>
           <FlatList data={profile_achievements} horizontal
             keyExtractor={(achieve) => achieve.image}
-            contentContainerStyle={{ justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 4}}
+            contentContainerStyle={{ justifyContent: 'space-between', marginTop: 4}}
             renderItem={({ item }) =>
               <AchieveIcon onClick={() => {}}
                   size={52}
@@ -67,6 +67,7 @@ export const HeaderView = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 16,
     backgroundColor: "#000",
     borderTopLeftRadius: 60,
     borderTopRightRadius: 20,
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 12,
-    paddingRight: 8,
+    //paddingRight: 8,
   },
   image: {
     height: 38,
