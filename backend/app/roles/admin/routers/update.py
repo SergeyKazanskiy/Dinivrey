@@ -121,8 +121,23 @@ async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: As
     if data.present == True:
         message = await AchievementService.update_participate_achievements(data.student_id, session)
 
+    await update_student_events_attended(session, data.student_id, data.present)
+
     return {"isOk": await CRUD.update(models.Attendance, id, data, session),
             "achievements": message or ''}
+
+async def update_student_events_attended(session: AsyncSession, student_id: int, present: bool):
+    delta = 1 if present else -1
+
+    stmt = (
+        update(models.Student)
+        .where(models.Student.id == student_id)
+        .values(
+            events_attended=models.Student.events_attended + delta
+        )
+    )
+    await session.execute(stmt)
+    await session.commit()
 
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
@@ -130,6 +145,7 @@ async def update_all_attendances(event_id: int, group_id: int, data: schemas.Att
     for row in rows:
         await CRUD.update(models.Attendance, row.id, data, session)
         await AchievementService.update_participate_achievements(row.id, session)
+        await update_student_events_attended(session, row.student_id, True)
     return {"isOk": True}
 
 

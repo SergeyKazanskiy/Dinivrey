@@ -104,10 +104,23 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
 
     # try:
     #     await session.execute(text("""
-    #         ALTER TABLE achievements ADD COLUMN profile_place INTEGER NOT NULL DEFAULT 0;
+    #         ALTER TABLE students ADD COLUMN events_attended INTEGER NOT NULL DEFAULT 0;
     #     """))
     # except Exception as e:
-    #     print("!!!!! error:", e)    
+    #     print("!!!!! error:", e)
+
+    # try:
+    #     await session.execute(text("""
+    #         UPDATE students
+    #         SET events_attended = (
+    #             SELECT COUNT(*)
+    #             FROM attendances a
+    #             WHERE a.student_id = students.id
+    #             AND a.present = 1
+    #         ); 
+    #         """))
+    # except Exception as e:
+    #     print("!!!!! error:", e)     
 
     # try:
     #     await session.execute(text("""
@@ -116,12 +129,12 @@ async def add_new_fields(session: AsyncSession = Depends(get_session)):
     # except Exception as e:
     #     print("!!!!! error:", e)  
 
-    try:
-        await session.execute(text("""
-            ALTER TABLE students ADD COLUMN avatar TEXT NOT NULL DEFAULT 'Avatar_1';
-        """))
-    except Exception as e:
-        print("!!!!! error:", e)
+    # try:
+    #     await session.execute(text("""
+    #         ALTER TABLE students ADD COLUMN avatar TEXT NOT NULL DEFAULT 'Avatar_1';
+    #     """))
+    # except Exception as e:
+    #     print("!!!!! error:", e)
 
     await session.commit()
     return {"status": "Success"}

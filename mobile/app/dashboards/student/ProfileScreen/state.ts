@@ -119,7 +119,6 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   },
 
   loadStudent:(student_id: number) => {
-    
     get_student(student_id, (student: Student) => {
       if (student) {
         const { saveNotificationToken, loadNotifications }: ProfileSlice = get();
@@ -166,6 +165,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
         get_student_attendance_count(student_id, (res: {count: number}) => {
           const { levelColor, level, percent } = getAttendanceLevel(res.count);
+
           set({ levelColor, level, percent });
         })
       }
@@ -213,22 +213,22 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 });
 
 // Private functions
-function getAttendanceLevel(amount: number): {levelColor: string, level: number, percent: number} {
+export function getAttendanceLevel(amount: number): {levelColor: string, level: number, percent: number} {
   let count = 0, level = 0, factor = getLevelData(1).factor, step = 0;
 
   while (count < amount) {
-    if (step < factor) {
-      step++;
-    } else {
-      level++;
-      factor = getLevelData(level).factor;
-      step = 1;
-    }
-    //alert(level + ' ' + parseFloat((step / factor).toFixed(2)))
-    count++;
-  }
+    step++;
 
-  return {levelColor: getLevelData(level).color, level, percent: parseFloat((step / factor).toFixed(2)) }
+    if (step === factor) {
+      level++;
+      factor = getLevelData(level + 1).factor;
+      step = 0;
+    }
+    count++;
+    //alert('level:' + level + ' step:' + step + ' factor:' + factor + ' count:' + count)
+  }
+  const percent = step / factor === 1 ? 0 : parseFloat((step / factor).toFixed(2));
+  return {levelColor: getLevelData(level).color, level, percent }
 }
 
 function getLevelData(level: number): {color: string, factor: number} {

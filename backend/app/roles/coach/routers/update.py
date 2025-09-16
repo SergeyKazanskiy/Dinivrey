@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import delete, update
 from database import get_session
 from crud import CRUD
 from roles.coach import schemas
@@ -27,6 +28,7 @@ router = APIRouter()
 @router.put("/camps/events/attendances/{id}", tags=["Coach"])
 async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     response = {"isOk": await CRUD.update(models.Attendance, id, data, session), "notifications": []}
+    await update_student_events_attended(session, data.student_id, data.present)
 
     if data.present == True:
         achievements = await AchievementService.update_participate_achievements(data.student_id, session)
@@ -36,6 +38,19 @@ async def update_attendance(id: int, data: schemas.AttendanceUpdate, session: As
 
     return response
 
+async def update_student_events_attended(session: AsyncSession, student_id: int, present: bool):
+    delta = 1 if present else -1
+
+    stmt = (
+        update(models.Student)
+        .where(models.Student.id == student_id)
+        .values(
+            events_attended=models.Student.events_attended + delta
+        )
+    )
+    await session.execute(stmt)
+    await session.commit()
+
 @router.put("/camps/events/{event_id}/groups/{group_id}/attendances", tags=["Coach"])
 async def update_all_attendances(event_id: int, group_id: int, data: schemas.AttendanceUpdate, session: AsyncSession = Depends(get_session)):
     rows = await CRUD.get(models.Attendance, session, filters={"event_id": event_id, "group_id": group_id})
@@ -43,6 +58,7 @@ async def update_all_attendances(event_id: int, group_id: int, data: schemas.Att
     notifications = []
     for row in rows:
         await CRUD.update(models.Attendance, row.id, data, session)
+        await update_student_events_attended(session, row.student_id, True)
         
         achievements = await AchievementService.update_participate_achievements(row.student_id, session)
         if achievements["added"] or achievements["updated"]:

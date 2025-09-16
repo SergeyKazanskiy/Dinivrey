@@ -122,7 +122,7 @@ export const createAttendanceSlice = (set: any, get: any): AttendanceSlice => ({
         if (attendance) {
             update_attendance(attendance_id, {student_id: attendance.student_id, present: !attendance.present}, (res) => {
                 if (res.isOk) {
-                    alert(objectToJson(res))
+                    //alert(objectToJson(res))
 
                     
                     const currentEvent = events_shedules.find(el => el.id === event_id);

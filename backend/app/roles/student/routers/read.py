@@ -499,6 +499,7 @@ async def get_liders(group_id: int, session: AsyncSession = Depends(get_session)
                 'last_name': student.last_name,
                 'gender': student.gender,
                 'age': student.age,
+                'events_attended': student.events_attended,
                 'speed': test.speed,
                 'stamina': test.stamina,
                 'climbing': test.climbing,

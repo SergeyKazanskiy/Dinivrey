@@ -7,7 +7,7 @@ import { examColors, RuleTests, ImagesPath } from '../../../../shared/constants'
 import { ScoreBanner2 } from '../../components/ScoreBanner2';
 import { objectToJson } from "@/app/shared/utils";
 import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
-import { LidersSlice } from "../state";
+import { getAttendanceLevel } from "../../ProfileScreen/state";
 
 
 export const LidersView = () => {
@@ -28,10 +28,18 @@ export const LidersView = () => {
       keyExtractor={(index) => index.toString()}
       renderItem={({ item, index }) => {
       const average=(item.speed + item.stamina + item.climbing + item.evasion + item.hiding) / 5
+      const attandanceLevel = getAttendanceLevel(item.events_attended).level
+
       return (
         <View style={[styles.cell, styles.item]}>
           <View style={{flexDirection: "row"}}>
-            <Image style={styles.image} source={{uri: `${ImagesPath}/avatars/${item.avatar}.png`}} />
+             <View style={{position: "relative"}}>
+              <Image style={styles.image} source={{uri: `${ImagesPath}/avatars/${item.avatar}.png`}} />
+
+              <View style={[styles.badgeWrapper, {position:'absolute'}]}>
+                <Text style={[styles.badge]}>{attandanceLevel}</Text>
+              </View>
+             </View>
           
             <View style={{flexDirection: 'column', justifyContent: 'center', gap: 3}}>
               <Text style={styles.name}>{item.first_name}</Text> 
@@ -88,8 +96,10 @@ const styles = StyleSheet.create({
     height: 38,
     width: 38,
     borderRadius: 19,
+    borderWidth: 2,
+    borderColor: '#D1FF4D',
     marginTop: 4,
-    marginLeft: 4
+    marginLeft: 4,
   },
   name: {
     color: "#fff",
@@ -103,6 +113,20 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     backgroundColor: "#555"
   },
+  badgeWrapper: {
+    height: 16,
+    width: 16,
+    backgroundColor: '#000',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#fff',
+    justifyContent: 'center'
+  },
+  badge: {
+    color: "#fff",
+    fontSize: 8,
+    alignSelf:'center',
+  }
 });
 
 
