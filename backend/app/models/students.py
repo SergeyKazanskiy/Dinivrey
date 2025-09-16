@@ -25,6 +25,7 @@ class Student(Base):
     password = Column(String, unique=True, nullable=True)
     token_FCM = Column(String, default="", nullable=False)
     avatar = Column(String, default="Avatar_1", nullable=False)
+    events_attended = Column(Integer, nullable=False, default=0)
     group = relationship("Group", back_populates="students")
     parents = relationship("Parent", back_populates="student", cascade="all, delete")
     tests = relationship("Test", back_populates="student", cascade="all, delete")

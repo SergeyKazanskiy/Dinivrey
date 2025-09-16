@@ -167,6 +167,7 @@ export interface Lider {
     avatar: string;
     first_name: string;
     last_name: string;
+    events_attended: number;
 
     speed: number;
     stamina: number;
