@@ -90,3 +90,13 @@ class TokenUpdate(BaseModel):
 
 class AvatarUpdate(BaseModel):
     avatar: str
+
+class LockedAchieves(BaseModel):
+    id: int
+    image: str
+    name: str
+    category: str
+    effect: str
+    progress: float
+    level: int
+    
