@@ -82,7 +82,7 @@ export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label
                 borderWidth: 2, borderColor: colors[0]
               }]}
             >
-              <Text style={[styles.percent, {color: level > 1 ? '#fff' : '#222'}]}>{percent * 100}%</Text>
+              <Text style={[styles.percent, {color: level > 1 ? '#fff' : percent === 0 ?'#ddd' : '#222'}]}>{percent * 100}%</Text>
             </LinearGradient>
           </ImageBackground>
         </Animatable.View>

@@ -18,6 +18,7 @@ export const AchievesPanel: React.FC<Props> = ({ isUnlocked, achieves, onClick }
                 <View style={styles.section}>
                     {achieves.map((item) => {
                         const level = "level" in item ? item.level : 1;
+                        const progress = "progress" in item ? item.progress : 1;
 
                         return (
                             <AchieveIcon key={item.id}
@@ -25,9 +26,9 @@ export const AchievesPanel: React.FC<Props> = ({ isUnlocked, achieves, onClick }
                                 size={64}
                                 image={item.image}
                                 label={item.name}
-                                level={level > 0 ? level : 1}
-                                percent={isUnlocked ? 1 : 0.5}
-                                //effect={item.effect}
+                                level={level?? 1}
+                                percent={progress?? 0}
+                                effect={item.effect}
                             />
                         );
                     })}

@@ -9,6 +9,7 @@ from sqlalchemy.future import select
 from sqlalchemy import desc, asc, or_, exists, func
 from datetime import datetime, timedelta
 from services.NotificationService import NotificationService
+from services.ProgressService import ProgressService, LastTest
 
 router = APIRouter()
 
@@ -445,8 +446,8 @@ async def get_student_achieves(id: int, session: AsyncSession = Depends(get_sess
                 profile_place = row[7],
             ) for row in rows]
 
-@router.get("/students/{id}/achievements/locked", response_model=List[schemas.AchieveResponse], tags=["Student"])
-async def get_locked_achieves(id: int, session: AsyncSession = Depends(get_session)):
+@router.get("/students/{id}/achievements/locked2", response_model=List[schemas.AchieveResponse], tags=["Student"])
+async def get_locked_achieves2(id: int, session: AsyncSession = Depends(get_session)):
     A = models.Achieve
     S = models.Achievement
 
@@ -474,6 +475,56 @@ async def get_locked_achieves(id: int, session: AsyncSession = Depends(get_sessi
                 profile_place = 0,
                 level = None,
             ) for row in rows]
+
+
+
+@router.get("/students/{id}/achievements/locked", response_model=List[schemas.LockedAchieves], tags=["Student"])
+async def get_locked_achieves(id: int, session: AsyncSession = Depends(get_session)):
+    A = models.Achieve
+    S = models.Achievement
+
+    subquery = (
+        select(S.id)
+        .where((S.student_id == id) & (S.achieve_id == A.id))
+    )
+
+    stmt = (
+        select(A.id, A.image, A.name, A.category, A.effect, A.hasRules)
+        .where(~exists(subquery))
+        .order_by(asc(A.name))
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    stmt2 = (select(models.Test).where(models.Test.student_id == id).order_by(desc(models.Test.timestamp)).limit(1))
+    result = await session.execute(stmt2)
+    last_tests = result.scalars().all()
+    last_test: LastTest = last_tests[0] if last_tests else None
+
+    achieves =[]
+    for row in rows:
+        progress = 0.0
+        level = 1
+
+        if row[3] == 'Test' and row[5] is True and last_test:
+            progress, level = await ProgressService.calc_tests_progress(session, last_test, row[0])
+            #print('!!!!!_9 ', row[0], row[1], row[2], row[3], row[4], progress, level)  
+        
+        achieve = schemas.LockedAchieves(
+            id = row[0],
+            image = row[1],
+            name = row[2],
+            category = row[3],
+            effect = row[4],
+            progress = progress,
+            level = level or 1,
+        ) 
+        achieves.append(achieve)
+
+    print('!!!!!_5. ', achieves)
+    return achieves
+
 
 # Liders
 @router.get("/camps", response_model=List[schemas.CampResponse], tags=["Student"])

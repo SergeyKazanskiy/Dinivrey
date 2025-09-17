@@ -50,6 +50,8 @@ export interface Achieve {
   name: string;
   category: string;
   effect: string;
+  progress?: number;
+  level?: number;
 }
 
 export type Test = {
