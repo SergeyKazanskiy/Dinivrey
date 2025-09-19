@@ -26,7 +26,7 @@ export const StudentPage: React.FC = () => {
     const camp = camps.find(el => el.id === camp_id)!;
     const group = groups.find(el => el.id === group_id)!;
     const breadcrumb: string = camp.name + ' / ' + group.name;
-    const fileName = first_name + '_' + last_name + '_' + studentId
+    const fileName = last_name + '_' + first_name + '_' + studentId
     const photoPath = photo === 'Student_boy.png' || photo === 'Student_girl.png' ?
         ImagesPath + '/photos/' + photo :
         ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + photo
