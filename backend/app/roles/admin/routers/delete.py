@@ -37,7 +37,7 @@ async def delete_student(id: int, session: Session = Depends(get_session)):
 
     result = await PhotoStorageService.delete_student_photo(id, session)
     if not result.isOk:
-        raise HTTPException(status_code=result.error_code, detail=result.error_message)
+       raise HTTPException(status_code=result.error_code, detail=result.error_message)
 
     return {"isOk": await CRUD.delete(models.Student, id, session)}
 

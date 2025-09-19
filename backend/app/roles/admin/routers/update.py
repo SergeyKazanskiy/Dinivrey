@@ -19,9 +19,10 @@ router = APIRouter()
 @router.put("/camps/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession = Depends(get_session)):
     
-    result = await PhotoStorageService.rename_camp_folder(id, data.name, session)
-    if not result.isOk:
-        raise HTTPException(status_code=result.error_code, detail=result.error_message)
+    if data.name:
+        result = await PhotoStorageService.rename_camp_folder(id, data.name, session)
+        if not result.isOk:
+            raise HTTPException(status_code=result.error_code, detail=result.error_message)
 
     return {"isOk": await CRUD.update(models.Camp, id, data, session)}
 
@@ -92,7 +93,7 @@ async def update_student_test(student_id: int, test_id: int, data: schemas.TestU
 
 
 @router.post("/students/{id}/photo", response_model=schemas.ResponseOk, tags=["Admin_update"])
-async def update_coach_photo(game_id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+async def update_student_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     return await PhotoStorageService.upload_student_photo(id, file, session)
 
 @router.put("/students/{student_id}/games/{game_id}", tags=["Admin_update"])

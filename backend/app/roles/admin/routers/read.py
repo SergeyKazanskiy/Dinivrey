@@ -504,19 +504,19 @@ async def get_camp_last_statistics(id: int, session: AsyncSession = Depends(get_
 
     if row:
         return {
-            "speed": row.avg_speed,
-            "stamina": row.avg_stamina,
-            "climbing": row.avg_climbing,
-            "evasion": row.avg_evasion,
-            "hiding": row.avg_hiding
+            "speed": row.avg_speed or 0.0,
+            "stamina": row.avg_stamina or 0.0,
+            "climbing": row.avg_climbing or 0.0,
+            "evasion": row.avg_evasion or 0.0,
+            "hiding": row.avg_hiding or 0.0
         }
     else:
         return {
-            "speed": None,
-            "stamina": None,
-            "climbing": None,
-            "evasion": None,
-            "hiding": None
+            "speed": 0.0,
+            "stamina": 0.0,
+            "climbing": 0.0,
+            "evasion": 0.0,
+            "hiding": 0.0
         }
 
 
