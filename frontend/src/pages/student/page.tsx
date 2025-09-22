@@ -21,7 +21,8 @@ export const StudentPage: React.FC = () => {
     const { closeStudent, updateStudents } = useStudentsStore();
     const { photo, first_name, last_name, isNotificationsModal, notifications } = useStore();
     const { isProfileChanged, isParentsChanged, isAddressChanged, isGroupsChanged } = useStore();
-    const { loadStudent, updateStudent, deleteNotifications, uploadPhoto, hideNotificationsModal } = useStore();
+    const { loadStudent, updateStudent, deleteNotifications, uploadPhoto, hideNotificationsModal} = useStore();
+    const { setGroups, setExtraGroups } = useStore();
 
     const camp = camps.find(el => el.id === camp_id)!;
     const group = groups.find(el => el.id === group_id)!;
@@ -33,6 +34,8 @@ export const StudentPage: React.FC = () => {
                   
     useEffect(() => {
         loadStudent(studentId, camp_id);
+        setGroups(groups);
+        setExtraGroups(groups);
     }, [loadStudent ]);
 
     const [isBackAlert, setIsBackAlert] = useState(false);
