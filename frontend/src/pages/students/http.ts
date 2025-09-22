@@ -2,6 +2,7 @@ import { httpWrapper } from '../../shared/http/httpWrapper';
 import { api } from '../../api/api';
 import { Camp, Group, Schedule, Lider, Student } from './model';
 import { Parent } from '../student/model';
+import { objectToJson } from '../../shared/utils';
 
 // Get
 export function get_camps(callback: (camps: Camp[]) => void) {

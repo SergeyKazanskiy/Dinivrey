@@ -30,9 +30,10 @@ async def update_camp(id: int, data: schemas.CampUpdate, session: AsyncSession =
 @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
 
-    result = await PhotoStorageService.rename_group_folder(id, data.name, session)
-    if not result.isOk:
-        raise HTTPException(status_code=result.error_code, detail=result.error_message)
+    if data.name:
+        result = await PhotoStorageService.rename_group_folder(id, data.name, session)
+        if not result.isOk:
+            raise HTTPException(status_code=result.error_code, detail=result.error_message)
 
     return {"isOk": await CRUD.update(models.Group, id, data, session)}
 
