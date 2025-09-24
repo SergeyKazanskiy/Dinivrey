@@ -170,7 +170,7 @@ class PhotoStorageService:
 
         folder = Path(UPLOAD_FOLDER) / camp_name / 'students' / group_name
         path = Path(folder).joinpath(student_photo_name)
-        print("!!!!!_2", path)
+        #print("!!!!!_2", path)
         # 4.Checking if file exist (if no - Error! File have to exist!)
         if not path.exists():
             return ResponseOk(isOk=False, error_code=405, error_message="Something is wrong, the specified file is not there")

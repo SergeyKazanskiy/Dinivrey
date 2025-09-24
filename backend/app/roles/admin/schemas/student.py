@@ -199,7 +199,7 @@ class StudentAchieve(BaseModel):
     id: int
     image: str
     name: str
-    level: str
+    level: int
 
 class StudentAchieveLider(BaseModel):
     id: int

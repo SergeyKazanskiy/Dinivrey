@@ -5,12 +5,12 @@ import { StateSlice } from '../state';
 export interface AddressSlice {
     city: string;
     street: string;
-    home: string;
+    house: string;
     isAddressChanged: boolean;
 
     setCity:(city: string) => void;
     setStreet:(street: string) => void;
-    setHome:(home: string) => void;
+    setHome:(house: string) => void;
 
     checkAddress:() => void;
     getAddress:() => StudentAddress;
@@ -19,26 +19,26 @@ export interface AddressSlice {
 export const createAddressSlice = (set: any, get: any): AddressSlice => ({
     city: 'City',
     street: 'Street',
-    home: 'Home',
+    house: '',
     isAddressChanged: false,
 
     setCity:(city: string) => set({ city }),
     setStreet:(street: string) => set({ street }),
-    setHome:(home: string) => set({ home }),
+    setHome:(house: string) => set({ house }),
 
     checkAddress:() => {
-        const { student, city, street, home }: StateSlice & AddressSlice= get();
+        const { student, city, street, 	house }: StateSlice & AddressSlice= get();
         if (student) {
             const isAddressChanged = 
             city !== student.city ||
             street !== student.street ||
-            home !== student.home;
+            house !== student.house;
             set({ isAddressChanged }); 
         }   
     },
 
     getAddress:() => {
-        const { city, street, home }: AddressSlice = get();
-        return { city, street, home }
+        const { city, street, house }: AddressSlice = get();
+        return { city, street, house }
     }
 });

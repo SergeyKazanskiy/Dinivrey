@@ -1,0 +1,61 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - Developer
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # --- Подготовка SSH для подключения к VPS ---
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+    # --- Dev Deployment (Developer branch) ---
+    - name: Deploy Dev
+      if: github.ref == 'refs/heads/Developer'
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+          "cd ~/project && ./deploy.sh dev"
+
+    # --- Prod Build & Deployment (main branch) ---
+    - name: Build & Push Prod Images
+      if: github.ref == 'refs/heads/main'
+      run: |
+        # Логинимся в Docker Hub
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+        # Определяем последнюю версию в Docker Hub
+        LATEST=$(curl -s https://hub.docker.com/v2/repositories/dockerhub_user/backend_prod/tags?page_size=1 \
+          | jq -r '.results[0].name')
+        if [ "$LATEST" = "null" ] || [ -z "$LATEST" ]; then
+          NEW="1.0.0"
+        else
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST"
+          PATCH=$((PATCH+1))
+          NEW="$MAJOR.$MINOR.$PATCH"
+        fi
+        echo "Новая версия: $NEW"
+
+        # Собираем prod-образы
+        docker build -t dockerhub_user/backend_prod:$NEW ./backend
+        docker build -t dockerhub_user/frontend_prod:$NEW ./frontend
+
+        # Пушим в Docker Hub
+        docker push dockerhub_user/backend_prod:$NEW
+        docker push dockerhub_user/frontend_prod:$NEW
+
+        # Деплой на VPS
+        ssh -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+          "cd ~/project && ./deploy.sh prod $NEW"

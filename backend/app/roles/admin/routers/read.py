@@ -765,7 +765,7 @@ async def get_group_honores(group_id: int, achieve_id: int, session: AsyncSessio
     )
     images_result = await session.execute(images_stmt)
     image_rows = images_result.all()
-
+    
     # 3. Собираем достижения по студентам
     achieves = defaultdict(list)
 
