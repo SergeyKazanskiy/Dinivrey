@@ -5,7 +5,7 @@ import { useStore } from './store';
 import { DrillsView } from './views/DrillsView';
 import { DrillView } from './views/DrillView';
 import { DrillModal } from './components/DrillModal';
-import { DeleteMenu } from '../../components/DeleteMenu';
+import { DeleteModal } from './components/DeleteModal';
 
 
 export const DrillsPage: React.FC = () => {
@@ -28,7 +28,7 @@ export const DrillsPage: React.FC = () => {
                     {isModal && <Modal isOpen={isModal} onClose={closeModal} isCentered>
                         <ModalContent w='380px'>
                             {isAdd && <DrillModal/>}
-                            {isDelete && <DeleteMenu deleteAction={deleteDrill}/>}
+                            {isDelete && <DeleteModal/>}
                         </ModalContent>
                     </Modal>}
              
