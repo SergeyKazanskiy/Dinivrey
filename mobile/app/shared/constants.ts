@@ -82,3 +82,5 @@ export const AchieveGradientColors: Record<string, any> = [
   ['#5A4EA1', '#A84B9C'],
   ['#5A4EA1', '#A84B9C'],
 ];
+
+export const Locations: string[] = ['Pardes Hanna Agricultural High School', 'Beit Eliezer High School']
