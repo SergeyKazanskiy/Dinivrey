@@ -1,7 +1,7 @@
 import { Metric } from '../model';
 import { update_metric } from '../http';
 import { objectToJson } from '../../../shared/utils';
-import { Camp } from '../../achievements/model';
+import { Camp } from '../model';
 
 
 export interface MetricsSlice {

@@ -62,3 +62,5 @@ export const StudentsIcons = {
 export const ImagesPath = 'http://localhost:8000/images';
 
 export const DrillLevels: string[] = ['Beginner', 'Intermediate', 'Advanced'];
+
+export const Locations: string[] = ['Pardes Hanna Agricultural High School', 'Beit Eliezer High School']

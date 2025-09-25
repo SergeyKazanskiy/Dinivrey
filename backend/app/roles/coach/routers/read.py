@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Dict
 from database import get_session
 from crud import CRUD
 from roles.coach import schemas
@@ -621,3 +621,21 @@ async def get_event_game(id: int, session: AsyncSession = Depends(get_session)):
 @router.get("/camps/events/games/{game_id}/gamers", response_model=List[schemas.GamerResponse], tags=["Coach"])
 async def get_game_players(game_id: int, session: AsyncSession = Depends(get_session)):
     return await CRUD.get(models.Gamer, session, filters={"game_id": game_id})
+
+
+# Camp location
+@router.get("/camps/groups/{group_id}/location", response_model=Dict[str, str], tags=["Coach"])
+async def get_camp_location(group_id: int, session: AsyncSession = Depends(get_session)):
+
+    stmt = (
+        select(models.Camp.city)
+        .join(models.Group, models.Camp.id == models.Group.camp_id)
+        .where(models.Group.id == group_id)
+    )
+    result = await session.execute(stmt)
+    camp_city = result.scalar_one_or_none()
+
+    if camp_city is None:
+        raise HTTPException(status_code=404, detail="Group not found")
+    
+    return {"city": camp_city}

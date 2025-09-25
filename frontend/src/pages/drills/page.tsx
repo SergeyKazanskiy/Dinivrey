@@ -9,7 +9,7 @@ import { DeleteModal } from './components/DeleteModal';
 
 
 export const DrillsPage: React.FC = () => {
-    const { isModal, isAdd, isDelete, drills } = useStore();
+    const { isModal, isAdd, isDelete, isDrillView } = useStore();
     const { loadDrills, closeModal, deleteDrill } = useStore();
 
     useEffect(() => {
@@ -36,8 +36,8 @@ export const DrillsPage: React.FC = () => {
                 </Box>
 
                 <Box px='12px' pt='2px' style={screenStyles.widget} w='320px'>
-                    <DrillView/>
-                </Box>   
+                    {isDrillView && <DrillView/>}
+                </Box> 
             </SimpleGrid>
         </VStack>
     )
