@@ -9,6 +9,7 @@ from sqlalchemy.future import select
 from sqlalchemy import delete, update
 from services.photo_storage import PhotoStorageService
 from services.AchievementService import AchievementService
+from services.AchievementSynс import AchievementSynс
 from services.NotificationService import NotificationService
 
 
@@ -97,11 +98,11 @@ async def update_student_test(student_id: int, test_id: int, data: schemas.TestU
 async def update_student_photo(id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     return await PhotoStorageService.upload_student_photo(id, file, session)
 
-@router.put("/students/{student_id}/games/{game_id}", tags=["Admin_update"])
-async def update_student_game(student_id: int, game_id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
+@router.put("/students/{student_id}/games/{gamer_id}", tags=["Admin_update"])
+async def update_student_game(student_id: int, gamer_id: int, data: schemas.GameUpdate, session: AsyncSession = Depends(get_session)):
     return {
-        "isOk": await CRUD.update(models.Gamer, game_id, data, session),
-        "achievements": await AchievementService.update_game_achievements(student_id, game_id, session)
+        "isOk": await CRUD.update(models.Gamer, gamer_id, data, session),
+        "achievements": await AchievementService.update_game_achievements(student_id, gamer_id, session)
         }
 
 @router.put("/students/achievements/{id}", response_model=schemas.ResponseOk, tags=["Admin_update"])
@@ -164,6 +165,17 @@ async def update_achieve_rules(id: int, data: List[schemas.RuleCreate], session:
     for rule in data:
         await CRUD.add(models.Rule, rule, session)   
     return {"isOk": True}
+
+@router.put("/achieves/{id}/synchronization", response_model=schemas.ResponseOk, tags=["Admin_update"])
+async def sync_new_achievement(id: int, data: schemas.RuleData, session: AsyncSession = Depends(get_session)): 
+    
+    notifications = await AchievementSynс.sync_new_achievement(id, data.rules, data.category, session)
+    if notifications:
+        print("!!!!!_4", notifications)
+        res = await NotificationService.send_notifications(session, notifications)
+
+    return {"isOk": True}
+
 
 # @router.post("/achieves/rules/all", response_model=schemas.ResponseOk, tags=["Admin_update"])
 # async def update_achieve_rules_all(session: AsyncSession = Depends(get_session)):
