@@ -20,7 +20,7 @@ from .coach import CoachCreate, CoachUpdate, CoachResponse
 from .coach import CoachGroupCreate, CoachGroupResponse, CoachGroup, CoachSchedule, CoachEvent
 
 from .achieve import AchieveCreate, AchieveUpdate, AchieveResponse, AchieveShortResponse
-from .rule import RuleCreate, RuleUpdate, RuleResponse
+from .rule import RuleCreate, RuleUpdate, RuleResponse, RuleData
 from .drill import DrillCreate, DrillResponse, DrillUpdate
 
 from .settings import MetricBase, MetricCreate, MetricResponse, MetricUpdate

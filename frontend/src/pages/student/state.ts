@@ -54,7 +54,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         const { setPhoto, setFirstName, setLastName, setGender, setAge, setIsActive, setPhone }: ProfileSlice = get();
         const { setCity, setStreet, setHome}: AddressSlice = get();
         const { setCamp, setGroup, setGroupExtra}: GroupsSlice = get();
-        const { initialStudent, loadLastTestDate, loadGames, loadAchieves, loadAttendance }: StateSlice = get();
+        const { initialStudent, loadLastTestDate, loadGames, loadAchieves, loadAttendance, loadNotificationsCount }: StateSlice = get();
         const { selectDate }: EventsSlice = get();
 
         get_student(studentId, (student: Student) => {
@@ -95,6 +95,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 loadGames();
                 loadAchieves();
                 loadAttendance();
+                loadNotificationsCount(studentId);
             }
         });
     },
