@@ -36,14 +36,14 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
         clearDrill();
     },
 
-    selectDrill: (drillId: number, column: string) => {
-        const { showDrillView, unselectDrill,  drill_id}: StateSlice & DrillsSlice = get();
+    selectDrill: (drillId: number, col: string) => {
+        const { showDrillView, unselectDrill,  drill_id, column}: StateSlice & DrillsSlice = get();
 
-        if (drill_id === drillId) {
+        if (drill_id === drillId && column === col) {
             unselectDrill();
         } else {
             get_drill(drillId, (drill => {
-                set({ drill_id: drillId, column});
+                set({ drill_id: drillId, column: col});
                 showDrillView();
         
                 const { setName, setLink, setDesc, setCategory, setLevel }: DrillSlice = get();
