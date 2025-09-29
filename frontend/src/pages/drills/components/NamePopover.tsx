@@ -20,7 +20,7 @@ export function NamePopover({name, setName}: Props) {
 
   return (
     <Menu size='sm' isOpen={isOpen} onOpen={onOpen} placement="bottom">
-      <MenuButton>
+      <MenuButton onClick={(e) => { e.stopPropagation()}}>
         <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' icon={<ChevronDownIcon />}/>
       </MenuButton>
       <MenuList p={2}>

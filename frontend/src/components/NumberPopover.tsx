@@ -14,7 +14,8 @@ export const NumberPopover: React.FC<Props> = ({ value, onUpdate }) => {
   const [newValue, setNewValue] = useState(value);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleOpen = () => {
+  const handleOpen = (e: { stopPropagation: () => void; }) => {
+    e.stopPropagation()
     onOpen();
     setTimeout(() => {
       inputRef.current?.focus();
@@ -37,8 +38,8 @@ export const NumberPopover: React.FC<Props> = ({ value, onUpdate }) => {
             onChange={(valStr, valNum) => setNewValue(valNum)}>
             <NumberInputField ref={inputRef} onBlur={handleBlur}/>
             <NumberInputStepper >
-              <NumberIncrementStepper children='+'/>
-              <NumberDecrementStepper children='-'/>
+              <NumberIncrementStepper children='+' onClick={(e) => { e.stopPropagation()}}/>
+              <NumberDecrementStepper children='-' onClick={(e) => { e.stopPropagation()}}/>
             </NumberInputStepper>
           </NumberInput>
       </PopoverContent>

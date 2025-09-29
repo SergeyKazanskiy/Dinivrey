@@ -12,7 +12,7 @@ export function TimeMenu({ setTime }: Props) {
 
   return (
     <Menu size='sm' placement="bottom" isOpen={isOpen} onClose={onClose} onOpen={onOpen}>
-      <MenuButton>
+      <MenuButton onClick={(e) => { e.stopPropagation()}}>
         <IconButton ml='4px' mb='2px' size='20px' aria-label='Edit' icon={<ChevronDownIcon />}/>
       </MenuButton>
       <MenuList p={2}>
