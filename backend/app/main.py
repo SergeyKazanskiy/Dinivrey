@@ -41,10 +41,10 @@ async def setup_database():
 app.include_router(router)
 app.include_router(auth_router)
 
-app.include_router(admin_select, prefix="/admin_api") #, dependencies=[Depends(get_decoded_token)]
-app.include_router(admin_create, prefix="/admin_api")
-app.include_router(admin_update, prefix="/admin_api")
-app.include_router(admin_delete, prefix="/admin_api")
+app.include_router(admin_select, prefix="/api") #, dependencies=[Depends(get_decoded_token)]
+app.include_router(admin_create, prefix="/api")
+app.include_router(admin_update, prefix="/api")
+app.include_router(admin_delete, prefix="/api")
 
 app.include_router(student_select, prefix="/student_api", dependencies=[Depends(get_decoded_token)])
 app.include_router(student_update, prefix="/student_api", dependencies=[Depends(get_decoded_token)])
