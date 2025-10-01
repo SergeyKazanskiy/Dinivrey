@@ -37,7 +37,7 @@ async def delete_student(id: int, session: Session = Depends(get_session)):
 
     result = await PhotoStorageService.delete_student_photo(id, session)
     if not result.isOk:
-        raise HTTPException(status_code=result.error_code, detail=result.error_message)
+       raise HTTPException(status_code=result.error_code, detail=result.error_message)
 
     return {"isOk": await CRUD.delete(models.Student, id, session)}
 
@@ -99,6 +99,10 @@ async def delete_manager(id: int, session: Session = Depends(get_session)):
 @router.delete("/camps/coaches/{id}", response_model=schemas.ResponseOk, tags=["Admin_delete"])
 async def delete_coach(id: int, session: Session = Depends(get_session)):
 
+    res = await PhotoStorageService.delete_coach_photo(id, session)
+    if not res.isOk:
+        raise HTTPException(status_code=res.error_code, detail=res.error_message)
+
     await session.execute(
         update(models.GroupSchedule)
         .where(models.GroupSchedule.coach_id == id)
@@ -110,10 +114,6 @@ async def delete_coach(id: int, session: Session = Depends(get_session)):
     )
 
     await session.commit()
-
-    res = await PhotoStorageService.delete_coach_photo(id, session)
-    if not res.isOk:
-        raise HTTPException(status_code=res.error_code, detail=res.error_message)
     
     return {"isOk": result.rowcount > 0}
 

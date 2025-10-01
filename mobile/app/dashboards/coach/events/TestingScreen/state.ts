@@ -1,9 +1,10 @@
 import { Store } from "../store";
 import { Tester, TestUpdate } from "../model";
-import { get_testers, update_student_test, add_all_present_students_new_tests } from '../http';
+import { get_testers, update_student_test, add_all_present_students_new_tests, get_camp_location } from '../http';
 import { NumericFields, objectToJson } from '../../../../shared/utils';
 import { EventsSlice } from '../EventsScreen/state';
 import { AttendanceSlice } from "../AttendanceScreen/state";
+import { Locations } from '../../../../shared/constants';
 
 
 export interface TestingSlice {
@@ -12,14 +13,17 @@ export interface TestingSlice {
 
     exams: NumericFields<Tester>[];
     exam: NumericFields<Tester>;
+    location:string;
 
     isModal: boolean;
     tester_id: number;
     examValue: number;
 
+    
+    loadTesters: () => void;
+    loadLocation: () => void;
 
     selectMenu: (item: string) => void;
-    loadTesters: () => void;
     selectExam: (test: NumericFields<Tester>) => void;
 
     onTesterCheck: (student_id: number) => void;
@@ -35,11 +39,30 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
 
     exam: 'speed',       
     exams: ['speed', 'stamina', 'climbing', 'evasion', 'hiding'],
+    location: '',
 
     isModal: false,
     tester_id: 0,
     examValue: 0,
 
+
+    loadTesters: () => {
+        const { event_id, group_id, event_timestamp }: EventsSlice = get();
+
+        get_testers(event_id, group_id, event_timestamp, (testers: Tester[]) => {
+            //alert(objectToJson(testers));
+            const participants = testers.map(el => ({...el, participate: true}))
+            set({ exam: 'speed', testers: participants });
+        })
+    },
+
+    loadLocation: () => {
+        const { group_id }: EventsSlice = get();
+
+        get_camp_location(group_id, (location: string) => {
+            set({ location });
+        })
+    },
 
     selectMenu: (item: string) => {
         if (item === 'Add participants') {
@@ -50,16 +73,6 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
                 loadTesters();
             })
         }
-    },
-
-    loadTesters: () => {
-        const { event_id, group_id, event_timestamp }: EventsSlice = get();
-
-        get_testers(event_id, group_id, event_timestamp, (testers: Tester[]) => {
-            //alert(objectToJson(testers));
-            const participants = testers.map(el => ({...el, participate: true}))
-            set({ exam: 'speed', testers: participants });
-        })
     },
 
     selectExam: (selected: NumericFields<Tester>) => {
@@ -97,15 +110,16 @@ export const createTestingSlice = (set: any, get: () => Store): TestingSlice => 
 
     closeModal: () => set({ isModal: false }),
 
-    updateTest: (examValue: number, ) => {
-        const { exam, tester_id, testers, events_shedules, event_id }: TestingSlice & EventsSlice = get();
+    updateTest: (examValue: number ) => {
+        const { exam, tester_id, testers, location }: TestingSlice & EventsSlice = get();
         const tester = testers.find(el => el.id === tester_id)!;
-        const event = events_shedules.find(el => el.id === event_id)!;
+
+        const location_inx = Locations.findIndex(el => el === location) + 1
 
         const data: TestUpdate = {
             exam,
             value: examValue,
-            camp_id: exam === 'speed' ? 0: event.camp_id
+            camp_id: exam === 'speed' ? 0: location_inx
         }
         //alert(objectToJson(data))
         update_student_test(tester.id, tester.test_id, data, (res => {

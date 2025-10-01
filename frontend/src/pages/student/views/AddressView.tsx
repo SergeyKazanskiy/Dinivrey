@@ -6,14 +6,14 @@ import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 
 
 export const AddressView: React.FC = () => {
-  const { student, city, street, home } = useStore();
+  const { student, city, street, house } = useStore();
   const {setCity, setStreet, setHome, checkAddress } = useStore();
 
   useEffect(() => {
     if (student) {
       checkAddress();
     }
-  }, [city, street, home]);
+  }, [city, street, house]);
 
   return (
     <Container style={screenStyles.widget} h='48px'>                
@@ -24,7 +24,7 @@ export const AddressView: React.FC = () => {
         <ProfileCell label="Street" value={street} maxLength={12} w1='52px' w2='180px'
           onChange={(value) => setStreet(String(value))} 
         />
-        <ProfileCell label="Home" value={home} maxLength={20} w1='52px' w2='80px'
+        <ProfileCell label="Home" value={house} maxLength={20} w1='52px' w2='80px'
           onChange={(value) => setHome(String(value))}
         />
       </HStack>

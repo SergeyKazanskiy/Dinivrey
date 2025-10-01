@@ -6,6 +6,7 @@ from database import get_session
 from crud import CRUD
 from roles.manager import schemas
 import models
+from services.photo_storage import PhotoStorageService
 
 router = APIRouter()
 
@@ -13,6 +14,11 @@ router = APIRouter()
 # Groups
 @router.put("/camps/groups/{id}", response_model=schemas.ResponseOk, tags=["Manager"])
 async def update_group(id: int, data: schemas.GroupUpdate, session: AsyncSession = Depends(get_session)):
+    if data.name:
+        result = await PhotoStorageService.rename_group_folder(id, data.name, session)
+        if not result.isOk:
+            raise HTTPException(status_code=result.error_code, detail=result.error_message)
+        
     return {"isOk": await CRUD.update(models.Group, id, data, session)}
 
 @router.put("/camps/groups/schedule/{id}", response_model=schemas.ResponseOk, tags=["Manager"])

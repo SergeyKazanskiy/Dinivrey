@@ -11,7 +11,9 @@ export const ParentsView: React.FC = () => {
   const { camp_id, group_id, first_name, last_name } = useStore();
   const { parents, isProfileChanged, isParentsChanged, isAddressChanged, isGroupsChanged } = useStore();
   const { setParentName, setParentPhone, setParentEmail, updateStudent } = useStore();
-  const { studentId, updateStudents, deleteStudent } = useStudentsStore();
+
+  const { studentId, group_id: gid} = useStudentsStore();
+  const { updateStudents, deleteStudent, loadStudents } = useStudentsStore();
 
   function handleUpdate() {
     //alert(camp_id + " " + group_id+ " " + first_name+ " " + last_name)
@@ -19,6 +21,9 @@ export const ParentsView: React.FC = () => {
       alert('Not all required fields are filled in');
     } else {
       updateStudent((student) => {updateStudents(student)});
+      if (isGroupsChanged) {
+        loadStudents(gid)
+      }
     }
   }
 

@@ -45,7 +45,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
    // photo: '',
     student: null,
     initialStudent: {id:0, photo: '', first_name: '', last_name: '', phone: '', age: 0, gender: '',
-        active: false, city: '', street: '', home: '', group_id: 0, group_extra_id: 0 },
+        active: false, city: '', street: '', house: '', group_id: 0, group_extra_id: 0 },
     student_id: 0,
 
    // setPhoto:(photo: string) => set({ photo }),
@@ -54,7 +54,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
         const { setPhoto, setFirstName, setLastName, setGender, setAge, setIsActive, setPhone }: ProfileSlice = get();
         const { setCity, setStreet, setHome}: AddressSlice = get();
         const { setCamp, setGroup, setGroupExtra}: GroupsSlice = get();
-        const { initialStudent, loadLastTestDate, loadGames, loadAchieves, loadAttendance }: StateSlice = get();
+        const { initialStudent, loadLastTestDate, loadGames, loadAchieves, loadAttendance, loadNotificationsCount }: StateSlice = get();
         const { selectDate }: EventsSlice = get();
 
         get_student(studentId, (student: Student) => {
@@ -63,7 +63,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 set({ student: normalizedStudent, student_id: studentId });
 
                 const {photo, first_name, last_name, age, gender, active, phone,
-                    city, street, home, group_id, group_extra_id } = normalizedStudent;
+                    city, street, house, group_id, group_extra_id } = normalizedStudent;
                
                 setPhoto(photo);
                 setFirstName(first_name);
@@ -75,7 +75,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
                 setCity(city);
                 setStreet(street);
-                setHome(home);
+                setHome(house);
 
                 setCamp(camp_id);
                 setGroup(group_id);
@@ -95,6 +95,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
                 loadGames();
                 loadAchieves();
                 loadAttendance();
+                loadNotificationsCount(studentId);
             }
         });
     },
@@ -186,10 +187,10 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
             const { student, getProfile, getAddress, getStudentGroups }: StateSlice & ProfileSlice & AddressSlice & GroupsSlice= get();
             if (student) {
                 const { photo, first_name, last_name, phone, age, gender, active } = getProfile();
-                const { city, street, home } = getAddress();
+                const { city, street, house } = getAddress();
                 const { group_id, group_extra_id } = getStudentGroups();
                 const updatedStudent: Student = { id: student.id, photo, first_name, last_name, phone, age, gender, active,
-                    city, street, home, group_id, group_extra_id
+                    city, street, house, group_id, group_extra_id
                 }
                 const data: Partial<Student> = getChanges(student, updatedStudent);
                 const id = student.id;

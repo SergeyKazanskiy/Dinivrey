@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { auth, provider } from "./firebaseConfig";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@chakra-ui/react";
+import { setAuthToken } from "../api/api";
 
 
 type Props = {
@@ -17,7 +18,8 @@ const AuthGate: React.FC<Props> = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
-        
+        setAuthToken(token);
+
         const res = await fetch("/auth/verify", {
           headers: { Authorization: `Bearer ${token}`, },
         });
@@ -42,7 +44,11 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      // const credential = provider.getCustomParameters()
+      // const token = credential.accessToken;
+      // const user = result.user;
+      // const token2 = user.getIdToken()
     } catch (err) {
       alert("Google login failed " + err);
     }

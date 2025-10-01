@@ -78,6 +78,10 @@ export function get_testers(event_id: number, group_id: number, timestamp: numbe
     return httpWrapper(() => api.get(`camps/events/${event_id}/groups/${group_id}/testers?timestamp=${timestamp}`), callback, 'Getting testers');
 };
 
+export function get_camp_location(group_id: number, callback: (location: string) => void) {
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/location`), callback, 'Getting camp location');
+};
+
 export function add_all_present_students_new_tests(event_id: number, group_id: number, callback: (res: {isOk: boolean}) => void) {
     return httpWrapper(() => api.post(`camps/events/${event_id}/groups/${group_id}/tests`), callback);
 };

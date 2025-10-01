@@ -34,6 +34,11 @@ export function replace_rules(achieve_id: number, rules: Rule[], callback: (res:
   return httpWrapper(() => api.put(`achieves/rules/${achieve_id}`, rules), callback);
 };
 
+export function sync_new_achievement(achieve_id: number, data: {category: string, rules: Rule[]}, callback: (res: {isOk: boolean}) => void) {
+  return httpWrapper(() => api.put(`achieves/${achieve_id}/synchronization`, data), callback);
+};
+
+
 // Delete
 export function delete_achieve(achieve_id: number, callback: (res: {isOk: boolean}) => void) {
   return httpWrapper(() => api.delete(`achieves/${achieve_id}`), callback);

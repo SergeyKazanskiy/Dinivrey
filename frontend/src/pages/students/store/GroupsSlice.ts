@@ -40,7 +40,7 @@ export const createGroupsSlice = (set: any, get: any): GroupsSlice => ({
 
     selectGroup: (id: number, inx: number) => {
         const { group_id, groups }: GroupsSlice = get();
-
+        //alert(id)
         if (id !== group_id) {
             set({
                 group_id: id,

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "735296528155",
+    "project_id": "dinivrey-a4d49",
+    "storage_bucket": "dinivrey-a4d49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735296528155:android:92b35af0cb45e99d84bdbe",
+        "android_client_info": {
+          "package_name": "android.package"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735296528155-hv2eb4t0sb7bpv6bvh3u3m5l2pblkj5b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuDnhIj5MSakFLIwac_alB1NDfu1GVxPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735296528155-hv2eb4t0sb7bpv6bvh3u3m5l2pblkj5b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

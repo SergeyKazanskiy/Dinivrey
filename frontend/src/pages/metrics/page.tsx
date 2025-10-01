@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { VStack, SimpleGrid, Text, Button, HStack, Spacer } from "@chakra-ui/react";
 import { useStore } from './store';
 import { MetricsView } from './views/MetricsView';
 import { CampsFilter } from './components/CampsFilter';
+import { Locations } from '../../shared/constants';
 
 
 export const MetricsPage: React.FC = () => {
@@ -13,6 +14,11 @@ export const MetricsPage: React.FC = () => {
         loadMetrics();
         loadCamps();
     }, [loadMetrics, loadCamps]);
+
+    function getCampName(location_inx: number) {
+        const camp = camps.find(el => el.city ===Locations[location_inx]);
+        return camp?.name || ''
+    }
 
     return (
         <VStack align='start'  overflow='scroll'>
@@ -34,30 +40,30 @@ export const MetricsPage: React.FC = () => {
                     metrics={metrics.filter(el => el.test === 'Speed' && el.camp_id === 0)}
                     note='This Test applied the same way everywhere'
                 />
-                <MetricsView //2
+                <MetricsView //2 Pardes Hanna
                     test='Stamina Test - 200-400 meters run'
-                    location='Location - Pardes Hanna - Pardes Hanna Agricultural High School'
+                    location={`Location - ${getCampName(0)} - ${Locations[0]}`}
                     example='(01:20:00, meaning 01=minuets, 20=seconds)'
                     metrics={metrics.filter(el => el.test === 'Stamina' && el.camp_id === 1)}
                     note='This Test applied only to a specific location'
                 />
-                <MetricsView //3
+                <MetricsView //3 Hadera
                     test='Endurance Test - 200-400 meters run'
-                    location='Location - Hadera - Beit Eliezer High School'
+                    location={`Location - ${getCampName(1)} - ${Locations[1]}`}
                     example='(01:20:00, meaning 01=minuets, 20=seconds)'
                     metrics={metrics.filter(el => el.test === 'Stamina' && el.camp_id === 2)} //Endurance
                     note='This Test applied only to a specific location'
                 />
-                <MetricsView //4
+                <MetricsView //4 Pardes Hanna
                     test='Parkour test/climbing skills - Speed Run'
-                    location='Location - Hadera - Beit Eliezer High School'
+                    location={`Location - ${getCampName(0)} - ${Locations[0]}`}
                     example='(07:00, meaning 07 seconds, 00 milliseconds)'
                     metrics={metrics.filter(el => el.test === 'Climbing' && el.camp_id === 1)}
                     note='This Test applied only to a specific location'
                 />
-                <MetricsView //5
+                <MetricsView //5 Hadera
                     test='Parkour test/climbing skills - Speed Run'
-                    location='Location - Pardes Hanna - Pardes Hanna Agricultural High School'
+                    location={`Location - ${getCampName(1)} - ${Locations[1]}`}
                     example='(07:00, meaning 07 seconds, 00 milliseconds)'
                     metrics={metrics.filter(el => el.test === 'Climbing' && el.camp_id === 2)}
                     note='This Test applied only to a specific location'
@@ -66,4 +72,5 @@ export const MetricsPage: React.FC = () => {
         </VStack>
     )
 };
+
 
