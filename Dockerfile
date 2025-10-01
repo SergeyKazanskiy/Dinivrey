@@ -3,13 +3,20 @@ FROM node:20 AS frontend-builder
 
 WORKDIR /app/frontend
 
+# Копируем package.json и установим зависимости
 COPY frontend/package*.json ./
-COPY frontend/.env ./
-COPY frontend/.env.production ./
+
+# Копируем все .env файлы
+COPY frontend/.env ./            # локальная сборка
+COPY frontend/.env.production ./ # продакшен
+
 RUN npm install
 
 COPY frontend/ ./
-RUN npm run build
+
+# По умолчанию сборка использует .env (локально / Playground)
+ARG NODE_ENV=development
+RUN if [ "$NODE_ENV" = "production" ]; then npm run build -- --mode production; else npm run build; fi
 
 # ---------- Stage 2: backend ----------
 FROM python:3.11-slim AS backend
@@ -30,7 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx supervisor && \
     rm -rf /var/lib/apt/lists/*
 
-# Копируем фронтенд билд в nginx
+# Копируем фронтенд билд
 COPY --from=frontend-builder /app/frontend/build /var/www/html
 
 # Копируем backend
