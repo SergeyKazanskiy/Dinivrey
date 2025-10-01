@@ -10,5 +10,6 @@ export interface Metric {
 export interface Camp {
   id: number;
   name: string;
+  city: string;
 }
 

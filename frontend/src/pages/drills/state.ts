@@ -9,17 +9,23 @@ export interface StateSlice {
     isModal: boolean;
     isAdd: boolean;
     isDelete: boolean;
+    isDrillView: boolean;
+
 
     loadDrills: () => void;
     openAddModal: () => void;
     openDeleteModal: () => void;
     closeModal: () => void;
+
+    showDrillView: () => void;
+    hideDrillView: () => void;
 }
 
 export const createStateSlice = (set: any, get: any): StateSlice => ({
     isModal: false,
     isAdd: false,
     isDelete: false,
+    isDrillView: false,
 
     loadDrills: () => {
         get_drills((drils: ShortDrill[]) => {
@@ -39,4 +45,7 @@ export const createStateSlice = (set: any, get: any): StateSlice => ({
 
     openDeleteModal: () => set({ isModal: true, isAdd: false, isDelete: true }),
     closeModal: () => set({ isModal: false, isAdd: false, isDelete: false }),
+
+    showDrillView: () => set({ isDrillView: true }),
+    hideDrillView: () => set({ isDrillView: false }),
 });

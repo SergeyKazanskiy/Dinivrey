@@ -160,8 +160,8 @@ class PhotoStorageService:
 
         # 2.Getting the student's photo name (finish if there is no photo yet)
         student_photo_name: str = student.photo
-
-        if student_photo_name == '':
+        print("!!!!!_1", student.photo)
+        if student_photo_name == 'Student_boy.png' or student_photo_name == 'Student_girl.png':
             return ResponseOk(isOk=True) # Finish. Student has no photo!
 
         # 3.Creating the path object
@@ -170,7 +170,7 @@ class PhotoStorageService:
 
         folder = Path(UPLOAD_FOLDER) / camp_name / 'students' / group_name
         path = Path(folder).joinpath(student_photo_name)
-
+        #print("!!!!!_2", path)
         # 4.Checking if file exist (if no - Error! File have to exist!)
         if not path.exists():
             return ResponseOk(isOk=False, error_code=405, error_message="Something is wrong, the specified file is not there")
@@ -363,7 +363,7 @@ class PhotoStorageService:
 
         # 3.Checking if exist old folder and not exist folder with new_name
         if not old_folder.exists():
-            return ResponseOk(isOk=False, error_code=404, error_message="Old camp folder does not exist")
+            return ResponseOk(isOk=True) #, error_code=404, error_message="Old camp folder does not exist"
 
         if new_folder.exists():
             return ResponseOk(isOk=False, error_code=409, error_message="Cannot rename because a folder with that name already exists")
@@ -401,7 +401,7 @@ class PhotoStorageService:
 
         # 3.Checking if exist old folder and not exist folder with new_name
         if not old_folder.exists():
-            return ResponseOk(isOk=False, error_code=404, error_message="Old group folder does not exist")
+            return ResponseOk(isOk=True) #, error_code=404, error_message="Old group folder does not exist"
 
         if new_folder.exists():
             return ResponseOk(isOk=False, error_code=409, error_message="Cannot rename because a folder with that name already exists")
@@ -432,7 +432,7 @@ class PhotoStorageService:
 
         # 3.Checking if exist folder and it is empty    
         if not folder_path.exists():
-            return ResponseOk(isOk=False, error_code=404, error_message="Camp folder does not exist")
+            return ResponseOk(isOk=True)
 
         if any(folder_path.rglob("*")):
             return ResponseOk(isOk=False, error_code=409, error_message="Camp folder is not empty")
@@ -473,7 +473,7 @@ class PhotoStorageService:
 
          # 3.Checking if exist folder and it is empty
         if not folder_path.exists():
-            return ResponseOk(isOk=False, error_code=404, error_message="Group folder does not exist")
+            return ResponseOk(isOk=True)
 
         if any(folder_path.iterdir()):
             return ResponseOk(isOk=False, error_code=409, error_message="Group folder is not empty")

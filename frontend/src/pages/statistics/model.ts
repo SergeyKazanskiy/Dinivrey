@@ -101,7 +101,7 @@ export interface StudentAchieve {
   id: number;
   image: string;
   name: string;
-  level: string;
+  level: number;
 }
 
 export interface Honored {

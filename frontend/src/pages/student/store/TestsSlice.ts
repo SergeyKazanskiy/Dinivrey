@@ -4,6 +4,8 @@ import { add_test, update_student_test, delete_student_test} from '../http';
 import { objectToJson, NumericFields, formatDateTime } from '../../../shared/utils';
 import { CampsSlice } from '../../students/store/CampsSlice';
 import { StateSlice } from '../state';
+import { Locations } from '../../../shared/constants';
+import { GroupsSlice } from './GroupsSlice';
 
 
 export interface TestsSlice {
@@ -15,12 +17,15 @@ export interface TestsSlice {
 
     exam: NumericFields<Test>;
     exam_time: NumericFields<Test>;
+    location: string;
 
     isTestModal: boolean;
     isTestUpdate: boolean;
     isTestDelete: boolean;
 
     setTests:(tests: Test[]) => void; //student loaded
+    setLocation:(location: string) => void; //student loaded
+
     selectTestCell:(test_id: number, testColumn: string) => void;
     
     addTest:() => void;
@@ -41,12 +46,14 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
 
     exam: 'speed',
     exam_time: 'speed_time',
+    location:'',
     
     isTestModal: false,
     isTestUpdate: false,
     isTestDelete: false,
 
     setTests:(tests: Test[]) => set({ tests }),
+    setLocation:(location: string) => set({ location }),
 
     selectTestCell:(test_id: number, testColumn: string) => {
         const { tests, setTest }: TestsSlice & TestSlice = get();
@@ -114,13 +121,15 @@ export const createTestsSlice = (set: any, get: any): TestsSlice => ({
     // },
 
     updateTest: (examValue: number) => {
-        const { exam, exam_time, test_id, camp_id, tests, student_id }: TestsSlice & CampsSlice & StateSlice = get();
+        const { exam, exam_time, test_id, camp_id, tests, student_id, location }: TestsSlice & GroupsSlice & StateSlice = get();
         const test = tests.find(el => el.id === test_id)!;
 
+        const location_inx = Locations.findIndex(el => el === location) + 1
+        alert(location_inx)
         const data: TestUpdate = {
             exam,
             value: examValue,
-            camp_id: exam === 'speed' ? 0: camp_id
+            camp_id: exam === 'speed' ? 0: location_inx
         }
 
         update_student_test(student_id, test_id, data, (res => {

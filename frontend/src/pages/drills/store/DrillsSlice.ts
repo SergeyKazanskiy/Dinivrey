@@ -13,7 +13,7 @@ export interface DrillsSlice {
     
     setColumn: (column: string) => void;
     setDrills: (drills: ShortDrill[]) => void;
-    selectDrill: (drill_id: number, column: string) => void;
+    selectDrill: (drillId: number, column: string) => void;
     unselectDrill:() => void;
 
     addDrill: () => void;
@@ -36,20 +36,32 @@ export const createDrillsSlice = (set: any, get: any): DrillsSlice => ({
         clearDrill();
     },
 
-    selectDrill: (drill_id: number, column: string) => {
-        get_drill(drill_id, (drill => {
-            set({ drill_id, column});
-       
-            const { setName, setLink, setDesc, setCategory, setLevel }: DrillSlice = get();
-            setName(drill.name);
-            setLink(drill.link);
-            setDesc(drill.desc);
-            setCategory(drill.category);
-            setLevel(drill.level);
-        }));
+    selectDrill: (drillId: number, col: string) => {
+        const { showDrillView, unselectDrill,  drill_id, column}: StateSlice & DrillsSlice = get();
+
+        if (drill_id === drillId && column === col) {
+            unselectDrill();
+        } else {
+            get_drill(drillId, (drill => {
+                set({ drill_id: drillId, column: col});
+                showDrillView();
+        
+                const { setName, setLink, setDesc, setCategory, setLevel }: DrillSlice = get();
+                setName(drill.name);
+                setLink(drill.link);
+                setDesc(drill.desc);
+                setCategory(drill.category);
+                setLevel(drill.level);
+            }));
+        }
     },
 
-    unselectDrill:() => set({ drill_id: 0, column: '' }),
+    unselectDrill:() => {
+        const { hideDrillView }: StateSlice = get();
+        hideDrillView();
+
+        set({ drill_id: 0, column: '' })
+    },
 
     addDrill: () => {
         const { getNewDrill }: DrillSlice = get();

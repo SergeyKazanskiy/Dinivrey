@@ -5,11 +5,11 @@ import { useStore } from './store';
 import { DrillsView } from './views/DrillsView';
 import { DrillView } from './views/DrillView';
 import { DrillModal } from './components/DrillModal';
-import { DeleteMenu } from '../../components/DeleteMenu';
+import { DeleteModal } from './components/DeleteModal';
 
 
 export const DrillsPage: React.FC = () => {
-    const { isModal, isAdd, isDelete, drills } = useStore();
+    const { isModal, isAdd, isDelete, isDrillView } = useStore();
     const { loadDrills, closeModal, deleteDrill } = useStore();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export const DrillsPage: React.FC = () => {
                     {isModal && <Modal isOpen={isModal} onClose={closeModal} isCentered>
                         <ModalContent w='380px'>
                             {isAdd && <DrillModal/>}
-                            {isDelete && <DeleteMenu deleteAction={deleteDrill}/>}
+                            {isDelete && <DeleteModal/>}
                         </ModalContent>
                     </Modal>}
              
@@ -36,8 +36,8 @@ export const DrillsPage: React.FC = () => {
                 </Box>
 
                 <Box px='12px' pt='2px' style={screenStyles.widget} w='320px'>
-                    <DrillView/>
-                </Box>   
+                    {isDrillView && <DrillView/>}
+                </Box> 
             </SimpleGrid>
         </VStack>
     )

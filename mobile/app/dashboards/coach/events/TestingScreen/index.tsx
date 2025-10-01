@@ -14,7 +14,7 @@ import { formatDateTime } from '../../../../shared/utils';
 
 export default function TestingScreen() {
   const { event_timestamp, group_name } = useStore();
-  const { loadTesters, selectMenu } = useStore();
+  const { loadTesters, loadLocation, selectMenu } = useStore();
 
   const [isMenu, setIsMenu] = useState(false);
   const router = useRouter();
@@ -22,6 +22,7 @@ export default function TestingScreen() {
   useFocusEffect(
     useCallback(() => {
       loadTesters();
+      loadLocation();
     }, [])
   );
 

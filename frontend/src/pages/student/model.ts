@@ -27,7 +27,7 @@ export interface StudentProfile {
 export interface StudentAddress {
   city?: string;
   street?: string;
-  home?: string;
+  house?: string;
 }
 
 export interface StudentGroups {

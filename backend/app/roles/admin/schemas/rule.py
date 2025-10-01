@@ -24,3 +24,6 @@ class RuleResponse(RuleBase):
     class Config:
         from_attributes = True
 
+class RuleData(BaseModel):
+    category: str
+    rules: List[RuleCreate]

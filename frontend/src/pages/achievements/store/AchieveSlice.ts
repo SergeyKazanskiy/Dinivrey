@@ -1,6 +1,6 @@
 import { effectNames } from '../../../shared/constants';
 import { Achieve, AchieveShort, Rule } from '../model';
-import { create_achieve, add_rules, update_achieve, replace_rules } from '../httpClient';
+import { create_achieve, add_rules, update_achieve, replace_rules, sync_new_achievement } from '../httpClient';
 import { objectToJson } from '../../../shared/utils';
 import axios, {AxiosError} from 'axios';
 import { RulesSlice } from './RulesSlice';
@@ -74,7 +74,14 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
                 if (achieve.hasRules) {
                     const state: RulesSlice = get();
                     const newRules = state.rules.map(rule => ({ ...rule, achieve_id: res.id }));
-                    add_rules(newRules, (res) => {});
+                    add_rules(newRules, (res) => {
+                        //alert(objectToJson("add_rules"));
+                        const data = {category: achieveShort.category, rules: newRules}
+                        sync_new_achievement(achieveShort.id, data, (res => {
+
+                            //alert(objectToJson("sync_new_achievement"));
+                        }))
+                    });
                 } 
                 set({ achieveId: 0, ruleInx: 0, isAchieveChanged: false });
                 hideBackAlert();
@@ -91,8 +98,15 @@ export const createAchieveSlice = (set: any, get: any): AchieveSlice => ({
                 if (achieve.hasRules) {
                     const state: RulesSlice = get();
                     const newRules = state.rules.map(rule => ({ ...rule, achieve_id: achieveId}))
-                    //alert(objectToJson(newRules))
-                    replace_rules(achieveId, newRules, (res) => {})
+                    //alert(objectToJson('updateAchieve'))
+
+                    replace_rules(achieveId, newRules, (res) => {
+                        const data = {category: achieveShort.category, rules: newRules}
+                        sync_new_achievement(achieveShort.id, data, (res => {
+                           // alert(objectToJson("sync_new_achievement"))
+
+                        }))
+                    })
                 };
                 set({ achieveId: 0, ruleInx: 0, isAchieveChanged: false });
                 hideBackAlert();
