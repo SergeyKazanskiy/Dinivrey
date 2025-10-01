@@ -16,8 +16,8 @@ frontend/.DS_Store
 
 # env
 backend/.env
-frontend/.env.development
-frontend/.env.production
+# frontend/.env.development
+# frontend/.env.production
 
 # backend
 __pycache__/
