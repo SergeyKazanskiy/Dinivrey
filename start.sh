@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-set -e
-
-echo "Запуск supervisord..."
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+#!/bin/bash
+# Запускаем supervisor (nginx + uvicorn)
+supervisord -c /etc/supervisor/conf.d/supervisord.conf
+tail -f /var/log/supervisor/*.log
