@@ -7,7 +7,7 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 
 # Копируем все .env файлы
-COPY frontend/.env ./
+COPY frontend/.env.development ./
 COPY frontend/.env.production ./
 
 RUN npm install
