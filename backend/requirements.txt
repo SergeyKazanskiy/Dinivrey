@@ -6,7 +6,7 @@ python-dotenv
 firebase-admin
 aiosmtplib
 jinja2
-Pillow
+pillow
 apscheduler
 PyJWT
 requests
