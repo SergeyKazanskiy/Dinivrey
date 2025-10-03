@@ -4,3 +4,9 @@ sqlalchemy
 pydantic
 python-dotenv
 firebase-admin
+aiosmtplib
+jinja2
+Pillow
+apscheduler
+PyJWT
+requests
