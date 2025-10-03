@@ -23,8 +23,8 @@ frontend/.DS_Store
 __pycache__/
 
 # firebase
-backend/app/secrets/*
-firebase-key.json
+# backend/app/secrets/*
+# firebase-key.json
 
 # database
 backend/app/database.db
