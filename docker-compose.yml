@@ -1,15 +1,24 @@
-version: "3.8"
+version: "3.9"
+
 services:
   backend:
-    build: ./backend
+    image: sergeykazanskiy/dinivrey-backend:1.0.31
     container_name: dinivrey-backend
     ports:
       - "8000:8000"
+    networks:
+      - dinivrey-net
 
   frontend:
-    build: ./frontend
+    image: sergeykazanskiy/dinivrey-frontend:1.0.31
     container_name: dinivrey-frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    networks:
+      - dinivrey-net
+
+networks:
+  dinivrey-net:
+    driver: bridge
