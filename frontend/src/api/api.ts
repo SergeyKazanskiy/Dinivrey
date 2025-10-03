@@ -9,5 +9,4 @@ export function setAuthToken(token: string) {
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-
 //export const API_BASE_URL = 'http://localhost:8000';
