@@ -11,6 +11,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Extract PR number as version
+        run: |
+          MSG="$(git log -1 --pretty=%B)"
+          if [[ "$MSG" =~ Merge\ pull\ request\ \#([0-9]+) ]]; then
+            echo "VERSION=1.0.${BASH_REMATCH[1]}" >> $GITHUB_ENV
+          else
+            echo "VERSION=1.0.0" >> $GITHUB_ENV
+          fi
+
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
@@ -19,10 +28,10 @@ jobs:
 
       - name: Build & Push Backend
         run: |
-          docker build -t sergeykazanskiy/dinivrey-backend ./backend
-          docker push sergeykazanskiy/dinivrey-backend
+          docker build -t sergeykazanskiy/dinivrey-backend:${VERSION} ./backend
+          docker push sergeykazanskiy/dinivrey-backend:${VERSION}
 
       - name: Build & Push Frontend
         run: |
-          docker build -t sergeykazanskiy/dinivrey-frontend ./frontend
-          docker push sergeykazanskiy/dinivrey-frontend
+          docker build -t sergeykazanskiy/dinivrey-frontend:${VERSION} ./frontend
+          docker push sergeykazanskiy/dinivrey-frontend:${VERSION}
