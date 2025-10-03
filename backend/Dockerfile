@@ -21,7 +21,6 @@ COPY .env /app/backend/.env
 
 # Копируем скрипты запуска и конфиг supervisor
 COPY uvicorn_start.sh /uvicorn_start.sh
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Делаем скрипт запуска исполняемым
 RUN chmod +x /uvicorn_start.sh
