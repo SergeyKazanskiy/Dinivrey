@@ -15,7 +15,7 @@ frontend/public/.DS_Store
 frontend/.DS_Store
 
 # env
-backend/.env
+# backend/.env
 # frontend/.env.development
 # frontend/.env.production
 
