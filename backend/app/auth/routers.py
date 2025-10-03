@@ -11,7 +11,7 @@ from database import get_session
 import models
 from sqlalchemy.future import select
 from .auth_utils import get_decoded_token
-from config import settings
+#from config import settings
 
 
 load_dotenv()

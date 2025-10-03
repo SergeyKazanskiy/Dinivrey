@@ -1,6 +1,6 @@
 from fastapi import Header, HTTPException
 from firebase_admin import auth
-from config import settings
+#from config import settings
 import jwt
 import requests
 import json
