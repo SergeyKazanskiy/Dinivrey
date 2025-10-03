@@ -26,5 +26,5 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Делаем скрипт запуска исполняемым
 RUN chmod +x /uvicorn_start.sh
 
-# По умолчанию запускаем supervisor, который следит за uvicorn
-CMD ["/usr/bin/supervisord"]
+# Запускаем uvicorn
+CMD ["/uvicorn_start.sh"]
