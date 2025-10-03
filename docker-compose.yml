@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    container_name: dinivrey-backend
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    container_name: dinivrey-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
