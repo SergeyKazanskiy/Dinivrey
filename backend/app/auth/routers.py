@@ -95,8 +95,8 @@ async def login(data: schemas.LoginRequest, session: AsyncSession = Depends(get_
     if not student:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    firebase_token = auth.create_custom_token(str(student.password))
-
+    firebase_token = auth.create_custom_token(f"student-{student.id}")
+    #print(firebase_token.decode("utf-8"))
     return {
         "id_student": student.id,
         "token": firebase_token.decode("utf-8")
