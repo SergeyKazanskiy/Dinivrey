@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Button, Platform, Image, Text } from "react-native";
 import { CustomAlert } from '../components/CustomAlert';
 import { signInWithCustomToken, signOut } from "firebase/auth";
-import { auth, firebaseConfig } from "./firebaseConfig";
+import { auth } from "./firebaseConfig";
 import { useAuthState } from './state';
 import { objectToJson } from "../utils";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -30,7 +30,7 @@ export default function StudentLoginScreen() {
     axios.post( API_BASE_URL + "/student/login", { email, password })
     .then(async res => {
       const { id_student, token } = res.data;
-      //alert(id_student + "  " + token)
+      //alert(token)
       await signInWithCustomToken(auth, token);
       const idToken = await auth.currentUser?.getIdToken(true)!;
 
