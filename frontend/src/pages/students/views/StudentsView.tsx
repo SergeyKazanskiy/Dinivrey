@@ -2,7 +2,7 @@ import { SimpleGrid, Box, Text, VStack, Image, useDisclosure} from "@chakra-ui/r
 import { widgetStyles } from '../../../shared/appStyles'
 import { useStore } from '../store';
 import { StudentPopover } from '../components/StudentPopover';
-import { ImagesPath } from '../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../shared/constants';
 
 
 export const StudentsView: React.FC = () => {
@@ -14,8 +14,8 @@ export const StudentsView: React.FC = () => {
       <SimpleGrid display='flex' flexWrap='wrap' h='580px'>
         {students.map((item, inx) => {
           const photoPath = item.photo === 'Student_boy.png' || item.photo === 'Student_girl.png' ?
-            ImagesPath + '/photos/' + item.photo :
-            ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + item.photo
+            BACKEND_APP_IMAGES_URL + '/photos/' + item.photo :
+            BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/students/' + group_name + '/' + item.photo
           
           return (
             <Box key={inx} m={3} onClick={() => selectStudent(item.id)}>

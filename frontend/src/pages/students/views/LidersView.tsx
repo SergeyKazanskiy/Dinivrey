@@ -2,7 +2,7 @@ import { Box, Text, Image, Button, HStack, Spacer } from "@chakra-ui/react";
 import { widgetStyles } from '../../../shared/appStyles'
 import { useStore } from '../store';
 import { AchieveIcon } from '../components/AchieveIcon';
-import { ImagesPath } from '../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../shared/constants';
 import { PasswordDialog } from '../components/PasswordDialog';
 
 
@@ -53,8 +53,8 @@ export const LidersView: React.FC = () => {
         <Box h='538px' overflow='scroll'>    
           {liders.map((item, inx) => {
             const photoPath = item.photo === 'Student_boy.png' || item.photo === 'Student_girl.png' ?
-              ImagesPath + '/photos/' + item.photo :
-              ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + item.photo
+              BACKEND_APP_IMAGES_URL + '/photos/' + item.photo :
+              BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/students/' + group_name + '/' + item.photo
 
             return (
             <HStack key={inx} m={1} align='center'  py={1}  bg='white'>

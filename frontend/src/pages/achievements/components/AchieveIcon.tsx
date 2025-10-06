@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EffectName, effects, ImagesPath } from '../../../shared/constants'
+import { EffectName, effects, BACKEND_APP_IMAGES_URL } from '../../../shared/constants'
 import { Box, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
@@ -12,9 +12,8 @@ interface AnimatedIconProps {
 }
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, effect: selectedEffect }) => {
-  const frameSrc = ImagesPath + `/achieves/frames/${level}.png`;
-  //const pngSrc = ImagesPath + `/achieves/images/${image}.png`;
-  const gifSrc = ImagesPath + `/achieves/gifs/${image}.gif`;
+  const frameSrc = BACKEND_APP_IMAGES_URL + `/achieves/frames/${level}.png`;
+  const gifSrc = BACKEND_APP_IMAGES_URL + `/achieves/gifs/${image}.gif`;
   
   const [animationStyle, setAnimationStyle] = useState<React.CSSProperties>({});
   const effect = effects.find((e) => e.name === selectedEffect);

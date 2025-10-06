@@ -4,7 +4,7 @@ import { AvatarWrapper } from '../../components/AvatarWrapper';
 import { ScoreBanner } from '../../components/ScoreBanner';
 import { TeamPanel } from '../../components/TeamPanel';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../shared/constants';
 import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
 
 
@@ -14,7 +14,7 @@ export const HeaderView = () => {
   return (
     <View style={styles.container}>
       <AvatarWrapper
-        avatar={{uri: `${ImagesPath}/avatars/${student.avatar}.png`}}
+        avatar={{uri: `${BACKEND_APP_IMAGES_URL}/avatars/${student.avatar}.png`}}
         level={level}
         percent={percent}
         levelColor={levelColor}

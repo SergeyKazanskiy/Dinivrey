@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import { widgetStyles } from '../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
-import { ImagesPath, RuleTests } from '../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL, RuleTests } from '../../../../shared/constants';
 import { TestFields } from '../../model';
 
 
@@ -26,7 +26,7 @@ export const SportsView = () => {
                     return (
                         <TouchableOpacity onPress={() => selectTest(TestFields[index])}>
                             <Image style={styles.image}
-                                source={{ uri: `${ImagesPath}/icons/tests/${capitalizedItem}.png` }} 
+                                source={{ uri: `${BACKEND_APP_IMAGES_URL}/icons/tests/${capitalizedItem}.png` }} 
                             />
                             {/* <Text style={item === lider_test ? widgetStyles.sportSelected : widgetStyles.sport}>{item}</Text> */}
                         </TouchableOpacity>

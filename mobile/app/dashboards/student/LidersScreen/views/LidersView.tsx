@@ -3,7 +3,7 @@ import { StyleSheet, FlatList, Image, View, Text } from "react-native";
 import { useStore } from '../../store';
 import { LiderCell } from '../../../../shared/components/LiderCell';
 import { ExamBanner2 } from '../../components/ExamBanner2';
-import { examColors, RuleTests, ImagesPath } from '../../../../shared/constants';
+import { examColors, RuleTests, BACKEND_APP_IMAGES_URL } from '../../../../shared/constants';
 import { ScoreBanner2 } from '../../components/ScoreBanner2';
 import { objectToJson } from "@/app/shared/utils";
 import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
@@ -34,7 +34,7 @@ export const LidersView = () => {
         <View style={[styles.cell, styles.item]}>
           <View style={{flexDirection: "row"}}>
              <View style={{position: "relative"}}>
-              <Image style={styles.image} source={{uri: `${ImagesPath}/avatars/${item.avatar}.png`}} />
+              <Image style={styles.image} source={{uri: `${BACKEND_APP_IMAGES_URL}/avatars/${item.avatar}.png`}} />
 
               <View style={[styles.badgeWrapper, {position:'absolute'}]}>
                 <Text style={[styles.badge]}>{attandanceLevel}</Text>
