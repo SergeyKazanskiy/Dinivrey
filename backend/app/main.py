@@ -26,7 +26,7 @@ app.add_middleware(
     allow_methods=["*"],  # Разрешить все методы (GET, POST, OPTIONS и т. д.)
     allow_headers=["*"],  # Разрешить все заголовки
 )
-app.mount("/images", StaticFiles(directory="backend/app/images"), name="images")
+app.mount("/images", StaticFiles(directory="/app/backend/app/images"), name="images")
 
 
 router = APIRouter()
