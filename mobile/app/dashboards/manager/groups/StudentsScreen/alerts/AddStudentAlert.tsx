@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, TextInput, Modal, TouchableOpacity, Image, Button, Platform, StyleSheet} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Student } from '../../model';
-import { Genders, StudentsIcons, ImagesPath } from '../../../../../shared/constants';
+import { Genders, StudentsIcons, BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
 import { useStore } from '../../store';
 import { CustomAlert } from '../../../../../shared/components/CustomAlert';
 
@@ -68,11 +68,9 @@ export const AddStudentAlert: React.FC = () => {
             <View style={styles.imageBlock}>
               <TouchableOpacity onPress={handlePickImage}>
                 <Image source={{ uri: imageUri ||
-                  `${ImagesPath}/photos/${StudentsIcons[gender as keyof typeof StudentsIcons]} `}}
+                  `${BACKEND_APP_IMAGES_URL}/photos/${StudentsIcons[gender as keyof typeof StudentsIcons]} `}}
                   style={styles.avatar}
                 />
-                {/* <Image source={{ uri: `${ImagesPath}/photos/Student_boy.png` }} style={styles.avatar} /> */}
-                
               </TouchableOpacity>
               {/* <Text style={styles.imageHint}>Tap image to select</Text> */}
 

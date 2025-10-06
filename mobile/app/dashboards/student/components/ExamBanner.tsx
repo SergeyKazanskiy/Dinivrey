@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { ImagesPath } from '../../../shared/constants';
 import { RuleTests, ExamIcons } from '../../../shared/constants';
 
 

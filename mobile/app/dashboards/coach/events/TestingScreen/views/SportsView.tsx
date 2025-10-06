@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import { widgetStyles } from '../../../../../shared/styles/appStyles';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
 
 
 export const SportsView = () => {
@@ -21,7 +21,7 @@ export const SportsView = () => {
                     return (
                         <TouchableOpacity onPress={() => selectExam(item)}>
                             <Image style={[styles.image, item === exam && styles.examSelected]} 
-                                source={{ uri: `${ImagesPath}/icons/tests/${capitalizedItem}.png` }} 
+                                source={{ uri: `${BACKEND_APP_IMAGES_URL}/icons/tests/${capitalizedItem}.png` }} 
                             />
                             <Text style={widgetStyles.sport}>{item}</Text>
                         </TouchableOpacity>

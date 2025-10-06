@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Text, Image, AbsoluteCenter, chakra, useToken } from '@chakra-ui/react';
 import { CampTest } from '../model';
-import { ImagesPath } from '../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../shared/constants';
 
 
 const ChakraSvg = chakra('svg');
@@ -25,11 +25,11 @@ export const RadarChart: React.FC<RadarChartProps> = ({ test, onExam }) => {
   const radius = size * 0.43;
 
   const icons = [
-    `${ImagesPath}/icons/tests/Climbing.png`,
-    `${ImagesPath}/icons/tests/Stamina.png`,
-    `${ImagesPath}/icons/tests/Speed.png`,
-    `${ImagesPath}/icons/tests/Evasion.png`,
-    `${ImagesPath}/icons/tests/Hiding.png`,
+    `${BACKEND_APP_IMAGES_URL}/icons/tests/Climbing.png`,
+    `${BACKEND_APP_IMAGES_URL}/icons/tests/Stamina.png`,
+    `${BACKEND_APP_IMAGES_URL}/icons/tests/Speed.png`,
+    `${BACKEND_APP_IMAGES_URL}/icons/tests/Evasion.png`,
+    `${BACKEND_APP_IMAGES_URL}/icons/tests/Hiding.png`,
   ];
 
   const values = [

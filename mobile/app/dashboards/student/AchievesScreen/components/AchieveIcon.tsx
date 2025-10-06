@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image, Text, StyleSheet, TouchableOpacity, ImageSourcePropType, ImageBackground } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { ImagesPath, RuleLevels, AchieveGradientColors } from '../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL, RuleLevels, AchieveGradientColors } from '../../../../shared/constants';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -29,9 +29,9 @@ const effectMapping: Record<string, Animatable.Animation> = {
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label, level, percent, size,
   effect: selectedEffect, isGif, isAnimate = true}) => {
 
-  const frameSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/frames/${RuleLevels[level - 1]}.png` };
-  const pngSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/images/${image}.png` };
-  const gifSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/gifs/${image}.gif` };
+  const frameSrc: ImageSourcePropType = { uri: `${BACKEND_APP_IMAGES_URL}/achieves/frames/${RuleLevels[level - 1]}.png` };
+  const pngSrc: ImageSourcePropType = { uri: `${BACKEND_APP_IMAGES_URL}/achieves/images/${image}.png` };
+  const gifSrc: ImageSourcePropType = { uri: `${BACKEND_APP_IMAGES_URL}/achieves/gifs/${image}.gif` };
 
   const colors = AchieveGradientColors[level - 1]  ;
   const [animation, setAnimation] = useState<Animatable.Animation | undefined>(undefined);

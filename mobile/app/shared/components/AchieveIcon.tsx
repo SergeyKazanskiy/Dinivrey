@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image, Text, StyleSheet, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { ImagesPath, RuleLevels } from '../constants';
+import { BACKEND_APP_IMAGES_URL, RuleLevels } from '../constants';
 
 
 interface AnimatedIconProps {
@@ -25,9 +25,9 @@ const effectMapping: Record<string, Animatable.Animation> = {
 
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ onClick, image, label, level, size = 80, effect: selectedEffect, isGif, isAnimate = true}) => {
-  const frameSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/frames/${RuleLevels[level - 1]}.png` };
-  const pngSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/images/${image}.png` };
-  const gifSrc: ImageSourcePropType = { uri: `${ImagesPath}/achieves/gifs/${image}.gif` };
+  const frameSrc: ImageSourcePropType = { uri: `${BACKEND_APP_IMAGES_URL}/achieves/frames/${RuleLevels[level - 1]}.png` };
+  const pngSrc: ImageSourcePropType = { uri: `${BACKEND_APP_IMAGES_URL}/achieves/images/${image}.png` };
+  const gifSrc: ImageSourcePropType = { uri: `${BACKEND_APP_IMAGES_URL}/achieves/gifs/${image}.gif` };
 
 
   const [animation, setAnimation] = useState<Animatable.Animation | undefined>(undefined);

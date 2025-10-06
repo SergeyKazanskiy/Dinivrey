@@ -2,7 +2,7 @@ import { Box, Text, Image, Button, HStack, Spacer } from "@chakra-ui/react";
 import { widgetStyles } from '../../../shared/appStyles'
 import { useStore } from '../store';
 import { SimpleIcon } from '../components/SimpleIcon';
-import { ImagesPath, RuleLevels } from '../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL, RuleLevels } from '../../../shared/constants';
 
 
 interface PropNameCell {
@@ -24,8 +24,8 @@ export const HonoresView: React.FC = () => {
     <Box h='260px' overflow='scroll' pt={2}>    
       {honores.map((item, inx) => {
         const photoPath = item.photo === 'Student_boy.png' || item.photo === 'Student_girl.png' ?
-          ImagesPath + '/photos/' + item.photo :
-          ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + item.photo
+          BACKEND_APP_IMAGES_URL + '/photos/' + item.photo :
+          BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/students/' + group_name + '/' + item.photo
 
         return (
           <HStack key={inx} m={1} align='center' cursor='pointer' py={1} bg='white'
