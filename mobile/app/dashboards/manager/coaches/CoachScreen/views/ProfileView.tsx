@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TextInput } from 'react-native';
 import { Button } from '@rneui/themed';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
 
 
 export const ProfileView = () => {
@@ -23,7 +23,7 @@ export const ProfileView = () => {
     return (
         <View style={styles.container}>
             <View style={styles.section}>
-                <Image source={{ uri: `${ImagesPath + '/photos/' + camp_name + '/coaches/' + coach.photo}` }} style={styles.avatar} />
+                <Image source={{ uri: `${BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/coaches/' + coach.photo}` }} style={styles.avatar} />
 
                 <View style={styles.group}>
                     <Text style={styles.label}>First name</Text>

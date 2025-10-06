@@ -1,6 +1,6 @@
 import { Box, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { ImagesPath } from '../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../shared/constants';
 
 
 interface AnimatedIconProps {
@@ -12,8 +12,8 @@ interface AnimatedIconProps {
 }
 
 export const AchieveIcon: React.FC<AnimatedIconProps> = ({ image, label, level, count, onClick }) => {
-  const frameSrc = ImagesPath + `/achieves/frames/${level}.png`;
-  const pngSrc = ImagesPath + `/achieves/images/${image}.png`;
+  const frameSrc = BACKEND_APP_IMAGES_URL + `/achieves/frames/${level}.png`;
+  const pngSrc = BACKEND_APP_IMAGES_URL + `/achieves/images/${image}.png`;
 
   return (
       <Box position="relative" display="inline-block" mx='8px' cursor='pointer'

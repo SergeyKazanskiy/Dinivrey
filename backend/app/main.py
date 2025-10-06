@@ -11,6 +11,8 @@ from roles.coach.routers import coach_select, coach_create, coach_update, coach_
 from roles.manager.routers import manager_select, manager_create, manager_update, manager_delete
 
 from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+
 from auth.auth_utils import get_decoded_token
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from services.NotificationService import NotificationService
@@ -26,7 +28,9 @@ app.add_middleware(
     allow_methods=["*"],  # Разрешить все методы (GET, POST, OPTIONS и т. д.)
     allow_headers=["*"],  # Разрешить все заголовки
 )
-app.mount("/images", StaticFiles(directory="/app/backend/app/images"), name="images")
+
+IMAGES_DIR = Path(__file__).parent / "images"
+app.mount("/images", StaticFiles(directory=str(IMAGES_DIR)), name="images")
 
 
 router = APIRouter()

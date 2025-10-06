@@ -2,7 +2,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import { Avatar, Badge, ListItem } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
 
 
 export function StudentsView() {
@@ -21,8 +21,8 @@ export function StudentsView() {
         {students.map(student => {
             const itemStyle = styles.item;
             const photoPath = student.photo === 'Student_boy.png' || student.photo === 'Student_girl.png' ?
-            ImagesPath + '/photos/' + student.photo :
-            ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + student.photo
+            BACKEND_APP_IMAGES_URL + '/photos/' + student.photo :
+            BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/students/' + group_name + '/' + student.photo
 
             return (
                 <ListItem key={student.id}

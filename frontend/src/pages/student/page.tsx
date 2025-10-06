@@ -12,7 +12,7 @@ import { useStore as useStudentsStore } from '../students/store';
 import { useStore  } from './store';
 import { BackAlert } from '../../components/BackAlert';
 import { PhotoUploader } from '../../components/PhotoUploader';
-import { ImagesPath } from '../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../shared/constants';
 import { NotificationsModal } from './components/NotificationsModal';
 
 
@@ -29,8 +29,8 @@ export const StudentPage: React.FC = () => {
     const breadcrumb: string = camp.name + ' / ' + group.name;
     const fileName = last_name + '_' + first_name + '_' + studentId
     const photoPath = photo === 'Student_boy.png' || photo === 'Student_girl.png' ?
-        ImagesPath + '/photos/' + photo :
-        ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + photo
+        BACKEND_APP_IMAGES_URL + '/photos/' + photo :
+        BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/students/' + group_name + '/' + photo
                   
     useEffect(() => {
         loadStudent(studentId, camp_id);

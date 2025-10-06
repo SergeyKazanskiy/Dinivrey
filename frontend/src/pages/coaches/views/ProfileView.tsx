@@ -6,7 +6,7 @@ import { screenStyles, widgetStyles } from '../../../shared/appStyles'
 import { DeletePopover } from '../../../components/DeletePopover';
 import { objectToJson } from "../../../shared/utils";
 import { PhotoUploader } from '../../../components/PhotoUploader';
-import { ImagesPath } from '../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../shared/constants';
 
 
 interface Props {
@@ -23,7 +23,7 @@ export const ProfileView: React.FC<Props> = ({coach_id}) => {
 
   const coach = coaches.find(el => el.id === coach_id)!;
   const fileName = coach.first_name + '_' + coach.last_name + '_' + coach.id;
-  const photoPath = ImagesPath + '/photos/' + camp_name + '/coaches/' + coach.photo;
+  const photoPath = BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/coaches/' + coach.photo;
   const photoSrc = `${photoPath}?v=${photoVersion}`;
 
   return (

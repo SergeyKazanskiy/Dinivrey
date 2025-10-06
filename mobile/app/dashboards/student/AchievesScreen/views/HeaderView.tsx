@@ -7,7 +7,7 @@ import { TeamPanel } from '../../components/TeamPanel';
 import { useStore } from '../../store';
 import { examColors, RuleTests } from '../../../../shared/constants';
 import { AchieveIcon } from '../../../../shared/components/AchieveIcon';
-import { ImagesPath } from '../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../shared/constants';
 
 
 export const HeaderView = () => { 
@@ -22,7 +22,7 @@ export const HeaderView = () => {
     <View style={styles.container}>
       <View style={{flexDirection: "row"}}>
         <AvatarWrapper size={104}
-          avatar={{uri: `${ImagesPath}/avatars/${student.avatar}.png`}}
+          avatar={{uri: `${BACKEND_APP_IMAGES_URL}/avatars/${student.avatar}.png`}}
           level={level}
           percent={percent}
           levelColor={levelColor}

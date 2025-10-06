@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TextInput } from 'react-native';
 import { Button } from '@rneui/themed';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../../shared/constants';
 import { SelectedField, Option } from '../../../../../shared/components/SelectedField';
 
 
