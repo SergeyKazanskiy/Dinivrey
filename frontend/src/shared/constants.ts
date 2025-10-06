@@ -59,7 +59,9 @@ export const StudentsIcons = {
   Girl: "Student_girl.png",
 };
 
-export const ImagesPath = 'http://localhost:8000/images';
+//export const ImagesPath = 'http://localhost:8000/images';
+export const FRONTEND_APP_IMAGES_URL = process.env.REACT_APP_FRONTEND_IMAGES_URL as string;
+export const BACKEND_APP_IMAGES_URL = process.env.REACT_APP_BACKEND_IMAGES_URL as string;
 
 export const DrillLevels: string[] = ['Beginner', 'Intermediate', 'Advanced'];
 

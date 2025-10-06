@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { useStore } from '../../store';
-import { ImagesPath } from '../../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
 
 
 export const ProfileView = () => {
   const { student, camp_name, group_name } = useStore();
   const photoPath = student.photo === 'Student_boy.png' || student.photo === 'Student_girl.png' ?
-  ImagesPath + '/photos/' + student.photo :
-  ImagesPath + '/photos/' + camp_name + '/students/' + group_name + '/' + student.photo
+  BACKEND_APP_IMAGES_URL + '/photos/' + student.photo :
+  BACKEND_APP_IMAGES_URL + '/photos/' + camp_name + '/students/' + group_name + '/' + student.photo
 
   return (
     <View style={styles.container}>

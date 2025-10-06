@@ -7,7 +7,7 @@ import { TeamPanel } from '../../components/TeamPanel';
 import { useStore } from '../../store';
 import { examColors, RuleTests } from '../../../../shared/constants';
 import { TestFields } from '../../model';
-import { ImagesPath } from '../../../../shared/constants';
+import { BACKEND_APP_IMAGES_URL } from '../../../../shared/constants';
 
 
 export const HeaderView = () => { 
@@ -19,7 +19,7 @@ export const HeaderView = () => {
       <View style={styles.avatar}>
         <View style={{zIndex: 100}}>
           <AvatarWrapper
-            avatar={{uri: `${ImagesPath}/avatars/${student.avatar}.png`}}
+            avatar={{uri: `${BACKEND_APP_IMAGES_URL}/avatars/${student.avatar}.png`}}
             level={level}
             percent={percent}
            levelColor={levelColor}

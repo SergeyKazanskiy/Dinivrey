@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { Image } from '@chakra-ui/react';
-import { ImagesPath } from '../shared/constants';
 import { resizeImage } from '../shared/utils';
 
 
