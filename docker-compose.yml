@@ -1,19 +1,24 @@
-version: "3.9"
-
 services:
   backend:
-    image: sergeykazanskiy/dinivrey-backend:1.0.35
-    container_name: dinivrey-backend
+    build:
+      context: ./backend
+    container_name: backend
     ports:
       - "8000:8000"
-    networks:
-      - dinivrey-net
+    volumes:
+      - ./backend:/app
+      - ./media:/app/images
+    environment:
+      - PYTHONUNBUFFERED=1
 
   frontend:
-    image: sergeykazanskiy/dinivrey-frontend:1.0.35
-    container_name: dinivrey-frontend
+    build:
+      context: ./frontend
+    container_name: frontend
     ports:
-      - "80:80"
+      - "3000:80"
+    environment:
+      - BACKEND_APP_IMAGES_URL=http://192.168.0.95:8000/media
     depends_on:
       - backend
     networks:
