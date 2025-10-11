@@ -20,7 +20,7 @@ export const CampsView: React.FC = () => {
           borderWidth={item.id === campId ? 2 : 0} borderColor='red.300'
           onClick={() => selectCamp(item.id)}>
 
-          <Text color='gray.700' fontSize={16} cursor='pointer'>{item.city}</Text>
+          {/* <Text color='gray.700' fontSize={16} cursor='pointer'>{item.city}</Text> */}
           <Text color='gray.700' fontSize={16} cursor='pointer'>{item.name}</Text>
          
           <StatisticCard camp_id={item.id} onExam={() => {}}/>
