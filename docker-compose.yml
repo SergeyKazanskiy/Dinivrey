@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    image: sergeykazanskiy/dinivrey-backend:1.0.35
+    image: sergeykazanskiy/dinivrey-backend:1.0.40
     container_name: dinivrey-backend
     ports:
       - "8000:8000"
@@ -10,7 +10,7 @@ services:
       - dinivrey-net
 
   frontend:
-    image: sergeykazanskiy/dinivrey-frontend:1.0.35
+    image: sergeykazanskiy/dinivrey-frontend:1.0.40
     container_name: dinivrey-frontend
     ports:
       - "80:80"
