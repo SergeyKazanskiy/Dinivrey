@@ -2,6 +2,7 @@ import { Camp } from '../model';
 import { StateSlice } from '../state';
 import { LidersSlice } from './LidersSlice';
 import { TestsSlice } from './TestsSlice';
+import { objectToJson, sanitizeName } from '../../../shared/utils';
 
 
 export interface CampsSlice {
@@ -25,7 +26,7 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
     setCamps: (camps: Camp[])  => set({ camps, campId: 0 }),
 
     selectCamp: (camp_id: number) => {
-        const { campId }: CampsSlice = get();
+        const { campId, camps }: CampsSlice = get();
 
         if (camp_id === campId) {
              set({ campId: 0 });
@@ -39,6 +40,9 @@ export const createCampsSlice = (set: any, get: any): CampsSlice => ({
             const { loadLastDate, loadGroups }: StateSlice = get();
             loadLastDate(camp_id);
             loadGroups(camp_id);
+
+            const camp = camps.find(el => el.id === camp_id)!
+            set({ camp_name: sanitizeName(camp.name)});
         } else {
             set({ campId: camp_id });
 

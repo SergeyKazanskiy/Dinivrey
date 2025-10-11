@@ -21,14 +21,7 @@ export interface StudentsSlice {
 }
 
 export const createStudentsSlice = (set: any, get: any): StudentsSlice => ({
-    students: [
-        { id: 1, first_name: 'Name 1', last_name: 'LastName 1', photo: '/images/Student_boy.png',
-            gender: 'Girl', age: 12, group_id: 1, active: true
-        },
-        { id: 1, first_name: 'Name 2', last_name: 'LastName 2', photo: '/images/Student_boy.png',
-            gender: 'Boy', age: 11, group_id: 1, active: true
-        },
-    ],
+    students: [],
     studentId: 1,
 
     setStudents: (students: Student[]) => set({ students, students_id: 0 }),

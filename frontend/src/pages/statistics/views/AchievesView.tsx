@@ -15,7 +15,7 @@ export const AchievesView: React.FC = () => {
       {camps.map((item) => (
         <Box>
           <HStack spacing={2} pl={4}>
-            <Text color='#DB3939' fontSize={18} fontWeight={400}>{item.city},</Text>
+            {/* <Text color='#DB3939' fontSize={18} fontWeight={400}>{item.city},</Text> */}
             <Text color='#DB3939' fontSize={18} fontWeight={400}>{item.name}</Text>
           </HStack>  
          
