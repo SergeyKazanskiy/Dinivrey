@@ -61,3 +61,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+// # Разработка (локально)
+// expo start --env-file .env.development
+
+// # Тест-сборка (.apk для телефона)
+// eas build -p android --profile preview
+
+// # Продакшен
+// eas build -p android --profile production

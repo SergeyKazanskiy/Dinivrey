@@ -51,7 +51,9 @@ export const StudentsIcons = {
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-export const BACKEND_APP_IMAGES_URL = Platform.OS === "web" ? "http://localhost:8000/images" : Constants.expoConfig?.extra?.imagesUrl
+export const BACKEND_APP_IMAGES_URL = process.env.EXPO_PUBLIC_IMAGES_URL
+//export const BACKEND_APP_IMAGES_URL = Platform.OS === "web" ? "http://localhost:8000/images" : Constants.expoConfig?.extra?.imagesUrl
+//export const BACKEND_APP_IMAGES_URL = Constants.expoConfig?.extra?.imagesUrl;
 //export const BACKEND_APP_IMAGES_URL = Constants.expoConfig?.extra?.imagesUrl;
 //console.log("Loaded env:", BACKEND_APP_IMAGES_URL);
 

@@ -9,4 +9,5 @@ import { Platform } from "react-native";
 
 // export { API_BASE_URL };
 
-export const API_BASE_URL = Platform.OS === "web" ? "http://localhost:8000" : Constants.expoConfig?.extra?.apiBaseUrl
+//export const API_BASE_URL = Platform.OS === "web" ? "http://localhost:8000" : Constants.expoConfig?.extra?.apiBaseUrl
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL
