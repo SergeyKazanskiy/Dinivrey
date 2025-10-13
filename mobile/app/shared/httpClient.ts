@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:8000';
-export const api = axios.create({ baseURL: API_BASE_URL + `/student_api/`});
+//export const API_BASE_URL = 'http://localhost:8000';
+export const api = axios.create({ baseURL: process.env.EXPO_PUBLIC_API_BASE_URL + `/student_api/`});
 
 
 export interface LoadingSlice {

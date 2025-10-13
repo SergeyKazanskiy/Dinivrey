@@ -3,6 +3,7 @@
     "name": "mobile",
     "slug": "mobile",
     "version": "1.0.0",
+    "owner": "dinivrey",
     "orientation": "default",
     "icon": "./assets/images/Logo.png",
     "scheme": "myapp",
@@ -48,10 +49,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "apiBaseUrl": "http://192.168.0.95:8000",
-      "imagesUrl": "http://192.168.0.95:8000/images"
     }
   }
 }
