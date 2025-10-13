@@ -11,7 +11,7 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 //   appId: "1:473620400081:web:3114bf11ed074e92f0c2f0"
 // };
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyCi12mBo2ZY8z3o2pQW_M_V5yqgf1i0SzI",
   authDomain: "dinivrey-a4d49.firebaseapp.com",
   projectId: "dinivrey-a4d49",
