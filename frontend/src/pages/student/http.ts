@@ -11,7 +11,7 @@ export function get_student(id: number, callback: (student: Student) => void) {
 };
 
 export function get_camps(callback: (camps: Camp[]) => void) {
-  return httpWrapper(() => api.get(`camps/`), callback);
+  return httpWrapper(() => api.get(`camps`), callback);
 };
 
 export function get_groups(camp_id: number, callback: (groups: Group[]) => void) {

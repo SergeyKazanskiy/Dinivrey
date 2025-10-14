@@ -18,16 +18,16 @@ export function get_group_schedule(group_id: number, callback: (schedules: Sched
 };
 
 export function get_students(group_id: number, callback: (students: Student[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/students`), callback, 'Getting students');
 };
 
 export function get_liders(group_id: number, callback: (liders: Lider[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/liders/`), callback, 'Getting liders');
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/liders`), callback, 'Getting liders');
 };
 
 // Create
 export function create_camp(data: Omit<Camp, 'id'>, callback: (res: {id: number}) => void) {
-  return httpWrapper(() => api.post(`camps/`, data), callback);
+  return httpWrapper(() => api.post(`camps`, data), callback);
 };
 
 export function create_group(data: Omit<Group, 'id'>, callback: (res: {id: number}) => void) {
