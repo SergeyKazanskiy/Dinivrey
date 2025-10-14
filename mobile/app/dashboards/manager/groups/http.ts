@@ -14,7 +14,7 @@ export function get_groups(camp_id: number, callback: (camps: Group[]) => void) 
 };
 
 export function get_liders(group_id: number, callback: (liders: Lider[]) => void) { //???
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/liders/`), callback, 'Getting liders');
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/liders`), callback, 'Getting liders');
 };
 
 export function create_group(data: Omit<Group, 'id'>, callback: (res: {id: number}) => void) {
@@ -32,7 +32,7 @@ export function delete_group(id: number, callback: (res: {isOk: boolean}) => voi
 
 // Students
 export function get_students(group_id: number, callback: (students: StudentShort[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/students`), callback, 'Getting students');
 };
 
 export function create_student(data: Omit<StudentShort, 'id'>, callback: (res: {id: number}) => void) {
