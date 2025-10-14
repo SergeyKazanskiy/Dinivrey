@@ -118,7 +118,7 @@ export function get_groups(camp_id: number, callback: (camps: Group[]) => void) 
 };
 
 export function get_liders(group_id: number, callback: (liders: Lider[]) => void) {
-    return httpWrapper(() => api.get(`camps/groups/${group_id}/liders/`), callback, 'Getting liders');
+    return httpWrapper(() => api.get(`camps/groups/${group_id}/liders`), callback, 'Getting liders');
 };
 
 
@@ -137,5 +137,5 @@ export function get_game_players(game_id: number, callback: (gamers: Gamer[]) =>
 };
 
 export function get_students(group_id: number, callback: (students: Student[]) => void) {
-  return httpWrapper(() => api.get(`camps/groups/${group_id}/students/`), callback, 'Getting students');
+  return httpWrapper(() => api.get(`camps/groups/${group_id}/students`), callback, 'Getting students');
 };
