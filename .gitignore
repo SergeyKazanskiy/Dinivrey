@@ -29,4 +29,4 @@ __pycache__/
 # database
 backend/app/database.db
 # ???
-data/
+data/backend/app/secrets/
