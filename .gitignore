@@ -6,7 +6,7 @@ mobile/node_modules
 frontend/.expo
 mobile/.expo
 
-# macos
+# store
 .DS_Store
 backend/.DS_Store
 frontend/.DS_Store
@@ -14,19 +14,14 @@ frontend/public/icons/.DS_Store
 frontend/public/.DS_Store
 frontend/.DS_Store
 
-# env
-# backend/.env
-# frontend/.env.development
-# frontend/.env.production
+# secrets
+backend/app/secrets/
+frontend/src/secrets/
 
 # backend
 __pycache__/
 
-# firebase
-# backend/app/secrets/*
-# firebase-key.json
-
 # database
-backend/app/database.db
-# ???
-data/
+#backend/app/database.db
+
+
