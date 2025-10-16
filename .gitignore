@@ -16,7 +16,7 @@ frontend/.DS_Store
 
 # secrets
 backend/app/secrets/
-frontend/src/secrets/
+#frontend/src/secrets/
 
 # backend
 __pycache__/
