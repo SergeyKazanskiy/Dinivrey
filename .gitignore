@@ -15,6 +15,7 @@ frontend/public/.DS_Store
 frontend/.DS_Store
 
 # env
+backend/app/secrets/
 # backend/.env
 # frontend/.env.development
 # frontend/.env.production
@@ -29,4 +30,4 @@ __pycache__/
 # database
 backend/app/database.db
 # ???
-data/backend/app/secrets/
+
