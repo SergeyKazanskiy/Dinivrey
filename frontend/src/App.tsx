@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { signOut } from "firebase/auth";
-import { auth } from "./authorization/firebaseConfig";
+import { auth } from "./auth/firebaseConfig";
 
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { HStack, VStack, Text, Image, Button } from '@chakra-ui/react';

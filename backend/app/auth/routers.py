@@ -1,10 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException, APIRouter, Depends, Header
 import firebase_admin
 from firebase_admin import auth, credentials, initialize_app
-from google.cloud import firestore
-import time
-from dotenv import load_dotenv
-import os
+from pathlib import Path
 from . import schemas
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_session
@@ -13,13 +10,11 @@ from sqlalchemy.future import select
 from .auth_utils import get_decoded_token
 
 
-load_dotenv()
+firebase_key_path = Path("./secrets/firebase-key.json")
+if not firebase_key_path.is_file():
+    raise RuntimeError(f"{firebase_key_path} not found")
 
-firebase_key_path = os.getenv("FIREBASE_KEY_PATH")
-if not firebase_key_path:
-    raise RuntimeError("FIREBASE_KEY_PATH not set")
-
-cred = credentials.Certificate('./secrets/firebase-key.json')
+cred = credentials.Certificate(str(firebase_key_path))
 firebase_admin.initialize_app(cred)
 
 

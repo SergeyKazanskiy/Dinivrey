@@ -1,23 +1,31 @@
-
-
 services:
   backend:
-    platform: linux/amd64
-    image: sergeykazanskiy/dinivrey-backend:1.0.43
+    #platform: linux/amd64
+    image: ghcr.io/sergeykazanskiy/dinivrey-backend:1.0.46
     container_name: dinivrey-backend
+    environment:
+      - PYTHONUNBUFFERED=1
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/app/images:/app/app/images:rw
+      - ./backend/app/database.db:/app/app/database.db:rw
+      - ./backend/app/secrets/firebase-key.json:/app/app/secrets/firebase-key.json:ro
+    restart: unless-stopped
     networks:
       - dinivrey-net
 
   frontend:
-    platform: linux/amd64
-    image: sergeykazanskiy/dinivrey-frontend:1.0.43
+    #platform: linux/amd64
+    image: ghcr.io/sergeykazanskiy/dinivrey-frontend:1.0.46
     container_name: dinivrey-frontend
-    ports:
-      - "3000:80"
     depends_on:
       - backend
+    ports:
+      - "3001:80"
+    volumes:
+      - ./frontend/src/secrets/firebaseConfig.ts:/app/src/secrets/firebaseConfig.ts:ro
+    restart: unless-stopped
     networks:
       - dinivrey-net
 
