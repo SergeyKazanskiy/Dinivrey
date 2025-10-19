@@ -3,6 +3,9 @@ import { Student, Achievement, Test, Game, Event } from "../model";
 import { get_student, get_student_first_achieve, get_last_test, save_notification_token } from '../http';
 import { get_last_game, get_upcoming_events, update_student_avatar, get_student_group} from '../http';
 import { get_student_attendance_count, get_notifications, delete_notifications } from '../http';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+
 import { effectNames, RuleLevels, eventTypes } from '../../../shared/constants';
 import { getTodayTimestamp, objectToJson } from '../../../shared/utils';
 import messaging from "@react-native-firebase/messaging";
@@ -28,6 +31,7 @@ export interface ProfileSlice {
   isBackDrawer: boolean;
   isAvatarsModal: boolean;
 
+  notificationsAlert: string;
   isNotificationsModal: boolean;
   notifications: string[];
  
@@ -41,9 +45,7 @@ export interface ProfileSlice {
 
 
   saveNotificationToken: (student_id: number) => void;
-
   loadStudent: (studentId: number) => void;
-  
   clickAchievement: (achievement_id: number) => void;
 
   setBackDrawer: (isBackDrawer: boolean) => void;
@@ -53,6 +55,7 @@ export interface ProfileSlice {
 
   showNotificationsModal: () => void;
   hideNotificationsModal: () => void;
+  hideNotificationsAlert: () => void;
 
   clickAvatar: (avatar: string) => void;
   showAvatarsModal: () => void;
@@ -73,6 +76,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
   isBackDrawer: true,
   isAvatarsModal: false,
 
+  notificationsAlert: '',
   isNotificationsModal: false,
   notifications: [], //'⭐ Great progress! Your achievement Speed has been upgraded to Mythic'
 
@@ -86,35 +90,35 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
   
   saveNotificationToken: async (student_id: number) => {
-    const now = Date.now();
-
-    if (Platform.OS === "web") { // only for test
-      const testToken = "web-test-token";
-      save_notification_token(student_id, { token_FCM: testToken }, (res => {
-        if (res.isOk) {
-            AsyncStorage.setItem(TOKEN_KEY, testToken);
-            AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
-          }
-      }));
-      return;
-    }
-
-    const storedToken = await AsyncStorage.getItem(TOKEN_KEY);
-    const storedTs = await AsyncStorage.getItem(TOKEN_TS_KEY);
-    const isExpired = !storedTs || now - parseInt(storedTs, 10) > WEEK_MS;
-
-    if (!storedToken || isExpired) {
-      try {
-        const newToken = await messaging().getToken(); // onTokenRefresh where?
-        save_notification_token(student_id, {token_FCM: newToken}, (res => {
-          if (res.isOk) {
-            AsyncStorage.setItem(TOKEN_KEY, newToken);
-            AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
-          }
-        }));
-      } catch (err) {
-        Alert.alert('FCM onTokenRefresh error:', JSON.stringify(err));
+    if (Device.isDevice && Platform.OS !== "web") {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+  
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
       }
+  
+      if (finalStatus !== 'granted') {
+        set({ notificationsAlert: 'Push notifications permission denied!' });
+        return;
+      }
+  
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      
+      save_notification_token(student_id, {token_FCM: token}, (res => {
+        if (res.isOk) {
+          set({ notificationsAlert: 'Push notifications on!' });
+        }
+      }));
+    } else {
+      // alert('Push notifications only work on a real device');
+      
+      // save_notification_token(student_id, {token_FCM: 'Test_token_FCM'}, (res => {
+      //   if (res.isOk) {
+      //     set({ notificationsAlert: 'Test push notifications on!' });
+      //   }
+      // }));
     }
   },
 
@@ -198,6 +202,7 @@ export const createProfileSlice = (set: any, get: () => Store): ProfileSlice => 
 
   showNotificationsModal:() => set({isNotificationsModal: true}),
   hideNotificationsModal:() => set({isNotificationsModal: false}),
+  hideNotificationsAlert:() => set({notificationsAlert: ''}),
 
   clickAvatar: (avatar: string) => {
     const { student_id, student }: ProfileSlice = get();
@@ -240,3 +245,36 @@ function getLevelData(level: number): {color: string, factor: number} {
   if (level > 5) return {color: '#43BB32', factor: 1};
   else return {color: '#D9D9D9', factor: 1};
 }
+
+// saveNotificationToken: async (student_id: number) => {
+//     const now = Date.now();
+
+//     if (Platform.OS === "web") { // only for test
+//       const testToken = "web-test-token";
+//       save_notification_token(student_id, { token_FCM: testToken }, (res => {
+//         if (res.isOk) {
+//             AsyncStorage.setItem(TOKEN_KEY, testToken);
+//             AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
+//           }
+//       }));
+//       return;
+//     }
+
+//     const storedToken = await AsyncStorage.getItem(TOKEN_KEY);
+//     const storedTs = await AsyncStorage.getItem(TOKEN_TS_KEY);
+//     const isExpired = !storedTs || now - parseInt(storedTs, 10) > WEEK_MS;
+
+//     if (!storedToken || isExpired) {
+//       try {
+//         const newToken = await messaging().getToken(); // onTokenRefresh where?
+//         save_notification_token(student_id, {token_FCM: newToken}, (res => {
+//           if (res.isOk) {
+//             AsyncStorage.setItem(TOKEN_KEY, newToken);
+//             AsyncStorage.setItem(TOKEN_TS_KEY, now.toString());
+//           }
+//         }));
+//       } catch (err) {
+//         Alert.alert('FCM onTokenRefresh error:', JSON.stringify(err));
+//       }
+//     }
+//   },
