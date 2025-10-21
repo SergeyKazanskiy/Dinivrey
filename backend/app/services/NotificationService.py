@@ -5,6 +5,7 @@ from sqlalchemy.future import select
 from firebase_admin import messaging, exceptions as fb_exceptions
 from datetime import timedelta, datetime
 from models import Student, Notification
+import requests
 
 STORAGE_PERIOD_DAYS = 7
 
@@ -39,24 +40,54 @@ def _build_notifications(added, updated) -> List[str]:
     return notifications
 
 async def _send_to_student(token: str, notifications: List[str]):
-    last_error = None
-    for note in notifications:
-        msg = messaging.Message(
-            notification=messaging.Notification(
-                title="Achievement",
-                body=note
-            ),
-            token=token,
+    messages = [
+        {"to": token, "sound": "default", "title": "Achievement", "body": note }
+        for note in notifications
+    ]
+    try:
+        response = requests.post(
+            "https://exp.host/--/api/v2/push/send",
+            json=messages,
+            headers={
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            timeout=10,
         )
-        try:
-            messaging.send(msg)
-        except fb_exceptions.FirebaseError as e:
-            last_error = str(e)
+        res_json = response.json()
+        success = response.status_code == 200 and all(
+            item.get("status") == "ok" for item in res_json.get("data", [])
+        )
+        return {
+            "success": success,
+            "error_message": res_json,
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error_message": str(e),
+        }
 
-    return {
-        "success": last_error is None,
-        "error_message": last_error
-    }
+
+# async def _send_to_student(token: str, notifications: List[str]):
+#     last_error = None
+#     for note in notifications:
+#         msg = messaging.Message(
+#             notification=messaging.Notification(
+#                 title="Achievement",
+#                 body=note
+#             ),
+#             token=token,
+#         )
+#         try:
+#             messaging.send(msg)
+#         except fb_exceptions.FirebaseError as e:
+#             last_error = str(e)
+
+#     return {
+#         "success": last_error is None,
+#         "error_message": last_error
+#     }
 
 def _make_notification(student: Optional[Student], achievements: List[Dict[str, Any]], error: Optional[str] = None) -> Dict[str, Any]:
     return {

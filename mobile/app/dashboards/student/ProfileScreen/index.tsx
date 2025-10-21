@@ -17,10 +17,10 @@ import { AvatarsModal } from './components/AvatarsModal';
 
 
 const ProfileScreen = () => {
-  const { student, last_test, last_game, isNotificationsModal, isAvatarsModal } = useStore();
+  const { notificationsAlert, last_test, last_game, isNotificationsModal, isAvatarsModal } = useStore();
 
   const { loadStudent, clickAvatar, hideAvatarsModal, deleteNotifications } = useStore();
-  const { loadTest, loadGame, loadEvent, setBackDrawer, hideNotificationsModal } = useStore();
+  const { loadTest, loadGame, loadEvent, setBackDrawer, hideNotificationsModal, hideNotificationsAlert } = useStore();
   
   const [showHeaderButton, setShowHeaderButton] = useState(false);
   const { userId } = useAuthState();
@@ -114,6 +114,12 @@ const ProfileScreen = () => {
         title="Chose from selection"
         onClose={hideAvatarsModal}>
         <AvatarsModal onAvatar ={clickAvatar}/>
+      </CustomAlert>
+
+      <CustomAlert visible={notificationsAlert.length > 0} 
+        title="Push Notifications registration"
+        onClose={hideNotificationsAlert}>
+        <Text style={[styles.upcomingClass]}>{notificationsAlert}</Text>
       </CustomAlert>
 
       <ScrollView style={styles.container}>
