@@ -26,9 +26,9 @@ root.render(
     <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
       <ChakraProvider>
         <HttpStatus/>
-        <AuthGate>
+        {/* <AuthGate> */}
           <App />
-        </AuthGate>
+        {/* </AuthGate> */}
       </ChakraProvider>
     </React.StrictMode>
 );
