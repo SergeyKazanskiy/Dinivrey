@@ -44,6 +44,7 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 
   const handleLogin = async () => {
     try {
+      auth.signOut();
       const result = await signInWithPopup(auth, provider);
       // const credential = provider.getCustomParameters()
       // const token = credential.accessToken;

@@ -45,7 +45,7 @@ app.include_router(router)
 # Adding routers
 app.include_router(auth_router)
 
-app.include_router(admin_select, prefix="/api") #, dependencies=[Depends(get_decoded_token)]
+app.include_router(admin_select, prefix="/api", dependencies=[Depends(get_decoded_token)]) #, dependencies=[Depends(get_decoded_token)]
 app.include_router(admin_create, prefix="/api", dependencies=[Depends(get_decoded_token)])
 app.include_router(admin_update, prefix="/api", dependencies=[Depends(get_decoded_token)])
 app.include_router(admin_delete, prefix="/api", dependencies=[Depends(get_decoded_token)])
