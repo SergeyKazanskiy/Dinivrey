@@ -1,9 +1,0 @@
-tunnel: <TUNNEL-UUID>
-credentials-file: /etc/cloudflared/<TUNNEL-UUID>.json
-
-ingress:
-  - hostname: frontend.yourdomain.tld
-    service: http://frontend:80
-  - hostname: api.yourdomain.tld
-    service: http://backend:8000
-  - service: http_status:404
