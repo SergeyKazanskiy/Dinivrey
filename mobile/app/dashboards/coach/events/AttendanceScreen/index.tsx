@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 import { StyleSheet, Platform, View, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Button, CheckBox } from '@rneui/themed';
+import { Button } from '../../../../shared/components/CustomButton';
+import { CheckBox } from '../../../../shared/components/CustomCheckBox'
 import { useFocusEffect } from '@react-navigation/native';
 import { useStore } from '../store';
 import { StudentsView } from './views/StudentsView';

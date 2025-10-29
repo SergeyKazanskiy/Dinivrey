@@ -1,11 +1,7 @@
-import { ListItem } from '@rneui/themed';
-import { useState } from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { StyleSheet, FlatList } from 'react-native';
 import { useStore } from '../../store';
 import { GroupEventCell } from '../../../../../shared/components/GroupEventCell';
 import { formatDateTime } from '../../../../../shared/utils';
-import { Icon } from '@rneui/themed';
 
 
 export function GroupEventsView() {

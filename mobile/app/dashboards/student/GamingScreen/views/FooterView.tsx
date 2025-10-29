@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 import { TimerView } from './TimerView';
 import { LinearGradient } from 'expo-linear-gradient';

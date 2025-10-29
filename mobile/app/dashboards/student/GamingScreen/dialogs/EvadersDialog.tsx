@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
-import { CheckBox } from '@rneui/themed';
+import { CheckBox } from '../../../../shared/components/CustomCheckBox'
 import { useStore } from '../../store';
 import { Player, Role, Team } from '../../model';
 import { BONUS_POINTS } from '../constants';

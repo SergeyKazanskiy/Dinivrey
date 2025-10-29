@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
-import { ListItem, Icon } from '@rneui/themed';
+import { ListItem } from '../../../../../shared/components/CustomListItem';
+import { Icon } from '../../../../../shared/components/CustomIcon';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
 import { DrillCell } from '../../../../../shared/components/DrillCell';

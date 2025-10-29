@@ -1,5 +1,6 @@
 import { StyleSheet, Text, Platform, View, ScrollView, Pressable } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
+import { Icon } from '../../../../../shared/components/CustomIcon';
 import { useStore } from '../../store';
 import { PopupWrapper } from '../../../../../shared/components/PopupWrapper';
 import { Student, Player } from '../../model';
@@ -39,7 +40,7 @@ export function AddingPopup() {
                     <Text style={styles.playerName}>
                       {student.last_name} {student.first_name[0]} | {student.age}
                     </Text>
-                    <Icon name="check-circle" type="feather" size={20} color='#222'/>
+                    <Icon name="check-circle" size={20} color='#222'/>
                   </View>
                 </Pressable>
               );

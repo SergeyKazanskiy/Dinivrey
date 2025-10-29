@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Achieve } from '../../model';
-import { Icon } from '@rneui/themed';
+import { Icon } from '../../../../../shared/components/CustomIcon';
 
 
 export type Props = {

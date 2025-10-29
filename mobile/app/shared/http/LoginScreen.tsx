@@ -1,70 +1,73 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, TextInput, StyleSheet, Button, Platform, Image, Text } from "react-native";
-import { CustomAlert } from '../components/CustomAlert';
-import { PhoneAuthProvider, signInWithCredential, RecaptchaVerifier, signOut } from "firebase/auth";
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { auth, firebaseConfig } from "./firebaseConfig";
-import { useAuthState } from './state';
-import { UserRole } from '../../api/auth_api';
-import { objectToJson } from "../utils";
-import { LinearGradient } from 'expo-linear-gradient';
-import { DinivreyHeader } from '../components/DinivreyHeader';
-import { router } from 'expo-router';
-import { HttpStatus } from './HttpStatus';
-import { useSharedHttpClient } from './httpClient';
-
+import { CustomAlert } from "../components/CustomAlert";
+import {
+  PhoneAuthProvider,
+  signInWithCredential,
+  RecaptchaVerifier,
+  signOut,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+import { auth } from "./firebaseConfig";
+import { useAuthState } from "./state";
+import { UserRole } from "../../api/auth_api";
+import { LinearGradient } from "expo-linear-gradient";
+import { DinivreyHeader } from "../components/DinivreyHeader";
+import { router } from "expo-router";
+import { HttpStatus } from "./HttpStatus";
+import { useSharedHttpClient } from "./httpClient";
 
 interface Props {
   role: UserRole;
 }
 
-export default function LoginScreen({ role }: Props) { 
+export default function LoginScreen({ role }: Props) {
   const { loginUser } = useAuthState();
   const { catchError, errorMessage: e } = useSharedHttpClient();
   const { setLoading, clearMessages } = useSharedHttpClient();
 
-  const recaptchaVerifier = useRef(null);
-
   const [phone, setPhone] = useState("+1 650-555-1234");
-  const [code, setCode] = useState('123456');
+  const [code, setCode] = useState("123456");
   const [verificationId, setVerificationId] = useState("");
-
   const [isCode, setIsCode] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState("");
 
   const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
 
   useEffect(() => {
-    if (Platform.OS === 'web' && !recaptchaVerifierRef.current) {
-      recaptchaVerifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible',
-      });
+    if (Platform.OS === "web" && !recaptchaVerifierRef.current) {
+      recaptchaVerifierRef.current = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+        }
+      );
     }
   }, []);
 
-
   const sendPhone = async () => {
     try {
-      let id;
       setLoading(true);
+      let confirmation;
 
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
+        // Web: используем RecaptchaVerifier напрямую
         const verifier = recaptchaVerifierRef.current!;
-        const provider = new PhoneAuthProvider(auth);
-        id = await provider.verifyPhoneNumber(phone, verifier);
+        confirmation = await signInWithPhoneNumber(auth, phone, verifier);
       } else {
-        const provider = new PhoneAuthProvider(auth);
-        id = await provider.verifyPhoneNumber(phone, recaptchaVerifier.current!);
+        // Mobile (Expo): RecaptchaVerifier не требуется
+        confirmation = await signInWithPhoneNumber(auth, phone);
       }
 
-      setLoading(false);
-      setVerificationId(id);
+      setVerificationId(confirmation.verificationId);
       setIsCode(true);
+      setLoading(false);
     } catch (err: any) {
       setIsError(true);
       setErrorMessage(err.message);
+      setLoading(false);
     }
   };
 
@@ -73,53 +76,46 @@ export default function LoginScreen({ role }: Props) {
       const credential = PhoneAuthProvider.credential(verificationId, code);
       await signInWithCredential(auth, credential);
       const token = await auth.currentUser?.getIdToken(true)!;
-
       loginUser(role, token);
     } catch (err: any) {
       setIsError(true);
-      setErrorMessage(err.message)
+      setErrorMessage(err.message);
     }
   };
 
   const closeErrorAlert = async () => {
     clearMessages();
     signOut(auth);
-    setVerificationId('');
+    setVerificationId("");
     await auth.currentUser?.delete();
-  }
+  };
 
   return (
-    <LinearGradient colors={['#2E4A7C', '#152B52']} style={styles.wrapper}>
-      <DinivreyHeader title='Authorization' onExit={()=>router.replace('/')}/>
-      <Image style={[styles.image]}
-        source={require('../../../assets/images/DinivreyCompany.png')} /> 
+    <LinearGradient colors={["#2E4A7C", "#152B52"]} style={styles.wrapper}>
+      <DinivreyHeader title="Authorization" onExit={() => router.replace("/")} />
+      <Image
+        style={[styles.image]}
+        source={require("../../../assets/images/DinivreyCompany.png")}
+      />
 
-      <CustomAlert visible={isCode} title="Success!"
-        onClose={() => setIsCode(false)}>
-        <Text style={styles.alertText}>Verification code received</Text> 
+      <CustomAlert visible={isCode} title="Success!" onClose={() => setIsCode(false)}>
+        <Text style={styles.alertText}>Verification code received</Text>
       </CustomAlert>
 
-      <CustomAlert visible={isError} title="Phone error!"
-        onClose={() => (setIsError(false), setErrorMessage(''))}>
-        <Text style={styles.alertText}>{errorMessage}</Text> 
+      <CustomAlert visible={isError} title="Phone error!" onClose={() => (setIsError(false), setErrorMessage(""))}>
+        <Text style={styles.alertText}>{errorMessage}</Text>
       </CustomAlert>
 
-      <CustomAlert visible={catchError} title="Server error!"
-        onClose={closeErrorAlert}>
-        <Text style={styles.alertText}>{e}</Text> 
+      <CustomAlert visible={catchError} title="Server error!" onClose={closeErrorAlert}>
+        <Text style={styles.alertText}>{e}</Text>
       </CustomAlert>
 
-      {Platform.OS !== 'web' && (
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={firebaseConfig}
-        />
-      )}
-
-      {verificationId === '' ? (
+      {verificationId === "" ? (
         <>
           <Text style={styles.label}>Enter your phone, {role}</Text>
-          <TextInput style={styles.value} keyboardType="phone-pad"
+          <TextInput
+            style={styles.value}
+            keyboardType="phone-pad"
             placeholder="Enter phone"
             value={phone}
             onChangeText={setPhone}
@@ -131,9 +127,11 @@ export default function LoginScreen({ role }: Props) {
       ) : (
         <>
           <Text style={styles.label}>Enter code from SMS</Text>
-          <TextInput  style={styles.value} keyboardType="number-pad" 
+          <TextInput
+            style={styles.value}
+            keyboardType="number-pad"
             placeholder="Code from SMS"
-            value={code} 
+            value={code}
             onChangeText={setCode}
           />
           <View style={styles.button}>
@@ -141,13 +139,13 @@ export default function LoginScreen({ role }: Props) {
           </View>
         </>
       )}
-      <View id="recaptcha-container" />
-      {Platform.OS === 'web' && <div id="recaptcha-container" />}
 
-      <HttpStatus/>
+      {Platform.OS === "web" && <div id="recaptcha-container" />}
+      <HttpStatus />
     </LinearGradient>
   );
 }
+
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { StyleSheet, View, Image, Platform } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import SignatureCanvas, { SignatureViewRef }  from 'react-native-signature-canvas';
 import SignaturePad from 'react-signature-canvas';
 import { useStore } from '../../store';

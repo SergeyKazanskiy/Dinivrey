@@ -1,8 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { cellStyles } from '../styles/appStyles';
-import { Button } from '@rneui/themed';
-import { Group } from '../../dashboards/coach/students/model';
 
 
 export type Props = {

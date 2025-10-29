@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { cellStyles } from '../styles/appStyles';
-import { Button } from '@rneui/themed';
+import { Button } from '../../shared/components/CustomButton';
 
 
 export interface ShortGroup {

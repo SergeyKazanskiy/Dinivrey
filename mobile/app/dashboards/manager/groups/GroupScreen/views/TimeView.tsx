@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Button, Icon } from '@rneui/themed';
+import { Icon } from '../../../../../shared/components/CustomIcon';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, FlatList, View } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 import { useStore as useGroupStore } from '../../../groups/store';
 

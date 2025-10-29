@@ -1,5 +1,6 @@
 import { StyleSheet, ScrollView } from 'react-native';
-import { Avatar, Badge, ListItem } from '@rneui/themed';
+import { Avatar } from '../../../../../shared/components/CustomAvatar';
+import { ListItem } from '../../../../../shared/components/CustomListItem';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
 import { BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
@@ -41,7 +42,6 @@ export function StudentsView() {
                             {`${student.gender}, ${student.age} years old`}
                         </ListItem.Subtitle>
                     </ListItem.Content>
-                    {/* <Badge value="3.5" status="success" /> */}
                 </ListItem>
             )})
         }

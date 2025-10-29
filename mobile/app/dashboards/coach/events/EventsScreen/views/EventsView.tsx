@@ -1,11 +1,11 @@
-import { ListItem } from '@rneui/themed';
+import { ListItem } from '../../../../../shared/components/CustomListItem';
 import { useState } from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStore } from '../../store';
 import { CoachEventCell } from '../../../../../shared/components/CoachEventCell';
 import { formatDateTime, objectToJson } from '../../../../../shared/utils';
-import { Icon } from '@rneui/themed';
+import { Icon } from '../../../../../shared/components/CustomIcon';
 
 
 export function EventsView({ day, weekday }: {day: number, weekday: string}) {

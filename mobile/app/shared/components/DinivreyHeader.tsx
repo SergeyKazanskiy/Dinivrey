@@ -12,7 +12,7 @@ export const DinivreyHeader: React.FC<Props> = ({ title, onExit }) => {
   return (
     <View style={styles.container}>
       <Image style={[styles.image]}
-        source={require('../../../assets/images/Logo.png')} /> 
+        source={require('../../../assets/images/icon.png')} /> 
       <Text style={styles.title}>{title}</Text>
       <Ionicons name='exit-outline' style={[styles.icon]}
         onPress={onExit}/>

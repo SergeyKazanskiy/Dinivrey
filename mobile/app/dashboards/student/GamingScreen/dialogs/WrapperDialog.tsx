@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Modal, View, Text, TouchableWithoutFeedback, Animated, StyleSheet } from 'react-native';
-import { TouchableOpacity, Platform, Image } from 'react-native';
-import { Icon } from '@rneui/themed';
+import { Platform } from 'react-native';
+import { Icon } from '../../../../shared/components/CustomIcon';
 
 
 interface Props {

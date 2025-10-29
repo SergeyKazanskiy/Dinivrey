@@ -1,9 +1,8 @@
-import { StyleSheet, FlatList, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, FlatList, ScrollView } from 'react-native';
 import { useStore } from '../../store';
 import { CommentCell } from '../../../../../shared/components/CommentCell';
 import { getYearAndMonth, getDayAndWeekday } from '../../../../../shared/utils';
 import { months } from '../../../../../shared/constants';
-import { Icon } from '@rneui/themed';
 
 
 export function CommentsView() {

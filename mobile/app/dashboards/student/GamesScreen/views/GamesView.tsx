@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { Icon } from '../../../../shared/components/CustomIcon';
 import { Team } from '../../model';
 import { useStore } from '../../store';
 

@@ -29,7 +29,7 @@ export default function StudentLoginScreen() {
     axios.post( API_BASE_URL + "/student/login", { email, password })
     .then(async res => {
       const { id_student, token } = res.data;
-      //alert(token)
+      alert(token)
       await signInWithCustomToken(auth, token);
       const idToken = await auth.currentUser?.getIdToken(true)!;
 

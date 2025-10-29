@@ -1,5 +1,6 @@
-import { StyleSheet, FlatList, Text, View, ScrollView } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { StyleSheet, FlatList, Text, View } from 'react-native';
+import { Icon } from '../../../../shared/components/CustomIcon';
+import { Button } from '../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 import { ScoreView } from './ScoreView';
 import { Team, Role } from '../../model';

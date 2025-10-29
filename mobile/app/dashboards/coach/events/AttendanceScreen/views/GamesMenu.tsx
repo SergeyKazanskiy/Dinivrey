@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Game, Team } from '../../model';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 
 
 export type Props = {

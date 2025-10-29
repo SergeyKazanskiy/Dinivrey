@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { CheckBox } from '@rneui/themed';
-import { color } from '@rneui/themed/dist/config';
+import { CheckBox } from '../../../../../shared/components/CustomCheckBox'
+
 
 
 interface Props {

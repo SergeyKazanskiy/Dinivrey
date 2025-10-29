@@ -1,5 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
-import { Text } from '@rneui/themed';
+import { StyleSheet, Platform, Text } from 'react-native';
 import { useStore } from '../../store';
 import { WebView } from 'react-native-webview';
 import { LinearGradient } from 'expo-linear-gradient';

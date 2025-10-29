@@ -3,7 +3,7 @@ import { useStore } from '../../store';
 import { getWeeksInMonth } from '../../../../../shared/utils';
 import { TypesView } from './TypesView';
 import { SelectedField, Option } from '../../../../../shared/components/SelectedField';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { Ionicons } from '@expo/vector-icons';
 
 

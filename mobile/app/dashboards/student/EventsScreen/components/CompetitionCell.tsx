@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { cellStyles } from '../../../../shared/styles/appStyles';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../shared/components/CustomButton';
 
 
 export type Props = {
@@ -24,6 +24,7 @@ export const CompetitionCell: React.FC<Props> = ({date, time, desc, group1, grou
         <View style={styles.header}>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Button
+              onPress={()=>{}}
               title={group1}
               type='outline' 
               buttonStyle={styles.button}
@@ -32,6 +33,7 @@ export const CompetitionCell: React.FC<Props> = ({date, time, desc, group1, grou
 
             {group2 &&
               <Button
+                onPress={()=>{}}
                 title={group2}
                 type='outline' 
                 buttonStyle={styles.button}

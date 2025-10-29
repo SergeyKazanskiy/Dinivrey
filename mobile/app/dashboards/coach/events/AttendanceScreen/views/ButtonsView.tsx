@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { Ionicons } from '@expo/vector-icons';
 import { SelectWrapper } from '../../../../../shared/components/SelectWrapper';
 import { GamesMenu } from './GamesMenu';

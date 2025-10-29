@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 import { WrapperDialog } from './WrapperDialog';
 

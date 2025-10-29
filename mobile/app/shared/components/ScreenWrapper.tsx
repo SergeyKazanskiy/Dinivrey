@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Modal, Animated, Dimensions, TouchableWithoutFeedback, StyleSheet, Platform,} from 'react-native';
-import { Text, Icon } from '@rneui/themed';
+import { View, Modal, Animated, Dimensions, TouchableWithoutFeedback, StyleSheet, Platform, Text } from 'react-native';
+import { Icon } from '../../shared/components/CustomIcon';
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;

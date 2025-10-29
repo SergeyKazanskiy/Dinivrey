@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Modal, TouchableOpacity, View, LayoutRectangle, StyleSheet,
     Dimensions, StyleProp, TextStyle, ViewStyle, Platform} from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../shared/components/CustomButton';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -40,7 +40,7 @@ export const SelectWrapper: React.FC<SelectWrapperProps> =
     <View ref={buttonRef} style={{ flex: 1}} >
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
         <Button title={label}
-            type='clear' 
+            type='outline' 
             buttonStyle={buttonStyle}
             titleStyle={labelStyle}
             onPress={open}

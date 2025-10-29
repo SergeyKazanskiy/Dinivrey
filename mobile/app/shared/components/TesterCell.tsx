@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { CheckBox } from '@rneui/themed';
+import { CheckBox } from './CustomCheckBox'
 import { cellStyles, groupStyles } from '../styles/appStyles';
 import { formatSeconds } from '../../shared/utils';
+
 
 
 export type Props = {

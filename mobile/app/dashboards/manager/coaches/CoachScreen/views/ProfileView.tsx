@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TextInput } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 import { BACKEND_APP_IMAGES_URL } from '../../../../../shared/constants';
 

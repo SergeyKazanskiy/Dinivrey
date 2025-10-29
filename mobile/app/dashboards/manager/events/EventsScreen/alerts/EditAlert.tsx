@@ -1,5 +1,4 @@
-import { View, Modal, TouchableWithoutFeedback, StyleSheet, Platform } from 'react-native';
-import { Text } from '@rneui/themed';
+import { View, Modal, TouchableWithoutFeedback, StyleSheet, Platform, Text } from 'react-native';
 
 
 interface Props {

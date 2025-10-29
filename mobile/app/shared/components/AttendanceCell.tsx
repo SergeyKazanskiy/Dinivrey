@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
-import { CheckBox } from '@rneui/themed';
+import { CheckBox } from '../../shared/components/CustomCheckBox'
 import { cellStyles, groupStyles } from '../styles/appStyles';
 import { Ionicons } from '@expo/vector-icons';
 

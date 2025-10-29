@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, ScrollView, Platform } from 'react-native';
-import { ListItem } from '@rneui/themed';
+import { ListItem } from '../../../../shared/components/CustomListItem';
 import { useAuthState } from '../../../../shared/http/state';
 import { useStore } from '../store';
 import { StudentList } from './views/StudentList';
-import { Icon } from '@rneui/themed';
+import { Icon } from '../../../../shared/components/CustomIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 
 

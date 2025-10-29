@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { Icon } from '@rneui/themed';
+import { Icon } from '../../../../shared/components/CustomIcon';
 
 
 export type Props = {

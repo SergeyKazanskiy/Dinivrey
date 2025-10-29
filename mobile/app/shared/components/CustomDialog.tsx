@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Modal, View, Text, StyleSheet, Animated, Platform } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../shared/components/CustomButton';
 
 
 interface Props {

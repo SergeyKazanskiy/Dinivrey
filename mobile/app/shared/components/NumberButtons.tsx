@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../shared/components/CustomButton';
 
 
 type Props = {

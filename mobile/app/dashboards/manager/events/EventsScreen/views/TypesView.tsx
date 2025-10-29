@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { CheckBox } from '@rneui/themed';
+import { CheckBox } from '../../../../../shared/components/CustomCheckBox'
 import { useStore } from '../../store';
 import { eventTypes } from '../../../../../shared/constants';
 

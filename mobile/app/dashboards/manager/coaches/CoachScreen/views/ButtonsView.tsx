@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet, Pressable } from 'react-native';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useStore } from '../../store';
 

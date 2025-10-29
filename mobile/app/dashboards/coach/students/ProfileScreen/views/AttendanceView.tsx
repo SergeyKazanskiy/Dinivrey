@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useStore } from "../../store";
-import { Button } from '@rneui/themed';
+import { Button } from '../../../../../shared/components/CustomButton';
 
 
 export const AttendanceView: React.FC = () => {

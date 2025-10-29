@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, Platform, View, ScrollView, Pressable } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { Icon } from '../../../../../shared/components/CustomIcon';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 import { PopupWrapper } from '../../../../../shared/components/PopupWrapper';
 import { Student, Player } from '../../model';
@@ -63,7 +64,7 @@ export function RemovingPopup() {
                     <Text style={styles.playerName}>
                       {player.name} | {player.age}
                     </Text>
-                    <Icon name="x-circle" type="feather" color='#555'/>
+                    <Icon name="x-circle" color='#555'/>
                   </View>
                 </Pressable>
               );

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { Icon } from '../../../../../shared/components/CustomIcon';
 import { useStore } from '../../store';
 import { weekDays } from '../../../../../shared/constants';
 import { objectToJson } from '@/app/shared/utils';
@@ -30,16 +30,10 @@ export const SchedulesView = () => {
               </TouchableOpacity>
             }
             {isSelected && schedule && (
-              <Button type="clear" containerStyle={styles.button}
-                icon={<Icon name="delete" size={20} color="#ccc" />}
-                onPress={deleteSchedule}
-              />
+              <Icon name="delete" size={20} color="#ccc" style={styles.button} onPress={deleteSchedule}/>
             )}
             {isSelected && !schedule && (
-              <Button type="clear" containerStyle={styles.button}
-                icon={<Icon name="add" size={20} color="#ccc" />}
-                onPress={createSchedule}
-              />
+              <Icon name="delete" size={20} color="#ccc" style={styles.button} onPress={createSchedule}/>
             )}
             {!isSelected && <View style={{width: 80}}/>}
           </TouchableOpacity>

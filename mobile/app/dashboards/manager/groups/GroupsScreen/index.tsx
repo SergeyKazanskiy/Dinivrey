@@ -1,11 +1,9 @@
-import React, { useCallback, useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView, Platform } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, Platform } from 'react-native';
 import { useStore } from '../store';
 import { CampsView } from './views/CampsView';
 import { GroupsView } from './views/GroupsView';
 import { AddGroupAlert } from './alerts/AddGroupAlert';
-import { Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
 
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, FlatList, View } from 'react-native';
-import { Button } from '@rneui/themed';
-import { widgetStyles, screenStyles } from '../../../../../shared/styles/appStyles';
-import { Camp } from '../../model';
+import { Button } from '../../../../../shared/components/CustomButton';
 import { useStore } from '../../store';
 
 

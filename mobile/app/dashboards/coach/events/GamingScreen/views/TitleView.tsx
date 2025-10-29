@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Icon, Button } from '@rneui/themed';
+import { Icon } from '../../../../../shared/components/CustomIcon';
 import { useStore } from '../../store';
 import { Team, Role } from '../../model';
 
@@ -21,14 +21,14 @@ export function TitleView({ team, role }: Props) {
         <Text style={styles.teamName}>{teamName}</Text>
         
         <View style={styles.wrapperAdd}>
-          <Icon name="person-add" type="ionicon" color="#333" size={18}
+          <Icon name="person-add" color="#333" size={18}
             disabled={blockPlayersAdding}
             onPress={() => (setCurrentTeam(team), setCurrentRole(role), showAddingPopup())}
           />
         </View>
         
         <View style={styles.wrapperRemove}>
-          <Icon name="delete" type="material" color='#A90F11' size={21}
+          <Icon name="delete" color='#A90F11' size={21}
             disabled={blockPlayersAdding}
             onPress={() => (setCurrentTeam(team), setCurrentRole(role), showRemovingPopup())}
           />

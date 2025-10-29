@@ -7,7 +7,7 @@ import { GamesView } from './views/GamesView';
 import { useStore } from '../store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HeaderView } from './views/HeaderView';
-import { Button } from '@rneui/themed';
+import { Button } from '../../../shared/components/CustomButton';
 
 
 export default function GamesScreen() {

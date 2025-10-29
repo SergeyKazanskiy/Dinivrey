@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { View, Modal, TouchableOpacity, StyleSheet, LayoutRectangle,} from 'react-native';
-import { Text } from '@rneui/themed';
+import { View, Modal, TouchableOpacity, StyleSheet, LayoutRectangle, Text } from 'react-native';
+
 
 interface Props {
   title: string;
