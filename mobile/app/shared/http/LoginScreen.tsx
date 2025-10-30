@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, TextInput, StyleSheet, Button, Platform, Image, Text } from "react-native";
 import { CustomAlert } from '../components/CustomAlert';
 import { PhoneAuthProvider, signInWithCredential, RecaptchaVerifier, signOut } from "firebase/auth";
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+//import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { auth, firebaseConfig } from "./firebaseConfig";
 import { useAuthState } from './state';
 import { UserRole } from '../../api/auth_api';
@@ -109,11 +109,11 @@ export default function LoginScreen({ role }: Props) {
         <Text style={styles.alertText}>{e}</Text> 
       </CustomAlert>
 
-      {Platform.OS !== 'web' && (
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={firebaseConfig}
-        />
+      {Platform.OS !== 'web' && (<></>
+        // <FirebaseRecaptchaVerifierModal
+        //   ref={recaptchaVerifier}
+        //   firebaseConfig={firebaseConfig}
+        // />
       )}
 
       {verificationId === '' ? (
