@@ -5,12 +5,7 @@ import { get_last_game, get_upcoming_events, update_student_avatar, get_student_
 import { get_student_attendance_count, get_notifications, delete_notifications } from '../http';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-
-import { effectNames, RuleLevels, eventTypes } from '../../../shared/constants';
-import { getTodayTimestamp, objectToJson } from '../../../shared/utils';
-import messaging from "@react-native-firebase/messaging";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
 
 const TOKEN_KEY = "fcm_token";
