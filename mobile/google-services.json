@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:735296528155:android:92b35af0cb45e99d84bdbe",
+        "mobilesdk_app_id": "1:735296528155:android:71ce3b9d10261b9a84bdbe",
         "android_client_info": {
-          "package_name": "android.package"
+          "package_name": "com.dinivrey.mobile"
         }
       },
       "oauth_client": [

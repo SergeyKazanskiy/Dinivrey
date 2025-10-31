@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Dinivrey",
+    "slug": "dinivrey",
     "version": "1.0.0",
-    "owner": "dinivrey",
+    "owner": "sergeykazanskiy",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -13,7 +13,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.dinivrey.mobile",
       "infoPlist": {
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       },
       "config": {
         "usesNonExemptEncryption": false
@@ -46,9 +48,17 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/notification-icon.png",
+          "icon": "./assets/images/notification-icon.png",
           "color": "#ffffff",
           "mode": "default"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "googleServicesFile": "./google-services.json"
+          }
         }
       ]
     ],

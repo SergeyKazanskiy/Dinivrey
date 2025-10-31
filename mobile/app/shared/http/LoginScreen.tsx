@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, TextInput, StyleSheet, Button, Platform, Image, Text } from "react-native";
 import { CustomAlert } from '../components/CustomAlert';
-import { PhoneAuthProvider, signInWithCredential, RecaptchaVerifier, signOut } from "firebase/auth";
+import { PhoneAuthProvider, signInWithCredential, RecaptchaVerifier, signOut, signInWithPhoneNumber } from "firebase/auth";
 //import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { auth, firebaseConfig } from "./firebaseConfig";
 import { useAuthState } from './state';
@@ -45,26 +45,50 @@ export default function LoginScreen({ role }: Props) {
   }, []);
 
 
+  // const sendPhone = async () => {
+  //   try {
+  //     let id;
+  //     setLoading(true);
+
+  //     if (Platform.OS === 'web') {
+  //       const verifier = recaptchaVerifierRef.current!;
+  //       const provider = new PhoneAuthProvider(auth);
+  //       id = await provider.verifyPhoneNumber(phone, verifier);
+  //     } else {
+  //       const provider = new PhoneAuthProvider(auth);
+  //       id = await provider.verifyPhoneNumber(phone, recaptchaVerifier.current!);
+  //     }
+
+  //     setLoading(false);
+  //     setVerificationId(id);
+  //     setIsCode(true);
+  //   } catch (err: any) {
+  //     setIsError(true);
+  //     setErrorMessage(err.message);
+  //   }
+  // };
+
   const sendPhone = async () => {
     try {
-      let id;
       setLoading(true);
+      let confirmation;
 
-      if (Platform.OS === 'web') {
+      if (Platform.OS === "web") {
+        // Web: используем RecaptchaVerifier напрямую
         const verifier = recaptchaVerifierRef.current!;
-        const provider = new PhoneAuthProvider(auth);
-        id = await provider.verifyPhoneNumber(phone, verifier);
+        confirmation = await signInWithPhoneNumber(auth, phone, verifier);
       } else {
-        const provider = new PhoneAuthProvider(auth);
-        id = await provider.verifyPhoneNumber(phone, recaptchaVerifier.current!);
+        // Mobile (Expo): RecaptchaVerifier не требуется
+        confirmation = await signInWithPhoneNumber(auth, phone);
       }
 
-      setLoading(false);
-      setVerificationId(id);
+      setVerificationId(confirmation.verificationId);
       setIsCode(true);
+      setLoading(false);
     } catch (err: any) {
       setIsError(true);
       setErrorMessage(err.message);
+      setLoading(false);
     }
   };
 
@@ -109,12 +133,12 @@ export default function LoginScreen({ role }: Props) {
         <Text style={styles.alertText}>{e}</Text> 
       </CustomAlert>
 
-      {Platform.OS !== 'web' && (<></>
+      {/* {Platform.OS !== 'web' && (<>
         // <FirebaseRecaptchaVerifierModal
         //   ref={recaptchaVerifier}
         //   firebaseConfig={firebaseConfig}
         // />
-      )}
+      )} */}
 
       {verificationId === '' ? (
         <>
