@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { HttpStatus } from './shared/http/HttpStatus';
+import './app.css'
 
 
 export default function Index() {

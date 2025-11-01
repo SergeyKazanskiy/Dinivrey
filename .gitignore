@@ -5,6 +5,7 @@ mobile/node_modules
 # expo
 frontend/.expo
 mobile/.expo
+mobile/dist/
 
 # store
 .DS_Store
