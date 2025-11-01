@@ -1,0 +1,28 @@
+# node modules
+frontend/node_modules
+mobile/node_modules
+
+# expo
+frontend/.expo
+mobile/.expo
+
+# store
+.DS_Store
+backend/.DS_Store
+frontend/.DS_Store
+frontend/public/icons/.DS_Store
+frontend/public/.DS_Store
+frontend/.DS_Store
+
+# secrets
+backend/app/secrets/
+#frontend/src/secrets/
+
+# backend
+__pycache__/
+
+# database
+#backend/app/database.db
+
+Unraid.txt
+

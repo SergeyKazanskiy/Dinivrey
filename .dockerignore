@@ -1,0 +1,44 @@
+# -------------------------------
+# Папки, которые не должны попасть в образы
+# -------------------------------
+
+# Мобильная часть, не нужна на сервере
+mobile/
+
+# Node.js
+frontend/node_modules
+frontend/build
+
+# Python
+backend/__pycache__/
+backend/.venv/
+backend/venv/
+*.pyc
+*.pyo
+*.pyd
+pip-wheel-metadata/
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.iml
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.DS_Store
+
+# Docker лишнее
+docker-compose.yml
+docker-compose.override.yml
+.dockerignore
+#Dockerfile
+
+# База данных (после первой заливки с исходными данными надо расскоментировать)!!!
+# и добавить в файл services: backend: build: ./backend volumes: - ./backend/data:/app/backend/data
+#*.db
+
