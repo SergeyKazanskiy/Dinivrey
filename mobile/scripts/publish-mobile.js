@@ -1,6 +1,3 @@
-// Utility to run commands
-
-
 import { execSync } from "child_process";
 import fs from "fs";
 import readline from "readline";
@@ -11,8 +8,8 @@ const rl = readline.createInterface({
 });
 
 // Utility to run commands
-function run(cmd) {
-  execSync(cmd, { stdio: "inherit" });
+function run(cmd, options = {}) {
+  execSync(cmd, { stdio: "inherit", ...options });
 }
 
 // Utility to ask user a question
@@ -33,9 +30,7 @@ function ask(question) {
 
   // 2️⃣ Read and optionally update .env.production
   const envPath = ".env.production";
-  let envData = fs.existsSync(envPath)
-    ? fs.readFileSync(envPath, "utf8")
-    : "";
+  let envData = fs.existsSync(envPath) ? fs.readFileSync(envPath, "utf8") : "";
 
   const apiUrlMatch = envData.match(/^EXPO_PUBLIC_API_BASE_URL=(.*)$/m);
   const imagesUrlMatch = envData.match(/^EXPO_PUBLIC_IMAGES_URL=(.*)$/m);
@@ -76,9 +71,24 @@ function ask(question) {
   console.log("\n📦 Экспортируем Expo проект в dist...");
   run("npx expo export --output-dir dist");
 
-  // 4️⃣ Deploy to GitHub Pages
+  // 4️⃣ Clean gh-pages branch before deploy
+  console.log("\n🧹 Очищаем ветку gh-pages на GitHub...");
+  try {
+    run("git fetch origin gh-pages");
+    run("git checkout gh-pages");
+    run("git rm -rf .");
+    run("git clean -fdx");
+    run("git commit --allow-empty -m 'Очистка перед публикацией'");
+    run("git push origin gh-pages --force");
+    run("git checkout -"); // вернуться обратно
+  } catch {
+    console.log("⚠️ Ветка gh-pages пока не существует — будет создана автоматически.");
+  }
+
+  // 5️⃣ Deploy to GitHub Pages
   console.log("\n🚀 Публикуем на GitHub Pages...");
-  run("npx gh-pages -d dist");
+  run("npx gh-pages -d dist -b gh-pages");
 
   console.log("\n✅ Готово! Приложение опубликовано на GitHub Pages 🎉");
+  console.log("\n🌍 URL: https://sergeykazanskiy.github.io/dinivrey/mobile");
 })();

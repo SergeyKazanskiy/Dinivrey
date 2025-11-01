@@ -92,5 +92,6 @@
         "listUnknownPackages": false
       }
     }
-  }
+  },
+  "type": "module"
 }
